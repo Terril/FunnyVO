@@ -37,6 +37,7 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.funnyvo.android.Main_Menu.MainMenuActivity;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SimpleClasses.ApiRequest;
 import com.funnyvo.android.SimpleClasses.Callback;
@@ -54,7 +55,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.qboxus.musictok.Main_Menu.MainMenuActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

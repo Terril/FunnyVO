@@ -14,7 +14,7 @@
         android:visibility="gone"
         android:id="@+id/datetxt"/>
 
-    <com.qboxus.musictok.Chat.RoundCornersImageView
+    <com.funnyvo.android.Chat.RoundCornersImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/chatimage"

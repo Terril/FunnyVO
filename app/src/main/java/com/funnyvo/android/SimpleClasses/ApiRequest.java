@@ -45,7 +45,7 @@ public class ApiRequest {
                         }
 
                         if (callback != null)
-                            callback.Responce(response.toString());
+                            callback.Response(response.toString());
 
                     }
                 }, new Response.ErrorListener() {
@@ -58,7 +58,7 @@ public class ApiRequest {
                 }
 
                 if (callback != null)
-                    callback.Responce(error.toString());
+                    callback.Response(error.toString());
 
             }
         }) {

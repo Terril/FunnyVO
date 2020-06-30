@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.qboxus.musictok.Video_Recording.Post_Video_A">
-
+    android:keepScreenOn="true">
 
 
     <RelativeLayout
@@ -19,38 +16,39 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:background="@color/white"
             app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            android:background="@color/white">
+            app:contentInsetStart="0dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/d_bottom_gray_line">
 
                 <TextView
+                    android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Post"
-                    android:id="@+id/username"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:textColor="@color/black"/>
+                    android:text="Post"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
 
                 <ImageButton
+                    android:id="@+id/Goback"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_back"
-                    android:tint="@color/black"
-                    android:id="@+id/Goback"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
+                    android:background="@color/transparent"
                     android:scaleType="fitCenter"
-                    android:background="@color/transparent"/>
+                    android:src="@drawable/ic_back"
+                    android:tint="@color/black" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -59,68 +57,68 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/video_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
-                android:scaleType="fitCenter"
                 android:layout_marginTop="10dp"
-                android:id="@+id/video_thumbnail"/>
+                android:scaleType="fitCenter" />
 
 
             <EditText
+                android:id="@+id/description_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:backgroundTint="@color/transparent"
                 android:hint="Description"
-                android:textColor="@color/black"
-                android:id="@+id/description_edit"
-                android:layout_margin="15dp"/>
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/redcolor"
-                android:layout_marginTop="25dp">
+                android:layout_marginTop="25dp"
+                android:background="@color/redcolor">
 
                 <TextView
+                    android:id="@+id/post_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Post Video"
                     android:padding="15dp"
+                    android:text="Post Video"
+                    android:textColor="@color/white"
                     android:textSize="14dp"
-                    android:textStyle="bold"
-                    android:id="@+id/post_btn"
-                    android:textColor="@color/white"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/save_draft_btn"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_margin="15dp"
-                android:id="@+id/save_draft_btn"
-                android:orientation="horizontal"
                 android:background="@drawable/d_bottom_gray_line"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_drafts"
+                    android:layout_marginStart="5dp"
                     android:scaleType="fitCenter"
-                    android:layout_marginStart="5dp"/>
+                    android:src="@drawable/ic_drafts" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
                     android:text="Save to Draft"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_marginStart="25dp"/>
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

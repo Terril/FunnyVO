@@ -5,8 +5,7 @@
     android:paddingTop="24dp"
     android:background="@color/white"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.qboxus.musictok.Notifications.Notification_F">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 

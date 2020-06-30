@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.qboxus.musictok.Video_Recording.Preview_Video_A">
+>
 
 
-<com.qboxus.musictok.Video_Recording.MovieWrapperView
+<com.funnyvo.android.Video_Recording.MovieWrapperView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_movie_wrapper"/>

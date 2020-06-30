@@ -5,8 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:id="@+id/Inbox_F"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    tools:context="com.qboxus.musictok.Inbox.Inbox_F">
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"

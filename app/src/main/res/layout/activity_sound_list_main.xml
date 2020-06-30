@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.qboxus.musictok.SoundLists.SoundList_Main_A">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <RelativeLayout
@@ -72,13 +71,13 @@
                 android:layout_marginLeft="-1dp"
                 app:tabIndicatorColor="@color/black"/>
 
-            <com.qboxus.musictok.Main_Menu.Custom_ViewPager
+            <com.funnyvo.android.Main_Menu.Custom_ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/viewpager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_below="@+id/groups_tab">
-            </com.qboxus.musictok.Main_Menu.Custom_ViewPager>
+            </com.funnyvo.android.Main_Menu.Custom_ViewPager>
 
 
         </RelativeLayout>

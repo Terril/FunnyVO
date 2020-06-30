@@ -27,14 +27,14 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.funnyvo.android.Chat.Chat_Activity;
+import com.funnyvo.android.Main_Menu.MainMenuActivity;
+import com.funnyvo.android.Main_Menu.MainMenuFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SimpleClasses.Variables;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.qboxus.musictok.Main_Menu.MainMenuActivity;
-import com.qboxus.musictok.Main_Menu.MainMenuFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,8 +147,6 @@ public class Notification_Receive extends FirebaseMessagingService {
             ShowNotification(ctx, title, message, result);
 
             if (MainMenuActivity.mainMenuActivity != null) {
-
-
                 if (snackbar != null) {
                     snackbar.getView().setVisibility(View.INVISIBLE);
                     snackbar.dismiss();

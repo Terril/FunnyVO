@@ -25,10 +25,10 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.funnyvo.android.Comments.Comment_Get_Set;
 import com.funnyvo.android.R;
 import com.gmail.samehadar.iosdialog.CamomileSpinner;
 import com.googlecode.mp4parser.authoring.Track;
-import com.qboxus.musictok.Comments.Comment_Get_Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -295,7 +295,7 @@ public class Functions {
 
         ApiRequest.Call_Api(activity, Variables.likeDislikeVideo, parameters, new Callback() {
             @Override
-            public void Responce(String resp) {
+            public void Response(String resp) {
                 api_callBack.OnSuccess(resp);
             }
         });
@@ -318,7 +318,7 @@ public class Functions {
 
         ApiRequest.Call_Api(activity, Variables.postComment, parameters, new Callback() {
             @Override
-            public void Responce(String resp) {
+            public void Response(String resp) {
 
                 ArrayList<Comment_Get_Set> arrayList = new ArrayList<>();
                 try {
@@ -373,7 +373,7 @@ public class Functions {
 
         ApiRequest.Call_Api(activity, Variables.showVideoComments, parameters, new Callback() {
             @Override
-            public void Responce(String resp) {
+            public void Response(String resp) {
                 ArrayList<Comment_Get_Set> arrayList = new ArrayList<>();
                 try {
                     JSONObject response = new JSONObject(resp);
@@ -454,7 +454,7 @@ public class Functions {
 
         ApiRequest.Call_Api(activity, Variables.follow_users, parameters, new Callback() {
             @Override
-            public void Responce(String resp) {
+            public void Response(String resp) {
                 Functions.cancel_loader();
                 try {
                     JSONObject response = new JSONObject(resp);
@@ -494,7 +494,7 @@ public class Functions {
 
         ApiRequest.Call_Api(activity, Variables.get_user_data, parameters, new Callback() {
             @Override
-            public void Responce(String resp) {
+            public void Response(String resp) {
                 Functions.cancel_loader();
                 try {
                     JSONObject response = new JSONObject(resp);
@@ -532,7 +532,7 @@ public class Functions {
 
         ApiRequest.Call_Api(activity, Variables.DeleteVideo, parameters, new Callback() {
             @Override
-            public void Responce(String resp) {
+            public void Response(String resp) {
                 Functions.cancel_loader();
                 try {
                     JSONObject response = new JSONObject(resp);

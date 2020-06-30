@@ -1,6 +1,5 @@
 package com.funnyvo.android.Services;
 
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -56,10 +55,8 @@ import java.util.Map;
  * Created by AQEEL on 6/7/2018.
  */
 
-
 // this the background service which will upload the video into database
 public class Upload_Service extends Service {
-
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -141,7 +138,6 @@ public class Upload_Service extends Service {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
 
                         File myVideo = new File(uri.getPath());
                         Uri myVideoUri = Uri.parse(myVideo.toString());

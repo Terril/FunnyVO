@@ -9,7 +9,7 @@
     android:id="@+id/Chat_F"
     android:fitsSystemWindows="true"
     android:paddingTop="24dp"
-    tools:context="com.qboxus.musictok.Chat.Chat_Activity">
+>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -76,15 +76,12 @@ public class Request_Varification_F extends RootFragment implements View.OnClick
         view.findViewById(R.id.choose_file_btn).setOnClickListener(this);
         view.findViewById(R.id.send_btn).setOnClickListener(this);
 
-
         return view;
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-
             case R.id.Goback:
                 getActivity().onBackPressed();
                 break;
@@ -104,9 +101,7 @@ public class Request_Varification_F extends RootFragment implements View.OnClick
 
     // this method will show the dialog of selete the either take a picture form camera or pick the image from gallary
     private void selectImage() {
-
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogCustom);
 
@@ -117,7 +112,6 @@ public class Request_Varification_F extends RootFragment implements View.OnClick
             @Override
 
             public void onClick(DialogInterface dialog, int item) {
-
                 if (options[item].equals("Take Photo")) {
                     if (check_permissions())
                         openCameraIntent();

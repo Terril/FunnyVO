@@ -24,7 +24,6 @@ public class Splash_A extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-
         Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, MODE_PRIVATE);
 
         countDownTimer = new CountDownTimer(2500, 500) {
