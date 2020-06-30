@@ -1,4 +1,4 @@
-package com.funnyvo.android.Notifications;
+package com.funnyvo.android.notifications;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,16 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.funnyvo.android.Inbox.Inbox_F;
-import com.funnyvo.android.Main_Menu.MainMenuFragment;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
-import com.funnyvo.android.Profile.Profile_F;
+import com.funnyvo.android.inbox.InboxFragment;
+import com.funnyvo.android.main_menu.MainMenuFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
+import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.WatchVideos.WatchVideos_F;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.notifications.datamodel.Notification;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
@@ -36,19 +37,19 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Notification_F extends RootFragment implements View.OnClickListener {
+public class NotificationFragment extends RootFragment implements View.OnClickListener {
 
     View view;
     Context context;
 
-    Notification_Adapter adapter;
+    NotificationAdapter adapter;
     RecyclerView recyclerView;
 
-    ArrayList<Notification_Get_Set> datalist;
+    ArrayList<Notification> datalist;
 
     SwipeRefreshLayout swiperefresh;
 
-    public Notification_F() {
+    public NotificationFragment() {
         // Required empty public constructor
     }
 
@@ -66,9 +67,9 @@ public class Notification_F extends RootFragment implements View.OnClickListener
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new Notification_Adapter(context, datalist, new Notification_Adapter.OnItemClickListener() {
+        adapter = new NotificationAdapter(context, datalist, new NotificationAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Notification_Get_Set item) {
+            public void onItemClick(View view, int postion, Notification item) {
 
                 switch (view.getId()) {
                     case R.id.watch_btn:
@@ -140,13 +141,13 @@ public class Notification_F extends RootFragment implements View.OnClickListener
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msg = jsonObject.getJSONArray("msg");
-                ArrayList<Notification_Get_Set> temp_list = new ArrayList<>();
+                ArrayList<Notification> temp_list = new ArrayList<>();
                 for (int i = 0; i < msg.length(); i++) {
                     JSONObject data = msg.getJSONObject(i);
                     JSONObject fb_id_details = data.optJSONObject("fb_id_details");
                     JSONObject value_data = data.optJSONObject("value_data");
 
-                    Notification_Get_Set item = new Notification_Get_Set();
+                    Notification item = new Notification();
 
                     item.fb_id = data.optString("fb_id");
 
@@ -204,22 +205,22 @@ public class Notification_F extends RootFragment implements View.OnClickListener
     }
 
     private void Open_inbox_F() {
-        Inbox_F inbox_f = new Inbox_F();
+        InboxFragment inbox_fragment = new InboxFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, inbox_f).commit();
+        transaction.replace(R.id.MainMenuFragment, inbox_fragment).commit();
 
     }
 
-    private void OpenWatchVideo(Notification_Get_Set item) {
-        Intent intent = new Intent(getActivity(), WatchVideos_F.class);
+    private void OpenWatchVideo(Notification item) {
+        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("video_id", item.id);
         startActivity(intent);
     }
 
 
-    public void Open_Profile(Notification_Get_Set item) {
+    public void Open_Profile(Notification item) {
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
 
             TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);
@@ -227,7 +228,7 @@ public class Notification_F extends RootFragment implements View.OnClickListener
 
         } else {
 
-            Profile_F profile_f = new Profile_F(new Fragment_Callback() {
+            ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void Response(Bundle bundle) {
 
@@ -239,9 +240,9 @@ public class Notification_F extends RootFragment implements View.OnClickListener
             args.putString("user_id", item.fb_id);
             args.putString("user_name", item.first_name + " " + item.last_name);
             args.putString("user_pic", item.profile_pic);
-            profile_f.setArguments(args);
+            profile_fragment.setArguments(args);
             transaction.addToBackStack(null);
-            transaction.replace(R.id.MainMenuFragment, profile_f).commit();
+            transaction.replace(R.id.MainMenuFragment, profile_fragment).commit();
 
         }
 

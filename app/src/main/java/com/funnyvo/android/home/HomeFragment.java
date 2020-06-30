@@ -1,4 +1,4 @@
-package com.funnyvo.android.Home;
+package com.funnyvo.android.home;
 
 
 import android.Manifest;
@@ -48,22 +48,23 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
-import com.funnyvo.android.Comments.Comment_F;
-import com.funnyvo.android.Main_Menu.MainMenuActivity;
-import com.funnyvo.android.Main_Menu.MainMenuFragment;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
-import com.funnyvo.android.Profile.Profile_F;
+import com.funnyvo.android.comments.CommentFragment;
+import com.funnyvo.android.main_menu.MainMenuActivity;
+import com.funnyvo.android.main_menu.MainMenuFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
+import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.API_CallBack;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Data_Send;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.SoundLists.VideoSound_A;
-import com.funnyvo.android.Taged.Taged_Videos_F;
+import com.funnyvo.android.simpleclasses.ApiCallBack;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.FragmentDataSend;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.soundlists.VideoSoundActivity;
+import com.funnyvo.android.taged.TagedVideosFragment;
 import com.funnyvo.android.VideoAction.VideoAction_F;
+import com.funnyvo.android.home.datamodel.Home;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -100,13 +101,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 
 // this is the main view which is show all  the video in list
-public class Home_F extends RootFragment implements Player.EventListener, Fragment_Data_Send {
+public class HomeFragment extends RootFragment implements Player.EventListener, FragmentDataSend {
 
     View view;
     Context context;
 
     RecyclerView recyclerView;
-    ArrayList<Home_Get_Set> data_list;
+    ArrayList<Home> data_list;
     int currentPage = -1;
     LinearLayoutManager layoutManager;
 
@@ -116,7 +117,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
     boolean is_user_stop_video = false;
 
-    public Home_F() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -216,13 +217,13 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
 
     boolean is_add_show = false;
-    Home_Adapter adapter;
+    HomeAdapter adapter;
 
     public void Set_Adapter() {
 
-        adapter = new Home_Adapter(context, data_list, new Home_Adapter.OnItemClickListener() {
+        adapter = new HomeAdapter(context, data_list, new HomeAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int postion, final Home_Get_Set item, View view) {
+            public void onItemClick(int postion, final Home item, View view) {
 
                 switch (view.getId()) {
 
@@ -254,7 +255,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
                             is_add_show = true;
                         } else {
                             is_add_show = false;
-                            final VideoAction_F fragment = new VideoAction_F(item.video_id, new Fragment_Callback() {
+                            final VideoAction_F fragment = new VideoAction_F(item.video_id, new FragmentCallback() {
                                 @Override
                                 public void Response(Bundle bundle) {
 
@@ -262,7 +263,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
                                         Save_Video(item);
                                     } else if (bundle.getString("action").equals("delete")) {
                                         Functions.Show_loader(context, false, false);
-                                        Functions.Call_Api_For_Delete_Video(getActivity(), item.video_id, new API_CallBack() {
+                                        Functions.Call_Api_For_Delete_Video(getActivity(), item.video_id, new ApiCallBack() {
                                             @Override
                                             public void ArrayData(ArrayList arrayList) {
 
@@ -299,7 +300,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                             if (check_permissions()) {
-                                Intent intent = new Intent(getActivity(), VideoSound_A.class);
+                                Intent intent = new Intent(getActivity(), VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
                             }
@@ -356,7 +357,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
                 for (int i = 0; i < msgArray.length(); i++) {
                     JSONObject itemdata = msgArray.optJSONObject(i);
-                    Home_Get_Set item = new Home_Get_Set();
+                    Home item = new Home();
                     item.fb_id = itemdata.optString("fb_id");
 
                     JSONObject user_info = itemdata.optJSONObject("user_info");
@@ -434,7 +435,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
                 for (int i = 0; i < msgArray.length(); i++) {
                     JSONObject itemdata = msgArray.optJSONObject(i);
-                    Home_Get_Set item = new Home_Get_Set();
+                    Home item = new Home();
                     item.fb_id = itemdata.optString("fb_id");
 
                     JSONObject user_info = itemdata.optJSONObject("user_info");
@@ -486,7 +487,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
     // this function will set the player to the current video
     public void Set_Player(final int currentPage) {
 
-        final Home_Get_Set item = data_list.get(currentPage);
+        final Home item = data_list.get(currentPage);
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         final SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
@@ -615,7 +616,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
     }
 
 
-    public void Show_heart_on_DoubleTap(Home_Get_Set item, final RelativeLayout mainlayout, MotionEvent e) {
+    public void Show_heart_on_DoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
 
         int x = (int) e.getX() - 100;
         int y = (int) e.getY() - 100;
@@ -666,7 +667,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
     @Override
     public void onDataSent(String yourData) {
         int comment_count = Integer.parseInt(yourData);
-        Home_Get_Set item = data_list.get(currentPage);
+        Home item = data_list.get(currentPage);
         item.video_comment_count = "" + comment_count;
         data_list.remove(currentPage);
         data_list.add(currentPage, item);
@@ -703,24 +704,24 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
 
     // this function will call for like the video and Call an Api for like the video
-    public void Like_Video(final int position, final Home_Get_Set home_get_set) {
-        String action = home_get_set.liked;
+    public void Like_Video(final int position, final Home home_) {
+        String action = home_.liked;
 
         if (action.equals("1")) {
             action = "0";
-            home_get_set.like_count = "" + (Integer.parseInt(home_get_set.like_count) - 1);
+            home_.like_count = "" + (Integer.parseInt(home_.like_count) - 1);
         } else {
             action = "1";
-            home_get_set.like_count = "" + (Integer.parseInt(home_get_set.like_count) + 1);
+            home_.like_count = "" + (Integer.parseInt(home_.like_count) + 1);
         }
 
 
         data_list.remove(position);
-        home_get_set.liked = action;
-        data_list.add(position, home_get_set);
+        home_.liked = action;
+        data_list.add(position, home_);
         adapter.notifyDataSetChanged();
 
-        Functions.Call_Api_For_like_video(getActivity(), home_get_set.video_id, action, new API_CallBack() {
+        Functions.Call_Api_For_like_video(getActivity(), home_.video_id, action, new ApiCallBack() {
 
             @Override
             public void ArrayData(ArrayList arrayList) {
@@ -742,35 +743,35 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
 
     // this will open the comment screen
-    private void OpenComment(Home_Get_Set item) {
+    private void OpenComment(Home item) {
 
         int comment_counnt = Integer.parseInt(item.video_comment_count);
 
-        Fragment_Data_Send fragment_data_send = this;
+        FragmentDataSend fragment_data_send = this;
 
-        Comment_F comment_f = new Comment_F(comment_counnt, fragment_data_send);
+        CommentFragment comment_fragment = new CommentFragment(comment_counnt, fragment_data_send);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
         args.putString("video_id", item.video_id);
         args.putString("user_id", item.fb_id);
-        comment_f.setArguments(args);
+        comment_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, comment_f).commit();
+        transaction.replace(R.id.MainMenuFragment, comment_fragment).commit();
 
 
     }
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private void OpenProfile(Home_Get_Set item, boolean from_right_to_left) {
+    private void OpenProfile(Home item, boolean from_right_to_left) {
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
 
             TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);
             profile.select();
 
         } else {
-            Profile_F profile_f = new Profile_F(new Fragment_Callback() {
+            ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void Response(Bundle bundle) {
                     Call_Api_For_Singlevideos(currentPage);
@@ -786,9 +787,9 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
             args.putString("user_id", item.fb_id);
             args.putString("user_name", item.first_name + " " + item.last_name);
             args.putString("user_pic", item.profile_pic);
-            profile_f.setArguments(args);
+            profile_fragment.setArguments(args);
             transaction.addToBackStack(null);
-            transaction.replace(R.id.MainMenuFragment, profile_f).commit();
+            transaction.replace(R.id.MainMenuFragment, profile_fragment).commit();
         }
 
     }
@@ -797,20 +798,20 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
     // this will open the profile of user which have uploaded the currenlty running video
     private void OpenHashtag(String tag) {
 
-        Taged_Videos_F taged_videos_f = new Taged_Videos_F();
+        TagedVideosFragment taged_videos_fragment = new TagedVideosFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
         args.putString("tag", tag);
-        taged_videos_f.setArguments(args);
+        taged_videos_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, taged_videos_f).commit();
+        transaction.replace(R.id.MainMenuFragment, taged_videos_fragment).commit();
 
 
     }
 
 
-    private void Show_video_option(final Home_Get_Set home_get_set) {
+    private void Show_video_option(final Home home_) {
 
         final CharSequence[] options = {"Save Video", "Cancel"};
 
@@ -826,7 +827,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
                 if (options[item].equals("Save Video")) {
                     if (Functions.Checkstoragepermision(getActivity()))
-                        Save_Video(home_get_set);
+                        Save_Video(home_);
 
                 } else if (options[item].equals("Cancel")) {
 
@@ -842,7 +843,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
     }
 
-    public void Save_Video(final Home_Get_Set item) {
+    public void Save_Video(final Home item) {
 
         Functions.Show_determinent_loader(context, false, false);
         PRDownloader.initialize(getActivity().getApplicationContext());
@@ -896,7 +897,7 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
 
     }
 
-    public void Applywatermark(final Home_Get_Set item) {
+    public void Applywatermark(final Home item) {
 
         Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
         Bitmap bitmap_resize = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
@@ -962,14 +963,14 @@ public class Home_F extends RootFragment implements Player.EventListener, Fragme
     }
 
 
-    public void Delete_file_no_watermark(Home_Get_Set item) {
+    public void Delete_file_no_watermark(Home item) {
         File file = new File(Variables.app_folder + item.video_id + "no_watermark" + ".mp4");
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public void Scan_file(Home_Get_Set item) {
+    public void Scan_file(Home item) {
         MediaScannerConnection.scanFile(getActivity(),
                 new String[]{Variables.app_folder + item.video_id + ".mp4"},
                 null,

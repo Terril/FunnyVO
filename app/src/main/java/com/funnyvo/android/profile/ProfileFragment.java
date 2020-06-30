@@ -1,4 +1,4 @@
-package com.funnyvo.android.Profile;
+package com.funnyvo.android.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,19 +21,19 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import com.funnyvo.android.Chat.Chat_Activity;
-import com.funnyvo.android.Following.Following_F;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
-import com.funnyvo.android.Profile.Liked_Videos.Liked_Video_F;
-import com.funnyvo.android.Profile.UserVideos.UserVideo_F;
+import com.funnyvo.android.chat.ChatActivity;
+import com.funnyvo.android.following.FollowingFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
+import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
+import com.funnyvo.android.profile.uservideos.UserVideoFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.See_Full_Image_F;
-import com.funnyvo.android.SimpleClasses.API_CallBack;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.SeeFullImageFragment;
+import com.funnyvo.android.simpleclasses.ApiCallBack;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -47,7 +47,7 @@ import java.util.ArrayList;
 // This is the profile screen which is show in 5 tab as well as it is also call
 // when we see the profile of other users
 
-public class Profile_F extends RootFragment implements View.OnClickListener {
+public class ProfileFragment extends RootFragment implements View.OnClickListener {
 
     View view;
     Context context;
@@ -76,15 +76,15 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
 
     public static String pic_url;
 
-    public Profile_F() {
+    public ProfileFragment() {
 
     }
 
 
-    Fragment_Callback fragment_callback;
+    FragmentCallback fragment_callback;
 
     @SuppressLint("ValidFragment")
-    public Profile_F(Fragment_Callback fragment_callback) {
+    public ProfileFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
     }
 
@@ -315,10 +315,10 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
             final Fragment result;
             switch (position) {
                 case 0:
-                    result = new UserVideo_F(user_id);
+                    result = new UserVideoFragment(user_id);
                     break;
                 case 1:
-                    result = new Liked_Video_F(user_id);
+                    result = new LikedVideoFragment(user_id);
                     break;
 
                 default:
@@ -410,9 +410,9 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
                 username2_txt.setText(user_info.optString("username"));
 
-                Profile_F.pic_url = user_info.optString("profile_pic");
+                ProfileFragment.pic_url = user_info.optString("profile_pic");
                 Picasso.with(context)
-                        .load(Profile_F.pic_url)
+                        .load(ProfileFragment.pic_url)
                         .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
                         .resize(200, 200).centerCrop().into(imageView);
 
@@ -473,7 +473,7 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
                 user_id,
                 send_status,
-                new API_CallBack() {
+                new ApiCallBack() {
                     @Override
                     public void ArrayData(ArrayList arrayList) {
                     }
@@ -506,7 +506,7 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
 
     //this method will get the big size of profile image.
     public void OpenfullsizeImage(String url) {
-        See_Full_Image_F see_image_f = new See_Full_Image_F();
+        SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         Bundle args = new Bundle();
@@ -524,7 +524,7 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
     }
 
     public void Open_Chat_F() {
-        Chat_Activity chat_activity = new Chat_Activity();
+        ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
@@ -545,43 +545,43 @@ public class Profile_F extends RootFragment implements View.OnClickListener {
 
     public void Open_Following() {
 
-        Following_F following_f = new Following_F();
+        FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
         args.putString("id", user_id);
         args.putString("from_where", "following");
-        following_f.setArguments(args);
+        following_fragment.setArguments(args);
         transaction.addToBackStack(null);
 
 
         View view = getActivity().findViewById(R.id.MainMenuFragment);
 
         if (view != null)
-            transaction.replace(R.id.MainMenuFragment, following_f).commit();
+            transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
         else
-            transaction.replace(R.id.Profile_F, following_f).commit();
+            transaction.replace(R.id.Profile_F, following_fragment).commit();
 
 
     }
 
     public void Open_Followers() {
-        Following_F following_f = new Following_F();
+        FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
         args.putString("id", user_id);
         args.putString("from_where", "fan");
-        following_f.setArguments(args);
+        following_fragment.setArguments(args);
         transaction.addToBackStack(null);
 
 
         View view = getActivity().findViewById(R.id.MainMenuFragment);
 
         if (view != null)
-            transaction.replace(R.id.MainMenuFragment, following_f).commit();
+            transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
         else
-            transaction.replace(R.id.Profile_F, following_f).commit();
+            transaction.replace(R.id.Profile_F, following_fragment).commit();
 
 
     }

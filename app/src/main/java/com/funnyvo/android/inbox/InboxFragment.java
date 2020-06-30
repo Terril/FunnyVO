@@ -1,4 +1,4 @@
-package com.funnyvo.android.Inbox;
+package com.funnyvo.android.inbox;
 
 
 import android.Manifest;
@@ -17,11 +17,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.funnyvo.android.Chat.Chat_Activity;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
+import com.funnyvo.android.chat.ChatActivity;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.inbox.datamodel.Inbox;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
@@ -37,23 +38,23 @@ import java.util.Collections;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Inbox_F extends RootFragment {
+public class InboxFragment extends RootFragment {
 
     View view;
     Context context;
 
     RecyclerView inbox_list;
 
-    ArrayList<Inbox_Get_Set> inbox_arraylist;
+    ArrayList<Inbox> inbox_arraylist;
     DatabaseReference root_ref;
 
-    Inbox_Adapter inbox_adapter;
+    InboxAdapter inbox_adapter;
 
     ProgressBar pbar;
 
     boolean isview_created = false;
 
-    public Inbox_F() {
+    public InboxFragment() {
         // Required empty public constructor
     }
 
@@ -78,9 +79,9 @@ public class Inbox_F extends RootFragment {
         LinearLayoutManager layout = new LinearLayoutManager(context);
         inbox_list.setLayoutManager(layout);
         inbox_list.setHasFixedSize(false);
-        inbox_adapter = new Inbox_Adapter(context, inbox_arraylist, new Inbox_Adapter.OnItemClickListener() {
+        inbox_adapter = new InboxAdapter(context, inbox_arraylist, new InboxAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Inbox_Get_Set item) {
+            public void onItemClick(Inbox item) {
 
                 // if user allow the stroage permission then we open the chat view
                 if (check_ReadStoragepermission())
@@ -88,9 +89,9 @@ public class Inbox_F extends RootFragment {
 
 
             }
-        }, new Inbox_Adapter.OnLongItemClickListener() {
+        }, new InboxAdapter.OnLongItemClickListener() {
             @Override
-            public void onLongItemClick(Inbox_Get_Set item) {
+            public void onLongItemClick(Inbox item) {
 
             }
         });
@@ -146,7 +147,7 @@ public class Inbox_F extends RootFragment {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    Inbox_Get_Set model = ds.getValue(Inbox_Get_Set.class);
+                    Inbox model = ds.getValue(Inbox.class);
                     model.setId(ds.getKey());
 
                     inbox_arraylist.add(model);
@@ -187,7 +188,7 @@ public class Inbox_F extends RootFragment {
     //open the chat fragment and on item click and pass your id and the other person id in which
     //you want to chat with them and this parameter is that is we move from match list or inbox list
     public void chatFragment(String receiverid, String name, String picture) {
-        Chat_Activity chat_activity = new Chat_Activity();
+        ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
 

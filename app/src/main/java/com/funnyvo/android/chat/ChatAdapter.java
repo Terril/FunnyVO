@@ -1,4 +1,4 @@
-package com.funnyvo.android.Chat;
+package com.funnyvo.android.chat;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
@@ -19,7 +19,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.chat.datamodel.Chat;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 
 class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Chat_GetSet> mDataSet;
+    private List<Chat> mDataSet;
     String myID;
     private static final int mychat = 1;
     private static final int friendchat = 2;
@@ -56,11 +57,11 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ChatAdapter.OnLongClickListener long_listener;
 
     public interface OnItemClickListener {
-        void onItemClick(Chat_GetSet item, View view);
+        void onItemClick(Chat item, View view);
     }
 
     public interface OnLongClickListener {
-        void onLongclick(Chat_GetSet item, View view);
+        void onLongclick(Chat item, View view);
     }
 
     /**
@@ -70,7 +71,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      *                Device id
      */
 
-    ChatAdapter(List<Chat_GetSet> dataSet, String id, Context context, ChatAdapter.OnItemClickListener listener, ChatAdapter.OnLongClickListener long_listener) {
+    ChatAdapter(List<Chat> dataSet, String id, Context context, ChatAdapter.OnItemClickListener listener, ChatAdapter.OnLongClickListener long_listener) {
         mDataSet = dataSet;
         this.myID = id;
         this.context = context;
@@ -140,7 +141,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Chat_GetSet chat = mDataSet.get(position);
+        Chat chat = mDataSet.get(position);
 
         if (chat.getType().equals("text")) {
             Chatviewholder chatviewholder = (Chatviewholder) holder;
@@ -157,7 +158,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // make the group of message by date set the gap of 1 min
             // means message send with in 1 min will show as a group
             if (position != 0) {
-                Chat_GetSet chat2 = mDataSet.get(position - 1);
+                Chat chat2 = mDataSet.get(position - 1);
                 if (chat2.getTimestamp().substring(14, 16).equals(chat.getTimestamp().substring(14, 16))) {
                     chatviewholder.datetxt.setVisibility(View.GONE);
                 } else {
@@ -186,7 +187,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 chatimageholder.message_seen.setText("");
             }
             if (chat.getPic_url().equals("none")) {
-                if (Chat_Activity.uploading_image_id.equals(chat.getChat_id())) {
+                if (ChatActivity.uploading_image_id.equals(chat.getChat_id())) {
                     chatimageholder.p_bar.setVisibility(View.VISIBLE);
                     chatimageholder.message_seen.setText("");
                 } else {
@@ -202,7 +203,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // make the group of message by date set the gap of 1 min
             // means message send with in 1 min will show as a group
             if (position != 0) {
-                Chat_GetSet chat2 = mDataSet.get(position - 1);
+                Chat chat2 = mDataSet.get(position - 1);
                 if (chat2.getTimestamp().substring(14, 16).equals(chat.getTimestamp().substring(14, 16))) {
                     chatimageholder.datetxt.setVisibility(View.GONE);
                 } else {
@@ -232,7 +233,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 chataudioviewholder.message_seen.setText("");
             }
             if (chat.getPic_url().equals("none")) {
-                if (Chat_Activity.uploading_Audio_id.equals(chat.getChat_id())) {
+                if (ChatActivity.uploading_Audio_id.equals(chat.getChat_id())) {
                     chataudioviewholder.p_bar.setVisibility(View.VISIBLE);
                     chataudioviewholder.message_seen.setText("");
                 } else {
@@ -248,7 +249,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // make the group of message by date set the gap of 1 min
             // means message send with in 1 min will show as a group
             if (position != 0) {
-                Chat_GetSet chat2 = mDataSet.get(position - 1);
+                Chat chat2 = mDataSet.get(position - 1);
                 if (chat2.getTimestamp().substring(14, 16).equals(chat.getTimestamp().substring(14, 16))) {
                     chataudioviewholder.datetxt.setVisibility(View.GONE);
                 } else {
@@ -261,7 +262,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             }
 
-            if (Chat_Activity.uploading_Audio_id.equals("none")) {
+            if (ChatActivity.uploading_Audio_id.equals("none")) {
 
             }
 
@@ -293,7 +294,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // make the group of message by date set the gap of 1 min
             // means message send with in 1 min will show as a group
             if (position != 0) {
-                Chat_GetSet chat2 = mDataSet.get(position - 1);
+                Chat chat2 = mDataSet.get(position - 1);
                 if (chat2.getTimestamp().substring(14, 16).equals(chat.getTimestamp().substring(14, 16))) {
                     chatimageholder.datetxt.setVisibility(View.GONE);
                 } else {
@@ -323,7 +324,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             alertviewholder.message.setText("This message is deleted by " + chat.getSender_name());
 
             if (position != 0) {
-                Chat_GetSet chat2 = mDataSet.get(position - 1);
+                Chat chat2 = mDataSet.get(position - 1);
                 if (chat2.getTimestamp().substring(11, 13).equals(chat.getTimestamp().substring(11, 13))) {
                     alertviewholder.datetxt.setVisibility(View.GONE);
                 } else {
@@ -390,7 +391,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             message_seen = view.findViewById(R.id.message_seen);
         }
 
-        public void bind(final Chat_GetSet item, final ChatAdapter.OnLongClickListener long_listener) {
+        public void bind(final Chat item, final ChatAdapter.OnLongClickListener long_listener) {
             message.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -420,7 +421,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             p_bar = view.findViewById(R.id.p_bar);
         }
 
-        public void bind(final Chat_GetSet item, final ChatAdapter.OnItemClickListener listener, final ChatAdapter.OnLongClickListener long_listener) {
+        public void bind(final Chat item, final ChatAdapter.OnItemClickListener listener, final ChatAdapter.OnLongClickListener long_listener) {
 
             chatimage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -467,7 +468,7 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
 
-        public void bind(final Chat_GetSet item, final ChatAdapter.OnItemClickListener listener, final ChatAdapter.OnLongClickListener long_listener) {
+        public void bind(final Chat item, final ChatAdapter.OnItemClickListener listener, final ChatAdapter.OnLongClickListener long_listener) {
 
 
             audio_bubble.setOnClickListener(new View.OnClickListener() {

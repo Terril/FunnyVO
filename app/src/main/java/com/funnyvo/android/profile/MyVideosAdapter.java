@@ -1,4 +1,4 @@
-package com.funnyvo.android.Profile;
+package com.funnyvo.android.profile;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.funnyvo.android.Home.Home_Get_Set;
+import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.R;
 
 import java.util.ArrayList;
@@ -22,18 +22,18 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class MyVideos_Adapter extends RecyclerView.Adapter<MyVideos_Adapter.CustomViewHolder> {
+public class MyVideosAdapter extends RecyclerView.Adapter<MyVideosAdapter.CustomViewHolder> {
 
     public Context context;
-    private MyVideos_Adapter.OnItemClickListener listener;
-    private ArrayList<Home_Get_Set> dataList;
+    private MyVideosAdapter.OnItemClickListener listener;
+    private ArrayList<Home> dataList;
 
 
     public interface OnItemClickListener {
-        void onItemClick(int postion, Home_Get_Set item, View view);
+        void onItemClick(int postion, Home item, View view);
     }
 
-    public MyVideos_Adapter(Context context, ArrayList<Home_Get_Set> dataList, MyVideos_Adapter.OnItemClickListener listener) {
+    public MyVideosAdapter(Context context, ArrayList<Home> dataList, MyVideosAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
@@ -41,10 +41,10 @@ public class MyVideos_Adapter extends RecyclerView.Adapter<MyVideos_Adapter.Cust
     }
 
     @Override
-    public MyVideos_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public MyVideosAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_myvideo_layout, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        MyVideos_Adapter.CustomViewHolder viewHolder = new MyVideos_Adapter.CustomViewHolder(view);
+        MyVideosAdapter.CustomViewHolder viewHolder = new MyVideosAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -66,7 +66,7 @@ public class MyVideos_Adapter extends RecyclerView.Adapter<MyVideos_Adapter.Cust
 
         }
 
-        public void bind(final int position, final Home_Get_Set item, final MyVideos_Adapter.OnItemClickListener listener) {
+        public void bind(final int position, final Home item, final MyVideosAdapter.OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,8 +77,8 @@ public class MyVideos_Adapter extends RecyclerView.Adapter<MyVideos_Adapter.Cust
     }
 
     @Override
-    public void onBindViewHolder(final MyVideos_Adapter.CustomViewHolder holder, final int i) {
-        final Home_Get_Set item = dataList.get(i);
+    public void onBindViewHolder(final MyVideosAdapter.CustomViewHolder holder, final int i) {
+        final Home item = dataList.get(i);
         holder.setIsRecyclable(false);
 
 

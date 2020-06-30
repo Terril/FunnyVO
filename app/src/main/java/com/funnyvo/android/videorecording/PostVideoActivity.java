@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording;
+package com.funnyvo.android.videorecording;
 
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -21,10 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
-import com.funnyvo.android.Services.ServiceCallback;
-import com.funnyvo.android.Services.Upload_Service;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.services.ServiceCallback;
+import com.funnyvo.android.services.UploadService;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class Post_Video_A extends AppCompatActivity implements ServiceCallback, View.OnClickListener {
+public class PostVideoActivity extends AppCompatActivity implements ServiceCallback, View.OnClickListener {
 
 
     ImageView video_thumbnail;
@@ -109,7 +109,7 @@ public class Post_Video_A extends AppCompatActivity implements ServiceCallback, 
     public void Start_Service() {
         serviceCallback = this;
 
-        Upload_Service mService = new Upload_Service(serviceCallback);
+        UploadService mService = new UploadService(serviceCallback);
         if (!Functions.isMyServiceRunning(this, mService.getClass())) {
             Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
             mServiceIntent.setAction("startservice");
@@ -118,7 +118,7 @@ public class Post_Video_A extends AppCompatActivity implements ServiceCallback, 
             startService(mServiceIntent);
 
 
-            Intent intent = new Intent(this, Upload_Service.class);
+            Intent intent = new Intent(this, UploadService.class);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         } else {
@@ -155,34 +155,34 @@ public class Post_Video_A extends AppCompatActivity implements ServiceCallback, 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(Post_Video_A.this, responce, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PostVideoActivity.this, responce, Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
 
-                    startActivity(new Intent(Post_Video_A.this, MainMenuActivity.class));
+                    startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
 
                 }
             }, 1000);
 
 
         } else {
-            Toast.makeText(Post_Video_A.this, responce, Toast.LENGTH_LONG).show();
+            Toast.makeText(PostVideoActivity.this, responce, Toast.LENGTH_LONG).show();
             progressDialog.dismiss();
         }
     }
 
 
     // this is importance for binding the service to the activity
-    Upload_Service mService;
+    UploadService mService;
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
 
-            Upload_Service.LocalBinder binder = (Upload_Service.LocalBinder) service;
+            UploadService.LocalBinder binder = (UploadService.LocalBinder) service;
             mService = binder.getService();
 
-            mService.setCallbacks(Post_Video_A.this);
+            mService.setCallbacks(PostVideoActivity.this);
 
 
         }
@@ -205,7 +205,7 @@ public class Post_Video_A extends AppCompatActivity implements ServiceCallback, 
 
         serviceCallback = this;
 
-        Upload_Service mService = new Upload_Service(serviceCallback);
+        UploadService mService = new UploadService(serviceCallback);
 
         if (Functions.isMyServiceRunning(this, mService.getClass())) {
             Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
@@ -237,11 +237,11 @@ public class Post_Video_A extends AppCompatActivity implements ServiceCallback, 
                 in.close();
                 out.close();
 
-                Toast.makeText(Post_Video_A.this, "File saved in Draft", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Post_Video_A.this, MainMenuActivity.class));
+                Toast.makeText(PostVideoActivity.this, "File saved in Draft", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
 
             } else {
-                Toast.makeText(Post_Video_A.this, "File failed to saved in Draft", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostVideoActivity.this, "File failed to saved in Draft", Toast.LENGTH_SHORT).show();
 
             }
 

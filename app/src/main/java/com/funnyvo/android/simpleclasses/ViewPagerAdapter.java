@@ -1,4 +1,4 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
 import android.util.SparseArray;
 import android.view.ViewGroup;

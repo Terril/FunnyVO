@@ -1,4 +1,4 @@
-package com.funnyvo.android.Accounts;
+package com.funnyvo.android.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,12 +37,12 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.funnyvo.android.Main_Menu.MainMenuActivity;
+import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -64,7 +64,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class Login_A extends Activity {
+public class LoginActivity extends Activity {
 
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
@@ -194,7 +194,7 @@ public class Login_A extends Activity {
     public void Loginwith_FB() {
 
         LoginManager.getInstance()
-                .logInWithReadPermissions(Login_A.this,
+                .logInWithReadPermissions(LoginActivity.this,
                         Arrays.asList("public_profile", "email"));
 
         // initialze the facebook sdk and request to facebook for login
@@ -210,13 +210,13 @@ public class Login_A extends Activity {
             @Override
             public void onCancel() {
                 // App code
-                Toast.makeText(Login_A.this, "Login Cancel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d("resp", "" + error.toString());
-                Toast.makeText(Login_A.this, "Login Error" + error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login Error" + error.toString(), Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -234,7 +234,7 @@ public class Login_A extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Functions.Show_loader(Login_A.this, false, false);
+                            Functions.Show_loader(LoginActivity.this, false, false);
                             final String id = Profile.getCurrentProfile().getId();
                             GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
                                 @Override
@@ -269,7 +269,7 @@ public class Login_A extends Activity {
                             request.executeAsync();
                         } else {
                             Functions.cancel_loader();
-                            Toast.makeText(Login_A.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -299,7 +299,7 @@ public class Login_A extends Activity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(Login_A.this);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
         if (account != null) {
             String id = account.getId();
             String fname = "" + account.getGivenName();

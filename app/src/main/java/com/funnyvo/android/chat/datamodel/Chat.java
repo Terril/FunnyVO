@@ -1,13 +1,13 @@
-package com.funnyvo.android.Chat;
+package com.funnyvo.android.chat.datamodel;
 
 /**
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Chat_GetSet {
+public class Chat {
     String receiver_id, sender_id, chat_id, sender_name, text, pic_url, status, time, timestamp, type;
 
-    public Chat_GetSet() {
+    public Chat() {
 
     }
 

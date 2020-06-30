@@ -1,4 +1,4 @@
-package com.funnyvo.android.Settings;
+package com.funnyvo.android.settings;
 
 
 import android.content.Context;
@@ -16,18 +16,18 @@ import com.funnyvo.android.accounts.RequestVerificationFragment;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.SimpleClasses.Webview_F;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.simpleclasses.WebviewFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Setting_F extends RootFragment implements View.OnClickListener {
+public class SettingFragment extends RootFragment implements View.OnClickListener {
 
     View view;
     Context context;
 
-    public Setting_F() {
+    public SettingFragment() {
         // Required empty public constructor
     }
 
@@ -78,15 +78,15 @@ public class Setting_F extends RootFragment implements View.OnClickListener {
     }
 
     public void Open_Privacy_url() {
-        Webview_F webview_f = new Webview_F();
+        WebviewFragment webview_fragment = new WebviewFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
         Bundle bundle = new Bundle();
         bundle.putString("url", Variables.privacy_policy);
         bundle.putString("title", "Privacy Policy");
-        webview_f.setArguments(bundle);
+        webview_fragment.setArguments(bundle);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.Setting_F, webview_f).commit();
+        transaction.replace(R.id.Setting_F, webview_fragment).commit();
     }
 
     // this will erase all the user info store in locally and logout the user

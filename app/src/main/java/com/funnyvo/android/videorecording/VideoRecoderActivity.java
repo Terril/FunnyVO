@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording;
+package com.funnyvo.android.videorecording;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -30,14 +30,14 @@ import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SegmentProgress.ProgressBarListener;
-import com.funnyvo.android.SegmentProgress.SegmentedProgressBar;
-import com.funnyvo.android.SimpleClasses.FileUtils;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.SoundLists.SoundList_Main_A;
-import com.funnyvo.android.Video_Recording.GallerySelectedVideo.GallerySelectedVideo_A;
+import com.funnyvo.android.segmentprogress.ProgressBarListener;
+import com.funnyvo.android.segmentprogress.SegmentedProgressBar;
+import com.funnyvo.android.simpleclasses.FileUtils;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.soundlists.SoundListMainActivity;
+import com.funnyvo.android.videorecording.galleryselectedvideo.GallerySelectedVideoActivity;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -63,7 +63,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Video_Recoder_A extends AppCompatActivity implements View.OnClickListener {
+public class VideoRecoderActivity extends AppCompatActivity implements View.OnClickListener {
 
     CameraView cameraView;
     int number = 0;
@@ -302,7 +302,7 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
-        final ProgressDialog progressDialog = new ProgressDialog(Video_Recoder_A.this);
+        final ProgressDialog progressDialog = new ProgressDialog(VideoRecoderActivity.this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -323,7 +323,7 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
                     if (file.exists()) {
                         try {
                             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                            retriever.setDataSource(Video_Recoder_A.this, Uri.fromFile(file));
+                            retriever.setDataSource(VideoRecoderActivity.this, Uri.fromFile(file));
                             String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
                             boolean isVideo = "yes".equals(hasVideo);
 
@@ -413,7 +413,7 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
 
-        Merge_Video_Audio merge_video_audio = new Merge_Video_Audio(Video_Recoder_A.this);
+        MergeVideoAudio merge_video_audio = new MergeVideoAudio(VideoRecoderActivity.this);
         merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
 
     }
@@ -467,14 +467,14 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.add_sound_txt:
-                Intent intent = new Intent(this, SoundList_Main_A.class);
+                Intent intent = new Intent(this, SoundListMainActivity.class);
                 startActivityForResult(intent, Sounds_list_Request_code);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
 
             case R.id.time_btn:
                 if (sec_passed + 1 < Variables.recording_duration / 1000) {
-                    RecordingTimeRang_F recordingTimeRang_f = new RecordingTimeRang_F(new Fragment_Callback() {
+                    RecordingTimeRangeFragment recordingTimeRangeFragment = new RecordingTimeRangeFragment(new FragmentCallback() {
                         @Override
                         public void Response(Bundle bundle) {
                             if (bundle != null) {
@@ -512,8 +512,8 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
                         bundle.putInt("end_time", (sec_passed + 1));
 
                     bundle.putInt("total_time", (Variables.recording_duration / 1000));
-                    recordingTimeRang_f.setArguments(bundle);
-                    recordingTimeRang_f.show(getSupportFragmentManager(), "");
+                    recordingTimeRangeFragment.setArguments(bundle);
+                    recordingTimeRangeFragment.show(getSupportFragmentManager(), "");
                 }
                 break;
 
@@ -614,7 +614,7 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
 
                                 Functions.cancel_determinent_loader();
 
-                                Intent intent = new Intent(Video_Recoder_A.this, GallerySelectedVideo_A.class);
+                                Intent intent = new Intent(VideoRecoderActivity.this, GallerySelectedVideoActivity.class);
                                 intent.putExtra("video_path", Variables.gallery_resize_video);
                                 startActivity(intent);
 
@@ -641,7 +641,7 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
 
                                     Functions.cancel_determinent_loader();
 
-                                    Toast.makeText(Video_Recoder_A.this, "Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
 
                                 }
@@ -728,13 +728,13 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Functions.Show_indeterminent_loader(Video_Recoder_A.this, true, true);
+                Functions.Show_indeterminent_loader(VideoRecoderActivity.this, true, true);
             }
 
             @Override
             protected void onPostExecute(String result) {
                 if (result.equals("error")) {
-                    Toast.makeText(Video_Recoder_A.this, "Try Again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
                     Functions.cancel_indeterminent_loader();
                     Chnage_Video_size(Variables.gallery_trimed_video, Variables.gallery_resize_video);
@@ -831,7 +831,7 @@ public class Video_Recoder_A extends AppCompatActivity implements View.OnClickLi
 
 
     public void Go_To_preview_Activity() {
-        Intent intent = new Intent(this, Preview_Video_A.class);
+        Intent intent = new Intent(this, PreviewVideoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }

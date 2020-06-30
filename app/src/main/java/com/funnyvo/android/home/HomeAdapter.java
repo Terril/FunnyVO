@@ -1,4 +1,4 @@
-package com.funnyvo.android.Home;
+package com.funnyvo.android.home;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.home.datamodel.Home;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,20 +20,20 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Home_Adapter extends RecyclerView.Adapter<Home_Adapter.CustomViewHolder> {
+public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHolder> {
 
     public Context context;
-    private Home_Adapter.OnItemClickListener listener;
-    private ArrayList<Home_Get_Set> dataList;
+    private HomeAdapter.OnItemClickListener listener;
+    private ArrayList<Home> dataList;
 
 
     // meker the onitemclick listener interface and this interface is impliment in Chatinbox activity
     // for to do action when user click on item
     public interface OnItemClickListener {
-        void onItemClick(int positon, Home_Get_Set item, View view);
+        void onItemClick(int positon, Home item, View view);
     }
 
-    public Home_Adapter(Context context, ArrayList<Home_Get_Set> dataList, Home_Adapter.OnItemClickListener listener) {
+    public HomeAdapter(Context context, ArrayList<Home> dataList, HomeAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
@@ -40,10 +41,10 @@ public class Home_Adapter extends RecyclerView.Adapter<Home_Adapter.CustomViewHo
     }
 
     @Override
-    public Home_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public HomeAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_home_layout, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
-        Home_Adapter.CustomViewHolder viewHolder = new Home_Adapter.CustomViewHolder(view);
+        HomeAdapter.CustomViewHolder viewHolder = new HomeAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -55,8 +56,8 @@ public class Home_Adapter extends RecyclerView.Adapter<Home_Adapter.CustomViewHo
 
 
     @Override
-    public void onBindViewHolder(final Home_Adapter.CustomViewHolder holder, final int i) {
-        final Home_Get_Set item = dataList.get(i);
+    public void onBindViewHolder(final HomeAdapter.CustomViewHolder holder, final int i) {
+        final Home item = dataList.get(i);
         holder.setIsRecyclable(false);
 
         try {
@@ -156,7 +157,7 @@ public class Home_Adapter extends RecyclerView.Adapter<Home_Adapter.CustomViewHo
             shared_layout = view.findViewById(R.id.shared_layout);
         }
 
-        public void bind(final int postion, final Home_Get_Set item, final Home_Adapter.OnItemClickListener listener) {
+        public void bind(final int postion, final Home item, final HomeAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording;
+package com.funnyvo.android.videorecording;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -21,8 +21,8 @@ import com.daasuu.gpuv.player.PlayerScaleType;
 import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -40,7 +40,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.util.List;
 
-public class Preview_Video_A extends AppCompatActivity implements Player.EventListener {
+public class PreviewVideoActivity extends AppCompatActivity implements Player.EventListener {
 
 
     String video_url;
@@ -174,7 +174,7 @@ public class Preview_Video_A extends AppCompatActivity implements Player.EventLi
     protected void onDestroy() {
         super.onDestroy();
         if (player != null) {
-            player.removeListener(Preview_Video_A.this);
+            player.removeListener(PreviewVideoActivity.this);
             player.release();
             player = null;
         }
@@ -235,7 +235,7 @@ public class Preview_Video_A extends AppCompatActivity implements Player.EventLi
 
                                     Functions.cancel_determinent_loader();
 
-                                    Toast.makeText(Preview_Video_A.this, "Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PreviewVideoActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
 
                                 }
@@ -250,7 +250,7 @@ public class Preview_Video_A extends AppCompatActivity implements Player.EventLi
 
     public void GotopostScreen() {
 
-        Intent intent = new Intent(Preview_Video_A.this, Post_Video_A.class);
+        Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

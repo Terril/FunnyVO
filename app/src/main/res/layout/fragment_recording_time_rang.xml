@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Video_Recording.RecordingTimeRang_F">
+    tools:context=".videorecording.RecordingTimeRangeFragment">
 
 
         <LinearLayout

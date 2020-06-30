@@ -11,9 +11,9 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.funnyvo.android.main_menu.MainMenuActivity;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
 
-public class Splash_A extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
     CountDownTimer countDownTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class Splash_A extends AppCompatActivity {
 
             public void onFinish() {
 
-                Intent intent = new Intent(Splash_A.this, MainMenuActivity.class);
+                Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
 
                 if (getIntent().getExtras() != null) {
                     intent.putExtras(getIntent().getExtras());

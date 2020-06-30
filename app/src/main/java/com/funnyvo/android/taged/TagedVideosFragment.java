@@ -1,4 +1,4 @@
-package com.funnyvo.android.Taged;
+package com.funnyvo.android.taged;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,11 +25,11 @@ import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.MyVideosAdapter;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.WatchVideos.WatchVideos_F;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.watchvideos.WatchVideosFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Taged_Videos_F extends RootFragment {
+public class TagedVideosFragment extends RootFragment {
 
     View view;
     Context context;
@@ -60,7 +60,7 @@ public class Taged_Videos_F extends RootFragment {
 
     ProgressBar progress_bar;
 
-    public Taged_Videos_F() {
+    public TagedVideosFragment() {
         // Required empty public constructor
     }
 
@@ -283,7 +283,7 @@ public class Taged_Videos_F extends RootFragment {
     }
 
     private void OpenWatchVideo(int postion) {
-        Intent intent = new Intent(getActivity(), WatchVideos_F.class);
+        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);

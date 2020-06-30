@@ -1,4 +1,4 @@
-package com.funnyvo.android.Profile;
+package com.funnyvo.android.profile;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

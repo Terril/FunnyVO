@@ -1,4 +1,4 @@
-package com.funnyvo.android.Filter;
+package com.funnyvo.android.filter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
-import com.funnyvo.android.Video_Recording.Preview_Video_A;
+import com.funnyvo.android.videorecording.PreviewVideoActivity;
 
 import java.util.List;
 
@@ -57,22 +57,18 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageWeakPixelInclusionFilter
 // this is the class which will show you a Filters lists when you preview the video
 // after created it
 
-
-public class Filter_Adapter extends RecyclerView.Adapter<Filter_Adapter.CustomViewHolder> {
+public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> {
     public Context context;
-
     List<FilterType> datalist;
-
     Bitmap image;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int postion, FilterType item);
     }
 
-    public Filter_Adapter.OnItemClickListener listener;
+    public FilterAdapter.OnItemClickListener listener;
 
-
-    public Filter_Adapter(Context context, List<FilterType> arrayList, Filter_Adapter.OnItemClickListener listener) {
+    public FilterAdapter(Context context, List<FilterType> arrayList, FilterAdapter.OnItemClickListener listener) {
         this.context = context;
         datalist = arrayList;
         this.listener = listener;
@@ -81,10 +77,10 @@ public class Filter_Adapter extends RecyclerView.Adapter<Filter_Adapter.CustomVi
     }
 
     @Override
-    public Filter_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public FilterAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_filter_layout, viewGroup, false);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        Filter_Adapter.CustomViewHolder viewHolder = new Filter_Adapter.CustomViewHolder(view);
+        FilterAdapter.CustomViewHolder viewHolder = new FilterAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -104,7 +100,7 @@ public class Filter_Adapter extends RecyclerView.Adapter<Filter_Adapter.CustomVi
             ivPhoto = view.findViewById(R.id.iv_photo);
         }
 
-        public void bind(final int pos, final FilterType item, final Filter_Adapter.OnItemClickListener listener) {
+        public void bind(final int pos, final FilterType item, final FilterAdapter.OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -116,11 +112,11 @@ public class Filter_Adapter extends RecyclerView.Adapter<Filter_Adapter.CustomVi
 
 
     @Override
-    public void onBindViewHolder(final Filter_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final FilterAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
         String s = datalist.get(i).name();
         holder.fiter_txt.setText(s);
-        if (Preview_Video_A.select_postion == i) {
+        if (PreviewVideoActivity.select_postion == i) {
             holder.ivPhoto.setBackgroundColor(context.getResources().getColor(R.color.redcolor));
         }
         holder.ivPhoto.setImage(image);

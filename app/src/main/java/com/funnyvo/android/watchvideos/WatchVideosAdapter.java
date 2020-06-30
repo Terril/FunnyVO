@@ -1,4 +1,4 @@
-package com.funnyvo.android.WatchVideos;
+package com.funnyvo.android.watchvideos;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,10 +21,10 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Watch_Videos_Adapter extends RecyclerView.Adapter<Watch_Videos_Adapter.CustomViewHolder> {
+public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.CustomViewHolder> {
 
     public Context context;
-    private Watch_Videos_Adapter.OnItemClickListener listener;
+    private WatchVideosAdapter.OnItemClickListener listener;
     private ArrayList<Home> dataList;
 
 
@@ -34,7 +34,7 @@ public class Watch_Videos_Adapter extends RecyclerView.Adapter<Watch_Videos_Adap
         void onItemClick(int positon, Home item, View view);
     }
 
-    public Watch_Videos_Adapter(Context context, ArrayList<Home> dataList, Watch_Videos_Adapter.OnItemClickListener listener) {
+    public WatchVideosAdapter(Context context, ArrayList<Home> dataList, WatchVideosAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
@@ -42,10 +42,10 @@ public class Watch_Videos_Adapter extends RecyclerView.Adapter<Watch_Videos_Adap
     }
 
     @Override
-    public Watch_Videos_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public WatchVideosAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_watch_layout, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
-        Watch_Videos_Adapter.CustomViewHolder viewHolder = new Watch_Videos_Adapter.CustomViewHolder(view);
+        WatchVideosAdapter.CustomViewHolder viewHolder = new WatchVideosAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -56,7 +56,7 @@ public class Watch_Videos_Adapter extends RecyclerView.Adapter<Watch_Videos_Adap
 
 
     @Override
-    public void onBindViewHolder(final Watch_Videos_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final WatchVideosAdapter.CustomViewHolder holder, final int i) {
         final Home item = dataList.get(i);
 
         try {
@@ -155,7 +155,7 @@ public class Watch_Videos_Adapter extends RecyclerView.Adapter<Watch_Videos_Adap
             shared_layout = view.findViewById(R.id.shared_layout);
         }
 
-        public void bind(final int postion, final Home item, final Watch_Videos_Adapter.OnItemClickListener listener) {
+        public void bind(final int postion, final Home item, final WatchVideosAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

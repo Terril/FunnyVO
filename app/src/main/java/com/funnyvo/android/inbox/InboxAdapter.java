@@ -1,4 +1,4 @@
-package com.funnyvo.android.Inbox;
+package com.funnyvo.android.inbox;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -13,7 +13,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.inbox.datamodel.Inbox;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -26,26 +27,26 @@ import java.util.Date;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Inbox_Adapter extends RecyclerView.Adapter<Inbox_Adapter.CustomViewHolder> implements Filterable {
+public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.CustomViewHolder> implements Filterable {
     public Context context;
-    ArrayList<Inbox_Get_Set> inbox_dataList = new ArrayList<>();
-    ArrayList<Inbox_Get_Set> inbox_dataList_filter = new ArrayList<>();
-    private Inbox_Adapter.OnItemClickListener listener;
-    private Inbox_Adapter.OnLongItemClickListener longlistener;
+    ArrayList<Inbox> inbox_dataList = new ArrayList<>();
+    ArrayList<Inbox> inbox_dataList_filter = new ArrayList<>();
+    private InboxAdapter.OnItemClickListener listener;
+    private InboxAdapter.OnLongItemClickListener longlistener;
 
     Integer today_day = 0;
 
     // meker the onitemclick listener interface and this interface is impliment in Chatinbox activity
     // for to do action when user click on item
     public interface OnItemClickListener {
-        void onItemClick(Inbox_Get_Set item);
+        void onItemClick(Inbox item);
     }
 
     public interface OnLongItemClickListener {
-        void onLongItemClick(Inbox_Get_Set item);
+        void onLongItemClick(Inbox item);
     }
 
-    public Inbox_Adapter(Context context, ArrayList<Inbox_Get_Set> user_dataList, Inbox_Adapter.OnItemClickListener listener, Inbox_Adapter.OnLongItemClickListener longlistener) {
+    public InboxAdapter(Context context, ArrayList<Inbox> user_dataList, InboxAdapter.OnItemClickListener listener, InboxAdapter.OnLongItemClickListener longlistener) {
         this.context = context;
         this.inbox_dataList = user_dataList;
         this.inbox_dataList_filter = user_dataList;
@@ -59,10 +60,10 @@ public class Inbox_Adapter extends RecyclerView.Adapter<Inbox_Adapter.CustomView
     }
 
     @Override
-    public Inbox_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public InboxAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_inbox_list, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        Inbox_Adapter.CustomViewHolder viewHolder = new Inbox_Adapter.CustomViewHolder(view);
+        InboxAdapter.CustomViewHolder viewHolder = new InboxAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -83,7 +84,7 @@ public class Inbox_Adapter extends RecyclerView.Adapter<Inbox_Adapter.CustomView
             date_created = itemView.findViewById(R.id.datetxt);
         }
 
-        public void bind(final Inbox_Get_Set item, final Inbox_Adapter.OnItemClickListener listener, final Inbox_Adapter.OnLongItemClickListener longItemClickListener) {
+        public void bind(final Inbox item, final InboxAdapter.OnItemClickListener listener, final InboxAdapter.OnLongItemClickListener longItemClickListener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,9 +100,9 @@ public class Inbox_Adapter extends RecyclerView.Adapter<Inbox_Adapter.CustomView
 
 
     @Override
-    public void onBindViewHolder(final Inbox_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final InboxAdapter.CustomViewHolder holder, final int i) {
 
-        final Inbox_Get_Set item = inbox_dataList_filter.get(i);
+        final Inbox item = inbox_dataList_filter.get(i);
         holder.username.setText(item.getName());
         holder.last_message.setText(item.getMsg());
         holder.date_created.setText(ChangeDate(item.getDate()));
@@ -179,8 +180,8 @@ public class Inbox_Adapter extends RecyclerView.Adapter<Inbox_Adapter.CustomView
                 if (charString.isEmpty()) {
                     inbox_dataList_filter = inbox_dataList;
                 } else {
-                    ArrayList<Inbox_Get_Set> filteredList = new ArrayList<>();
-                    for (Inbox_Get_Set row : inbox_dataList) {
+                    ArrayList<Inbox> filteredList = new ArrayList<>();
+                    for (Inbox row : inbox_dataList) {
 
                         if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(row);
@@ -198,7 +199,7 @@ public class Inbox_Adapter extends RecyclerView.Adapter<Inbox_Adapter.CustomView
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                inbox_dataList_filter = (ArrayList<Inbox_Get_Set>) filterResults.values;
+                inbox_dataList_filter = (ArrayList<Inbox>) filterResults.values;
                 notifyDataSetChanged();
             }
         };

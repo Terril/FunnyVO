@@ -1,4 +1,4 @@
-package com.funnyvo.android.Chat.Audio;
+package com.funnyvo.android.chat.audio;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,9 +12,9 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.funnyvo.android.Chat.Chat_Activity;
+import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,11 +35,8 @@ import java.util.Locale;
  * Created by AQEEL on 12/5/2018.
  */
 
-
 // this class will send a voice message to other user
-
 public class SendAudio {
-
 
     DatabaseReference rootref;
     String senderid = "";
@@ -50,11 +47,9 @@ public class SendAudio {
 
     private static String mFileName = null;
     private MediaRecorder mRecorder = null;
-
     private DatabaseReference Adduser_to_inbox;
 
     EditText message_field;
-
 
     public SendAudio(Context context, EditText message_field,
                      DatabaseReference rootref, DatabaseReference adduser_to_inbox
@@ -70,7 +65,6 @@ public class SendAudio {
         this.Receiver_pic = receiver_pic;
         mFileName = context.getExternalCacheDir().getAbsolutePath();
         mFileName += "/audiorecordtest.mp3";
-
     }
 
 
@@ -107,9 +101,7 @@ public class SendAudio {
         if (mRecorder != null)
             mRecorder.start();
 
-
     }
-
 
     // stop the recording and then call a function to upload the audio file into database
 
@@ -171,7 +163,7 @@ public class SendAudio {
         StorageReference reference = FirebaseStorage.getInstance().getReference();
         DatabaseReference dref = rootref.child("chat").child(senderid + "-" + Receiverid).push();
         final String key = dref.getKey();
-        Chat_Activity.uploading_Audio_id = key;
+        ChatActivity.uploading_Audio_id = key;
         final String current_user_ref = "chat" + "/" + senderid + "-" + Receiverid;
         final String chat_user_ref = "chat" + "/" + Receiverid + "-" + senderid;
 
@@ -203,7 +195,7 @@ public class SendAudio {
                 filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Chat_Activity.uploading_Audio_id = "none";
+                        ChatActivity.uploading_Audio_id = "none";
                         HashMap message_user_map = new HashMap<>();
                         message_user_map.put("receiver_id", Receiverid);
                         message_user_map.put("sender_id", senderid);
@@ -252,9 +244,9 @@ public class SendAudio {
                                 Adduser_to_inbox.updateChildren(both_user_map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Chat_Activity.SendPushNotification((Activity) context, Variables.user_name, "Send an Audio...",
+                                        ChatActivity.SendPushNotification((Activity) context, Variables.user_name, "Send an Audio...",
                                                 Variables.user_pic,
-                                                Chat_Activity.token, Receiverid, senderid);
+                                                ChatActivity.token, Receiverid, senderid);
 
                                     }
                                 });

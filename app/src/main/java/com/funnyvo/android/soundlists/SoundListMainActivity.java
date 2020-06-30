@@ -1,4 +1,4 @@
-package com.funnyvo.android.SoundLists;
+package com.funnyvo.android.soundlists;
 
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -13,16 +13,14 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.funnyvo.android.main_menu.CustomViewPager;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SoundLists.FavouriteSounds.Favourite_Sound_F;
+import com.funnyvo.android.soundlists.favouritesounds.FavouriteSoundFragment;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class SoundList_Main_A extends AppCompatActivity implements View.OnClickListener {
+public class SoundListMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     protected TabLayout tablayout;
-
     protected CustomViewPager pager;
-
     private ViewPagerAdapter adapter;
 
     @Override
@@ -73,10 +71,10 @@ public class SoundList_Main_A extends AppCompatActivity implements View.OnClickL
             final Fragment result;
             switch (position) {
                 case 0:
-                    result = new Discover_SoundList_F();
+                    result = new DiscoverSoundListFragment();
                     break;
                 case 1:
-                    result = new Favourite_Sound_F();
+                    result = new FavouriteSoundFragment();
                     break;
                 default:
                     result = null;

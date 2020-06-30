@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording;
+package com.funnyvo.android.videorecording;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,14 +12,14 @@ import androidx.fragment.app.Fragment;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordingTimeRang_F extends BottomSheetDialogFragment implements View.OnClickListener {
+public class RecordingTimeRangeFragment extends BottomSheetDialogFragment implements View.OnClickListener {
 
     View view;
     Context context;
@@ -29,13 +29,13 @@ public class RecordingTimeRang_F extends BottomSheetDialogFragment implements Vi
     int recording_done_time = 0, total_time = 0;
     TextView range_txt;
 
-    public RecordingTimeRang_F() {
+    public RecordingTimeRangeFragment() {
         // Required empty public constructor
     }
 
-    Fragment_Callback fragment_callback;
+    FragmentCallback fragment_callback;
 
-    public RecordingTimeRang_F(Fragment_Callback fragment_callback) {
+    public RecordingTimeRangeFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
     }
 

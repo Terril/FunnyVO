@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording.GalleryVideos;
+package com.funnyvo.android.videorecording.galleryvideos;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,9 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.Video_Recording.GallerySelectedVideo.GallerySelectedVideo_A;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.videorecording.galleryselectedvideo.GallerySelectedVideoActivity;
+import com.funnyvo.android.videorecording.galleryvideos.datamodel.GalleryVideo;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -44,11 +45,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GalleryVideos_A extends AppCompatActivity {
+public class GalleryVideosActivity extends AppCompatActivity {
 
-    ArrayList<GalleryVideo_Get_Set> data_list;
+    ArrayList<GalleryVideo> data_list;
     public RecyclerView recyclerView;
-    GalleryVideos_Adapter adapter;
+    GalleryVideosAdapter adapter;
 
     ProgressBar pbar;
 
@@ -69,9 +70,9 @@ public class GalleryVideos_A extends AppCompatActivity {
 
 
         data_list = new ArrayList<>();
-        adapter = new GalleryVideos_Adapter(this, data_list, new GalleryVideos_Adapter.OnItemClickListener() {
+        adapter = new GalleryVideosAdapter(this, data_list, new GalleryVideosAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int postion, GalleryVideo_Get_Set item, View view) {
+            public void onItemClick(int postion, GalleryVideo item, View view) {
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 Bitmap bmp = null;
                 try {
@@ -126,7 +127,7 @@ public class GalleryVideos_A extends AppCompatActivity {
         File[] files = directory.listFiles();
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
-            GalleryVideo_Get_Set item = new GalleryVideo_Get_Set();
+            GalleryVideo item = new GalleryVideo();
             item.video_path = file.getAbsolutePath();
             item.video_duration_ms = getfileduration(Uri.parse(file.getAbsolutePath()));
 
@@ -160,7 +161,7 @@ public class GalleryVideos_A extends AppCompatActivity {
 
                         if (cursor != null) {
                             while (cursor.moveToNext()) {
-                                GalleryVideo_Get_Set item = new GalleryVideo_Get_Set();
+                                GalleryVideo item = new GalleryVideo();
                                 item.video_path = cursor.getString(0);
                                 item.video_duration_ms = getfileduration(Uri.parse(cursor.getString(0)));
 
@@ -300,13 +301,13 @@ public class GalleryVideos_A extends AppCompatActivity {
                 in.close();
                 out.close();
 
-                Intent intent = new Intent(GalleryVideos_A.this, GallerySelectedVideo_A.class);
+                Intent intent = new Intent(GalleryVideosActivity.this, GallerySelectedVideoActivity.class);
                 intent.putExtra("video_path", Variables.gallery_resize_video);
                 intent.putExtra("draft_file", src_path);
                 startActivity(intent);
 
             } else {
-                Toast.makeText(GalleryVideos_A.this, "Failed to get video from Draft", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GalleryVideosActivity.this, "Failed to get video from Draft", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -389,13 +390,13 @@ public class GalleryVideos_A extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Functions.Show_indeterminent_loader(GalleryVideos_A.this, true, true);
+                Functions.Show_indeterminent_loader(GalleryVideosActivity.this, true, true);
             }
 
             @Override
             protected void onPostExecute(String result) {
                 if (result.equals("error")) {
-                    Toast.makeText(GalleryVideos_A.this, "Try Again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GalleryVideosActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
                     Functions.cancel_indeterminent_loader();
                     Chnage_Video_size(Variables.gallery_trimed_video, Variables.gallery_resize_video);

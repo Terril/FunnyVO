@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording;
+package com.funnyvo.android.videorecording;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;

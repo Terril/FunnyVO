@@ -1,4 +1,4 @@
-package com.funnyvo.android.Main_Menu;
+package com.funnyvo.android.main_menu;
 
 import android.content.Context;
 import androidx.viewpager.widget.ViewPager;
@@ -14,11 +14,11 @@ import android.view.MotionEvent;
 
     // purpose is only to disable the scroll by fingure option
 
-public class Custom_ViewPager extends ViewPager {
+public class CustomViewPager extends ViewPager {
 
     private boolean enabled;
 
-    public Custom_ViewPager(Context context, AttributeSet attrs) {
+    public CustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.enabled = true;
     }

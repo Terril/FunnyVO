@@ -7,7 +7,7 @@
     android:id="@+id/Search_Main_F"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Search.Search_Main_F">
+    tools:context=".search.SearchMainFragment">
 
 
     <RelativeLayout

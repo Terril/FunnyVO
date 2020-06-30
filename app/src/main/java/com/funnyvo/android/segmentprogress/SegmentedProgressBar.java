@@ -1,4 +1,4 @@
-package com.funnyvo.android.SegmentProgress;
+package com.funnyvo.android.segmentprogress;
 
 /**
  * Created by AQEEL on 3/25/2019.

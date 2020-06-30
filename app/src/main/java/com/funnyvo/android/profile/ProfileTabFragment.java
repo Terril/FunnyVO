@@ -1,4 +1,4 @@
-package com.funnyvo.android.Profile;
+package com.funnyvo.android.profile;
 
 
 import android.content.Context;
@@ -30,20 +30,20 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import com.funnyvo.android.Following.Following_F;
-import com.funnyvo.android.Main_Menu.MainMenuActivity;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
-import com.funnyvo.android.Profile.Liked_Videos.Liked_Video_F;
-import com.funnyvo.android.Profile.UserVideos.UserVideo_F;
+import com.funnyvo.android.following.FollowingFragment;
+import com.funnyvo.android.main_menu.MainMenuActivity;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
+import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
+import com.funnyvo.android.profile.uservideos.UserVideoFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.See_Full_Image_F;
-import com.funnyvo.android.Settings.Setting_F;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.Video_Recording.GalleryVideos.GalleryVideos_A;
+import com.funnyvo.android.SeeFullImageFragment;
+import com.funnyvo.android.settings.SettingFragment;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.videorecording.galleryvideos.GalleryVideosActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -56,10 +56,9 @@ import java.io.File;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Profile_Tab_F extends RootFragment implements View.OnClickListener {
+public class ProfileTabFragment extends RootFragment implements View.OnClickListener {
     View view;
     Context context;
-
 
     public TextView username, username2_txt, video_count_txt;
     public ImageView imageView;
@@ -77,10 +76,7 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
     public static String pic_url;
     public LinearLayout create_popup_layout;
 
-    public Profile_Tab_F() {
-
-    }
-
+    public ProfileTabFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +84,6 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile_tab, container, false);
         context = getContext();
-
 
         return init();
     }
@@ -114,7 +109,7 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
                 break;
 
             case R.id.draft_btn:
-                Intent upload_intent = new Intent(getActivity(), GalleryVideos_A.class);
+                Intent upload_intent = new Intent(getActivity(), GalleryVideosActivity.class);
                 startActivity(upload_intent);
                 getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
@@ -285,7 +280,7 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
                 switch (tab.getPosition()) {
                     case 0:
 
-                        if (UserVideo_F.myvideo_count > 0) {
+                        if (UserVideoFragment.myvideo_count > 0) {
                             create_popup_layout.setVisibility(View.GONE);
                         } else {
                             create_popup_layout.setVisibility(View.VISIBLE);
@@ -350,10 +345,10 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
             final Fragment result;
             switch (position) {
                 case 0:
-                    result = new UserVideo_F(Variables.sharedPreferences.getString(Variables.u_id, ""));
+                    result = new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
                     break;
                 case 1:
-                    result = new Liked_Video_F(Variables.sharedPreferences.getString(Variables.u_id, ""));
+                    result = new LikedVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
                     break;
 
                 default:
@@ -437,9 +432,9 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
                 username2_txt.setText(user_info.optString("username"));
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
 
-                Profile_F.pic_url = user_info.optString("profile_pic");
+                ProfileFragment.pic_url = user_info.optString("profile_pic");
                 Picasso.with(context)
-                        .load(Profile_F.pic_url)
+                        .load(ProfileFragment.pic_url)
                         .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
                         .resize(200, 200).centerCrop().into(imageView);
 
@@ -484,7 +479,7 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
 
 
     public void Open_Edit_profile() {
-        Edit_Profile_F edit_profile_f = new Edit_Profile_F(new Fragment_Callback() {
+        EditProfileFragment edit_profile_fragment = new EditProfileFragment(new FragmentCallback() {
             @Override
             public void Response(Bundle bundle) {
                 update_profile();
@@ -493,22 +488,22 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, edit_profile_f).commit();
+        transaction.replace(R.id.MainMenuFragment, edit_profile_fragment).commit();
     }
 
 
     public void Open_setting() {
-        Setting_F setting_f = new Setting_F();
+        SettingFragment setting_fragment = new SettingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, setting_f).commit();
+        transaction.replace(R.id.MainMenuFragment, setting_fragment).commit();
     }
 
 
     //this method will get the big size of profile image.
     public void OpenfullsizeImage(String url) {
-        See_Full_Image_F see_image_f = new See_Full_Image_F();
+        SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         Bundle args = new Bundle();
@@ -553,7 +548,7 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
     }
 
     public void Open_Following() {
-        Following_F following_f = new Following_F(new Fragment_Callback() {
+        FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
             public void Response(Bundle bundle) {
                 Call_Api_For_get_Allvideos();
@@ -564,14 +559,14 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
         Bundle args = new Bundle();
         args.putString("id", Variables.sharedPreferences.getString(Variables.u_id, ""));
         args.putString("from_where", "following");
-        following_f.setArguments(args);
+        following_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, following_f).commit();
+        transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
 
     }
 
     public void Open_Followers() {
-        Following_F following_f = new Following_F(new Fragment_Callback() {
+        FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
             public void Response(Bundle bundle) {
                 Call_Api_For_get_Allvideos();
@@ -582,9 +577,9 @@ public class Profile_Tab_F extends RootFragment implements View.OnClickListener 
         Bundle args = new Bundle();
         args.putString("id", Variables.sharedPreferences.getString(Variables.u_id, ""));
         args.putString("from_where", "fan");
-        following_f.setArguments(args);
+        following_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, following_f).commit();
+        transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
 
     }
 

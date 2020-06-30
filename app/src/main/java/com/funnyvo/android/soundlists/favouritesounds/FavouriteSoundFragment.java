@@ -1,4 +1,4 @@
-package com.funnyvo.android.SoundLists.FavouriteSounds;
+package com.funnyvo.android.soundlists.favouritesounds;
 
 
 import android.app.ProgressDialog;
@@ -29,11 +29,11 @@ import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.SoundLists.Sounds_GetSet;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.soundlists.Sounds;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -60,13 +60,13 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Favourite_Sound_F extends RootFragment implements Player.EventListener {
+public class FavouriteSoundFragment extends RootFragment implements Player.EventListener {
 
 
     Context context;
     View view;
-    ArrayList<Sounds_GetSet> datalist;
-    Favourite_Sound_Adapter adapter;
+    ArrayList<Sounds> datalist;
+    FavouriteSoundAdapter adapter;
     static boolean active = false;
     RecyclerView recyclerView;
 
@@ -79,7 +79,7 @@ public class Favourite_Sound_F extends RootFragment implements Player.EventListe
     ProgressBar pbar;
     SwipeRefreshLayout swiperefresh;
 
-    public Favourite_Sound_F() {
+    public FavouriteSoundFragment() {
         // Required empty public constructor
     }
 
@@ -123,9 +123,9 @@ public class Favourite_Sound_F extends RootFragment implements Player.EventListe
 
     public void Set_adapter() {
 
-        adapter = new Favourite_Sound_Adapter(context, datalist, new Favourite_Sound_Adapter.OnItemClickListener() {
+        adapter = new FavouriteSoundAdapter(context, datalist, new FavouriteSoundAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Sounds_GetSet item) {
+            public void onItemClick(View view, int postion, Sounds item) {
 
                 if (view.getId() == R.id.done) {
                     StopPlaying();
@@ -196,7 +196,7 @@ public class Favourite_Sound_F extends RootFragment implements Player.EventListe
                 for (int i = 0; i < msgArray.length(); i++) {
                     JSONObject itemdata = msgArray.optJSONObject(i);
 
-                    Sounds_GetSet item = new Sounds_GetSet();
+                    Sounds item = new Sounds();
 
                     item.id = itemdata.optString("id");
 
@@ -241,7 +241,7 @@ public class Favourite_Sound_F extends RootFragment implements Player.EventListe
     SimpleExoPlayer player;
     String previous_url = "none";
 
-    public void playaudio(View view, final Sounds_GetSet item) {
+    public void playaudio(View view, final Sounds item) {
         previous_view = view;
 
         if (previous_url.equals(item.acc_path)) {

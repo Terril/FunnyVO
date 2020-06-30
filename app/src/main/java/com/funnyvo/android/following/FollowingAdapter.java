@@ -1,4 +1,4 @@
-package com.funnyvo.android.Following;
+package com.funnyvo.android.following;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.following.datamodel.Following;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,18 +21,18 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Following_Adapter extends RecyclerView.Adapter<Following_Adapter.CustomViewHolder> {
+public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.CustomViewHolder> {
     public Context context;
     String following_or_fans;
-    ArrayList<Following_Get_Set> datalist;
+    ArrayList<Following> datalist;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int postion, Following_Get_Set item);
+        void onItemClick(View view, int postion, Following item);
     }
 
-    public Following_Adapter.OnItemClickListener listener;
+    public FollowingAdapter.OnItemClickListener listener;
 
-    public Following_Adapter(Context context, String following_or_fans, ArrayList<Following_Get_Set> arrayList, Following_Adapter.OnItemClickListener listener) {
+    public FollowingAdapter(Context context, String following_or_fans, ArrayList<Following> arrayList, FollowingAdapter.OnItemClickListener listener) {
         this.context = context;
         this.following_or_fans = following_or_fans;
         datalist = arrayList;
@@ -39,10 +40,10 @@ public class Following_Adapter extends RecyclerView.Adapter<Following_Adapter.Cu
     }
 
     @Override
-    public Following_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public FollowingAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_following, viewGroup, false);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        Following_Adapter.CustomViewHolder viewHolder = new Following_Adapter.CustomViewHolder(view);
+        FollowingAdapter.CustomViewHolder viewHolder = new FollowingAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -71,7 +72,7 @@ public class Following_Adapter extends RecyclerView.Adapter<Following_Adapter.Cu
             action_txt = view.findViewById(R.id.action_txt);
         }
 
-        public void bind(final int pos, final Following_Get_Set item, final Following_Adapter.OnItemClickListener listener) {
+        public void bind(final int pos, final Following item, final FollowingAdapter.OnItemClickListener listener) {
 
 
             mainlayout.setOnClickListener(new View.OnClickListener() {
@@ -91,10 +92,10 @@ public class Following_Adapter extends RecyclerView.Adapter<Following_Adapter.Cu
     }
 
     @Override
-    public void onBindViewHolder(final Following_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final FollowingAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
 
-        Following_Get_Set item = datalist.get(i);
+        Following item = datalist.get(i);
 
         holder.user_name.setText(item.first_name + " " + item.last_name);
 

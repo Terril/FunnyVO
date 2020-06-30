@@ -1,4 +1,4 @@
-package com.funnyvo.android.SoundLists;
+package com.funnyvo.android.soundlists;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -24,11 +24,11 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
-import com.funnyvo.android.Home.Home_Get_Set;
+import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.Video_Recording.Video_Recoder_A;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -48,9 +48,9 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 
-public class VideoSound_A extends AppCompatActivity implements View.OnClickListener {
+public class VideoSoundActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Home_Get_Set item;
+    Home item;
     TextView sound_name, description_txt;
     ImageView sound_image;
 
@@ -64,7 +64,7 @@ public class VideoSound_A extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
         if (intent.hasExtra("data")) {
-            item = (Home_Get_Set) intent.getSerializableExtra("data");
+            item = (Home) intent.getSerializableExtra("data");
         }
 
         video_file = new File(Variables.app_folder + item.video_id + ".mp4");
@@ -231,7 +231,7 @@ public class VideoSound_A extends AppCompatActivity implements View.OnClickListe
             public void onDownloadComplete() {
                 Functions.cancel_determinent_loader();
                 audio_file = new File(Variables.app_folder + item.video_id + ".mp4");
-                Glide.with(VideoSound_A.this)
+                Glide.with(VideoSoundActivity.this)
                         .load(Uri.fromFile(video_file))
                         .into(sound_image);
                 Load_FFmpeg();
@@ -435,7 +435,7 @@ public class VideoSound_A extends AppCompatActivity implements View.OnClickListe
 
 
     public void Open_video_recording() {
-        Intent intent = new Intent(VideoSound_A.this, Video_Recoder_A.class);
+        Intent intent = new Intent(VideoSoundActivity.this, VideoRecoderActivity.class);
         intent.putExtra("sound_name", sound_name.getText().toString());
         intent.putExtra("sound_id", item.sound_id);
         startActivity(intent);

@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
     Context context;
     RecyclerView recyclerView;
 
-    Fragment_Callback fragment_callback;
+    FragmentCallback fragment_callback;
 
     String video_id, user_id;
 
@@ -51,7 +51,7 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
     }
 
     @SuppressLint("ValidFragment")
-    public VideoAction_F(String id, Fragment_Callback fragment_callback) {
+    public VideoAction_F(String id, FragmentCallback fragment_callback) {
         video_id = id;
         this.fragment_callback = fragment_callback;
     }

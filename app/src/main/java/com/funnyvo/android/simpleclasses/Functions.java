@@ -1,4 +1,4 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -25,7 +25,7 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.funnyvo.android.Comments.Comment_Get_Set;
+import com.funnyvo.android.comments.datamodel.Comments;
 import com.funnyvo.android.R;
 import com.gmail.samehadar.iosdialog.CamomileSpinner;
 import com.googlecode.mp4parser.authoring.Track;
@@ -281,7 +281,7 @@ public class Functions {
 
     public static void Call_Api_For_like_video(final Activity activity,
                                                String video_id, String action,
-                                               final API_CallBack api_callBack) {
+                                               final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -304,7 +304,7 @@ public class Functions {
     }
 
 
-    public static void Call_Api_For_Send_Comment(final Activity activity, String video_id, String comment, final API_CallBack api_callBack) {
+    public static void Call_Api_For_Send_Comment(final Activity activity, String video_id, String comment, final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -320,7 +320,7 @@ public class Functions {
             @Override
             public void Response(String resp) {
 
-                ArrayList<Comment_Get_Set> arrayList = new ArrayList<>();
+                ArrayList<Comments> arrayList = new ArrayList<>();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -328,7 +328,7 @@ public class Functions {
                         JSONArray msgArray = response.getJSONArray("msg");
                         for (int i = 0; i < msgArray.length(); i++) {
                             JSONObject itemdata = msgArray.optJSONObject(i);
-                            Comment_Get_Set item = new Comment_Get_Set();
+                            Comments item = new Comments();
                             item.fb_id = itemdata.optString("fb_id");
 
                             JSONObject user_info = itemdata.optJSONObject("user_info");
@@ -362,7 +362,7 @@ public class Functions {
 
     }
 
-    public static void Call_Api_For_get_Comment(final Activity activity, String video_id, final API_CallBack api_callBack) {
+    public static void Call_Api_For_get_Comment(final Activity activity, String video_id, final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -374,7 +374,7 @@ public class Functions {
         ApiRequest.Call_Api(activity, Variables.showVideoComments, parameters, new Callback() {
             @Override
             public void Response(String resp) {
-                ArrayList<Comment_Get_Set> arrayList = new ArrayList<>();
+                ArrayList<Comments> arrayList = new ArrayList<>();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -382,7 +382,7 @@ public class Functions {
                         JSONArray msgArray = response.getJSONArray("msg");
                         for (int i = 0; i < msgArray.length(); i++) {
                             JSONObject itemdata = msgArray.optJSONObject(i);
-                            Comment_Get_Set item = new Comment_Get_Set();
+                            Comments item = new Comments();
                             item.fb_id = itemdata.optString("fb_id");
 
                             JSONObject user_info = itemdata.optJSONObject("user_info");
@@ -437,7 +437,7 @@ public class Functions {
              String fb_id,
              String followed_fb_id,
              String status,
-             final API_CallBack api_callBack) {
+             final ApiCallBack api_callBack) {
 
         Functions.Show_loader(activity, false, false);
 
@@ -480,7 +480,7 @@ public class Functions {
     public static void Call_Api_For_Get_User_data
             (final Activity activity,
              String fb_id,
-             final API_CallBack api_callBack) {
+             final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -519,7 +519,7 @@ public class Functions {
     public static void Call_Api_For_Delete_Video
             (final Activity activity,
              String video_id,
-             final API_CallBack api_callBack) {
+             final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {

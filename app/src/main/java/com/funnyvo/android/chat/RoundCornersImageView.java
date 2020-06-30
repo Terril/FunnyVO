@@ -1,4 +1,4 @@
-package com.funnyvo.android.Chat;
+package com.funnyvo.android.chat;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

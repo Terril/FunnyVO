@@ -1,6 +1,6 @@
-package com.funnyvo.android.Video_Recording.GalleryVideos;
+package com.funnyvo.android.videorecording.galleryvideos.datamodel;
 
-public class GalleryVideo_Get_Set {
+public class GalleryVideo {
     String video_path,video_time;
     long video_duration_ms;
 }

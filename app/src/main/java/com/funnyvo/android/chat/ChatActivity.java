@@ -1,4 +1,4 @@
-package com.funnyvo.android.Chat;
+package com.funnyvo.android.chat;
 
 import android.Manifest;
 import android.app.Activity;
@@ -53,13 +53,14 @@ import com.downloader.OnProgressListener;
 import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
-import com.funnyvo.android.Chat.Audio.Play_Audio_F;
-import com.funnyvo.android.Chat.Audio.SendAudio;
+import com.funnyvo.android.chat.audio.PlayAudioFragment;
+import com.funnyvo.android.chat.audio.SendAudio;
 import com.funnyvo.android.R;
-import com.funnyvo.android.See_Full_Image_F;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.SeeFullImageFragment;
+import com.funnyvo.android.chat.datamodel.Chat;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.giphy.sdk.core.models.Media;
 import com.giphy.sdk.core.models.enums.MediaType;
 import com.giphy.sdk.core.network.api.CompletionHandler;
@@ -101,8 +102,7 @@ import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
-
-public class Chat_Activity extends Fragment {
+public class ChatActivity extends Fragment {
 
     DatabaseReference rootref;
     String senderid = "";
@@ -120,7 +120,7 @@ public class Chat_Activity extends Fragment {
     private DatabaseReference receive_typing_indication;
     RecyclerView chatrecyclerview;
     TextView user_name;
-    private List<Chat_GetSet> mChats = new ArrayList<>();
+    private List<Chat> mChats = new ArrayList<>();
     ChatAdapter mAdapter;
     ProgressBar p_bar;
 
@@ -223,7 +223,7 @@ public class Chat_Activity extends Fragment {
         // OverScrollDecoratorHelper.setUpOverScroll(chatrecyclerview, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
         mAdapter = new ChatAdapter(mChats, senderid, context, new ChatAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Chat_GetSet item, View v) {
+            public void onItemClick(Chat item, View v) {
 
                 if (item.getType().equals("image"))
                     OpenfullsizeImage(item);
@@ -248,7 +248,7 @@ public class Chat_Activity extends Fragment {
 
         }, new ChatAdapter.OnLongClickListener() {
             @Override
-            public void onLongclick(Chat_GetSet item, View view) {
+            public void onLongclick(Chat item, View view) {
                 if (view.getId() == R.id.msgtxt) {
                     if (senderid.equals(item.getSender_id()) && istodaymessage(item.getTimestamp()))
                         delete_Message(item);
@@ -292,9 +292,9 @@ public class Chat_Activity extends Fragment {
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    ArrayList<Chat_GetSet> arrayList = new ArrayList<>();
+                                    ArrayList<Chat> arrayList = new ArrayList<>();
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        Chat_GetSet item = snapshot.getValue(Chat_GetSet.class);
+                                        Chat item = snapshot.getValue(Chat.class);
                                         arrayList.add(item);
                                     }
                                     for (int i = arrayList.size() - 2; i >= 0; i--) {
@@ -489,7 +489,7 @@ public class Chat_Activity extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 try {
-                    Chat_GetSet model = dataSnapshot.getValue(Chat_GetSet.class);
+                    Chat model = dataSnapshot.getValue(Chat.class);
                     mChats.add(model);
                     mAdapter.notifyDataSetChanged();
                     chatrecyclerview.scrollToPosition(mChats.size() - 1);
@@ -506,7 +506,7 @@ public class Chat_Activity extends Fragment {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
 
                     try {
-                        Chat_GetSet model = dataSnapshot.getValue(Chat_GetSet.class);
+                        Chat model = dataSnapshot.getValue(Chat.class);
 
                         for (int i = mChats.size() - 1; i >= 0; i--) {
                             if (mChats.get(i).getTimestamp().equals(dataSnapshot.child("timestamp").getValue())) {
@@ -674,7 +674,7 @@ public class Chat_Activity extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
 
 
-                        Chat_Activity.SendPushNotification(getActivity(), Variables.user_name, message,
+                        ChatActivity.SendPushNotification(getActivity(), Variables.user_name, message,
                                 Variables.user_pic,
                                 token, Receiverid, senderid);
 
@@ -774,7 +774,7 @@ public class Chat_Activity extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 
-                                        Chat_Activity.SendPushNotification(getActivity(), Variables.user_name, "Send an Image....",
+                                        ChatActivity.SendPushNotification(getActivity(), Variables.user_name, "Send an Image....",
                                                 Variables.user_pic,
                                                 token, Receiverid, senderid);
 
@@ -855,7 +855,7 @@ public class Chat_Activity extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        Chat_Activity.SendPushNotification(getActivity(), Variables.user_name, "Send an gif image....",
+                        ChatActivity.SendPushNotification(getActivity(), Variables.user_name, "Send an gif image....",
                                 Variables.user_pic,
                                 token, Receiverid, senderid);
 
@@ -964,7 +964,7 @@ public class Chat_Activity extends Fragment {
     }
 
 
-    public void download_audio(final ProgressBar p_bar, Chat_GetSet item) {
+    public void download_audio(final ProgressBar p_bar, Chat item) {
         p_bar.setVisibility(View.VISIBLE);
         int downloadId = PRDownloader.download(item.getPic_url(), direct.getPath(), item.getChat_id() + ".mp3")
                 .build()
@@ -1010,19 +1010,19 @@ public class Chat_Activity extends Fragment {
 
     //this method will get the big size of image in private chat
     public void OpenAudio(String path) {
-        Play_Audio_F play_audio_f = new Play_Audio_F();
+        PlayAudioFragment play_audio_fragment = new PlayAudioFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         Bundle args = new Bundle();
         args.putString("path", path);
-        play_audio_f.setArguments(args);
+        play_audio_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.Chat_F, play_audio_f).commit();
+        transaction.replace(R.id.Chat_F, play_audio_fragment).commit();
 
     }
 
 
     // this is the delete message diloge which will show after long press in chat message
-    private void delete_Message(final Chat_GetSet chat_getSet) {
+    private void delete_Message(final Chat chat_) {
 
         final CharSequence[] options = {"Delete this message", "Cancel"};
 
@@ -1037,7 +1037,7 @@ public class Chat_Activity extends Fragment {
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Delete this message")) {
-                    update_message(chat_getSet);
+                    update_message(chat_);
 
                 } else if (options[item].equals("Cancel")) {
 
@@ -1055,7 +1055,7 @@ public class Chat_Activity extends Fragment {
 
 
     // we will update the privious message means we will tells the other user that we have seen your message
-    public void update_message(Chat_GetSet item) {
+    public void update_message(Chat item) {
         final String current_user_ref = "chat" + "/" + senderid + "-" + Receiverid;
         final String chat_user_ref = "chat" + "/" + Receiverid + "-" + senderid;
 
@@ -1574,8 +1574,8 @@ public class Chat_Activity extends Fragment {
 
 
     //this method will get the big size of image in private chat
-    public void OpenfullsizeImage(Chat_GetSet item) {
-        See_Full_Image_F see_image_f = new See_Full_Image_F();
+    public void OpenfullsizeImage(Chat item) {
+        SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         Bundle args = new Bundle();
@@ -1589,7 +1589,7 @@ public class Chat_Activity extends Fragment {
 
 
     // this is related with the list of Gifs that is show in the list below
-    Gif_Adapter gif_adapter;
+    GifAdapter gif_adapter;
     final ArrayList<String> url_list = new ArrayList<>();
     RecyclerView gips_list;
     GPHApi client = new GPHApiClient(Variables.gif_api_key1);
@@ -1598,7 +1598,7 @@ public class Chat_Activity extends Fragment {
         url_list.clear();
         gips_list = view.findViewById(R.id.gif_recylerview);
         gips_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        gif_adapter = new Gif_Adapter(context, url_list, new Gif_Adapter.OnItemClickListener() {
+        gif_adapter = new GifAdapter(context, url_list, new GifAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String item) {
                 SendGif(item);

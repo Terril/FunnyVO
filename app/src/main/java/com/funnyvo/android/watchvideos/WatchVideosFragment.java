@@ -1,4 +1,4 @@
-package com.funnyvo.android.WatchVideos;
+package com.funnyvo.android.watchvideos;
 
 
 import android.Manifest;
@@ -56,15 +56,15 @@ import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
 import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.API_CallBack;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Data_Send;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.SoundLists.VideoSound_A;
-import com.funnyvo.android.Taged.Taged_Videos_F;
+import com.funnyvo.android.simpleclasses.ApiCallBack;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.FragmentDataSend;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.soundlists.VideoSoundActivity;
+import com.funnyvo.android.taged.TagedVideosFragment;
 import com.funnyvo.android.VideoAction.VideoAction_F;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -97,8 +97,8 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 
-public class WatchVideos_F extends AppCompatActivity implements Player.EventListener,
-        KeyboardHeightObserver, View.OnClickListener, Fragment_Data_Send {
+public class WatchVideosFragment extends AppCompatActivity implements Player.EventListener,
+        KeyboardHeightObserver, View.OnClickListener, FragmentDataSend {
 
     Context context;
 
@@ -108,7 +108,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
     int currentPage = -1;
     LinearLayoutManager layoutManager;
 
-    Watch_Videos_Adapter adapter;
+    WatchVideosAdapter adapter;
 
     ProgressBar p_bar;
 
@@ -125,7 +125,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
     String video_id;
     String link;
 
-    public WatchVideos_F() {
+    public WatchVideosFragment() {
 
     }
 
@@ -387,7 +387,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
         snapHelper.attachToRecyclerView(recyclerView);
 
 
-        adapter = new Watch_Videos_Adapter(context, data_list, new Watch_Videos_Adapter.OnItemClickListener() {
+        adapter = new WatchVideosAdapter(context, data_list, new WatchVideosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int postion, final Home item, View view) {
 
@@ -413,7 +413,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
 
                     case R.id.shared_layout:
 
-                        final VideoAction_F fragment = new VideoAction_F(item.video_id, new Fragment_Callback() {
+                        final VideoAction_F fragment = new VideoAction_F(item.video_id, new FragmentCallback() {
                             @Override
                             public void Response(Bundle bundle) {
 
@@ -422,8 +422,8 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
                                 }
                                 if (bundle.getString("action").equals("delete")) {
 
-                                    Functions.Show_loader(WatchVideos_F.this, false, false);
-                                    Functions.Call_Api_For_Delete_Video(WatchVideos_F.this, item.video_id, new API_CallBack() {
+                                    Functions.Show_loader(WatchVideosFragment.this, false, false);
+                                    Functions.Call_Api_For_Delete_Video(WatchVideosFragment.this, item.video_id, new ApiCallBack() {
                                         @Override
                                         public void ArrayData(ArrayList arrayList) {
 
@@ -460,7 +460,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                             if (check_permissions()) {
-                                Intent intent = new Intent(WatchVideos_F.this, VideoSound_A.class);
+                                Intent intent = new Intent(WatchVideosFragment.this, VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
                             }
@@ -671,7 +671,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
         soundimage.startAnimation(aniRotate);
 
         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-            Functions.Call_Api_For_update_view(WatchVideos_F.this, item.video_id);
+            Functions.Call_Api_For_update_view(WatchVideosFragment.this, item.video_id);
 
 
         Call_Api_For_Singlevideos(currentPage);
@@ -750,7 +750,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
         adapter.notifyDataSetChanged();
 
 
-        Functions.Call_Api_For_like_video(this, home_.video_id, action, new API_CallBack() {
+        Functions.Call_Api_For_like_video(this, home_.video_id, action, new ApiCallBack() {
 
             @Override
             public void ArrayData(ArrayList arrayList) {
@@ -805,7 +805,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
     // this will open the comment screen
     public void OpenComment(Home item) {
         int comment_count = Integer.parseInt(item.video_comment_count);
-        Fragment_Data_Send fragment_data_send = this;
+        FragmentDataSend fragment_data_send = this;
 
         CommentFragment comment_fragment = new CommentFragment(comment_count, fragment_data_send);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -830,7 +830,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
 
         } else {
 
-            ProfileFragment profile_fragment = new ProfileFragment(new Fragment_Callback() {
+            ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void Response(Bundle bundle) {
 
@@ -864,7 +864,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
         send_progress.setVisibility(View.VISIBLE);
         send_btn.setVisibility(View.GONE);
 
-        Functions.Call_Api_For_Send_Comment(this, video_id, comment, new API_CallBack() {
+        Functions.Call_Api_For_Send_Comment(this, video_id, comment, new ApiCallBack() {
             @Override
             public void ArrayData(ArrayList arrayList) {
 
@@ -897,14 +897,14 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
     // this will open the profile of user which have uploaded the currenlty running video
     private void OpenHashtag(String tag) {
 
-        Taged_Videos_F taged_videos_f = new Taged_Videos_F();
+        TagedVideosFragment taged_videos_fragment = new TagedVideosFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
         args.putString("tag", tag);
-        taged_videos_f.setArguments(args);
+        taged_videos_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.WatchVideo_F, taged_videos_f).commit();
+        transaction.replace(R.id.WatchVideo_F, taged_videos_fragment).commit();
 
     }
 
@@ -929,15 +929,15 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Save Video")) {
-                    if (Functions.Checkstoragepermision(WatchVideos_F.this))
+                    if (Functions.Checkstoragepermision(WatchVideosFragment.this))
                         Save_Video(home_);
 
                 } else if (options[item].equals("Delete Video")) {
                     if (Variables.is_secure_info) {
                         Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show();
                     } else {
-                        Functions.Show_loader(WatchVideos_F.this, false, false);
-                        Functions.Call_Api_For_Delete_Video(WatchVideos_F.this, home_.video_id, new API_CallBack() {
+                        Functions.Show_loader(WatchVideosFragment.this, false, false);
+                        Functions.Call_Api_For_Delete_Video(WatchVideosFragment.this, home_.video_id, new ApiCallBack() {
                             @Override
                             public void ArrayData(ArrayList arrayList) {
 
@@ -1099,7 +1099,7 @@ public class WatchVideos_F extends AppCompatActivity implements Player.EventList
     }
 
     public void Scan_file(Home item) {
-        MediaScannerConnection.scanFile(WatchVideos_F.this,
+        MediaScannerConnection.scanFile(WatchVideosFragment.this,
                 new String[]{Variables.app_folder + item.video_id + ".mp4"},
                 null,
                 new MediaScannerConnection.OnScanCompletedListener() {

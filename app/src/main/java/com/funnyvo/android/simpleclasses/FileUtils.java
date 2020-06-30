@@ -1,4 +1,4 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
 import android.content.ContentUris;
 import android.content.Context;

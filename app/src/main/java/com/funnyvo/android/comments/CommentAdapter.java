@@ -1,4 +1,4 @@
-package com.funnyvo.android.Comments;
+package com.funnyvo.android.comments;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.comments.datamodel.Comments;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -18,20 +19,20 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Comments_Adapter extends RecyclerView.Adapter<Comments_Adapter.CustomViewHolder> {
+public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CustomViewHolder> {
 
     public Context context;
-    private Comments_Adapter.OnItemClickListener listener;
-    private ArrayList<Comment_Get_Set> dataList;
+    private CommentAdapter.OnItemClickListener listener;
+    private ArrayList<Comments> dataList;
 
 
     // meker the onitemclick listener interface and this interface is impliment in Chatinbox activity
     // for to do action when user click on item
     public interface OnItemClickListener {
-        void onItemClick(int positon, Comment_Get_Set item, View view);
+        void onItemClick(int positon, Comments item, View view);
     }
 
-    public Comments_Adapter(Context context, ArrayList<Comment_Get_Set> dataList, Comments_Adapter.OnItemClickListener listener) {
+    public CommentAdapter(Context context, ArrayList<Comments> dataList, CommentAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
@@ -39,10 +40,10 @@ public class Comments_Adapter extends RecyclerView.Adapter<Comments_Adapter.Cust
     }
 
     @Override
-    public Comments_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public CommentAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_comment_layout, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        Comments_Adapter.CustomViewHolder viewHolder = new Comments_Adapter.CustomViewHolder(view);
+        CommentAdapter.CustomViewHolder viewHolder = new CommentAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -53,8 +54,8 @@ public class Comments_Adapter extends RecyclerView.Adapter<Comments_Adapter.Cust
 
 
     @Override
-    public void onBindViewHolder(final Comments_Adapter.CustomViewHolder holder, final int i) {
-        final Comment_Get_Set item = dataList.get(i);
+    public void onBindViewHolder(final CommentAdapter.CustomViewHolder holder, final int i) {
+        final Comments item = dataList.get(i);
 
 
         holder.username.setText(item.first_name + " " + item.last_name);
@@ -93,7 +94,7 @@ public class Comments_Adapter extends RecyclerView.Adapter<Comments_Adapter.Cust
 
         }
 
-        public void bind(final int postion, final Comment_Get_Set item, final Comments_Adapter.OnItemClickListener listener) {
+        public void bind(final int postion, final Comments item, final CommentAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

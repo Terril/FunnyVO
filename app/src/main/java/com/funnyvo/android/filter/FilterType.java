@@ -1,4 +1,4 @@
-package com.funnyvo.android.Filter;
+package com.funnyvo.android.filter;
 
 /**
  * Created by AQEEL on 3/24/2019.

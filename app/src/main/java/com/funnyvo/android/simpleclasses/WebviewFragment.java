@@ -1,4 +1,4 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
 
 import android.content.Context;
@@ -20,7 +20,7 @@ import com.funnyvo.android.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Webview_F extends RootFragment {
+public class WebviewFragment extends RootFragment {
 
     View view;
     Context context;
@@ -31,7 +31,7 @@ public class Webview_F extends RootFragment {
     String title;
     TextView title_txt;
 
-    public Webview_F() {
+    public WebviewFragment() {
 
     }
 

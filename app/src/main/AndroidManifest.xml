@@ -4,7 +4,7 @@
     package="com.funnyvo.android">
 
     <application
-        android:name=".SimpleClasses.FunnyVO"
+        android:name=".simpleclasses.FunnyVO"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,23 +17,23 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="allowBackup,supportsRtl">
-        <activity android:name=".SoundLists.VideoSound_A" />
+        <activity android:name=".soundlists.VideoSoundActivity" />
         <activity
-            android:name=".Video_Recording.GalleryVideos.GalleryVideos_A"
+            android:name=".videorecording.galleryvideos.GalleryVideosActivity"
             android:screenOrientation="portrait"
             android:theme="@style/white_status"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Video_Recording.GallerySelectedVideo.GallerySelectedVideo_A"
+            android:name=".videorecording.galleryselectedvideo.GallerySelectedVideoActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Accounts.Login_A"
+            android:name=".accounts.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Splash_A"
+            android:name=".SplashActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -43,15 +43,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Main_Menu.MainMenuActivity"
+            android:name=".main_menu.MainMenuActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".WatchVideos.WatchVideos_F"
-            android:parentActivityName=".Main_Menu.MainMenuActivity"
+            android:name=".watchvideos.WatchVideosFragment"
+            android:parentActivityName=".main_menu.MainMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
@@ -70,7 +70,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Main_Menu.MainMenuActivity" />
+                android:value=".main_menu.MainMenuActivity" />
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -89,20 +89,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Video_Recording.Video_Recoder_A"
+            android:name=".videorecording.VideoRecoderActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Video_Recording.Preview_Video_A"
+            android:name=".videorecording.PreviewVideoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/black_status"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Video_Recording.Post_Video_A"
+            android:name=".videorecording.PostVideoActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".SoundLists.SoundList_Main_A"
+            android:name=".soundlists.SoundListMainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 
@@ -129,14 +129,14 @@
         </provider>
 
         <service
-            android:name=".Services.Upload_Service"
+            android:name=".services.UploadService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="startservice" />
             </intent-filter>
         </service>
-        <service android:name=".Firebase_Notification.Notification_Receive">
+        <service android:name=".firebase_notification.NotificationReceive">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

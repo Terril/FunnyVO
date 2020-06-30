@@ -1,4 +1,4 @@
-package com.funnyvo.android.Profile.Liked_Videos;
+package com.funnyvo.android.profile.liked_videos;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,13 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.funnyvo.android.Home.Home_Get_Set;
-import com.funnyvo.android.Profile.MyVideos_Adapter;
+import com.funnyvo.android.home.datamodel.Home;
+import com.funnyvo.android.profile.MyVideosAdapter;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.WatchVideos.WatchVideos_F;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.watchvideos.WatchVideosFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +31,11 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Liked_Video_F extends Fragment {
+public class LikedVideoFragment extends Fragment {
 
     public static RecyclerView recyclerView;
-    ArrayList<Home_Get_Set> data_list;
-    MyVideos_Adapter adapter;
+    ArrayList<Home> data_list;
+    MyVideosAdapter adapter;
 
     View view;
     Context context;
@@ -44,12 +44,12 @@ public class Liked_Video_F extends Fragment {
 
     RelativeLayout no_data_layout;
 
-    public Liked_Video_F() {
+    public LikedVideoFragment() {
         // Required empty public constructor
     }
 
     @SuppressLint("ValidFragment")
-    public Liked_Video_F(String user_id) {
+    public LikedVideoFragment(String user_id) {
         this.user_id = user_id;
     }
 
@@ -68,9 +68,9 @@ public class Liked_Video_F extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         data_list = new ArrayList<>();
-        adapter = new MyVideos_Adapter(context, data_list, new MyVideos_Adapter.OnItemClickListener() {
+        adapter = new MyVideosAdapter(context, data_list, new MyVideosAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int postion, Home_Get_Set item, View view) {
+            public void onItemClick(int postion, Home item, View view) {
 
                 OpenWatchVideo(postion);
 
@@ -137,7 +137,7 @@ public class Liked_Video_F extends Fragment {
                     for (int i = 0; i < user_videos.length(); i++) {
                         JSONObject itemdata = user_videos.optJSONObject(i);
 
-                        Home_Get_Set item = new Home_Get_Set();
+                        Home item = new Home();
                         item.fb_id = itemdata.optString("fb_id");
 
                         item.first_name = user_info.optString("first_name");
@@ -185,7 +185,7 @@ public class Liked_Video_F extends Fragment {
     }
 
     private void OpenWatchVideo(int postion) {
-        Intent intent = new Intent(getActivity(), WatchVideos_F.class);
+        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);

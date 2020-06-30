@@ -4,7 +4,7 @@
     android:layout_height="120dp"
     android:gravity="center">
 
-    <com.funnyvo.android.Chat.RoundCornersImageView
+    <com.funnyvo.android.chat.RoundCornersImageView
         android:layout_width="100dp"
         android:layout_height="60dp"
         android:id="@+id/gif_image"

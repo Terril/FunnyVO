@@ -1,4 +1,4 @@
-package com.funnyvo.android.Firebase_Notification;
+package com.funnyvo.android.firebase_notification;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -26,11 +26,11 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.funnyvo.android.Chat.Chat_Activity;
-import com.funnyvo.android.Main_Menu.MainMenuActivity;
-import com.funnyvo.android.Main_Menu.MainMenuFragment;
+import com.funnyvo.android.chat.ChatActivity;
+import com.funnyvo.android.main_menu.MainMenuActivity;
+import com.funnyvo.android.main_menu.MainMenuFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -46,7 +46,7 @@ import java.net.URL;
  * Created by AQEEL on 5/22/2018.
  */
 
-public class Notification_Receive extends FirebaseMessagingService {
+public class NotificationReceive extends FirebaseMessagingService {
 
     SharedPreferences sharedPreferences;
     String pic;
@@ -77,7 +77,7 @@ public class Notification_Receive extends FirebaseMessagingService {
             receiverid = remoteMessage.getData().get("receiverid");
             action_type = remoteMessage.getData().get("action_type");
 
-            if (!Chat_Activity.senderid_for_check_notification.equals(senderid)) {
+            if (!ChatActivity.senderid_for_check_notification.equals(senderid)) {
 
                 sendNotification sendNotification = new sendNotification(this);
                 sendNotification.execute(pic);
@@ -278,7 +278,7 @@ public class Notification_Receive extends FirebaseMessagingService {
                 tab3.select();
             }
 
-            Chat_Activity chat_activity = new Chat_Activity();
+            ChatActivity chat_activity = new ChatActivity();
             FragmentTransaction transaction = MainMenuActivity.mainMenuActivity.getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
 

@@ -13,7 +13,7 @@
          android:layout_height="match_parent">
 
 
-        <com.funnyvo.android.Main_Menu.Custom_ViewPager
+        <com.funnyvo.android.main_menu.CustomViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

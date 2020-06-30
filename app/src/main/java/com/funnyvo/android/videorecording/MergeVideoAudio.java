@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording;
+package com.funnyvo.android.videorecording;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -29,14 +29,14 @@ import java.util.List;
  */
 
 // this is the class which will add the selected soung to the created video
-public class Merge_Video_Audio extends AsyncTask<String, String, String> {
+public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     ProgressDialog progressDialog;
     Context context;
 
     String audio, video, output, draft_file;
 
-    public Merge_Video_Audio(Context context) {
+    public MergeVideoAudio(Context context) {
         this.context = context;
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please Wait...");
@@ -78,7 +78,7 @@ public class Merge_Video_Audio extends AsyncTask<String, String, String> {
 
 
     public void Go_To_preview_Activity() {
-        Intent intent = new Intent(context, Preview_Video_A.class);
+        Intent intent = new Intent(context, PreviewVideoActivity.class);
         intent.putExtra("path", Variables.outputfile2);
         intent.putExtra("draft_file", draft_file);
         context.startActivity(intent);

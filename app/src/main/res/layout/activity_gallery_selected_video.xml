@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Video_Recording.GallerySelectedVideo.GallerySelectedVideo_A">
+    tools:context=".videorecording.galleryselectedvideo.GallerySelectedVideoActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

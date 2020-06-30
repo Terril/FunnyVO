@@ -1,4 +1,4 @@
-package com.funnyvo.android.Main_Menu;
+package com.funnyvo.android.main_menu;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.funnyvo.android.Chat.Chat_Activity;
+import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
@@ -79,7 +79,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Chat_Activity chat_activity = new Chat_Activity();
+                        ChatActivity chat_activity = new ChatActivity();
                         FragmentTransaction transaction = MainMenuActivity.mainMenuActivity.getSupportFragmentManager().beginTransaction();
                         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
 

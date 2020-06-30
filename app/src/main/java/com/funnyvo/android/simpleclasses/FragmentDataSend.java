@@ -1,6 +1,6 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
-public interface Fragment_Data_Send {
+public interface FragmentDataSend {
 
     void onDataSent(String yourData);
 }

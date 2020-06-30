@@ -1,7 +1,7 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
 import android.view.View;
 
-public interface Adapter_Click_Listener {
+public interface AdapterClickListener {
     void onItemClick(View view, int pos, Object object);
 }

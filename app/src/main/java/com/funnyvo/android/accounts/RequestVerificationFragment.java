@@ -1,4 +1,4 @@
-package com.funnyvo.android.Accounts;
+package com.funnyvo.android.accounts;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,13 +24,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.FileUtils;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FileUtils;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,13 +45,12 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
-import static com.funnyvo.android.Main_Menu.MainMenuFragment.hasPermissions;
+import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
-public class Request_Varification_F extends RootFragment implements View.OnClickListener {
+public class RequestVerificationFragment extends RootFragment implements View.OnClickListener {
 
     View view;
     Context context;
-
     EditText username_edit, fullname_edit;
     TextView file_name_txt;
     String base_64;

@@ -1,4 +1,4 @@
-package com.funnyvo.android.SoundLists;
+package com.funnyvo.android.soundlists;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,10 +28,10 @@ import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -55,11 +55,11 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
-public class Discover_SoundList_F extends RootFragment implements Player.EventListener {
+public class DiscoverSoundListFragment extends RootFragment implements Player.EventListener {
 
     RecyclerView listview;
-    Sounds_Adapter adapter;
-    ArrayList<Sound_catagory_Get_Set> datalist;
+    SoundAdapter adapter;
+    ArrayList<SoundCategory> datalist;
 
     DownloadRequest prDownloader;
     static boolean active = false;
@@ -113,9 +113,9 @@ public class Discover_SoundList_F extends RootFragment implements Player.EventLi
 
     public void Set_adapter() {
 
-        adapter = new Sounds_Adapter(context, datalist, new Sounds_Adapter.OnItemClickListener() {
+        adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Sounds_GetSet item) {
+            public void onItemClick(View view, int postion, Sounds item) {
 
                 Log.d("resp", item.acc_path);
 
@@ -186,12 +186,12 @@ public class Discover_SoundList_F extends RootFragment implements Player.EventLi
 
                     JSONArray section_array = object.optJSONArray("sections_sounds");
 
-                    ArrayList<Sounds_GetSet> sound_list = new ArrayList<>();
+                    ArrayList<Sounds> sound_list = new ArrayList<>();
 
                     for (int j = 0; j < section_array.length(); j++) {
                         JSONObject itemdata = section_array.optJSONObject(j);
 
-                        Sounds_GetSet item = new Sounds_GetSet();
+                        Sounds item = new Sounds();
 
                         item.id = itemdata.optString("id");
 
@@ -209,11 +209,11 @@ public class Discover_SoundList_F extends RootFragment implements Player.EventLi
                         sound_list.add(item);
                     }
 
-                    Sound_catagory_Get_Set sound_catagory_get_set = new Sound_catagory_Get_Set();
-                    sound_catagory_get_set.catagory = object.optString("section_name");
-                    sound_catagory_get_set.sound_list = sound_list;
+                    SoundCategory sound_category = new SoundCategory();
+                    sound_category.catagory = object.optString("section_name");
+                    sound_category.sound_list = sound_list;
 
-                    datalist.add(sound_catagory_get_set);
+                    datalist.add(sound_category);
 
                 }
 
@@ -245,7 +245,7 @@ public class Discover_SoundList_F extends RootFragment implements Player.EventLi
     SimpleExoPlayer player;
     String previous_url = "none";
 
-    public void playaudio(View view, final Sounds_GetSet item) {
+    public void playaudio(View view, final Sounds item) {
         previous_view = view;
 
         if (previous_url.equals(item.acc_path)) {
@@ -402,7 +402,7 @@ public class Discover_SoundList_F extends RootFragment implements Player.EventLi
     }
 
 
-    private void Call_Api_For_Fav_sound(int pos, final Sounds_GetSet item) {
+    private void Call_Api_For_Fav_sound(int pos, final Sounds item) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -429,7 +429,7 @@ public class Discover_SoundList_F extends RootFragment implements Player.EventLi
                     item.fav = "1";
 
                 for (int i = 0; i < datalist.size(); i++) {
-                    Sound_catagory_Get_Set catagory_get_set = datalist.get(i);
+                    SoundCategory catagory_get_set = datalist.get(i);
                     if (catagory_get_set.sound_list.contains(item)) {
                         int index = catagory_get_set.sound_list.indexOf(item);
                         catagory_get_set.sound_list.remove(item);

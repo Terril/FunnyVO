@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/Profile_F"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Profile.Profile_Tab_F">
+    tools:context=".profile.ProfileTabFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

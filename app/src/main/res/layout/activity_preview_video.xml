@@ -7,7 +7,7 @@
 >
 
 
-<com.funnyvo.android.Video_Recording.MovieWrapperView
+<com.funnyvo.android.videorecording.MovieWrapperView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_movie_wrapper"/>

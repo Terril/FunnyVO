@@ -1,4 +1,4 @@
-package com.funnyvo.android.Comments;
+package com.funnyvo.android.comments;
 
 
 import android.annotation.SuppressLint;
@@ -20,13 +20,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.API_CallBack;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Fragment_Data_Send;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.ApiCallBack;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.FragmentDataSend;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.comments.datamodel.Comments;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,16 +37,16 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Comment_F extends RootFragment {
+public class CommentFragment extends RootFragment {
 
     View view;
     Context context;
 
     RecyclerView recyclerView;
 
-    Comments_Adapter adapter;
+    CommentAdapter adapter;
 
-    ArrayList<Comment_Get_Set> data_list;
+    ArrayList<Comments> data_list;
 
     String video_id;
     String user_id;
@@ -60,14 +61,14 @@ public class Comment_F extends RootFragment {
 
     public static int comment_count = 0;
 
-    public Comment_F() {
+    public CommentFragment() {
 
     }
 
-    Fragment_Data_Send fragment_data_send;
+    FragmentDataSend fragment_data_send;
 
     @SuppressLint("ValidFragment")
-    public Comment_F(int count, Fragment_Data_Send fragment_data_send) {
+    public CommentFragment(int count, FragmentDataSend fragment_data_send) {
         comment_count = count;
         this.fragment_data_send = fragment_data_send;
     }
@@ -115,9 +116,9 @@ public class Comment_F extends RootFragment {
 
 
         data_list = new ArrayList<>();
-        adapter = new Comments_Adapter(context, data_list, new Comments_Adapter.OnItemClickListener() {
+        adapter = new CommentAdapter(context, data_list, new CommentAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int postion, Comment_Get_Set item, View view) {
+            public void onItemClick(int postion, Comments item, View view) {
 
 
             }
@@ -168,11 +169,11 @@ public class Comment_F extends RootFragment {
     // this funtion will get all the comments against post
     public void Get_All_Comments() {
 
-        Functions.Call_Api_For_get_Comment(getActivity(), video_id, new API_CallBack() {
+        Functions.Call_Api_For_get_Comment(getActivity(), video_id, new ApiCallBack() {
             @Override
             public void ArrayData(ArrayList arrayList) {
-                ArrayList<Comment_Get_Set> arrayList1 = arrayList;
-                for (Comment_Get_Set item : arrayList1) {
+                ArrayList<Comments> arrayList1 = arrayList;
+                for (Comments item : arrayList1) {
                     data_list.add(item);
                 }
                 comment_count_txt.setText(data_list.size() + " comments");
@@ -197,14 +198,14 @@ public class Comment_F extends RootFragment {
     // this function will call an api to upload your comment
     public void Send_Comments(String video_id, final String comment) {
 
-        Functions.Call_Api_For_Send_Comment(getActivity(), video_id, comment, new API_CallBack() {
+        Functions.Call_Api_For_Send_Comment(getActivity(), video_id, comment, new ApiCallBack() {
             @Override
             public void ArrayData(ArrayList arrayList) {
                 send_progress.setVisibility(View.GONE);
                 send_btn.setVisibility(View.VISIBLE);
 
-                ArrayList<Comment_Get_Set> arrayList1 = arrayList;
-                for (Comment_Get_Set item : arrayList1) {
+                ArrayList<Comments> arrayList1 = arrayList;
+                for (Comments item : arrayList1) {
                     data_list.add(0, item);
                     comment_count++;
 

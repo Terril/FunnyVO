@@ -15,7 +15,7 @@
         android:id="@+id/datetxt"/>
 
 
-       <com.funnyvo.android.Chat.RoundCornersImageView
+       <com.funnyvo.android.chat.RoundCornersImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/chatimage"

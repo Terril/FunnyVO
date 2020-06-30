@@ -1,4 +1,4 @@
-package com.funnyvo.android.Chat;
+package com.funnyvo.android.chat;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
 
 import java.util.ArrayList;
 
@@ -21,16 +21,16 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Gif_Adapter extends RecyclerView.Adapter<Gif_Adapter.CustomViewHolder> {
+public class GifAdapter extends RecyclerView.Adapter<GifAdapter.CustomViewHolder> {
     public Context context;
     ArrayList<String> gif_list = new ArrayList<>();
-    private Gif_Adapter.OnItemClickListener listener;
+    private GifAdapter.OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(String item);
     }
 
-    public Gif_Adapter(Context context, ArrayList<String> urllist, Gif_Adapter.OnItemClickListener listener) {
+    public GifAdapter(Context context, ArrayList<String> urllist, GifAdapter.OnItemClickListener listener) {
         this.context = context;
         this.gif_list = urllist;
         this.listener = listener;
@@ -38,9 +38,9 @@ public class Gif_Adapter extends RecyclerView.Adapter<Gif_Adapter.CustomViewHold
     }
 
     @Override
-    public Gif_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public GifAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_gif_layout, null);
-        Gif_Adapter.CustomViewHolder viewHolder = new Gif_Adapter.CustomViewHolder(view);
+        GifAdapter.CustomViewHolder viewHolder = new GifAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -58,7 +58,7 @@ public class Gif_Adapter extends RecyclerView.Adapter<Gif_Adapter.CustomViewHold
             gif_image = view.findViewById(R.id.gif_image);
         }
 
-        public void bind(final String item, final Gif_Adapter.OnItemClickListener listener) {
+        public void bind(final String item, final GifAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,7 +74,7 @@ public class Gif_Adapter extends RecyclerView.Adapter<Gif_Adapter.CustomViewHold
 
 
     @Override
-    public void onBindViewHolder(final Gif_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final GifAdapter.CustomViewHolder holder, final int i) {
         holder.bind(gif_list.get(i), listener);
 
         Glide.with(context)

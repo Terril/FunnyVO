@@ -1,4 +1,4 @@
-package com.funnyvo.android.Chat.Audio;
+package com.funnyvo.android.chat.audio;
 
 
 import android.content.Context;
@@ -20,19 +20,17 @@ import nl.changer.audiowife.AudioWife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Play_Audio_F extends Fragment {
+public class PlayAudioFragment extends Fragment {
 
     View view;
     Context context;
     ImageButton play_btn, pause_btn;
     SeekBar seekBar;
     TextView duration_time, total_time;
-
     AudioWife audioWife;
-
     ImageButton close_btn;
 
-    public Play_Audio_F() {
+    public PlayAudioFragment() {
         // Required empty public constructor
     }
 

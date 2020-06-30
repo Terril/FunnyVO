@@ -16,31 +16,22 @@ import androidx.fragment.app.Fragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class See_Full_Image_F extends Fragment {
-
-
+public class SeeFullImageFragment extends Fragment {
     View view;
     Context context;
     ImageButton close_gallery;
-
-
     ImageView single_image;
 
     String image_url;
-
     ProgressBar p_bar;
-
-
     int width, height;
 
-    public See_Full_Image_F() {
+    public SeeFullImageFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +60,6 @@ public class See_Full_Image_F extends Fragment {
 
         single_image = view.findViewById(R.id.single_image);
 
-
         p_bar.setVisibility(View.VISIBLE);
         Picasso.with(context).load(image_url).placeholder(R.drawable.image_placeholder)
                 .into(single_image, new Callback() {
@@ -86,10 +76,8 @@ public class See_Full_Image_F extends Fragment {
                     }
                 });
 
-
         return view;
     }
-
 
 }
 

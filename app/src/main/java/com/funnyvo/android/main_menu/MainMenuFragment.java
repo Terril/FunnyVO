@@ -1,4 +1,4 @@
-package com.funnyvo.android.Main_Menu;
+package com.funnyvo.android.main_menu;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,24 +24,24 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.funnyvo.android.Accounts.Login_A;
-import com.funnyvo.android.Chat.Chat_Activity;
-import com.funnyvo.android.Discover.Discover_F;
-import com.funnyvo.android.Home.Home_F;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.OnBackPressListener;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
-import com.funnyvo.android.Notifications.Notification_F;
-import com.funnyvo.android.Profile.Profile_Tab_F;
+import com.funnyvo.android.accounts.LoginActivity;
+import com.funnyvo.android.chat.ChatActivity;
+import com.funnyvo.android.discover.DiscoverFragment;
+import com.funnyvo.android.home.HomeFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.OnBackPressListener;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
+import com.funnyvo.android.notifications.NotificationFragment;
+import com.funnyvo.android.profile.ProfileTabFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.Video_Recording.Video_Recoder_A;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainMenuFragment extends RootFragment implements View.OnClickListener {
 
     public static TabLayout tabLayout;
 
-    protected Custom_ViewPager pager;
+    protected CustomViewPager pager;
 
     private ViewPagerAdapter adapter;
     Context context;
@@ -233,7 +233,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
                 if (check_permissions()) {
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
 
-                        Intent intent = new Intent(getActivity(), Video_Recoder_A.class);
+                        Intent intent = new Intent(getActivity(), VideoRecoderActivity.class);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                     } else {
@@ -257,7 +257,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
                 } else {
 
-                    Intent intent = new Intent(getActivity(), Login_A.class);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 }
@@ -277,7 +277,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
                 } else {
 
-                    Intent intent = new Intent(getActivity(), Login_A.class);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 }
@@ -330,11 +330,11 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
             final Fragment result;
             switch (position) {
                 case 0:
-                    result = new Home_F();
+                    result = new HomeFragment();
                     break;
 
                 case 1:
-                    result = new Discover_F();
+                    result = new DiscoverFragment();
                     break;
 
                 case 2:
@@ -342,11 +342,11 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
                     break;
 
                 case 3:
-                    result = new Notification_F();
+                    result = new NotificationFragment();
                     break;
 
                 case 4:
-                    result = new Profile_Tab_F();
+                    result = new ProfileTabFragment();
                     break;
 
                 default:
@@ -512,7 +512,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
 
     public void chatFragment(String receiverid, String name, String picture) {
-        Chat_Activity chat_activity = new Chat_Activity();
+        ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
 

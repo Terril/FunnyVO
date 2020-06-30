@@ -1,4 +1,4 @@
-package com.funnyvo.android.SimpleClasses;
+package com.funnyvo.android.simpleclasses;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/4/2019.
  */
 
-public interface API_CallBack {
+public interface ApiCallBack {
 
     void ArrayData(ArrayList arrayList);
 

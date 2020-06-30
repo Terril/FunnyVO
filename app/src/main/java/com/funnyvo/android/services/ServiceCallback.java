@@ -1,4 +1,4 @@
-package com.funnyvo.android.Services;
+package com.funnyvo.android.services;
 
 /**
  * Created by AQEEL on 3/22/2019.

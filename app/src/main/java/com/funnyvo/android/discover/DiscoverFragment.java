@@ -1,4 +1,4 @@
-package com.funnyvo.android.Discover;
+package com.funnyvo.android.discover;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,14 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.funnyvo.android.Home.Home_Get_Set;
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
+import com.funnyvo.android.home.datamodel.Home;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.Search.Search_Main_F;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.WatchVideos.WatchVideos_F;
+import com.funnyvo.android.search.SearchMainFragment;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.discover.datamodel.Discover;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Discover_F extends RootFragment implements View.OnClickListener {
+public class DiscoverFragment extends RootFragment implements View.OnClickListener {
 
     View view;
     Context context;
@@ -47,13 +48,13 @@ public class Discover_F extends RootFragment implements View.OnClickListener {
 
     SwipeRefreshLayout swiperefresh;
 
-    public Discover_F() {
+    public DiscoverFragment() {
         // Required empty public constructor
     }
 
-    ArrayList<Discover_Get_Set> datalist;
+    ArrayList<Discover> datalist;
 
-    Discover_Adapter adapter;
+    DiscoverAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,9 +70,9 @@ public class Discover_F extends RootFragment implements View.OnClickListener {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new Discover_Adapter(context, datalist, new Discover_Adapter.OnItemClickListener() {
+        adapter = new DiscoverAdapter(context, datalist, new DiscoverAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(ArrayList<Home_Get_Set> datalist, int postion) {
+            public void onItemClick(ArrayList<Home> datalist, int postion) {
 
                 OpenWatchVideo(postion, datalist);
 
@@ -158,16 +159,16 @@ public class Discover_F extends RootFragment implements View.OnClickListener {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
                 for (int d = 0; d < msgArray.length(); d++) {
 
-                    Discover_Get_Set discover_get_set = new Discover_Get_Set();
+                    Discover discover = new Discover();
                     JSONObject discover_object = msgArray.optJSONObject(d);
-                    discover_get_set.title = discover_object.optString("section_name");
+                    discover.title = discover_object.optString("section_name");
 
                     JSONArray video_array = discover_object.optJSONArray("sections_videos");
 
-                    ArrayList<Home_Get_Set> video_list = new ArrayList<>();
+                    ArrayList<Home> video_list = new ArrayList<>();
                     for (int i = 0; i < video_array.length(); i++) {
                         JSONObject itemdata = video_array.optJSONObject(i);
-                        Home_Get_Set item = new Home_Get_Set();
+                        Home item = new Home();
 
 
                         JSONObject user_info = itemdata.optJSONObject("user_info");
@@ -203,14 +204,11 @@ public class Discover_F extends RootFragment implements View.OnClickListener {
                         video_list.add(item);
                     }
 
-                    discover_get_set.arrayList = video_list;
+                    discover.arrayList = video_list;
 
-                    datalist.add(discover_get_set);
-
+                    datalist.add(discover);
                 }
-
                 adapter.notifyDataSetChanged();
-
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
@@ -221,20 +219,19 @@ public class Discover_F extends RootFragment implements View.OnClickListener {
 
     }
 
-
     // When you click on any Video a new activity is open which will play the Clicked video
-    private void OpenWatchVideo(int postion, ArrayList<Home_Get_Set> data_list) {
-        Intent intent = new Intent(getActivity(), WatchVideos_F.class);
+    private void OpenWatchVideo(int postion, ArrayList<Home> data_list) {
+        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);
     }
 
     public void Open_search() {
-        Search_Main_F search_main_f = new Search_Main_F();
+        SearchMainFragment search_main_fragment = new SearchMainFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, search_main_f).commit();
+        transaction.replace(R.id.MainMenuFragment, search_main_fragment).commit();
 
     }
 

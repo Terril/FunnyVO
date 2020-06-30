@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording.GalleryVideos;
+package com.funnyvo.android.videorecording.galleryvideos;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
+import com.funnyvo.android.videorecording.galleryvideos.datamodel.GalleryVideo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,18 +21,18 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class GalleryVideos_Adapter extends RecyclerView.Adapter<GalleryVideos_Adapter.CustomViewHolder> {
+public class GalleryVideosAdapter extends RecyclerView.Adapter<GalleryVideosAdapter.CustomViewHolder> {
 
     public Context context;
-    private GalleryVideos_Adapter.OnItemClickListener listener;
-    private ArrayList<GalleryVideo_Get_Set> dataList;
+    private GalleryVideosAdapter.OnItemClickListener listener;
+    private ArrayList<GalleryVideo> dataList;
 
 
     public interface OnItemClickListener {
-        void onItemClick(int postion, GalleryVideo_Get_Set item, View view);
+        void onItemClick(int postion, GalleryVideo item, View view);
     }
 
-    public GalleryVideos_Adapter(Context context, ArrayList<GalleryVideo_Get_Set> dataList, GalleryVideos_Adapter.OnItemClickListener listener) {
+    public GalleryVideosAdapter(Context context, ArrayList<GalleryVideo> dataList, GalleryVideosAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
@@ -39,10 +40,10 @@ public class GalleryVideos_Adapter extends RecyclerView.Adapter<GalleryVideos_Ad
     }
 
     @Override
-    public GalleryVideos_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public GalleryVideosAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_galleryvideo_layout, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        GalleryVideos_Adapter.CustomViewHolder viewHolder = new GalleryVideos_Adapter.CustomViewHolder(view);
+        GalleryVideosAdapter.CustomViewHolder viewHolder = new GalleryVideosAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -62,7 +63,7 @@ public class GalleryVideos_Adapter extends RecyclerView.Adapter<GalleryVideos_Ad
             view_txt = view.findViewById(R.id.view_txt);
         }
 
-        public void bind(final int position, final GalleryVideo_Get_Set item, final GalleryVideos_Adapter.OnItemClickListener listener) {
+        public void bind(final int position, final GalleryVideo item, final GalleryVideosAdapter.OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,8 +77,8 @@ public class GalleryVideos_Adapter extends RecyclerView.Adapter<GalleryVideos_Ad
 
 
     @Override
-    public void onBindViewHolder(final GalleryVideos_Adapter.CustomViewHolder holder, final int i) {
-        final GalleryVideo_Get_Set item = dataList.get(i);
+    public void onBindViewHolder(final GalleryVideosAdapter.CustomViewHolder holder, final int i) {
+        final GalleryVideo item = dataList.get(i);
 
         holder.view_txt.setText(item.video_time);
 

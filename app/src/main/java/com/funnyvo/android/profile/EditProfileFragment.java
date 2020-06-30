@@ -1,4 +1,4 @@
-package com.funnyvo.android.Profile;
+package com.funnyvo.android.profile;
 
 
 import android.Manifest;
@@ -29,14 +29,14 @@ import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.API_CallBack;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.ApiCallBack;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -62,23 +62,23 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
-import static com.funnyvo.android.Main_Menu.MainMenuFragment.hasPermissions;
+import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Edit_Profile_F extends RootFragment implements View.OnClickListener {
+public class EditProfileFragment extends RootFragment implements View.OnClickListener {
 
     View view;
     Context context;
 
-    public Edit_Profile_F() {
+    public EditProfileFragment() {
 
     }
 
-    Fragment_Callback fragment_callback;
+    FragmentCallback fragment_callback;
 
-    public Edit_Profile_F(Fragment_Callback fragment_callback) {
+    public EditProfileFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
     }
 
@@ -435,11 +435,11 @@ public class Edit_Profile_F extends RootFragment implements View.OnClickListener
                     if (code.equals("200")) {
 
                         Variables.sharedPreferences.edit().putString(Variables.u_pic, image_link).commit();
-                        Profile_F.pic_url = image_link;
+                        ProfileFragment.pic_url = image_link;
                         Variables.user_pic = image_link;
 
                         Picasso.with(context)
-                                .load(Profile_F.pic_url)
+                                .load(ProfileFragment.pic_url)
                                 .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
                                 .resize(200, 200).centerCrop().into(profile_image);
 
@@ -532,7 +532,7 @@ public class Edit_Profile_F extends RootFragment implements View.OnClickListener
         Functions.Show_loader(getActivity(), false, false);
         Functions.Call_Api_For_Get_User_data(getActivity(),
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
-                new API_CallBack() {
+                new ApiCallBack() {
                     @Override
                     public void ArrayData(ArrayList arrayList) {
 

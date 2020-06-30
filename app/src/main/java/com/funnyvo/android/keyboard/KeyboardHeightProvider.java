@@ -1,4 +1,4 @@
-package com.funnyvo.android.KeyBoard;
+package com.funnyvo.android.keyboard;
 
 /**
  * Created by AQEEL on 4/2/2019.

@@ -71,13 +71,13 @@
                 android:layout_marginLeft="-1dp"
                 app:tabIndicatorColor="@color/black"/>
 
-            <com.funnyvo.android.Main_Menu.Custom_ViewPager
+            <com.funnyvo.android.main_menu.CustomViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/viewpager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_below="@+id/groups_tab">
-            </com.funnyvo.android.Main_Menu.Custom_ViewPager>
+            </com.funnyvo.android.main_menu.CustomViewPager>
 
 
         </RelativeLayout>

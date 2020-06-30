@@ -1,4 +1,4 @@
-package com.funnyvo.android.Video_Recording.GallerySelectedVideo;
+package com.funnyvo.android.videorecording.galleryselectedvideo;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -21,10 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.coremedia.iso.boxes.Container;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.SoundLists.SoundList_Main_A;
-import com.funnyvo.android.Video_Recording.Merge_Video_Audio;
-import com.funnyvo.android.Video_Recording.Preview_Video_A;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.soundlists.SoundListMainActivity;
+import com.funnyvo.android.videorecording.MergeVideoAudio;
+import com.funnyvo.android.videorecording.PreviewVideoActivity;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -53,9 +53,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.funnyvo.android.Video_Recording.Video_Recoder_A.Sounds_list_Request_code;
+import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_list_Request_code;
 
-public class GallerySelectedVideo_A extends AppCompatActivity implements View.OnClickListener, Player.EventListener {
+public class GallerySelectedVideoActivity extends AppCompatActivity implements View.OnClickListener, Player.EventListener {
 
     String path;
     TextView add_sound_txt;
@@ -133,7 +133,7 @@ public class GallerySelectedVideo_A extends AppCompatActivity implements View.On
                 break;
 
             case R.id.add_sound_txt:
-                Intent intent = new Intent(this, SoundList_Main_A.class);
+                Intent intent = new Intent(this, SoundListMainActivity.class);
                 startActivityForResult(intent, Sounds_list_Request_code);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
@@ -198,7 +198,7 @@ public class GallerySelectedVideo_A extends AppCompatActivity implements View.On
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
-        final ProgressDialog progressDialog = new ProgressDialog(GallerySelectedVideo_A.this);
+        final ProgressDialog progressDialog = new ProgressDialog(GallerySelectedVideoActivity.this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -218,7 +218,7 @@ public class GallerySelectedVideo_A extends AppCompatActivity implements View.On
                 File file = new File(path);
 
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(GallerySelectedVideo_A.this, Uri.fromFile(file));
+                retriever.setDataSource(GallerySelectedVideoActivity.this, Uri.fromFile(file));
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
                 boolean isVideo = "yes".equals(hasVideo);
 
@@ -299,12 +299,12 @@ public class GallerySelectedVideo_A extends AppCompatActivity implements View.On
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
-        Merge_Video_Audio merge_video_audio = new Merge_Video_Audio(GallerySelectedVideo_A.this);
+        MergeVideoAudio merge_video_audio = new MergeVideoAudio(GallerySelectedVideoActivity.this);
         merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2, draft_file);
     }
 
     public void Go_To_preview_Activity() {
-        Intent intent = new Intent(this, Preview_Video_A.class);
+        Intent intent = new Intent(this, PreviewVideoActivity.class);
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

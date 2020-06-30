@@ -1,10 +1,10 @@
-package com.funnyvo.android.Inbox;
+package com.funnyvo.android.inbox.datamodel;
 
 /**
  * Created by AQEEL on 9/11/2018.
  */
 
-public class Inbox_Get_Set {
+public class Inbox {
 
     String id, name, msg, pic, type, date, status, block;
 

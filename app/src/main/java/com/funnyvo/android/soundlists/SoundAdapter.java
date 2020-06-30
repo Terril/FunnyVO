@@ -1,4 +1,4 @@
-package com.funnyvo.android.SoundLists;
+package com.funnyvo.android.soundlists;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
 
 import java.util.ArrayList;
 
@@ -25,18 +25,18 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Sounds_Adapter extends RecyclerView.Adapter<Sounds_Adapter.CustomViewHolder> {
+public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHolder> {
     public Context context;
 
-    ArrayList<Sound_catagory_Get_Set> datalist;
+    ArrayList<SoundCategory> datalist;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int postion, Sounds_GetSet item);
+        void onItemClick(View view, int postion, Sounds item);
     }
 
-    public Sounds_Adapter.OnItemClickListener listener;
+    public SoundAdapter.OnItemClickListener listener;
 
-    public Sounds_Adapter(Context context, ArrayList<Sound_catagory_Get_Set> arrayList, Sounds_Adapter.OnItemClickListener listener) {
+    public SoundAdapter(Context context, ArrayList<SoundCategory> arrayList, SoundAdapter.OnItemClickListener listener) {
         this.context = context;
         datalist = arrayList;
         this.listener = listener;
@@ -44,9 +44,9 @@ public class Sounds_Adapter extends RecyclerView.Adapter<Sounds_Adapter.CustomVi
 
 
     @Override
-    public Sounds_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public SoundAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_category_sound_layout, viewGroup, false);
-        Sounds_Adapter.CustomViewHolder viewHolder = new Sounds_Adapter.CustomViewHolder(view);
+        SoundAdapter.CustomViewHolder viewHolder = new SoundAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -57,18 +57,18 @@ public class Sounds_Adapter extends RecyclerView.Adapter<Sounds_Adapter.CustomVi
 
 
     @Override
-    public void onBindViewHolder(final Sounds_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final SoundAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
 
 
-        Sound_catagory_Get_Set item = datalist.get(i);
+        SoundCategory item = datalist.get(i);
 
         holder.title.setText(item.catagory);
 
 
-        Sound_Items_Adapter adapter = new Sound_Items_Adapter(context, item.sound_list, new Sound_Items_Adapter.OnItemClickListener() {
+        SoundItemsAdapter adapter = new SoundItemsAdapter(context, item.sound_list, new SoundItemsAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Sounds_GetSet item) {
+            public void onItemClick(View view, int postion, Sounds item) {
 
                 listener.onItemClick(view, postion, item);
             }
@@ -116,29 +116,29 @@ public class Sounds_Adapter extends RecyclerView.Adapter<Sounds_Adapter.CustomVi
 }
 
 
-class Sound_Items_Adapter extends RecyclerView.Adapter<Sound_Items_Adapter.CustomViewHolder> {
+class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomViewHolder> {
     public Context context;
 
-    ArrayList<Sounds_GetSet> datalist;
+    ArrayList<Sounds> datalist;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int postion, Sounds_GetSet item);
+        void onItemClick(View view, int postion, Sounds item);
     }
 
-    public Sound_Items_Adapter.OnItemClickListener listener;
+    public SoundItemsAdapter.OnItemClickListener listener;
 
 
-    public Sound_Items_Adapter(Context context, ArrayList<Sounds_GetSet> arrayList, Sound_Items_Adapter.OnItemClickListener listener) {
+    public SoundItemsAdapter(Context context, ArrayList<Sounds> arrayList, SoundItemsAdapter.OnItemClickListener listener) {
         this.context = context;
         datalist = arrayList;
         this.listener = listener;
     }
 
     @Override
-    public Sound_Items_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public SoundItemsAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_sound_layout, viewGroup, false);
         view.setLayoutParams(new RecyclerView.LayoutParams(Variables.screen_width - 50, RecyclerView.LayoutParams.WRAP_CONTENT));
-        Sound_Items_Adapter.CustomViewHolder viewHolder = new Sound_Items_Adapter.CustomViewHolder(view);
+        SoundItemsAdapter.CustomViewHolder viewHolder = new SoundItemsAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -150,10 +150,10 @@ class Sound_Items_Adapter extends RecyclerView.Adapter<Sound_Items_Adapter.Custo
 
 
     @Override
-    public void onBindViewHolder(final Sound_Items_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final SoundItemsAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
 
-        Sounds_GetSet item = datalist.get(i);
+        Sounds item = datalist.get(i);
         try {
 
             holder.bind(i, datalist.get(i), listener);
@@ -204,7 +204,7 @@ class Sound_Items_Adapter extends RecyclerView.Adapter<Sound_Items_Adapter.Custo
 
         }
 
-        public void bind(final int pos, final Sounds_GetSet item, final Sound_Items_Adapter.OnItemClickListener listener) {
+        public void bind(final int pos, final Sounds item, final SoundItemsAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

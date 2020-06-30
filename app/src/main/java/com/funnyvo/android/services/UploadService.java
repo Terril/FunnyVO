@@ -1,4 +1,4 @@
-package com.funnyvo.android.Services;
+package com.funnyvo.android.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -32,8 +32,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
-import com.funnyvo.android.Video_Recording.AnimatedGifEncoder;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.videorecording.AnimatedGifEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,13 +56,13 @@ import java.util.Map;
  */
 
 // this the background service which will upload the video into database
-public class Upload_Service extends Service {
+public class UploadService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
     public class LocalBinder extends Binder {
-        public Upload_Service getService() {
-            return Upload_Service.this;
+        public UploadService getService() {
+            return UploadService.this;
         }
     }
 
@@ -85,11 +85,11 @@ public class Upload_Service extends Service {
     String description;
     SharedPreferences sharedPreferences;
 
-    public Upload_Service() {
+    public UploadService() {
         super();
     }
 
-    public Upload_Service(ServiceCallback serviceCallback) {
+    public UploadService(ServiceCallback serviceCallback) {
         Callback = serviceCallback;
     }
 
@@ -171,7 +171,7 @@ public class Upload_Service extends Service {
 
                         generateNoteOnSD("parameters", parameters.toString());
 
-                        RequestQueue rq = Volley.newRequestQueue(Upload_Service.this);
+                        RequestQueue rq = Volley.newRequestQueue(UploadService.this);
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                                 (Request.Method.POST, Variables.uploadVideo, parameters, new Response.Listener<JSONObject>() {
 

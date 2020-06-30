@@ -1,4 +1,4 @@
-package com.funnyvo.android.Following;
+package com.funnyvo.android.following;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,14 +16,15 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.funnyvo.android.Profile.Profile_F;
+import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.API_CallBack;
-import com.funnyvo.android.SimpleClasses.ApiRequest;
-import com.funnyvo.android.SimpleClasses.Callback;
-import com.funnyvo.android.SimpleClasses.Fragment_Callback;
-import com.funnyvo.android.SimpleClasses.Functions;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.ApiCallBack;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
+import com.funnyvo.android.simpleclasses.FragmentCallback;
+import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.following.datamodel.Following;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,16 +35,16 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Following_F extends Fragment {
+public class FollowingFragment extends Fragment {
 
     View view;
     Context context;
     String user_id;
 
-    Following_Adapter adapter;
+    FollowingAdapter adapter;
     RecyclerView recyclerView;
 
-    ArrayList<Following_Get_Set> datalist;
+    ArrayList<Following> datalist;
     RelativeLayout no_data_layout;
 
     ProgressBar pbar;
@@ -51,14 +52,14 @@ public class Following_F extends Fragment {
 
     TextView title_txt;
 
-    public Following_F() {
+    public FollowingFragment() {
         // Required empty public constructor
     }
 
-    Fragment_Callback fragment_callback;
+    FragmentCallback fragment_callback;
 
     @SuppressLint("ValidFragment")
-    public Following_F(Fragment_Callback fragment_callback) {
+    public FollowingFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
     }
 
@@ -86,9 +87,9 @@ public class Following_F extends Fragment {
         recyclerView.setHasFixedSize(true);
 
 
-        adapter = new Following_Adapter(context, following_or_fan, datalist, new Following_Adapter.OnItemClickListener() {
+        adapter = new FollowingAdapter(context, following_or_fan, datalist, new FollowingAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Following_Get_Set item) {
+            public void onItemClick(View view, int postion, Following item) {
 
                 switch (view.getId()) {
                     case R.id.action_txt:
@@ -165,7 +166,7 @@ public class Following_F extends Fragment {
 
                     JSONObject follow_Status = profile_data.optJSONObject("follow_Status");
 
-                    Following_Get_Set item = new Following_Get_Set();
+                    Following item = new Following();
                     item.fb_id = profile_data.optString("fb_id");
                     item.first_name = profile_data.optString("first_name");
                     item.last_name = profile_data.optString("last_name");
@@ -238,7 +239,7 @@ public class Following_F extends Fragment {
 
                     JSONObject follow_Status = profile_data.optJSONObject("follow_Status");
 
-                    Following_Get_Set item = new Following_Get_Set();
+                    Following item = new Following();
                     item.fb_id = profile_data.optString("fb_id");
                     item.first_name = profile_data.optString("first_name");
                     item.last_name = profile_data.optString("last_name");
@@ -276,8 +277,8 @@ public class Following_F extends Fragment {
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private void OpenProfile(final Following_Get_Set item) {
-        Profile_F profile_f = new Profile_F(new Fragment_Callback() {
+    private void OpenProfile(final Following item) {
+        ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
             @Override
             public void Response(Bundle bundle) {
 
@@ -289,13 +290,13 @@ public class Following_F extends Fragment {
         args.putString("user_id", item.fb_id);
         args.putString("user_name", item.first_name + " " + item.last_name);
         args.putString("user_pic", item.profile_pic);
-        profile_f.setArguments(args);
+        profile_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, profile_f).commit();
+        transaction.replace(R.id.MainMenuFragment, profile_fragment).commit();
     }
 
 
-    public void Follow_unFollow_User(final Following_Get_Set item, final int position) {
+    public void Follow_unFollow_User(final Following item, final int position) {
 
         final String send_status;
         if (item.follow.equals("0")) {
@@ -308,7 +309,7 @@ public class Following_F extends Fragment {
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
                 item.fb_id,
                 send_status,
-                new API_CallBack() {
+                new ApiCallBack() {
                     @Override
                     public void ArrayData(ArrayList arrayList) {
 

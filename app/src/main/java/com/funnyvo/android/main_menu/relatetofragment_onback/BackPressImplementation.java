@@ -1,4 +1,4 @@
-package com.funnyvo.android.Main_Menu.RelateToFragment_OnBack;
+package com.funnyvo.android.main_menu.relatetofragment_onback;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -7,11 +7,11 @@ import androidx.fragment.app.FragmentManager;
  * Created by AQEEL on 3/30/2018.
  */
 
-public class BackPressImplimentation implements OnBackPressListener {
+public class BackPressImplementation implements OnBackPressListener {
 
     private Fragment parentFragment;
 
-    public BackPressImplimentation(Fragment parentFragment) {
+    public BackPressImplementation(Fragment parentFragment) {
         this.parentFragment = parentFragment;
     }
 

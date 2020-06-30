@@ -1,4 +1,4 @@
-package com.funnyvo.android.Main_Menu;
+package com.funnyvo.android.main_menu;
 
 
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.funnyvo.android.Main_Menu.RelateToFragment_OnBack.RootFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
 
 public class BlankFragment extends RootFragment {

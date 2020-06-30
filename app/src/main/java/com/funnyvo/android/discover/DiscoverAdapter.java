@@ -1,4 +1,4 @@
-package com.funnyvo.android.Discover;
+package com.funnyvo.android.discover;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,9 +16,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.funnyvo.android.Home.Home_Get_Set;
+import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.R;
-import com.funnyvo.android.SimpleClasses.Variables;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.discover.datamodel.Discover;
 
 import java.util.ArrayList;
 
@@ -26,19 +27,19 @@ import java.util.ArrayList;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.CustomViewHolder> implements Filterable {
+public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.CustomViewHolder> implements Filterable {
     public Context context;
 
-    ArrayList<Discover_Get_Set> datalist;
-    ArrayList<Discover_Get_Set> datalist_filter;
+    ArrayList<Discover> datalist;
+    ArrayList<Discover> datalist_filter;
 
     public interface OnItemClickListener {
-        void onItemClick(ArrayList<Home_Get_Set> video_list, int postion);
+        void onItemClick(ArrayList<Home> video_list, int postion);
     }
 
-    public Discover_Adapter.OnItemClickListener listener;
+    public DiscoverAdapter.OnItemClickListener listener;
 
-    public Discover_Adapter(Context context, ArrayList<Discover_Get_Set> arrayList, Discover_Adapter.OnItemClickListener listener) {
+    public DiscoverAdapter(Context context, ArrayList<Discover> arrayList, DiscoverAdapter.OnItemClickListener listener) {
         this.context = context;
         datalist = arrayList;
         datalist_filter = arrayList;
@@ -47,10 +48,10 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
 
 
     @Override
-    public Discover_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public DiscoverAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_discover_layout, viewGroup, false);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        Discover_Adapter.CustomViewHolder viewHolder = new Discover_Adapter.CustomViewHolder(view);
+        DiscoverAdapter.CustomViewHolder viewHolder = new DiscoverAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -79,9 +80,9 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
 
 
     @Override
-    public void onBindViewHolder(final Discover_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final DiscoverAdapter.CustomViewHolder holder, final int i) {
 
-        Discover_Get_Set item = datalist_filter.get(i);
+        Discover item = datalist_filter.get(i);
 
         holder.title.setText(item.title);
 
@@ -103,8 +104,8 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
                 if (charString.isEmpty()) {
                     datalist_filter = datalist;
                 } else {
-                    ArrayList<Discover_Get_Set> filteredList = new ArrayList<>();
-                    for (Discover_Get_Set row : datalist) {
+                    ArrayList<Discover> filteredList = new ArrayList<>();
+                    for (Discover row : datalist) {
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
@@ -124,7 +125,7 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                datalist_filter = (ArrayList<Discover_Get_Set>) filterResults.values;
+                datalist_filter = (ArrayList<Discover>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
@@ -134,10 +135,10 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
     class Horizontal_Adapter extends RecyclerView.Adapter<Horizontal_Adapter.CustomViewHolder> {
         public Context context;
 
-        ArrayList<Home_Get_Set> datalist;
+        ArrayList<Home> datalist;
 
 
-        public Horizontal_Adapter(Context context, ArrayList<Home_Get_Set> arrayList) {
+        public Horizontal_Adapter(Context context, ArrayList<Home> arrayList) {
             this.context = context;
             datalist = arrayList;
         }
@@ -166,7 +167,7 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
 
             }
 
-            public void bind(final int pos, final ArrayList<Home_Get_Set> datalist) {
+            public void bind(final int pos, final ArrayList<Home> datalist) {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -183,7 +184,7 @@ public class Discover_Adapter extends RecyclerView.Adapter<Discover_Adapter.Cust
             holder.setIsRecyclable(false);
 
             try {
-                Home_Get_Set item = datalist.get(i);
+                Home item = datalist.get(i);
                 holder.bind(i, datalist);
 
 
