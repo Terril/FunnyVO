@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">FunnyVO</string>
+
+    <string name="facebook_app_id">fb_id</string>
+    <string name="fb_login_protocol_scheme">fb(fb_id)</string>
+
+    <string name="ad_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="my_Interstitial_Add">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="banner_ad">ca-app-pub-3940256099942544/6300978111</string>
+
+
+    <string name="request_verification">Request Verification</string>
+    <string name="apply_for_tic_tic_verification">Apply for Tic Tic Verification</string>
+    <string name="upper_body">A verified badge is check that aapears next to an \ntic tic accounts name to indiacte that the \naccount is the authentic presence of notable \npublic figure , celebrity, global brand or entity it \nrepresents.</string>
+    <string name="upper_body_below">Submitting a request for verification \ndoes not guarantee that your account will be verified</string>
+    <string name="lower_body">We require a goverment-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license.\npassport or national identification card) or official \nbusiness documents(tax filing, recent utility bill, article of \nincorporation) in order to review your request.</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="version">1.0</string>
+    <string name="device">android</string>
+    <string name="delete_function_not_available_in_demo">Delete Function not available in demo</string>
+</resources>

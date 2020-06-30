@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Video_Recording.RecordingTimeRang_F">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select timer"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:textColor="@color/colorAccent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="18s"
+                    android:id="@+id/range_txt"
+                    android:textColor="@color/black"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <com.appyvet.materialrangebar.RangeBar
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:id="@+id/seekbar"
+                app:mrb_connectingLineColor="@color/colorAccent"
+                app:mrb_connectingLineWeight="6dp"
+                app:mrb_rangeBar="true"
+                app:mrb_selectorSize="12dp"
+                app:mrb_tickHeight="0dp"
+                app:mrb_selectorColor="@color/colorAccent"
+                app:mrb_pinTextColor="@color/transparent"
+                app:mrb_pinColor="@color/transparent"
+                app:mrb_rangeBarColor="@color/graycolor"
+                app:mrb_tickStart="0"
+                app:mrb_tickEnd="18" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:id="@+id/start_recording_layout"
+                android:background="@color/colorAccent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start shooting"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+</FrameLayout>
