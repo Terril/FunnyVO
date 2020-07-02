@@ -63,7 +63,7 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
 import com.funnyvo.android.taged.TagedVideosFragment;
-import com.funnyvo.android.VideoAction.VideoAction_F;
+import com.funnyvo.android.VideoAction.VideoActionFragment;
 import com.funnyvo.android.home.datamodel.Home;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -255,29 +255,29 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             is_add_show = true;
                         } else {
                             is_add_show = false;
-                            final VideoAction_F fragment = new VideoAction_F(item.video_id, new FragmentCallback() {
+                            final VideoActionFragment fragment = new VideoActionFragment(item.video_id, new FragmentCallback() {
                                 @Override
-                                public void Response(Bundle bundle) {
+                                public void responseCallBackFromFragment(Bundle bundle) {
 
                                     if (bundle.getString("action").equals("save")) {
                                         Save_Video(item);
                                     } else if (bundle.getString("action").equals("delete")) {
-                                        Functions.Show_loader(context, false, false);
-                                        Functions.Call_Api_For_Delete_Video(getActivity(), item.video_id, new ApiCallBack() {
+                                        Functions.showLoader(context, false, false);
+                                        Functions.callApiForDeleteVideo(getActivity(), item.video_id, new ApiCallBack() {
                                             @Override
-                                            public void ArrayData(ArrayList arrayList) {
+                                            public void arrayData(ArrayList arrayList) {
 
                                             }
 
                                             @Override
-                                            public void OnSuccess(String responce) {
+                                            public void onSuccess(String responce) {
                                                 data_list.remove(currentPage);
                                                 adapter.notifyDataSetChanged();
 
                                             }
 
                                             @Override
-                                            public void OnFail(String responce) {
+                                            public void onFailure(String responce) {
 
                                             }
                                         });
@@ -335,9 +335,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.showAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 swiperefresh.setRefreshing(false);
                 Parse_data(resp);
             }
@@ -415,9 +415,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         }
 
 
-        ApiRequest.Call_Api(context, Variables.showAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 swiperefresh.setRefreshing(false);
                 Singal_Video_Parse_data(postion, resp);
             }
@@ -601,7 +601,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         soundimage.startAnimation(sound_animation);
 
         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-            Functions.Call_Api_For_update_view(getActivity(), item.video_id);
+            Functions.callApiForUpdateView(getActivity(), item.video_id);
 
 
         swipe_count++;
@@ -721,20 +721,20 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         data_list.add(position, home_);
         adapter.notifyDataSetChanged();
 
-        Functions.Call_Api_For_like_video(getActivity(), home_.video_id, action, new ApiCallBack() {
+        Functions.callApiForLikeVideo(getActivity(), home_.video_id, action, new ApiCallBack() {
 
             @Override
-            public void ArrayData(ArrayList arrayList) {
+            public void arrayData(ArrayList arrayList) {
 
             }
 
             @Override
-            public void OnSuccess(String responce) {
+            public void onSuccess(String responce) {
 
             }
 
             @Override
-            public void OnFail(String responce) {
+            public void onFailure(String responce) {
 
             }
         });
@@ -773,7 +773,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         } else {
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
-                public void Response(Bundle bundle) {
+                public void responseCallBackFromFragment(Bundle bundle) {
                     Call_Api_For_Singlevideos(currentPage);
                 }
             });
@@ -826,7 +826,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Save Video")) {
-                    if (Functions.Checkstoragepermision(getActivity()))
+                    if (Functions.checkstoragepermision(getActivity()))
                         Save_Video(home_);
 
                 } else if (options[item].equals("Cancel")) {
@@ -845,7 +845,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     public void Save_Video(final Home item) {
 
-        Functions.Show_determinent_loader(context, false, false);
+        Functions.showDeterminentLoader(context, false, false);
         PRDownloader.initialize(getActivity().getApplicationContext());
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
                 .build()
@@ -872,7 +872,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     public void onProgress(Progress progress) {
 
                         int prog = (int) ((progress.currentBytes * 100) / progress.totalBytes);
-                        Functions.Show_loading_progress(prog / 2);
+                        Functions.showLoadingProgress(prog / 2);
 
                     }
                 });
@@ -888,7 +888,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onError(Error error) {
                 Delete_file_no_watermark(item);
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-                Functions.cancel_determinent_loader();
+                Functions.cancelDeterminentLoader();
             }
 
 
@@ -911,7 +911,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     public void onProgress(double progress) {
 
                         Log.d("resp", "" + (int) (progress * 100));
-                        Functions.Show_loading_progress((int) ((progress * 100) / 2) + 50);
+                        Functions.showLoadingProgress((int) ((progress * 100) / 2) + 50);
 
                     }
 
@@ -922,7 +922,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             @Override
                             public void run() {
 
-                                Functions.cancel_determinent_loader();
+                                Functions.cancelDeterminentLoader();
                                 Delete_file_no_watermark(item);
                                 Scan_file(item);
 
@@ -948,7 +948,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                 try {
 
                                     Delete_file_no_watermark(item);
-                                    Functions.cancel_determinent_loader();
+                                    Functions.cancelDeterminentLoader();
                                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
 
                                 } catch (Exception e) {

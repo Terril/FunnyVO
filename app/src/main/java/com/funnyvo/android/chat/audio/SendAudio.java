@@ -31,25 +31,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-/**
- * Created by AQEEL on 12/5/2018.
- */
-
 // this class will send a voice message to other user
 public class SendAudio {
-
-    DatabaseReference rootref;
-    String senderid = "";
-    String Receiverid = "";
-    String Receiver_name = "";
-    String Receiver_pic = "null";
-    Context context;
+    private DatabaseReference rootref;
+    private String senderid = "";
+    private String Receiverid = "";
+    private String Receiver_name = "";
+    private String Receiver_pic = "null";
+    private Context context;
 
     private static String mFileName = null;
     private MediaRecorder mRecorder = null;
     private DatabaseReference Adduser_to_inbox;
 
-    EditText message_field;
+    private EditText message_field;
 
     public SendAudio(Context context, EditText message_field,
                      DatabaseReference rootref, DatabaseReference adduser_to_inbox

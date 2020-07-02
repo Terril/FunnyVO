@@ -3,9 +3,6 @@ package com.funnyvo.android.main_menu.relatetofragment_onback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-/**
- * Created by AQEEL on 3/30/2018.
- */
 
 public class BackPressImplementation implements OnBackPressListener {
 
@@ -17,7 +14,6 @@ public class BackPressImplementation implements OnBackPressListener {
 
     @Override
     public boolean onBackPressed() {
-
         if (parentFragment == null) return false;
 
         int childCount = parentFragment.getChildFragmentManager().getBackStackEntryCount();

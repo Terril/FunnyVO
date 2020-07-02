@@ -21,13 +21,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.funnyvo.android.R;
+import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.following.FollowingFragment;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
-import com.funnyvo.android.R;
-import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -387,9 +387,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         }
 
 
-        ApiRequest.Call_Api(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 is_run_first_time = true;
                 Parse_data(resp);
             }
@@ -469,17 +469,17 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             send_status = "0";
         }
 
-        Functions.Call_Api_For_Follow_or_unFollow(getActivity(),
+        Functions.callApiForFollowOrUnFollow(getActivity(),
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
                 user_id,
                 send_status,
                 new ApiCallBack() {
                     @Override
-                    public void ArrayData(ArrayList arrayList) {
+                    public void arrayData(ArrayList arrayList) {
                     }
 
                     @Override
-                    public void OnSuccess(String responce) {
+                    public void onSuccess(String responce) {
 
                         if (send_status.equals("1")) {
                             follow_unfollow_btn.setText("UnFollow");
@@ -494,7 +494,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                     }
 
                     @Override
-                    public void OnFail(String responce) {
+                    public void onFailure(String responce) {
 
                     }
 
@@ -591,7 +591,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public void onDetach() {
         super.onDetach();
         if (fragment_callback != null)
-            fragment_callback.Response(new Bundle());
+            fragment_callback.responseCallBackFromFragment(new Bundle());
 
         Functions.deleteCache(context);
 

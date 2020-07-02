@@ -6,5 +6,5 @@ package com.funnyvo.android.simpleclasses;
 
 public interface Callback {
 
-    void Response(String resp);
+    void response(String resp);
 }

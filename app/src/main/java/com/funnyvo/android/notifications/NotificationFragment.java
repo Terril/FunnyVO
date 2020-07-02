@@ -125,9 +125,9 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.getNotifications, jsonObject, new Callback() {
+        ApiRequest.callApi(context, Variables.getNotifications, jsonObject, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 swiperefresh.setRefreshing(false);
                 parse_data(resp);
             }
@@ -230,7 +230,7 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
 
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
-                public void Response(Bundle bundle) {
+                public void responseCallBackFromFragment(Bundle bundle) {
 
                 }
             });

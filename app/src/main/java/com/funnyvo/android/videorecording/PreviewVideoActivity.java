@@ -42,7 +42,6 @@ import java.util.List;
 
 public class PreviewVideoActivity extends AppCompatActivity implements Player.EventListener {
 
-
     String video_url;
     GPUPlayerView gpuPlayerView;
     public static int select_postion = 0;
@@ -184,7 +183,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     // this function will add the filter to video and save that same video for post the video in post video screen
     public void Save_Video(String srcMp4Path, final String destMp4Path) {
 
-        Functions.Show_determinent_loader(this, false, false);
+        Functions.showDeterminentLoader(this, false, false);
 
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
@@ -195,7 +194,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
                     public void onProgress(double progress) {
 
                         Log.d("resp", "" + (int) (progress * 100));
-                        Functions.Show_loading_progress((int) (progress * 100));
+                        Functions.showLoadingProgress((int) (progress * 100));
 
 
                     }
@@ -207,7 +206,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
                             @Override
                             public void run() {
 
-                                Functions.cancel_determinent_loader();
+                                Functions.cancelDeterminentLoader();
 
                                 GotopostScreen();
 
@@ -233,7 +232,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
                             public void run() {
                                 try {
 
-                                    Functions.cancel_determinent_loader();
+                                    Functions.cancelDeterminentLoader();
 
                                     Toast.makeText(PreviewVideoActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {

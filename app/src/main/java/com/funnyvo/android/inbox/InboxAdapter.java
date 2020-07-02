@@ -23,10 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
-
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.CustomViewHolder> implements Filterable {
     public Context context;
     ArrayList<Inbox> inbox_dataList = new ArrayList<>();

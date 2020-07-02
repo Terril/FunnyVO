@@ -389,7 +389,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     public void Save_Image() {
 
-        Functions.Show_loader(context, false, false);
+        Functions.showLoader(context, false, false);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         String key = reference.push().getKey();
@@ -408,7 +408,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                         }
                     });
                 } else {
-                    Functions.cancel_loader();
+                    Functions.cancelLoader();
                 }
             }
         });
@@ -425,10 +425,10 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.uploadImage, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.uploadImage, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -461,7 +461,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
     // this will update the latest info of user in database
     public void Call_Api_For_Edit_profile() {
 
-        Functions.Show_loader(context, false, false);
+        Functions.showLoader(context, false, false);
 
         String uname = username_edit.getText().toString().toLowerCase().replaceAll("\\s", "");
         JSONObject parameters = new JSONObject();
@@ -484,10 +484,10 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.edit_profile, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.edit_profile, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -529,23 +529,23 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     // this will get the user data and parse the data and show the data into views
     public void Call_Api_For_User_Details() {
-        Functions.Show_loader(getActivity(), false, false);
-        Functions.Call_Api_For_Get_User_data(getActivity(),
+        Functions.showLoader(getActivity(), false, false);
+        Functions.callApiForGetUserData(getActivity(),
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
                 new ApiCallBack() {
                     @Override
-                    public void ArrayData(ArrayList arrayList) {
+                    public void arrayData(ArrayList arrayList) {
 
                     }
 
                     @Override
-                    public void OnSuccess(String responce) {
-                        Functions.cancel_loader();
+                    public void onSuccess(String responce) {
+                        Functions.cancelLoader();
                         Parse_user_data(responce);
                     }
 
                     @Override
-                    public void OnFail(String responce) {
+                    public void onFailure(String responce) {
 
                     }
                 });
@@ -594,6 +594,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         super.onDetach();
 
         if (fragment_callback != null)
-            fragment_callback.Response(new Bundle());
+            fragment_callback.responseCallBackFromFragment(new Bundle());
     }
 }

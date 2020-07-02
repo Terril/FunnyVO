@@ -86,9 +86,9 @@ public class SearchFragment extends RootFragment {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.search, params, new Callback() {
+        ApiRequest.callApi(context, Variables.search, params, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
 
@@ -247,7 +247,7 @@ public class SearchFragment extends RootFragment {
 
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
-                public void Response(Bundle bundle) {
+                public void responseCallBackFromFragment(Bundle bundle) {
 
                 }
             });

@@ -1,9 +1,5 @@
 package com.funnyvo.android.keyboard;
 
-/**
- * Created by AQEEL on 4/2/2019.
- */
-
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Point;

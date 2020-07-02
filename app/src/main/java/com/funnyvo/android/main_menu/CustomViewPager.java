@@ -1,18 +1,14 @@
 package com.funnyvo.android.main_menu;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-/**
- * Created by AQEEL on 3/30/2018.
- */
-
+import androidx.viewpager.widget.ViewPager;
 
 // this the related to the viewpage that is show into mainscreen tab
 
-    // purpose is only to disable the scroll by fingure option
+// purpose is only to disable the scroll by fingure option
 
 public class CustomViewPager extends ViewPager {
 

@@ -142,7 +142,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
 
     // when the video is uploading successfully it will restart the appliaction
     @Override
-    public void ShowResponse(final String responce) {
+    public void showResponse(final String responce) {
 
         if (mConnection != null)
             unbindService(mConnection);

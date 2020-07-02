@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.funnyvo.android.R;
 import com.funnyvo.android.accounts.LoginActivity;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.discover.DiscoverFragment;
@@ -32,7 +33,6 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.OnBackPressListener
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.notifications.NotificationFragment;
 import com.funnyvo.android.profile.ProfileTabFragment;
-import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.google.android.material.tabs.TabLayout;

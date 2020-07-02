@@ -42,10 +42,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by AQEEL on 5/22/2018.
- */
-
 public class NotificationReceive extends FirebaseMessagingService {
 
     SharedPreferences sharedPreferences;

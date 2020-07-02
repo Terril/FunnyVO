@@ -15,10 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
-
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CustomViewHolder> {
 
     public Context context;

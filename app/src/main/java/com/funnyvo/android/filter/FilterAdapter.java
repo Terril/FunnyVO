@@ -49,11 +49,6 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageVibranceFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageVignetteFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageWeakPixelInclusionFilter;
 
-/**
- * Created by AQEEL on 3/24/2019.
- */
-
-
 // this is the class which will show you a Filters lists when you preview the video
 // after created it
 

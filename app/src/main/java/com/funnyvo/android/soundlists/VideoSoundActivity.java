@@ -193,7 +193,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
 
 
     public void Save_Video() {
-        Functions.Show_determinent_loader(this, false, false);
+        Functions.showDeterminentLoader(this, false, false);
         PRDownloader.initialize(this);
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + ".mp4")
                 .build()
@@ -220,7 +220,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
                     public void onProgress(Progress progress) {
 
                         int prog = (int) ((progress.currentBytes * 100) / progress.totalBytes);
-                        Functions.Show_loading_progress(prog);
+                        Functions.showLoadingProgress(prog);
 
                     }
                 });
@@ -229,7 +229,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                Functions.cancel_determinent_loader();
+                Functions.cancelDeterminentLoader();
                 audio_file = new File(Variables.app_folder + item.video_id + ".mp4");
                 Glide.with(VideoSoundActivity.this)
                         .load(Uri.fromFile(video_file))
@@ -240,7 +240,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onError(Error error) {
 
-                Functions.cancel_determinent_loader();
+                Functions.cancelDeterminentLoader();
             }
 
 
@@ -390,7 +390,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
 
 
     public void Convert_Mp3_to_acc() {
-        Functions.Show_loader(this, false, false);
+        Functions.showLoader(this, false, false);
         final String[] complexCommand = new String[]{"-y", "-i", Variables.app_folder + Variables.SelectedAudio_MP3, Variables.app_folder + Variables.SelectedAudio_AAC};
 
         new AsyncTask<Object, Object, Object>() {
@@ -415,16 +415,16 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
 
                 if (rc == RETURN_CODE_SUCCESS) {
                     Log.d(Variables.tag, "Command execution completed successfully.");
-                    Functions.cancel_loader();
+                    Functions.cancelLoader();
                     Open_video_recording();
 
                 } else if (rc == RETURN_CODE_CANCEL) {
                     Log.d(Variables.tag, "Command execution cancelled by user.");
-                    Functions.cancel_loader();
+                    Functions.cancelLoader();
                 } else {
                     Log.d(Variables.tag, String.format("Command execution failed with rc=%d and the output below.", rc));
                     Config.printLastCommandOutput(Log.INFO);
-                    Functions.cancel_loader();
+                    Functions.cancelLoader();
                 }
 
             }

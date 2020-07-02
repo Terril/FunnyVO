@@ -24,8 +24,8 @@ import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.AdapterClickListener;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -56,7 +56,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SoundList_F extends RootFragment implements Player.EventListener {
+public class SoundListFragment extends RootFragment implements Player.EventListener {
 
     View view;
     Context context;
@@ -71,11 +71,11 @@ public class SoundList_F extends RootFragment implements Player.EventListener {
 
     public static String running_sound_id;
 
-    public SoundList_F(String type) {
+    public SoundListFragment(String type) {
         this.type = type;
     }
 
-    public SoundList_F() {
+    public SoundListFragment() {
         // Required empty public constructor
     }
 
@@ -138,9 +138,9 @@ public class SoundList_F extends RootFragment implements Player.EventListener {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.search, params, new Callback() {
+        ApiRequest.callApi(context, Variables.search, params, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
 
@@ -211,11 +211,11 @@ public class SoundList_F extends RootFragment implements Player.EventListener {
             e.printStackTrace();
         }
 
-        Functions.Show_loader(context, false, false);
-        ApiRequest.Call_Api(context, Variables.fav_sound, parameters, new Callback() {
+        Functions.showLoader(context, false, false);
+        ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
 
                 if (item.fav.equals("1"))
                     item.fav = "0";

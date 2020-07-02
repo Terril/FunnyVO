@@ -22,7 +22,6 @@ import java.io.InputStream;
  */
 public class FileUtils {
 
-
     /**
      * Get a file from a Uri.
      * Framework Documents, as well as the _data field for the MediaStore and

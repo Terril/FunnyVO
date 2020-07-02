@@ -1725,7 +1725,7 @@ public class ChatActivity extends Fragment {
         }
 
 
-        ApiRequest.Call_Api(context, Variables.sendPushNotification, notimap, null);
+        ApiRequest.callApi(context, Variables.sendPushNotification, notimap, null);
 
     }
 

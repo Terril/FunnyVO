@@ -408,9 +408,9 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 Parse_data(resp);
             }
         });
@@ -481,7 +481,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     public void Open_Edit_profile() {
         EditProfileFragment edit_profile_fragment = new EditProfileFragment(new FragmentCallback() {
             @Override
-            public void Response(Bundle bundle) {
+            public void responseCallBackFromFragment(Bundle bundle) {
                 update_profile();
             }
         });
@@ -550,7 +550,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     public void Open_Following() {
         FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
-            public void Response(Bundle bundle) {
+            public void responseCallBackFromFragment(Bundle bundle) {
                 Call_Api_For_get_Allvideos();
             }
         });
@@ -568,7 +568,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     public void Open_Followers() {
         FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
-            public void Response(Bundle bundle) {
+            public void responseCallBackFromFragment(Bundle bundle) {
                 Call_Api_For_get_Allvideos();
             }
         });

@@ -43,12 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-/**
- * Created by AQEEL on 2/20/2019.
- */
-
 public class Functions {
-
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -62,7 +57,7 @@ public class Functions {
     }
 
 
-    public static void Show_Alert(Context context, String title, String Message) {
+    public static void showAlert(Context context, String title, String Message) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(Message)
@@ -77,7 +72,7 @@ public class Functions {
 
     public static Dialog dialog;
 
-    public static void Show_loader(Context context, boolean outside_touch, boolean cancleable) {
+    public static void showLoader(Context context, boolean outside_touch, boolean cancleable) {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.item_dialog_loading_view);
@@ -97,7 +92,7 @@ public class Functions {
         dialog.show();
     }
 
-    public static void cancel_loader() {
+    public static void cancelLoader() {
         if (dialog != null) {
             dialog.cancel();
         }
@@ -174,7 +169,7 @@ public class Functions {
     }
 
 
-    public static String Bitmap_to_base64(Activity activity, Bitmap imagebitmap) {
+    public static String bitmapToBase64(Activity activity, Bitmap imagebitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imagebitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] byteArray = baos.toByteArray();
@@ -254,7 +249,7 @@ public class Functions {
     }
 
 
-    public static void make_directry(String path) {
+    public static void makeDirectory(String path) {
         File dir = new File(path);
         if (!dir.exists()) {
             dir.mkdir();
@@ -279,9 +274,9 @@ public class Functions {
     // Bottom is all the Apis which is mostly used in app we have add it
     // just one time and whenever we need it we will call it
 
-    public static void Call_Api_For_like_video(final Activity activity,
-                                               String video_id, String action,
-                                               final ApiCallBack api_callBack) {
+    public static void callApiForLikeVideo(final Activity activity,
+                                           String video_id, String action,
+                                           final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -293,18 +288,16 @@ public class Functions {
         }
 
 
-        ApiRequest.Call_Api(activity, Variables.likeDislikeVideo, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.likeDislikeVideo, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                api_callBack.OnSuccess(resp);
+            public void response(String resp) {
+                api_callBack.onSuccess(resp);
             }
         });
-
-
     }
 
 
-    public static void Call_Api_For_Send_Comment(final Activity activity, String video_id, String comment, final ApiCallBack api_callBack) {
+    public static void callApiToSendComment(final Activity activity, String video_id, String comment, final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -316,9 +309,9 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(activity, Variables.postComment, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.postComment, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
 
                 ArrayList<Comments> arrayList = new ArrayList<>();
                 try {
@@ -345,14 +338,14 @@ public class Functions {
                             arrayList.add(item);
                         }
 
-                        api_callBack.ArrayData(arrayList);
+                        api_callBack.arrayData(arrayList);
 
                     } else {
                         Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
-                    api_callBack.OnFail(e.toString());
+                    api_callBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
 
@@ -362,7 +355,7 @@ public class Functions {
 
     }
 
-    public static void Call_Api_For_get_Comment(final Activity activity, String video_id, final ApiCallBack api_callBack) {
+    public static void callApiForGetComment(final Activity activity, String video_id, final ApiCallBack api_callBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -371,9 +364,9 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(activity, Variables.showVideoComments, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.showVideoComments, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 ArrayList<Comments> arrayList = new ArrayList<>();
                 try {
                     JSONObject response = new JSONObject(resp);
@@ -399,14 +392,14 @@ public class Functions {
                             arrayList.add(item);
                         }
 
-                        api_callBack.ArrayData(arrayList);
+                        api_callBack.arrayData(arrayList);
 
                     } else {
                         Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
-                    api_callBack.OnFail(e.toString());
+                    api_callBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
             }
@@ -415,8 +408,8 @@ public class Functions {
     }
 
 
-    public static void Call_Api_For_update_view(final Activity activity,
-                                                String video_id) {
+    public static void callApiForUpdateView(final Activity activity,
+                                            String video_id) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -426,20 +419,20 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(activity, Variables.updateVideoView, parameters, null);
+        ApiRequest.callApi(activity, Variables.updateVideoView, parameters, null);
 
 
     }
 
 
-    public static void Call_Api_For_Follow_or_unFollow
+    public static void callApiForFollowOrUnFollow
             (final Activity activity,
              String fb_id,
              String followed_fb_id,
              String status,
              final ApiCallBack api_callBack) {
 
-        Functions.Show_loader(activity, false, false);
+        Functions.showLoader(activity, false, false);
 
 
         JSONObject parameters = new JSONObject();
@@ -452,22 +445,22 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(activity, Variables.follow_users, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.follow_users, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
                     if (code.equals("200")) {
-                        api_callBack.OnSuccess(response.toString());
+                        api_callBack.onSuccess(response.toString());
 
                     } else {
                         Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    api_callBack.OnFail(e.toString());
+                    api_callBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
             }
@@ -477,7 +470,7 @@ public class Functions {
     }
 
 
-    public static void Call_Api_For_Get_User_data
+    public static void callApiForGetUserData
             (final Activity activity,
              String fb_id,
              final ApiCallBack api_callBack) {
@@ -492,22 +485,22 @@ public class Functions {
 
         Log.d("resp", parameters.toString());
 
-        ApiRequest.Call_Api(activity, Variables.get_user_data, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.get_user_data, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
                     if (code.equals("200")) {
-                        api_callBack.OnSuccess(response.toString());
+                        api_callBack.onSuccess(response.toString());
 
                     } else {
                         Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    api_callBack.OnFail(e.toString());
+                    api_callBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
             }
@@ -516,7 +509,7 @@ public class Functions {
     }
 
 
-    public static void Call_Api_For_Delete_Video
+    public static void callApiForDeleteVideo
             (final Activity activity,
              String video_id,
              final ApiCallBack api_callBack) {
@@ -530,16 +523,16 @@ public class Functions {
         }
 
 
-        ApiRequest.Call_Api(activity, Variables.DeleteVideo, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.DeleteVideo, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
                     if (code.equals("200")) {
                         if (api_callBack != null)
-                            api_callBack.OnSuccess(response.toString());
+                            api_callBack.onSuccess(response.toString());
 
                     } else {
                         Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -547,7 +540,7 @@ public class Functions {
 
                 } catch (Exception e) {
                     if (api_callBack != null)
-                        api_callBack.OnFail(e.toString());
+                        api_callBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
 
@@ -560,7 +553,7 @@ public class Functions {
 
     public static Dialog indeterminant_dialog;
 
-    public static void Show_indeterminent_loader(Context context, boolean outside_touch, boolean cancleable) {
+    public static void showIndeterminentLoader(Context context, boolean outside_touch, boolean cancleable) {
 
         indeterminant_dialog = new Dialog(context);
         indeterminant_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -579,7 +572,7 @@ public class Functions {
     }
 
 
-    public static void cancel_indeterminent_loader() {
+    public static void cancelIndeterminentLoader() {
         if (indeterminant_dialog != null) {
             indeterminant_dialog.cancel();
         }
@@ -589,7 +582,7 @@ public class Functions {
     public static Dialog determinant_dialog;
     public static ProgressBar determinant_progress;
 
-    public static void Show_determinent_loader(Context context, boolean outside_touch, boolean cancleable) {
+    public static void showDeterminentLoader(Context context, boolean outside_touch, boolean cancleable) {
 
         determinant_dialog = new Dialog(context);
         determinant_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -608,7 +601,7 @@ public class Functions {
 
     }
 
-    public static void Show_loading_progress(int progress) {
+    public static void showLoadingProgress(int progress) {
         if (determinant_progress != null) {
             determinant_progress.setProgress(progress);
 
@@ -616,7 +609,7 @@ public class Functions {
     }
 
 
-    public static void cancel_determinent_loader() {
+    public static void cancelDeterminentLoader() {
         if (determinant_dialog != null) {
             determinant_progress = null;
             determinant_dialog.cancel();
@@ -624,7 +617,7 @@ public class Functions {
     }
 
 
-    public static boolean Checkstoragepermision(Activity activity) {
+    public static boolean checkstoragepermision(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -672,6 +665,5 @@ public class Functions {
             return false;
         }
     }
-
 
 }

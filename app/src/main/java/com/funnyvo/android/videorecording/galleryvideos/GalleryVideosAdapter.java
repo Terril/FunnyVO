@@ -17,9 +17,6 @@ import com.funnyvo.android.videorecording.galleryvideos.datamodel.GalleryVideo;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
 
 public class GalleryVideosAdapter extends RecyclerView.Adapter<GalleryVideosAdapter.CustomViewHolder> {
 

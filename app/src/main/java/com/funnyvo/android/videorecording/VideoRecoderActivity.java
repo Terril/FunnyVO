@@ -293,7 +293,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
             camera_options.setVisibility(View.VISIBLE);
 
         } else if (sec_passed > (Variables.recording_duration / 1000)) {
-            Functions.Show_Alert(this, "Alert", "Video only can be a " + (int) Variables.recording_duration / 1000 + " S");
+            Functions.showAlert(this, "Alert", "Video only can be a " + (int) Variables.recording_duration / 1000 + " S");
         }
 
 
@@ -476,7 +476,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
                 if (sec_passed + 1 < Variables.recording_duration / 1000) {
                     RecordingTimeRangeFragment recordingTimeRangeFragment = new RecordingTimeRangeFragment(new FragmentCallback() {
                         @Override
-                        public void Response(Bundle bundle) {
+                        public void responseCallBackFromFragment(Bundle bundle) {
                             if (bundle != null) {
                                 is_recording_timer_enable = true;
                                 recording_time = bundle.getInt("end_time");
@@ -592,7 +592,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
 
     public void Chnage_Video_size(String src_path, String destination_path) {
 
-        Functions.Show_determinent_loader(this, false, false);
+        Functions.showDeterminentLoader(this, false, false);
         new GPUMp4Composer(src_path, destination_path)
                 .size(720, 1280)
                 .videoBitrate((int) (0.25 * 16 * 540 * 960))
@@ -601,7 +601,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
                     public void onProgress(double progress) {
 
                         Log.d("resp", "" + (int) (progress * 100));
-                        Functions.Show_loading_progress((int) (progress * 100));
+                        Functions.showLoadingProgress((int) (progress * 100));
 
                     }
 
@@ -612,7 +612,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
                             @Override
                             public void run() {
 
-                                Functions.cancel_determinent_loader();
+                                Functions.cancelDeterminentLoader();
 
                                 Intent intent = new Intent(VideoRecoderActivity.this, GallerySelectedVideoActivity.class);
                                 intent.putExtra("video_path", Variables.gallery_resize_video);
@@ -639,7 +639,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
                             public void run() {
                                 try {
 
-                                    Functions.cancel_determinent_loader();
+                                    Functions.cancelDeterminentLoader();
 
                                     Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
@@ -728,7 +728,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Functions.Show_indeterminent_loader(VideoRecoderActivity.this, true, true);
+                Functions.showIndeterminentLoader(VideoRecoderActivity.this, true, true);
             }
 
             @Override
@@ -736,7 +736,7 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
                 if (result.equals("error")) {
                     Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
-                    Functions.cancel_indeterminent_loader();
+                    Functions.cancelIndeterminentLoader();
                     Chnage_Video_size(Variables.gallery_trimed_video, Variables.gallery_resize_video);
                 }
             }

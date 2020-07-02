@@ -16,10 +16,6 @@ import com.funnyvo.android.simpleclasses.AdapterClickListener;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
-
 public class VideosListAdapter extends RecyclerView.Adapter<VideosListAdapter.CustomViewHolder> {
     public Context context;
 
