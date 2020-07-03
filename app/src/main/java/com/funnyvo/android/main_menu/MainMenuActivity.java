@@ -23,9 +23,7 @@ public class MainMenuActivity extends BaseActivity {
     public static MainMenuActivity mainMenuActivity;
     private MainMenuFragment mainMenuFragment;
     long mBackPressed;
-
     public static String token;
-
     public static Intent intent;
 
     @Override
@@ -53,9 +51,7 @@ public class MainMenuActivity extends BaseActivity {
 
 
         if (savedInstanceState == null) {
-
             initScreen();
-
         } else {
             mainMenuFragment = (MainMenuFragment) getSupportFragmentManager().getFragments().get(0);
         }

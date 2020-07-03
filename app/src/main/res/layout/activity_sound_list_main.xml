@@ -27,7 +27,7 @@
                     android:layout_width="50dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_white_cross"
+                    android:src="@drawable/ic_close"
                     android:id="@+id/Goback"
                     android:tint="@color/black"
                     android:scaleType="fitStart"

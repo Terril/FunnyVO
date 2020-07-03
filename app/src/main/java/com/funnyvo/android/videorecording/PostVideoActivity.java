@@ -99,7 +99,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             mServiceIntent.putExtra("desc", "" );
             startService(mServiceIntent);
 
-
             Intent intent = new Intent(this, UploadService.class);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 

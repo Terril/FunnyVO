@@ -30,7 +30,7 @@
                 android:layout_height="32dp"
                 android:id="@+id/Goback"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_white_cross"
+                android:src="@drawable/ic_close"
                 android:tint="@color/black"
                 android:padding="5dp"
                 android:layout_margin="5dp"

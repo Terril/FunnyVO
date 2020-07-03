@@ -1,7 +1,6 @@
 package com.funnyvo.android.videorecording.galleryselectedvideo;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -13,14 +12,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.coremedia.iso.boxes.Container;
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
 import com.funnyvo.android.videorecording.MergeVideoAudio;
@@ -55,10 +54,10 @@ import java.util.List;
 
 import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_list_Request_code;
 
-public class GallerySelectedVideoActivity extends AppCompatActivity implements View.OnClickListener, Player.EventListener {
+public class GallerySelectedVideoActivity extends BaseActivity implements View.OnClickListener, Player.EventListener {
 
     private String path;
-    private TextView add_sound_txt;
+    private Button btnAddMusic;
     private String draft_file;
     // this will call when swipe for another video and
     // this function will set the player to the current video
@@ -81,19 +80,18 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
         Variables.Selected_sound_id = "null";
 
-        findViewById(R.id.Goback).setOnClickListener(this);
+        findViewById(R.id.btnCloseGallery).setOnClickListener(this);
 
-        add_sound_txt = findViewById(R.id.add_sound_txt);
-        add_sound_txt.setOnClickListener(this);
+        btnAddMusic = findViewById(R.id.btnAddMusic);
+        btnAddMusic.setOnClickListener(this);
 
-        findViewById(R.id.next_btn).setOnClickListener(this);
+        findViewById(R.id.btnPrevNext).setOnClickListener(this);
 
         setPlayer();
 
     }
 
     public void setPlayer() {
-
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         video_player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
@@ -107,7 +105,6 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
         video_player.setRepeatMode(Player.REPEAT_MODE_OFF);
         video_player.addListener(this);
 
-
         final PlayerView playerView = findViewById(R.id.playerview);
         playerView.setPlayer(video_player);
 
@@ -118,9 +115,7 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
             }
         });
 
-
         video_player.setPlayWhenReady(true);
-
 
     }
 
@@ -129,19 +124,18 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.Goback:
+            case R.id.btnCloseGallery:
                 finish();
                 overridePendingTransition(R.anim.in_from_top, R.anim.out_from_bottom);
                 break;
 
-            case R.id.add_sound_txt:
+            case R.id.btnAddMusic:
                 Intent intent = new Intent(this, SoundListMainActivity.class);
                 startActivityForResult(intent, Sounds_list_Request_code);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
 
-            case R.id.next_btn:
-
+            case R.id.btnPrevNext:
                 if (video_player != null) {
                     video_player.setPlayWhenReady(false);
                 }
@@ -159,9 +153,8 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Sounds_list_Request_code) {
             if (data != null) {
-
                 if (data.getStringExtra("isSelected").equals("yes")) {
-                    add_sound_txt.setText(data.getStringExtra("sound_name"));
+                    btnAddMusic.setText(data.getStringExtra("sound_name"));
                     Variables.Selected_sound_id = data.getStringExtra("sound_id");
                     prepareAudio();
                 }
@@ -173,7 +166,6 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
     public void prepareAudio() {
         video_player.setVolume(0);
-
         File file = new File(Variables.app_folder + Variables.SelectedAudio_AAC);
         if (file.exists()) {
             audio = new MediaPlayer();
@@ -196,23 +188,16 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
-        final ProgressDialog progressDialog = new ProgressDialog(GallerySelectedVideoActivity.this);
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-
                 runOnUiThread(new Runnable() {
                     public void run() {
-
-                        progressDialog.setMessage("Please wait..");
-                        progressDialog.show();
+                        showProgressDialog();
                     }
                 });
 
-
                 ArrayList<String> video_list = new ArrayList<>();
-
                 File file = new File(path);
 
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -224,16 +209,11 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
                     video_list.add(path);
                 }
 
-
                 try {
-
                     Movie[] inMovies = new Movie[video_list.size()];
-
                     for (int i = 0; i < video_list.size(); i++) {
-
                         inMovies[i] = MovieCreator.build(video_list.get(i));
                     }
-
 
                     List<Track> videoTracks = new LinkedList<Track>();
                     List<Track> audioTracks = new LinkedList<Track>();
@@ -270,17 +250,14 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            progressDialog.dismiss();
-
+                            dismissProgressDialog();
                             if (audio != null)
                                 mergeWithAudio();
                             else {
                                 goToPreviewActivity();
                             }
-
                         }
                     });
-
 
                 } catch (Exception e) {
 
@@ -415,43 +392,6 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
     public void onSeekProcessed() {
 
         Log.d("resp", "smmdsmd");
-    }
-
-
-    // this will hide the bottom mobile navigation controll
-    public void hideNavigation() {
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
-        // This work only for android 4.4+
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-
-            // Code below is to handle presses of Volume up or Volume down.
-            // Without this, after pressing volume buttons, the navigation bar will
-            // show up and won't hide
-            final View decorView = getWindow().getDecorView();
-            decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility) {
-                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                                decorView.setSystemUiVisibility(flags);
-                            }
-                        }
-                    });
-        }
-
     }
 
     @SuppressLint("NewApi")
