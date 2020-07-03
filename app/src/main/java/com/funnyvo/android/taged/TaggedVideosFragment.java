@@ -40,7 +40,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TagedVideosFragment extends RootFragment {
+public class TaggedVideosFragment extends RootFragment {
 
     View view;
     Context context;
@@ -60,7 +60,7 @@ public class TagedVideosFragment extends RootFragment {
 
     ProgressBar progress_bar;
 
-    public TagedVideosFragment() {
+    public TaggedVideosFragment() {
         // Required empty public constructor
     }
 

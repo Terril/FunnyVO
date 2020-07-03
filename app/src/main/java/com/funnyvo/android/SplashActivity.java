@@ -10,11 +10,13 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.Variables;
 
-public class SplashActivity extends AppCompatActivity {
-    CountDownTimer countDownTimer;
+public class SplashActivity extends BaseActivity {
+    private CountDownTimer countDownTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

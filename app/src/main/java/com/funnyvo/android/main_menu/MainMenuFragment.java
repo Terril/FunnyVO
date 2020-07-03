@@ -40,15 +40,11 @@ import com.google.android.material.tabs.TabLayout;
 public class MainMenuFragment extends RootFragment implements View.OnClickListener {
 
     public static TabLayout tabLayout;
-
     protected CustomViewPager pager;
-
     private ViewPagerAdapter adapter;
-    Context context;
+    private Context context;
 
-    public MainMenuFragment() {
-
-    }
+    public MainMenuFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -148,7 +144,6 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
-
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 View v = tab.getCustomView();
@@ -157,13 +152,13 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
                 switch (tab.getPosition()) {
                     case 0:
-                        OnHome_Click();
+                        onHomeClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_home_white));
                         title.setTextColor(context.getResources().getColor(R.color.white));
                         break;
 
                     case 1:
-                        Onother_Tab_Click();
+                        onOtherTabClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_discover_red));
                         image.setColorFilter(ContextCompat.getColor(context, R.color.app_color), android.graphics.PorterDuff.Mode.SRC_IN);
                         title.setTextColor(context.getResources().getColor(R.color.app_color));
@@ -171,13 +166,13 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
 
                     case 3:
-                        Onother_Tab_Click();
+                        onOtherTabClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_notification_red));
                         image.setColorFilter(ContextCompat.getColor(context, R.color.app_color), android.graphics.PorterDuff.Mode.SRC_IN);
                         title.setTextColor(context.getResources().getColor(R.color.app_color));
                         break;
                     case 4:
-                        Onother_Tab_Click();
+                        onOtherTabClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_red));
                         image.setColorFilter(ContextCompat.getColor(context, R.color.app_color), android.graphics.PorterDuff.Mode.SRC_IN);
                         title.setTextColor(context.getResources().getColor(R.color.app_color));
@@ -230,7 +225,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
 
-                if (check_permissions()) {
+                if (checkPermissions()) {
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
 
                         Intent intent = new Intent(getActivity(), VideoRecoderActivity.class);
@@ -395,7 +390,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         }
     }
 
-    public void OnHome_Click() {
+    public void onHomeClick() {
 
         TabLayout.Tab tab1 = tabLayout.getTabAt(1);
         View view1 = tab1.getCustomView();
@@ -434,8 +429,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         tabLayout.setBackground(getResources().getDrawable(R.drawable.d_top_white_line));
     }
 
-    public void Onother_Tab_Click() {
-
+    public void onOtherTabClick() {
 
         TabLayout.Tab tab1 = tabLayout.getTabAt(1);
         View view1 = tab1.getCustomView();
@@ -479,7 +473,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
     // we need 4 permission during creating an video so we will get that permission
     // before start the video recording
-    public boolean check_permissions() {
+    public boolean checkPermissions() {
 
         String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,

@@ -64,7 +64,7 @@ import com.funnyvo.android.simpleclasses.FragmentDataSend;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
-import com.funnyvo.android.taged.TagedVideosFragment;
+import com.funnyvo.android.taged.TaggedVideosFragment;
 import com.funnyvo.android.VideoAction.VideoActionFragment;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -897,7 +897,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
     // this will open the profile of user which have uploaded the currenlty running video
     private void OpenHashtag(String tag) {
 
-        TagedVideosFragment taged_videos_fragment = new TagedVideosFragment();
+        TaggedVideosFragment taged_videos_fragment = new TaggedVideosFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();

@@ -1,12 +1,12 @@
-package com.uob.digitalbank.playground.dialog
+package com.funnyvo.android.customview
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
-import com.uob.digitalbank.playground.R
-import kotlinx.android.synthetic.main.pg_loader_dialog.*
+import com.funnyvo.android.R
+import kotlinx.android.synthetic.main.view_progress_dialog.*
 
 /**
  * A dialog showing a progress indicator. Intended use is to show loader inside dialog in full screen mode.
@@ -21,9 +21,9 @@ import kotlinx.android.synthetic.main.pg_loader_dialog.*
  *
  * ```
  */
-class PgLoaderDialog(val context: Context) {
+class LoaderDialog(val context: Context) {
 
-    private var dialog: Dialog = Dialog(context, R.style.Widget_Pg_Loader)
+    private var dialog: Dialog = Dialog(context)
 
     /**
      * Sets whether this dialog is cancelable with the
@@ -39,7 +39,7 @@ class PgLoaderDialog(val context: Context) {
         }
 
     /**
-     * Return true if [PgLoaderDialog] is currently showing on screen, else false.
+     * Return true if [LoaderDialog] is currently showing on screen, else false.
      *
      * @property isShowing
      */
@@ -49,19 +49,11 @@ class PgLoaderDialog(val context: Context) {
     init {
 
         dialog.apply {
-            setContentView(R.layout.pg_loader_dialog)
-
-            pgLoader.setAnimation("pg_tmrw_loader.json")
-
-            val colorDrawable =
-                ColorDrawable(ContextCompat.getColor(context, R.color.pg_palette_charcoal))
-            colorDrawable.alpha = 128
-
+            setContentView(R.layout.view_progress_dialog)
             window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            window?.setBackgroundDrawable(colorDrawable)
 
             setOnDismissListener {
-                pgLoader.cancelAnimation()
+                loader.visibility = INVISIBLE
             }
         }
     }
@@ -72,7 +64,7 @@ class PgLoaderDialog(val context: Context) {
     fun show() {
         dialog.apply {
             if (!isShowing) {
-                pgLoader.playAnimation()
+                loader.visibility = VISIBLE
                 show()
             }
         }
@@ -84,7 +76,7 @@ class PgLoaderDialog(val context: Context) {
     fun dismiss() {
         dialog.apply {
             if (isShowing) {
-                pgLoader.cancelAnimation()
+                loader.visibility = INVISIBLE
                 dismiss()
             }
         }

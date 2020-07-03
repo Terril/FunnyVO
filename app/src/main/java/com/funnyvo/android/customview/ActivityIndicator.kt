@@ -1,14 +1,13 @@
-package uob.com.digitalbank.utils
+package com.funnyvo.android.customview
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.uob.digitalbank.playground.dialog.PgLoaderDialog
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ActivityIndicator(context: Context, private val lifecycle: Lifecycle) : LifecycleObserver {
-    private val dialog = PgLoaderDialog(context).apply { isCancellable = false }
+    private val dialog = LoaderDialog(context).apply { isCancellable = false }
     private var isRealHide = AtomicBoolean(true)
 
     init {

@@ -124,6 +124,8 @@
 
         </LinearLayout>
 
+        <include
+            layout="@layout/view_progress_dialog"></include>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -40,11 +40,8 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
     View view;
     Context context;
     RecyclerView recyclerView;
-
     FragmentCallback fragment_callback;
-
     String video_id, user_id;
-
     ProgressBar progressBar;
 
     public VideoActionFragment() {

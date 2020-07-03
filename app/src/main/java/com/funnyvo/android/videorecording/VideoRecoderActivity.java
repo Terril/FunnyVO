@@ -30,6 +30,7 @@ import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.segmentprogress.ProgressBarListener;
 import com.funnyvo.android.segmentprogress.SegmentedProgressBar;
 import com.funnyvo.android.simpleclasses.FileUtils;
@@ -63,7 +64,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VideoRecoderActivity extends AppCompatActivity implements View.OnClickListener {
+public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener {
 
     CameraView cameraView;
     int number = 0;

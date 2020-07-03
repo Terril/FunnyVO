@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.R;
+import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -23,7 +23,6 @@ public class MainMenuActivity extends AppCompatActivity {
     private MainMenuFragment mainMenuFragment;
     long mBackPressed;
 
-
     public static String token;
 
     public static Intent intent;
@@ -32,13 +31,9 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
         mainMenuActivity = this;
-
         intent = getIntent();
-
         setIntent(null);
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         Variables.screen_height = displayMetrics.heightPixels;
@@ -125,14 +120,11 @@ public class MainMenuActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getBaseContext(), "Tap Again To Exit", Toast.LENGTH_SHORT).show();
                     mBackPressed = System.currentTimeMillis();
-
                 }
             } else {
                 super.onBackPressed();
             }
         }
-
     }
-
 
 }

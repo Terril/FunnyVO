@@ -4,7 +4,7 @@
     package="com.funnyvo.android">
 
     <application
-        android:name=".simpleclasses.FunnyVO"
+        android:name=".FunnyVOApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"

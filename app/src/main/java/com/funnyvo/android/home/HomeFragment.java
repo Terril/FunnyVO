@@ -48,12 +48,14 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.R;
+import com.funnyvo.android.VideoAction.VideoActionFragment;
 import com.funnyvo.android.comments.CommentFragment;
+import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.ProfileFragment;
-import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -62,9 +64,7 @@ import com.funnyvo.android.simpleclasses.FragmentDataSend;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
-import com.funnyvo.android.taged.TagedVideosFragment;
-import com.funnyvo.android.VideoAction.VideoActionFragment;
-import com.funnyvo.android.home.datamodel.Home;
+import com.funnyvo.android.taged.TaggedVideosFragment;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -110,18 +110,19 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     ArrayList<Home> data_list;
     int currentPage = -1;
     LinearLayoutManager layoutManager;
-
     ProgressBar p_bar;
-
     SwipeRefreshLayout swiperefresh;
 
     boolean is_user_stop_video = false;
 
+    boolean is_add_show = false;
+    HomeAdapter adapter;
+
+    int swipe_count = 0;
+
     public HomeFragment() {
         // Required empty public constructor
     }
-
-    int swipe_count = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -160,8 +161,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 if (page_no != currentPage) {
                     currentPage = page_no;
 
-                    Release_Privious_Player();
-                    Set_Player(currentPage);
+                    releasePreviousPlayer();
+                    setPlayer(currentPage);
 
                 }
             }
@@ -176,14 +177,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             @Override
             public void onRefresh() {
                 currentPage = -1;
-                Call_Api_For_get_Allvideos();
+                callApiForGetAllvideos();
             }
         });
 
-        Call_Api_For_get_Allvideos();
+        callApiForGetAllvideos();
 
         if (!Variables.is_remove_ads)
-            Load_add();
+            loadAdd();
 
         return view;
     }
@@ -191,7 +192,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     InterstitialAd mInterstitialAd;
 
-    public void Load_add() {
+    public void loadAdd() {
 
         // this is test app id you will get the actual id when you add app in your
         //add mob account
@@ -216,37 +217,27 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    boolean is_add_show = false;
-    HomeAdapter adapter;
-
-    public void Set_Adapter() {
+    public void setAdapter() {
 
         adapter = new HomeAdapter(context, data_list, new HomeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int postion, final Home item, View view) {
-
                 switch (view.getId()) {
-
                     case R.id.user_pic:
-                        onPause();
-                        OpenProfile(item, false);
-                        break;
-
                     case R.id.username:
                         onPause();
-                        OpenProfile(item, false);
+                        openProfile(item, false);
                         break;
-
                     case R.id.like_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            Like_Video(postion, item);
+                            likeVideo(postion, item);
                         } else {
                             Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show();
                         }
                         break;
 
                     case R.id.comment_layout:
-                        OpenComment(item);
+                        openComment(item);
                         break;
 
                     case R.id.shared_layout:
@@ -260,7 +251,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                 public void responseCallBackFromFragment(Bundle bundle) {
 
                                     if (bundle.getString("action").equals("save")) {
-                                        Save_Video(item);
+                                        saveVideo(item);
                                     } else if (bundle.getString("action").equals("delete")) {
                                         Functions.showLoader(context, false, false);
                                         Functions.callApiForDeleteVideo(getActivity(), item.video_id, new ApiCallBack() {
@@ -299,7 +290,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            if (check_permissions()) {
+                            if (checkPermissions()) {
                                 Intent intent = new Intent(getActivity(), VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
@@ -321,11 +312,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void Call_Api_For_get_Allvideos() {
-
-
+    private void callApiForGetAllvideos() {
         Log.d(Variables.tag, MainMenuActivity.token);
-
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -339,19 +327,18 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
-                Parse_data(resp);
+                parseData(resp);
             }
         });
 
 
     }
 
-    public void Parse_data(String responce) {
-
+    public void parseData(String response) {
         data_list = new ArrayList<>();
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
@@ -390,7 +377,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     data_list.add(item);
                 }
 
-                Set_Adapter();
+                setAdapter();
 
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -403,7 +390,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    private void Call_Api_For_Singlevideos(final int postion) {
+    private void callApiForSinglevideo(final int postion) {
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -419,17 +406,17 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
-                Singal_Video_Parse_data(postion, resp);
+                singleVideoParseData(postion, resp);
             }
         });
 
 
     }
 
-    public void Singal_Video_Parse_data(int pos, String responce) {
+    public void singleVideoParseData(int pos, String response) {
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
@@ -485,7 +472,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     // this will call when swipe for another video and
     // this function will set the player to the current video
-    public void Set_Player(final int currentPage) {
+    public void setPlayer(final int currentPage) {
 
         final Home item = data_list.get(currentPage);
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
@@ -499,21 +486,17 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         Log.d("resp", item.video_url);
 
-
         player.prepare(videoSource);
 
         player.setRepeatMode(Player.REPEAT_MODE_ALL);
         player.addListener(this);
 
-
         View layout = layoutManager.findViewByPosition(currentPage);
         final PlayerView playerView = layout.findViewById(R.id.playerview);
         playerView.setPlayer(player);
 
-
         player.setPlayWhenReady(is_visible_to_user);
         privious_player = player;
-
 
         final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
         playerView.setOnTouchListener(new View.OnTouchListener() {
@@ -527,7 +510,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
                     if ((deltaXAbs > 100) && (deltaXAbs < 1000)) {
                         if (deltaX > 0) {
-                            OpenProfile(item, true);
+                            openProfile(item, true);
                         }
                     }
 
@@ -553,7 +536,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 @Override
                 public void onLongPress(MotionEvent e) {
                     super.onLongPress(e);
-                    Show_video_option(item);
+                    showVideoOption(item);
 
                 }
 
@@ -567,8 +550,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                        Show_heart_on_DoubleTap(item, mainlayout, e);
-                        Like_Video(currentPage, item);
+                        showHeartOnDoubleTap(item, mainlayout, e);
+                        likeVideo(currentPage, item);
                     } else {
                         Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
                     }
@@ -590,7 +573,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onHashTagClicked(String hashTag) {
 
                 onPause();
-                OpenHashtag(hashTag);
+                openHashtag(hashTag);
 
             }
         }).handle(desc_txt);
@@ -606,17 +589,17 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         swipe_count++;
         if (swipe_count > 4) {
-            Show_add();
+            showAdd();
             swipe_count = 0;
         }
 
 
-        Call_Api_For_Singlevideos(currentPage);
+        callApiForSinglevideo(currentPage);
 
     }
 
 
-    public void Show_heart_on_DoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
+    public void showHeartOnDoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
 
         int x = (int) e.getX() - 100;
         int y = (int) e.getY() - 100;
@@ -657,7 +640,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    public void Show_add() {
+    public void showAdd() {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         }
@@ -695,7 +678,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // when we swipe for another video this will relaese the privious player
     SimpleExoPlayer privious_player;
 
-    public void Release_Privious_Player() {
+    public void releasePreviousPlayer() {
         if (privious_player != null) {
             privious_player.removeListener(this);
             privious_player.release();
@@ -704,7 +687,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     // this function will call for like the video and Call an Api for like the video
-    public void Like_Video(final int position, final Home home_) {
+    public void likeVideo(final int position, final Home home_) {
         String action = home_.liked;
 
         if (action.equals("1")) {
@@ -722,20 +705,16 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         adapter.notifyDataSetChanged();
 
         Functions.callApiForLikeVideo(getActivity(), home_.video_id, action, new ApiCallBack() {
-
             @Override
             public void arrayData(ArrayList arrayList) {
-
             }
 
             @Override
-            public void onSuccess(String responce) {
-
+            public void onSuccess(String response) {
             }
 
             @Override
-            public void onFailure(String responce) {
-
+            public void onFailure(String response) {
             }
         });
 
@@ -743,7 +722,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     // this will open the comment screen
-    private void OpenComment(Home item) {
+    private void openComment(Home item) {
 
         int comment_counnt = Integer.parseInt(item.video_comment_count);
 
@@ -764,7 +743,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private void OpenProfile(Home item, boolean from_right_to_left) {
+    private void openProfile(Home item, boolean from_right_to_left) {
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
 
             TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);
@@ -774,7 +753,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void responseCallBackFromFragment(Bundle bundle) {
-                    Call_Api_For_Singlevideos(currentPage);
+                    callApiForSinglevideo(currentPage);
                 }
             });
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -796,9 +775,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private void OpenHashtag(String tag) {
+    private void openHashtag(String tag) {
 
-        TagedVideosFragment taged_videos_fragment = new TagedVideosFragment();
+        TaggedVideosFragment taged_videos_fragment = new TaggedVideosFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();
@@ -811,7 +790,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    private void Show_video_option(final Home home_) {
+    private void showVideoOption(final Home home_) {
 
         final CharSequence[] options = {"Save Video", "Cancel"};
 
@@ -827,7 +806,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                 if (options[item].equals("Save Video")) {
                     if (Functions.checkstoragepermision(getActivity()))
-                        Save_Video(home_);
+                        saveVideo(home_);
 
                 } else if (options[item].equals("Cancel")) {
 
@@ -843,7 +822,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-    public void Save_Video(final Home item) {
+    public void saveVideo(final Home item) {
 
         Functions.showDeterminentLoader(context, false, false);
         PRDownloader.initialize(getActivity().getApplicationContext());
@@ -881,12 +860,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                Applywatermark(item);
+                applyWatermark(item);
             }
 
             @Override
             public void onError(Error error) {
-                Delete_file_no_watermark(item);
+                deleteFileNoWatermark(item);
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                 Functions.cancelDeterminentLoader();
             }
@@ -897,7 +876,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-    public void Applywatermark(final Home item) {
+    public void applyWatermark(final Home item) {
 
         Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
         Bitmap bitmap_resize = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
@@ -923,8 +902,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             public void run() {
 
                                 Functions.cancelDeterminentLoader();
-                                Delete_file_no_watermark(item);
-                                Scan_file(item);
+                                deleteFileNoWatermark(item);
+                                scanFile(item);
 
                             }
                         });
@@ -947,7 +926,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             public void run() {
                                 try {
 
-                                    Delete_file_no_watermark(item);
+                                    deleteFileNoWatermark(item);
                                     Functions.cancelDeterminentLoader();
                                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
 
@@ -963,14 +942,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    public void Delete_file_no_watermark(Home item) {
+    public void deleteFileNoWatermark(Home item) {
         File file = new File(Variables.app_folder + item.video_id + "no_watermark" + ".mp4");
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public void Scan_file(Home item) {
+    public void scanFile(Home item) {
         MediaScannerConnection.scanFile(getActivity(),
                 new String[]{Variables.app_folder + item.video_id + ".mp4"},
                 null,
@@ -985,7 +964,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    public boolean is_fragment_exits() {
+    public boolean doesfragmentExits() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() == 0) {
             return false;
@@ -999,7 +978,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onResume() {
         super.onResume();
-        if ((privious_player != null && (is_visible_to_user && !is_user_stop_video)) && !is_fragment_exits()) {
+        if ((privious_player != null && (is_visible_to_user && !is_user_stop_video)) && !doesfragmentExits()) {
             privious_player.setPlayWhenReady(true);
         }
     }
@@ -1032,7 +1011,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    public boolean check_permissions() {
+    public boolean checkPermissions() {
 
         String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -1125,6 +1104,5 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     public void onSeekProcessed() {
 
     }
-
 
 }

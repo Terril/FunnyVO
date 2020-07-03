@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
 import com.funnyvo.android.services.ServiceCallback;
@@ -33,15 +34,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class PostVideoActivity extends AppCompatActivity implements ServiceCallback, View.OnClickListener {
-
+public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener {
 
     ImageView video_thumbnail;
     String video_path;
     ProgressDialog progressDialog;
     ServiceCallback serviceCallback;
     EditText description_edit;
-
+    UploadService mService;
     String draft_file;
 
     @Override
@@ -56,7 +56,6 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
 
         video_path = Variables.output_filter_file;
         video_thumbnail = findViewById(R.id.video_thumbnail);
-
 
         description_edit = findViewById(R.id.description_edit);
 
@@ -87,7 +86,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                Start_Service();
+                startService();
             }
         });
 
@@ -99,14 +98,14 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.save_draft_btn:
-                Save_file_in_draft();
+                saveFileInDraft();
                 break;
         }
     }
 
 
     // this will start the service for uploading the video into database
-    public void Start_Service() {
+    public void startService() {
         serviceCallback = this;
 
         UploadService mService = new UploadService(serviceCallback);
@@ -129,7 +128,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
     @Override
     protected void onStop() {
         super.onStop();
-        Stop_Service();
+        stopService();
     }
 
     @Override
@@ -142,20 +141,19 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
 
     // when the video is uploading successfully it will restart the appliaction
     @Override
-    public void showResponse(final String responce) {
+    public void showResponse(final String response) {
 
-        if (mConnection != null)
+        if (mConnection != null) {
             unbindService(mConnection);
+        }
 
-
-        if (responce.equalsIgnoreCase("Your Video is uploaded Successfully")) {
-
-            Delete_draft_file();
+        if (response.equalsIgnoreCase("Your Video is uploaded Successfully")) {
+            deleteDraftFile();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(PostVideoActivity.this, responce, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
 
                     startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
@@ -163,16 +161,14 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
                 }
             }, 1000);
 
-
         } else {
-            Toast.makeText(PostVideoActivity.this, responce, Toast.LENGTH_LONG).show();
+            Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
             progressDialog.dismiss();
         }
     }
 
 
     // this is importance for binding the service to the activity
-    UploadService mService;
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
@@ -181,10 +177,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
 
             UploadService.LocalBinder binder = (UploadService.LocalBinder) service;
             mService = binder.getService();
-
             mService.setCallbacks(PostVideoActivity.this);
-
-
         }
 
         @Override
@@ -201,7 +194,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
 
 
     // this function will stop the the ruuning service
-    public void Stop_Service() {
+    public void stopService() {
 
         serviceCallback = this;
 
@@ -218,7 +211,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
     }
 
 
-    public void Save_file_in_draft() {
+    public void saveFileInDraft() {
         File source = new File(video_path);
         File destination = new File(Variables.draft_app_folder + Functions.getRandomString() + ".mp4");
         try {
@@ -251,7 +244,7 @@ public class PostVideoActivity extends AppCompatActivity implements ServiceCallb
     }
 
 
-    public void Delete_draft_file() {
+    public void deleteDraftFile() {
         try {
             if (draft_file != null) {
                 File file = new File(draft_file);
