@@ -9,8 +9,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
 
-    @Inject lateinit var activityIndicator: ActivityIndicator
-    public void showProgressDialog() {
-
-    }
+//    @Inject lateinit var activityIndicator: ActivityIndicator
+//    public void showProgressDialog() {
+//
+//    }
 }

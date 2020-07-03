@@ -90,12 +90,9 @@
     </style>
 
     <style name="tab_text" parent="TextAppearance.Design.Tab">
-
         <item name="textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:paddingLeft">10dp</item>
-
-
     </style>
 
     <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
