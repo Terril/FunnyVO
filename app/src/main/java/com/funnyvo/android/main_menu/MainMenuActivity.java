@@ -12,13 +12,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends BaseActivity {
     public static MainMenuActivity mainMenuActivity;
     private MainMenuFragment mainMenuFragment;
     long mBackPressed;

@@ -1,6 +1,8 @@
 package com.funnyvo.android.videorecording;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,15 +15,15 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daasuu.gpuv.composer.FillMode;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
 import com.daasuu.gpuv.player.PlayerScaleType;
-import com.funnyvo.android.base.BaseActivity;
-import com.funnyvo.android.filter.FilterType;
-import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.R;
-import com.funnyvo.android.simpleclasses.Functions;
+import com.funnyvo.android.base.BaseActivity;
+import com.funnyvo.android.filter.FilterAdapter;
+import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -90,7 +92,7 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
             @Override
             public void onItemClick(View view, int postion, FilterType item) {
                 select_postion = postion;
-                gpuPlayerView.setGlFilter(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext()));
+                gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext(), getBitmapForLogo())));
                 adapter.notifyDataSetChanged();
             }
         });
@@ -105,7 +107,7 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "TikTok"));
+                Util.getUserAgent(this, "FunnyVO"));
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path));
@@ -146,7 +148,6 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         if (player != null) {
             player.setPlayWhenReady(true);
         }
-
     }
 
     @Override
@@ -155,7 +156,6 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         if (player != null) {
             player.setPlayWhenReady(true);
         }
-
     }
 
     @Override
@@ -168,14 +168,13 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         }
     }
 
-
     // this function will add the filter to video and save that same video for post the video in post video screen
     public void saveVideo(String srcMp4Path, final String destMp4Path) {
         showProgressDialog();
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
                 //.videoBitrate((int) (0.25 * 16 * 540 * 960))
-                .filter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(select_postion), getApplicationContext())))
+                .filter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(select_postion), getApplicationContext(), getBitmapForLogo())))
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
@@ -218,6 +217,12 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
                 .start();
     }
 
+    private Bitmap getBitmapForLogo() {
+        Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
+        Bitmap reSizeBitmap = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
+
+        return reSizeBitmap;
+    }
 
     public void gotopostScreen() {
         Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
@@ -278,7 +283,6 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
     public void onSeekProcessed() {
 
     }
-
 
     @Override
     public void onBackPressed() {

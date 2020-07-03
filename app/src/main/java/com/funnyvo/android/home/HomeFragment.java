@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -49,6 +50,7 @@ import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.videoAction.VideoActionFragment;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.home.datamodel.Home;
@@ -120,8 +122,16 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     int swipe_count = 0;
 
+    BaseActivity mActivity;
+
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mActivity = (BaseActivity) getActivity();
     }
 
     @Override
@@ -823,8 +833,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     public void saveVideo(final Home item) {
-
-        Functions.showDeterminentLoader(context, false, false);
+        mActivity.showProgressDialog();
         PRDownloader.initialize(getActivity().getApplicationContext());
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
                 .build()
@@ -850,9 +859,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     @Override
                     public void onProgress(Progress progress) {
 
-                        int prog = (int) ((progress.currentBytes * 100) / progress.totalBytes);
-                        Functions.showLoadingProgress(prog / 2);
-
                     }
                 });
 
@@ -867,7 +873,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onError(Error error) {
                 deleteFileNoWatermark(item);
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-                Functions.cancelDeterminentLoader();
+                mActivity.dismissProgressDialog();
             }
 
 
@@ -877,7 +883,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     public void applyWatermark(final Home item) {
-
         Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
         Bitmap bitmap_resize = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
         GlWatermarkFilter filter = new GlWatermarkFilter(bitmap_resize, GlWatermarkFilter.Position.LEFT_TOP);
@@ -888,9 +893,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-
                         Log.d("resp", "" + (int) (progress * 100));
-                        Functions.showLoadingProgress((int) ((progress * 100) / 2) + 50);
+                        mActivity.showProgressDialog();
 
                     }
 
@@ -901,7 +905,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             @Override
                             public void run() {
 
-                                Functions.cancelDeterminentLoader();
+                                mActivity.dismissProgressDialog();
                                 deleteFileNoWatermark(item);
                                 scanFile(item);
 
@@ -927,7 +931,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                 try {
 
                                     deleteFileNoWatermark(item);
-                                    Functions.cancelDeterminentLoader();
+                                    mActivity.dismissProgressDialog();
                                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
 
                                 } catch (Exception e) {

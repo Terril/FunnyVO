@@ -1,6 +1,7 @@
 package com.funnyvo.android.filter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.daasuu.gpuv.egl.filter.GlBilateralFilter;
@@ -38,12 +39,15 @@ import com.daasuu.gpuv.egl.filter.GlToneCurveFilter;
 import com.daasuu.gpuv.egl.filter.GlToneFilter;
 import com.daasuu.gpuv.egl.filter.GlVibranceFilter;
 import com.daasuu.gpuv.egl.filter.GlVignetteFilter;
+import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
 import com.daasuu.gpuv.egl.filter.GlWeakPixelInclusionFilter;
 import com.daasuu.gpuv.egl.filter.GlZoomBlurFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 // this is the all available filters
@@ -90,111 +94,143 @@ public enum FilterType {
         return Arrays.asList(FilterType.values());
     }
 
-    public static GlFilter createGlFilter(FilterType filterType, Context context) {
+    public static Collection<GlFilter> createGlFilter(FilterType filterType, Context context, Bitmap bitmap) {
         switch (filterType) {
             case DEFAULT:
-                return new GlFilter();
+                GlFilter filter = new GlFilter();
+                return returnWithWaterMarkToFilters(filter, bitmap);
             case BILATERAL_BLUR:
-                return new GlBilateralFilter();
+                GlBilateralFilter bilateralFilter = new GlBilateralFilter();
+                return returnWithWaterMarkToFilters(bilateralFilter, bitmap);
             case BOX_BLUR:
-                return new GlBoxBlurFilter();
+                GlBoxBlurFilter boxBlurFilter = new GlBoxBlurFilter();
+                return returnWithWaterMarkToFilters(boxBlurFilter, bitmap);
             case BRIGHTNESS:
                 GlBrightnessFilter glBrightnessFilter = new GlBrightnessFilter();
                 glBrightnessFilter.setBrightness(0.1f);
-                return glBrightnessFilter;
+                return returnWithWaterMarkToFilters(glBrightnessFilter, bitmap);
             case BULGE_DISTORTION:
-                return new GlBulgeDistortionFilter();
+                GlBulgeDistortionFilter bulgeDistortionFilter = new GlBulgeDistortionFilter();
+                return returnWithWaterMarkToFilters(bulgeDistortionFilter, bitmap);
             case CGA_COLORSPACE:
-                return new GlCGAColorspaceFilter();
+                GlCGAColorspaceFilter glCGAColorspaceFilter = new GlCGAColorspaceFilter();
+                return returnWithWaterMarkToFilters(glCGAColorspaceFilter, bitmap);
             case CONTRAST:
                 GlContrastFilter glContrastFilter = new GlContrastFilter();
                 glContrastFilter.setContrast(2.5f);
-                return glContrastFilter;
+                return returnWithWaterMarkToFilters(glContrastFilter, bitmap);
             case CROSSHATCH:
-                return new GlCrosshatchFilter();
+                GlCrosshatchFilter glCrosshatchFilter = new GlCrosshatchFilter();
+                return returnWithWaterMarkToFilters(glCrosshatchFilter, bitmap);
             case EXPOSURE:
-                return new GlExposureFilter();
+                GlExposureFilter glExposureFilter = new GlExposureFilter();
+                return returnWithWaterMarkToFilters(glExposureFilter, bitmap);
             case FILTER_GROUP_SAMPLE:
-                return new GlFilterGroup(new GlSepiaFilter(), new GlVignetteFilter());
+                GlFilterGroup filterGroup = new GlFilterGroup(new GlSepiaFilter(), new GlVignetteFilter());
+                return returnWithWaterMarkToFilters(filterGroup, bitmap);
             case GAMMA:
                 GlGammaFilter glGammaFilter = new GlGammaFilter();
                 glGammaFilter.setGamma(2f);
-                return glGammaFilter;
+                return returnWithWaterMarkToFilters(glGammaFilter, bitmap);
             case GAUSSIAN_FILTER:
-                return new GlGaussianBlurFilter();
+                GlGaussianBlurFilter glGaussianBlurFilter = new GlGaussianBlurFilter();
+                return returnWithWaterMarkToFilters(glGaussianBlurFilter, bitmap);
             case GRAY_SCALE:
-                return new GlGrayScaleFilter();
+                GlGrayScaleFilter glGrayScaleFilter = new GlGrayScaleFilter();
+                return returnWithWaterMarkToFilters(glGrayScaleFilter, bitmap);
             case HALFTONE:
-                return new GlHalftoneFilter();
+                GlHalftoneFilter glHalftoneFilter = new GlHalftoneFilter();
+                return returnWithWaterMarkToFilters(glHalftoneFilter, bitmap);
             case HAZE:
                 GlHazeFilter glHazeFilter = new GlHazeFilter();
                 glHazeFilter.setSlope(-0.5f);
-                return glHazeFilter;
+                return returnWithWaterMarkToFilters(glHazeFilter, bitmap);
             case HIGHLIGHT_SHADOW:
-                return new GlHighlightShadowFilter();
+                GlHighlightShadowFilter glHighlightShadowFilter = new GlHighlightShadowFilter();
+                return returnWithWaterMarkToFilters(glHighlightShadowFilter, bitmap);
             case HUE:
-                return new GlHueFilter();
+                GlHueFilter glHueFilter = new GlHueFilter();
+                return returnWithWaterMarkToFilters(glHueFilter, bitmap);
             case INVERT:
-                return new GlInvertFilter();
+                GlInvertFilter glInvertFilter = new GlInvertFilter();
+                return returnWithWaterMarkToFilters(glInvertFilter, bitmap);
             case LUMINANCE:
-                return new GlLuminanceFilter();
+                GlLuminanceFilter glLuminanceFilter = new GlLuminanceFilter();
+                return returnWithWaterMarkToFilters(glLuminanceFilter, bitmap);
             case LUMINANCE_THRESHOLD:
-                return new GlLuminanceThresholdFilter();
+                GlLuminanceThresholdFilter glLuminanceThresholdFilter = new GlLuminanceThresholdFilter();
+                return returnWithWaterMarkToFilters(glLuminanceThresholdFilter, bitmap);
             case MONOCHROME:
-                return new GlMonochromeFilter();
+                GlMonochromeFilter glMonochromeFilter = new GlMonochromeFilter();
+                return returnWithWaterMarkToFilters(glMonochromeFilter, bitmap);
             case OPACITY:
-                return new GlOpacityFilter();
+                GlOpacityFilter glOpacityFilter = new GlOpacityFilter();
+                return returnWithWaterMarkToFilters(glOpacityFilter, bitmap);
             case PIXELATION:
-                return new GlPixelationFilter();
+                GlPixelationFilter glPixelationFilter = new GlPixelationFilter();
+                return returnWithWaterMarkToFilters(glPixelationFilter, bitmap);
             case POSTERIZE:
-                return new GlPosterizeFilter();
+                GlPosterizeFilter glPosterizeFilter = new GlPosterizeFilter();
+                return returnWithWaterMarkToFilters(glPosterizeFilter, bitmap);
             case RGB:
                 GlRGBFilter glRGBFilter = new GlRGBFilter();
                 glRGBFilter.setRed(0f);
-                return glRGBFilter;
+                return returnWithWaterMarkToFilters(glRGBFilter, bitmap);
             case SATURATION:
-                return new GlSaturationFilter();
+                GlSaturationFilter glSaturationFilter = new GlSaturationFilter();
+                return returnWithWaterMarkToFilters(glSaturationFilter, bitmap);
             case SEPIA:
-                return new GlSepiaFilter();
+                GlSepiaFilter glSepiaFilter = new GlSepiaFilter();
+                return returnWithWaterMarkToFilters(glSepiaFilter, bitmap);
             case SHARP:
                 GlSharpenFilter glSharpenFilter = new GlSharpenFilter();
                 glSharpenFilter.setSharpness(3f);
-                return glSharpenFilter;
+                return returnWithWaterMarkToFilters(glSharpenFilter, bitmap);
             case SOLARIZE:
-                return new GlSolarizeFilter();
+                GlSolarizeFilter glSolarizeFilter = new GlSolarizeFilter();
+                return returnWithWaterMarkToFilters(glSolarizeFilter, bitmap);
             case SPHERE_REFRACTION:
-                return new GlSphereRefractionFilter();
+                GlSphereRefractionFilter glSphereRefractionFilter = new GlSphereRefractionFilter();
+                return returnWithWaterMarkToFilters(glSphereRefractionFilter, bitmap);
             case SWIRL:
-                return new GlSwirlFilter();
+                GlSwirlFilter swirlFilter = new GlSwirlFilter();
+                return returnWithWaterMarkToFilters(swirlFilter, bitmap);
             case TONE_CURVE_SAMPLE:
                 try {
                     InputStream is = context.getAssets().open("acv/tone_cuver_sample.acv");
-                    return new GlToneCurveFilter(is);
+                    GlToneCurveFilter glToneCurveFilter = new GlToneCurveFilter(is);
+                    return returnWithWaterMarkToFilters(glToneCurveFilter, bitmap);
                 } catch (IOException e) {
                     Log.e("FilterType", "Error");
                 }
-                return new GlFilter();
+                return returnWithWaterMarkToFilters(new GlFilter(), bitmap);
             case TONE:
-                return new GlToneFilter();
+                return returnWithWaterMarkToFilters(new GlToneFilter(), bitmap);
 
             case VIBRANCE:
                 GlVibranceFilter glVibranceFilter = new GlVibranceFilter();
                 glVibranceFilter.setVibrance(3f);
-                return glVibranceFilter;
-
+                return returnWithWaterMarkToFilters(glVibranceFilter, bitmap);
             case VIGNETTE:
-                return new GlVignetteFilter();
+                return returnWithWaterMarkToFilters(new GlVignetteFilter(), bitmap);
 
             case WEAK_PIXEL:
-                return new GlWeakPixelInclusionFilter();
+                return returnWithWaterMarkToFilters(new GlWeakPixelInclusionFilter(), bitmap);
 
             case ZOOM_BLUR:
-                return new GlZoomBlurFilter();
+                return returnWithWaterMarkToFilters(new GlZoomBlurFilter(), bitmap);
 
             default:
-                return new GlFilter();
+                return returnWithWaterMarkToFilters(new GlFilter(), bitmap);
         }
     }
 
+    private static List<GlFilter> returnWithWaterMarkToFilters(GlFilter filter, Bitmap bitmap) {
+        ArrayList<GlFilter> filters = new ArrayList<>();
+        GlWatermarkFilter watermarkFilter = new GlWatermarkFilter(bitmap, GlWatermarkFilter.Position.RIGHT_BOTTOM);
+        filters.add(filter);
+        filters.add(watermarkFilter);
 
+        return filters;
+    }
 }
