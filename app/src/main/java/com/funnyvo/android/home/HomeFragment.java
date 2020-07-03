@@ -97,6 +97,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -489,7 +490,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         final SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, "TikTok"));
+                Util.getUserAgent(context, APP_NAME));
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(item.video_url));
@@ -895,16 +896,13 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     public void onProgress(double progress) {
                         Log.d("resp", "" + (int) (progress * 100));
                         mActivity.showProgressDialog();
-
                     }
 
                     @Override
                     public void onCompleted() {
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
                                 mActivity.dismissProgressDialog();
                                 deleteFileNoWatermark(item);
                                 scanFile(item);
@@ -960,7 +958,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 new MediaScannerConnection.OnScanCompletedListener() {
 
                     public void onScanCompleted(String path, Uri uri) {
-
                         Log.i("ExternalStorage", "Scanned " + path + ":");
                         Log.i("ExternalStorage", "-> uri=" + uri);
                     }

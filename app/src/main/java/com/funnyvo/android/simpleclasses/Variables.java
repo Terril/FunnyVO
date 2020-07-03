@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class Variables {
+    public static final String APP_NAME = "FunnyVO";
     public static final String device = "android";
 
     public static int screen_width;
@@ -16,7 +17,7 @@ public class Variables {
     public static final String SelectedAudio_AAC = "SelectedAudio.aac";
 
     public static final String root = Environment.getExternalStorageDirectory().toString();
-    public static final String app_folder = root + "/TicTic/";
+    public static final String app_folder = root + "/FunnyVO/";
     public static final String draft_app_folder = app_folder + "Draft/";
 
 

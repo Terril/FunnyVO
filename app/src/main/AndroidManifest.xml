@@ -95,7 +95,6 @@
         <activity
             android:name=".videorecording.PreviewVideoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/black_status"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".videorecording.PostVideoActivity"

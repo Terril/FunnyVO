@@ -112,12 +112,11 @@ public class UploadService extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
                         Bitmap bmThumbnail;
                         bmThumbnail = ThumbnailUtils.createVideoThumbnail(uri.getPath(),
                                 MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
                         Bitmap bmThumbnail_resized = Bitmap.createScaledBitmap(bmThumbnail, (int) (bmThumbnail.getWidth() * 0.4), (int) (bmThumbnail.getHeight() * 0.4), true);
-                        thumb_base_64 = Bitmap_to_base64(bmThumbnail_resized);
+                        thumb_base_64 = bitmapToBase64(bmThumbnail_resized);
 
                         try {
                             video_base64 = encodeFileToBase64Binary(uri);
@@ -203,7 +202,7 @@ public class UploadService extends Service {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap<String, String> headers = new HashMap<String, String>();
-                                headers.put("fb-id", sharedPreferences.getString(Variables.u_id, "0"));
+                                headers.put("fb_id", sharedPreferences.getString(Variables.u_id, "0"));
                                 headers.put("version", getResources().getString(R.string.version));
                                 headers.put("device", getResources().getString(R.string.device));
                                 headers.put("tokon", sharedPreferences.getString(Variables.api_token, ""));
@@ -263,7 +262,7 @@ public class UploadService extends Service {
 
 
     // for thumbnail
-    public String Bitmap_to_base64(Bitmap imagebitmap) {
+    public String bitmapToBase64(Bitmap imagebitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imagebitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
         byte[] byteArray = baos.toByteArray();

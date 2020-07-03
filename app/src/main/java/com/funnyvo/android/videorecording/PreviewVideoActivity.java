@@ -3,7 +3,10 @@ package com.funnyvo.android.videorecording;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -25,7 +28,6 @@ import java.util.List;
 
 public class PreviewVideoActivity extends BaseActivity {
 
-    private String video_url;
     private GPUPlayerView gpuPlayerView;
     public static int select_postion = 0;
     private final List<FilterType> filterTypes = FilterType.createFilterList();
@@ -40,6 +42,7 @@ public class PreviewVideoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideNavigation();
         setContentView(R.layout.activity_preview_video);
 
         Intent intent = getIntent();
@@ -48,9 +51,9 @@ public class PreviewVideoActivity extends BaseActivity {
         }
         eventListener = new PlayerEventListener();
         select_postion = 0;
-        video_url = Variables.outputfile2;
+        String videoUrl = Variables.outputfile2;
 
-        findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnGoBackPreview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -59,23 +62,28 @@ public class PreviewVideoActivity extends BaseActivity {
             }
         });
 
-
-        findViewById(R.id.next_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnNext).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveVideo(Variables.outputfile2, Variables.output_filter_file);
             }
         });
 
-        gpuPlayerView = setPlayer(video_url, eventListener);
+        gpuPlayerView = setPlayer(videoUrl, eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerview);
 
-        adapter = new FilterAdapter(this, filterTypes, new FilterAdapter.OnItemClickListener() {
+        Bitmap bmThumbnail = ThumbnailUtils.createVideoThumbnail(videoUrl,
+                MediaStore.Video.Thumbnails.MINI_KIND);
+        Bitmap bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (int) (bmThumbnail.getWidth() * 0.4), (int) (bmThumbnail.getHeight() * 0.4), true);
+
+        adapter = new FilterAdapter(this, filterTypes, bmThumbnailResized, new FilterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, FilterType item) {
                 select_postion = postion;
+                gpuPlayerView.setElevation(3.0F);
+
                 gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext(), getBitmapForLogo())));
                 adapter.notifyDataSetChanged();
             }
@@ -172,7 +180,7 @@ public class PreviewVideoActivity extends BaseActivity {
 
     private Bitmap getBitmapForLogo() {
         Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
-        Bitmap reSizeBitmap = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
+        Bitmap reSizeBitmap = Bitmap.createScaledBitmap(myLogo, 50, 50, true);
 
         return reSizeBitmap;
     }

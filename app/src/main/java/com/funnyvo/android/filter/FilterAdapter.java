@@ -63,12 +63,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
 
     public FilterAdapter.OnItemClickListener listener;
 
-    public FilterAdapter(Context context, List<FilterType> arrayList, FilterAdapter.OnItemClickListener listener) {
+    public FilterAdapter(Context context, List<FilterType> arrayList, Bitmap bitmap, FilterAdapter.OnItemClickListener listener) {
         this.context = context;
         datalist = arrayList;
         this.listener = listener;
-        image = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.ic_bg_filter);
+        image = bitmap;
     }
 
     @Override
@@ -109,14 +108,14 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
     @Override
     public void onBindViewHolder(final FilterAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
-        String s = datalist.get(i).name();
-        holder.fiter_txt.setText(s);
+        String filterName = datalist.get(i).name();
+        holder.fiter_txt.setText(filterName.replace("_", " "));
         if (PreviewVideoActivity.select_postion == i) {
             holder.ivPhoto.setBackgroundColor(context.getResources().getColor(R.color.redcolor));
         }
         holder.ivPhoto.setImage(image);
 
-        switch (s) {
+        switch (filterName) {
             case "BRIGHTNESS":
                 holder.ivPhoto.setFilter(new GPUImageBrightnessFilter());
                 break;

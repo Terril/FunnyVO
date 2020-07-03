@@ -36,24 +36,24 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="Post"
-                android:textColor="@color/palette_milk"
+                android:textColor="@color/palette_cheddar"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
 
             <ImageButton
                 android:id="@+id/Goback"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentLeft="true"
+                android:layout_width="@dimen/margin_32"
+                android:layout_height="@dimen/margin_32"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:background="@color/transparent"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_back"
-                android:tint="@color/palette_milk" />
+                android:tint="@color/palette_cheddar" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
@@ -78,6 +78,7 @@
         android:layout_marginLeft="@dimen/margin_10"
         android:layout_marginBottom="@dimen/margin_20"
         app:icon="@drawable/ic_local_save"
+        app:iconTint="@color/palette_cheddar_darker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"></com.google.android.material.button.MaterialButton>
 

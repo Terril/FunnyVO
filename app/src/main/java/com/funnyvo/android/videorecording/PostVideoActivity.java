@@ -44,6 +44,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideNavigation();
         setContentView(R.layout.activity_post_video);
 
         Intent intent = getIntent();
@@ -86,7 +87,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         }
     }
 
-
     // this will start the service for uploading the video into database
     public void startService() {
         serviceCallback = this;
@@ -96,7 +96,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
             mServiceIntent.setAction("startservice");
             mServiceIntent.putExtra("uri", "" + Uri.fromFile(new File(video_path)));
-            mServiceIntent.putExtra("desc", "" + description_edit.getText().toString());
+            mServiceIntent.putExtra("desc", "" );
             startService(mServiceIntent);
 
 
