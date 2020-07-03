@@ -5,7 +5,7 @@ package com.funnyvo.android.chat.datamodel;
  */
 
 public class Chat {
-    String receiver_id, sender_id, chat_id, sender_name, text, pic_url, status, time, timestamp, type;
+    public String receiver_id, sender_id, chat_id, sender_name, text, pic_url, status, time, timestamp, type;
 
     public Chat() {
 

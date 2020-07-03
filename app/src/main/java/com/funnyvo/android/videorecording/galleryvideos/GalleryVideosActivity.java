@@ -390,7 +390,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Functions.Show_indeterminent_loader(GalleryVideosActivity.this, true, true);
+                Functions.showIndeterminentLoader(GalleryVideosActivity.this, true, true);
             }
 
             @Override
@@ -398,7 +398,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
                 if (result.equals("error")) {
                     Toast.makeText(GalleryVideosActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
-                    Functions.cancel_indeterminent_loader();
+                    Functions.cancelIndeterminentLoader();
                     Chnage_Video_size(Variables.gallery_trimed_video, Variables.gallery_resize_video);
                 }
             }

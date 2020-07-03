@@ -24,10 +24,6 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by AQEEL on 2/15/2019.
- */
-
 // this is the class which will add the selected soung to the created video
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 

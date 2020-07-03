@@ -136,9 +136,9 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
 
         Log.d("resp", parameters.toString());
 
-        ApiRequest.Call_Api(context, Variables.discover, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.discover, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 Parse_data(resp);
                 swiperefresh.setRefreshing(false);
             }

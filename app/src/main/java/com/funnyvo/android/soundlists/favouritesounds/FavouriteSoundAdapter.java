@@ -17,10 +17,6 @@ import com.funnyvo.android.soundlists.Sounds;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/19/2019.
- */
-
 class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.CustomViewHolder > {
     public Context context;
 

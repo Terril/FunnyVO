@@ -51,10 +51,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by AQEEL on 6/7/2018.
- */
-
 // this the background service which will upload the video into database
 public class UploadService extends Service {
 
@@ -185,7 +181,7 @@ public class UploadService extends Service {
                                         stopForeground(true);
                                         stopSelf();
 
-                                        Callback.ShowResponse("Your Video is uploaded Successfully");
+                                        Callback.showResponse("Your Video is uploaded Successfully");
 
                                     }
                                 }, new Response.ErrorListener() {
@@ -196,7 +192,7 @@ public class UploadService extends Service {
                                         stopForeground(true);
                                         stopSelf();
 
-                                        Callback.ShowResponse("Their is some kind of problem from Server side Please Try Later");
+                                        Callback.showResponse("Their is some kind of problem from Server side Please Try Later");
                                     }
                                 }) {
                             @Override

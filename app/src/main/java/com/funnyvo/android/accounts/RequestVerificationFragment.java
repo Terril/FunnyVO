@@ -24,8 +24,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
-import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FileUtils;
@@ -49,11 +49,11 @@ import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
 public class RequestVerificationFragment extends RootFragment implements View.OnClickListener {
 
-    View view;
-    Context context;
-    EditText username_edit, fullname_edit;
-    TextView file_name_txt;
-    String base_64;
+    private View view;
+    private Context context;
+    private EditText username_edit, fullname_edit;
+    private TextView file_name_txt;
+    private String base_64;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -258,7 +258,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 resized.compress(Bitmap.CompressFormat.JPEG, 20, baos);
 
-                base_64 = Functions.Bitmap_to_base64(getActivity(), resized);
+                base_64 = Functions.bitmapToBase64(getActivity(), resized);
 
                 if (image_file != null)
                     file_name_txt.setText(image_file.getName());
@@ -308,7 +308,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 resized.compress(Bitmap.CompressFormat.JPEG, 20, baos);
 
-                base_64 = Functions.Bitmap_to_base64(getActivity(), resized);
+                base_64 = Functions.bitmapToBase64(getActivity(), resized);
 
                 if (image_file != null)
                     file_name_txt.setText(image_file.getName());
@@ -351,11 +351,11 @@ public class RequestVerificationFragment extends RootFragment implements View.On
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Functions.Show_loader(context, false, false);
-        ApiRequest.Call_Api(context, Variables.getVerified, params, new Callback() {
+        Functions.showLoader(context, false, false);
+        ApiRequest.callApi(context, Variables.getVerified, params, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 try {
                     JSONObject jsonObject = new JSONObject(resp);
                     String code = jsonObject.optString("code");

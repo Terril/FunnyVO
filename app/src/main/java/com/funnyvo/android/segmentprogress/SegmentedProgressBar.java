@@ -1,9 +1,5 @@
 package com.funnyvo.android.segmentprogress;
 
-/**
- * Created by AQEEL on 3/25/2019.
- */
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;

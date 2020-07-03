@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 public interface ApiCallBack {
 
-    void ArrayData(ArrayList arrayList);
+    void arrayData(ArrayList arrayList);
 
-    void OnSuccess(String responce);
+    void onSuccess(String responce);
 
-    void OnFail(String responce);
+    void onFailure(String responce);
 
 
 }

@@ -100,7 +100,7 @@ public class RecordingTimeRangeFragment extends BottomSheetDialogFragment implem
             case R.id.start_recording_layout:
                 Bundle bundle = new Bundle();
                 bundle.putInt("end_time", selected_value);
-                fragment_callback.Response(bundle);
+                fragment_callback.responseCallBackFromFragment(bundle);
                 dismiss();
                 break;
         }

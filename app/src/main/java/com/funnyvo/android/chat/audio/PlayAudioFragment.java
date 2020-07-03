@@ -22,13 +22,13 @@ import nl.changer.audiowife.AudioWife;
  */
 public class PlayAudioFragment extends Fragment {
 
-    View view;
-    Context context;
-    ImageButton play_btn, pause_btn;
-    SeekBar seekBar;
-    TextView duration_time, total_time;
-    AudioWife audioWife;
-    ImageButton close_btn;
+    private View view;
+    private Context context;
+    private ImageButton play_btn, pause_btn;
+    private SeekBar seekBar;
+    private TextView duration_time, total_time;
+    private AudioWife audioWife;
+    private ImageButton close_btn;
 
     public PlayAudioFragment() {
         // Required empty public constructor

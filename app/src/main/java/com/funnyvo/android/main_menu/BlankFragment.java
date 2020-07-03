@@ -12,11 +12,9 @@ import com.funnyvo.android.R;
 
 public class BlankFragment extends RootFragment {
 
-
     public BlankFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

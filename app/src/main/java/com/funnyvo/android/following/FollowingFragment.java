@@ -144,9 +144,9 @@ public class FollowingFragment extends Fragment {
         }
 
 
-        ApiRequest.Call_Api(context, Variables.get_followings, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.get_followings, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 Parse_following_data(resp);
             }
         });
@@ -216,9 +216,9 @@ public class FollowingFragment extends Fragment {
         }
 
 
-        ApiRequest.Call_Api(context, Variables.get_followers, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.get_followers, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 Parse_fans_data(resp);
             }
         });
@@ -280,7 +280,7 @@ public class FollowingFragment extends Fragment {
     private void OpenProfile(final Following item) {
         ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
             @Override
-            public void Response(Bundle bundle) {
+            public void responseCallBackFromFragment(Bundle bundle) {
 
             }
         });
@@ -305,18 +305,18 @@ public class FollowingFragment extends Fragment {
             send_status = "0";
         }
 
-        Functions.Call_Api_For_Follow_or_unFollow(getActivity(),
+        Functions.callApiForFollowOrUnFollow(getActivity(),
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
                 item.fb_id,
                 send_status,
                 new ApiCallBack() {
                     @Override
-                    public void ArrayData(ArrayList arrayList) {
+                    public void arrayData(ArrayList arrayList) {
 
                     }
 
                     @Override
-                    public void OnSuccess(String responce) {
+                    public void onSuccess(String responce) {
 
                         if (send_status.equals("1")) {
                             item.follow = "1";
@@ -333,7 +333,7 @@ public class FollowingFragment extends Fragment {
                     }
 
                     @Override
-                    public void OnFail(String responce) {
+                    public void onFailure(String responce) {
 
                     }
 
@@ -344,7 +344,7 @@ public class FollowingFragment extends Fragment {
     @Override
     public void onDetach() {
         if (fragment_callback != null)
-            fragment_callback.Response(new Bundle());
+            fragment_callback.responseCallBackFromFragment(new Bundle());
 
         super.onDetach();
     }

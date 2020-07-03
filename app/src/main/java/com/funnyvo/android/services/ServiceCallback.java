@@ -5,5 +5,5 @@ package com.funnyvo.android.services;
  */
 
 public interface ServiceCallback {
-    void ShowResponse(String responce);
+    void showResponse(String responce);
 }

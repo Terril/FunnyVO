@@ -20,9 +20,8 @@ import java.util.Map;
 
 public class ApiRequest {
 
-    public static void Call_Api(final Context context, final String url, JSONObject jsonObject,
-                                final Callback callback) {
-
+    public static void callApi(final Context context, final String url, JSONObject jsonObject,
+                               final Callback callback) {
 
         if (!Variables.is_secure_info) {
             final String[] urlsplit = url.split("/");
@@ -38,15 +37,12 @@ public class ApiRequest {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
                         if (!Variables.is_secure_info) {
                             final String[] urlsplit = url.split("/");
                             Log.d(Variables.tag + urlsplit[urlsplit.length - 1], response.toString());
                         }
-
                         if (callback != null)
-                            callback.Response(response.toString());
-
+                            callback.response(response.toString());
                     }
                 }, new Response.ErrorListener() {
 
@@ -58,7 +54,7 @@ public class ApiRequest {
                 }
 
                 if (callback != null)
-                    callback.Response(error.toString());
+                    callback.response(error.toString());
 
             }
         }) {

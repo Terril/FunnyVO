@@ -15,9 +15,6 @@ import com.funnyvo.android.notifications.datamodel.Notification;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.CustomViewHolder> {
     public Context context;

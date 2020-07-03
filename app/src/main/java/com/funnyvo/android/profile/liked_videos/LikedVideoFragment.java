@@ -105,9 +105,9 @@ public class LikedVideoFragment extends Fragment {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.my_liked_video, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.my_liked_video, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 Parse_data(resp);
             }
         });

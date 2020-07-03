@@ -17,10 +17,10 @@ import java.util.List;
  * Created by AQEEL on 3/20/2018.
  */
 
-public class VideoSharingApps_Adapter extends RecyclerView.Adapter<VideoSharingApps_Adapter.CustomViewHolder> {
+public class VideoSharingAppsAdapter extends RecyclerView.Adapter<VideoSharingAppsAdapter.CustomViewHolder> {
 
     public Context context;
-    private VideoSharingApps_Adapter.OnItemClickListener listener;
+    private VideoSharingAppsAdapter.OnItemClickListener listener;
     private List<ResolveInfo> dataList;
 
 
@@ -31,7 +31,7 @@ public class VideoSharingApps_Adapter extends RecyclerView.Adapter<VideoSharingA
     }
 
 
-    public VideoSharingApps_Adapter(Context context, List<ResolveInfo> dataList, VideoSharingApps_Adapter.OnItemClickListener listener) {
+    public VideoSharingAppsAdapter(Context context, List<ResolveInfo> dataList, VideoSharingAppsAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
@@ -39,9 +39,9 @@ public class VideoSharingApps_Adapter extends RecyclerView.Adapter<VideoSharingA
     }
 
     @Override
-    public VideoSharingApps_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public VideoSharingAppsAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_videosharingapps_layout, null);
-        VideoSharingApps_Adapter.CustomViewHolder viewHolder = new VideoSharingApps_Adapter.CustomViewHolder(view);
+        VideoSharingAppsAdapter.CustomViewHolder viewHolder = new VideoSharingAppsAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -53,7 +53,7 @@ public class VideoSharingApps_Adapter extends RecyclerView.Adapter<VideoSharingA
 
 
     @Override
-    public void onBindViewHolder(final VideoSharingApps_Adapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final VideoSharingAppsAdapter.CustomViewHolder holder, final int i) {
         final ResolveInfo item = dataList.get(i);
         holder.setIsRecyclable(false);
 
@@ -82,7 +82,7 @@ public class VideoSharingApps_Adapter extends RecyclerView.Adapter<VideoSharingA
             image = view.findViewById(R.id.image);
         }
 
-        public void bind(final int postion, final ResolveInfo item, final VideoSharingApps_Adapter.OnItemClickListener listener) {
+        public void bind(final int postion, final ResolveInfo item, final VideoSharingAppsAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

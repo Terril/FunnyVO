@@ -1,8 +1,5 @@
 package com.funnyvo.android.segmentprogress;
 
-/**
- * Created by AQEEL on 3/25/2019.
- */
 
 import android.os.Handler;
 import android.os.Message;

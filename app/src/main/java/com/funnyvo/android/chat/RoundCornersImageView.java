@@ -15,7 +15,6 @@ import android.widget.ImageView;
 
 @SuppressLint("AppCompatCustomView")
 public class RoundCornersImageView extends ImageView {
-    ;
 
     public RoundCornersImageView(Context context) {
         super(context);

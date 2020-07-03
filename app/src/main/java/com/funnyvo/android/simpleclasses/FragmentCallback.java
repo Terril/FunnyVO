@@ -8,5 +8,5 @@ import android.os.Bundle;
 
 public interface FragmentCallback {
 
-    void Response(Bundle bundle);
+    void responseCallBackFromFragment(Bundle bundle);
 }

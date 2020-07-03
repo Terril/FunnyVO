@@ -64,8 +64,8 @@ public class MainMenuActivity extends AppCompatActivity {
             mainMenuFragment = (MainMenuFragment) getSupportFragmentManager().getFragments().get(0);
         }
 
-        Functions.make_directry(Variables.app_folder);
-        Functions.make_directry(Variables.draft_app_folder);
+        Functions.makeDirectory(Variables.app_folder);
+        Functions.makeDirectory(Variables.draft_app_folder);
 
     }
 

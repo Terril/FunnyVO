@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VideoAction_F extends BottomSheetDialogFragment implements View.OnClickListener {
+public class VideoActionFragment extends BottomSheetDialogFragment implements View.OnClickListener {
 
     View view;
     Context context;
@@ -47,11 +47,11 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
 
     ProgressBar progressBar;
 
-    public VideoAction_F() {
+    public VideoActionFragment() {
     }
 
     @SuppressLint("ValidFragment")
-    public VideoAction_F(String id, FragmentCallback fragment_callback) {
+    public VideoActionFragment(String id, FragmentCallback fragment_callback) {
         video_id = id;
         this.fragment_callback = fragment_callback;
     }
@@ -99,7 +99,7 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
         return view;
     }
 
-    VideoSharingApps_Adapter adapter;
+    VideoSharingAppsAdapter adapter;
 
     public void Get_Shared_app() {
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerview);
@@ -132,7 +132,7 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
                     Collections.sort(launchables,
                             new ResolveInfo.DisplayNameComparator(pm));
 
-                    adapter = new VideoSharingApps_Adapter(context, launchables, new VideoSharingApps_Adapter.OnItemClickListener() {
+                    adapter = new VideoSharingAppsAdapter(context, launchables, new VideoSharingAppsAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int positon, ResolveInfo item, View view) {
                             Toast.makeText(context, "" + item.activityInfo.name, Toast.LENGTH_SHORT).show();
@@ -187,12 +187,12 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
         switch (view.getId()) {
             case R.id.save_video_layout:
 
-                if (Functions.Checkstoragepermision(getActivity())) {
+                if (Functions.checkstoragepermision(getActivity())) {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("action", "save");
                     dismiss();
-                    fragment_callback.Response(bundle);
+                    fragment_callback.responseCallBackFromFragment(bundle);
                 }
 
                 break;
@@ -212,7 +212,7 @@ public class VideoAction_F extends BottomSheetDialogFragment implements View.OnC
                     Bundle bundle = new Bundle();
                     bundle.putString("action", "delete");
                     dismiss();
-                    fragment_callback.Response(bundle);
+                    fragment_callback.responseCallBackFromFragment(bundle);
                 }
                 break;
 

@@ -1,9 +1,5 @@
 package com.funnyvo.android.keyboard;
 
-/**
- * Created by AQEEL on 4/2/2019.
- */
-
 public interface KeyboardHeightObserver {
     /**
      * Called when the keyboard height has changed, 0 means keyboard is closed,

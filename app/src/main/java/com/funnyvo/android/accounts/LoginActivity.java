@@ -37,8 +37,8 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
+import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Functions;
@@ -66,14 +66,12 @@ import java.util.Arrays;
 
 public class LoginActivity extends Activity {
 
-    FirebaseAuth mAuth;
-    FirebaseUser firebaseUser;
+    private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
 
-    SharedPreferences sharedPreferences;
-
-    View top_view;
-
-    TextView login_title_txt;
+    private SharedPreferences sharedPreferences;
+    private View top_view;
+    private TextView login_title_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,13 +125,10 @@ public class LoginActivity extends Activity {
                 onBackPressed();
             }
         });
-
         top_view = findViewById(R.id.top_view);
-
 
         login_title_txt = findViewById(R.id.login_title_txt);
         login_title_txt.setText("You need a " + getString(R.string.app_name) + "\naccount to Continue");
-
 
         SpannableString ss = new SpannableString("By signing up, you confirm that you agree to our \n Terms of Use and have read and understood \n our Privacy Policy.");
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -234,13 +229,13 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Functions.Show_loader(LoginActivity.this, false, false);
+                            Functions.showLoader(LoginActivity.this, false, false);
                             final String id = Profile.getCurrentProfile().getId();
                             GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
                                 @Override
                                 public void onCompleted(JSONObject user, GraphResponse graphResponse) {
 
-                                    Functions.cancel_loader();
+                                    Functions.cancelLoader();
                                     Log.d("resp", user.toString());
                                     //after get the info of user we will pass to function which will store the info in our server
 
@@ -254,7 +249,7 @@ public class LoginActivity extends Activity {
                                     if (lname.equals("") || lname.equals("null"))
                                         lname = "";
 
-                                    Call_Api_For_Signup("" + id, fname
+                                    callApiForSignup("" + id, fname
                                             , lname,
                                             "https://graph.facebook.com/" + id + "/picture?width=500&width=500",
                                             "facebook");
@@ -268,7 +263,7 @@ public class LoginActivity extends Activity {
                             request.setParameters(parameters);
                             request.executeAsync();
                         } else {
-                            Functions.cancel_loader();
+                            Functions.cancelLoader();
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -318,7 +313,7 @@ public class LoginActivity extends Activity {
 
             if (lname.equals("") || lname.equals("null"))
                 lname = "User";
-            Call_Api_For_Signup(id, fname, lname, pic_url, "gmail");
+            callApiForSignup(id, fname, lname, pic_url, "gmail");
 
 
         } else {
@@ -354,7 +349,7 @@ public class LoginActivity extends Activity {
                 if (lname.equals("") || lname.equals("null"))
                     lname = "User";
 
-                Call_Api_For_Signup(id, fname, lname, pic_url, "gmail");
+                callApiForSignup(id, fname, lname, pic_url, "gmail");
 
 
             }
@@ -364,14 +359,12 @@ public class LoginActivity extends Activity {
 
     }
 
-
     // this function call an Api for Signin
-    private void Call_Api_For_Signup(String id,
-                                     String f_name,
-                                     String l_name,
-                                     String picture,
-                                     String singnup_type) {
-
+    private void callApiForSignup(String id,
+                                  String f_name,
+                                  String l_name,
+                                  String picture,
+                                  String singnup_type) {
 
         PackageInfo packageInfo = null;
         try {
@@ -383,7 +376,6 @@ public class LoginActivity extends Activity {
 
         JSONObject parameters = new JSONObject();
         try {
-
             parameters.put("fb_id", id);
             parameters.put("first_name", "" + f_name);
             parameters.put("last_name", "" + l_name);
@@ -398,11 +390,11 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
 
-        Functions.Show_loader(this, false, false);
-        ApiRequest.Call_Api(this, Variables.SignUp, parameters, new Callback() {
+        Functions.showLoader(this, false, false);
+        ApiRequest.callApi(this, Variables.SignUp, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 Parse_signup_data(resp);
 
             }

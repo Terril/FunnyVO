@@ -23,10 +23,6 @@ import com.funnyvo.android.discover.datamodel.Discover;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
-
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.CustomViewHolder> implements Filterable {
     public Context context;
 

@@ -16,11 +16,6 @@ import com.funnyvo.android.search.datamodel.Users;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/19/2019.
- */
-
-
 class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.CustomViewHolder> {
     public Context context;
 

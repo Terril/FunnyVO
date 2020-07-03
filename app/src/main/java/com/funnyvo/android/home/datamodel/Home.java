@@ -2,9 +2,6 @@ package com.funnyvo.android.home.datamodel;
 
 import java.io.Serializable;
 
-/**
- * Created by AQEEL on 2/18/2019.
- */
 
 public class Home implements Serializable {
     public String fb_id, username, first_name, last_name, profile_pic, verified;

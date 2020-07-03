@@ -169,9 +169,9 @@ public class CommentFragment extends RootFragment {
     // this funtion will get all the comments against post
     public void Get_All_Comments() {
 
-        Functions.Call_Api_For_get_Comment(getActivity(), video_id, new ApiCallBack() {
+        Functions.callApiForGetComment(getActivity(), video_id, new ApiCallBack() {
             @Override
-            public void ArrayData(ArrayList arrayList) {
+            public void arrayData(ArrayList arrayList) {
                 ArrayList<Comments> arrayList1 = arrayList;
                 for (Comments item : arrayList1) {
                     data_list.add(item);
@@ -181,12 +181,12 @@ public class CommentFragment extends RootFragment {
             }
 
             @Override
-            public void OnSuccess(String responce) {
+            public void onSuccess(String responce) {
 
             }
 
             @Override
-            public void OnFail(String responce) {
+            public void onFailure(String responce) {
 
             }
 
@@ -198,9 +198,9 @@ public class CommentFragment extends RootFragment {
     // this function will call an api to upload your comment
     public void Send_Comments(String video_id, final String comment) {
 
-        Functions.Call_Api_For_Send_Comment(getActivity(), video_id, comment, new ApiCallBack() {
+        Functions.callApiToSendComment(getActivity(), video_id, comment, new ApiCallBack() {
             @Override
-            public void ArrayData(ArrayList arrayList) {
+            public void arrayData(ArrayList arrayList) {
                 send_progress.setVisibility(View.GONE);
                 send_btn.setVisibility(View.VISIBLE);
 
@@ -222,12 +222,12 @@ public class CommentFragment extends RootFragment {
             }
 
             @Override
-            public void OnSuccess(String responce) {
+            public void onSuccess(String responce) {
 
             }
 
             @Override
-            public void OnFail(String responce) {
+            public void onFailure(String responce) {
 
             }
         });
@@ -249,7 +249,7 @@ public class CommentFragment extends RootFragment {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.sendPushNotification, notimap, null);
+        ApiRequest.callApi(context, Variables.sendPushNotification, notimap, null);
 
     }
 

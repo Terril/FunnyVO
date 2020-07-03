@@ -101,7 +101,7 @@ public class SearchMainFragment extends RootFragment {
 
         adapter.addFrag(new SearchFragment("users"), "Users");
         adapter.addFrag(new SearchFragment("video"), "Videos");
-        adapter.addFrag(new SoundList_F("sound"), "Sounds");
+        adapter.addFrag(new SoundListFragment("sound"), "Sounds");
 
 
         menu_pager.setAdapter(adapter);

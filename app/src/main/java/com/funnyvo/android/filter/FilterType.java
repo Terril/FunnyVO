@@ -1,9 +1,5 @@
 package com.funnyvo.android.filter;
 
-/**
- * Created by AQEEL on 3/24/2019.
- */
-
 import android.content.Context;
 import android.util.Log;
 

@@ -18,10 +18,6 @@ import com.funnyvo.android.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by AQEEL on 3/20/2018.
- */
-
 public class MyVideosAdapter extends RecyclerView.Adapter<MyVideosAdapter.CustomViewHolder> {
 
     public Context context;

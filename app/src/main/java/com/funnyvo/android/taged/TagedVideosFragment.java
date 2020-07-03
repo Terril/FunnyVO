@@ -201,9 +201,9 @@ public class TagedVideosFragment extends RootFragment {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.SearchByHashTag, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.SearchByHashTag, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 progress_bar.setVisibility(View.GONE);
                 Parse_data(resp);
             }

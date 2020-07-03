@@ -120,9 +120,9 @@ public class UserVideoFragment extends Fragment {
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 is_api_run = false;
                 Parse_data(resp);
             }

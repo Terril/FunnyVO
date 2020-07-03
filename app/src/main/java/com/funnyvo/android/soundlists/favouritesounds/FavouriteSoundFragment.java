@@ -169,9 +169,9 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             e.printStackTrace();
         }
 
-        ApiRequest.Call_Api(context, Variables.my_FavSound, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.my_FavSound, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
+            public void response(String resp) {
                 swiperefresh.setRefreshing(false);
                 pbar.setVisibility(View.GONE);
                 Parse_data(resp);
@@ -408,11 +408,11 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             e.printStackTrace();
         }
 
-        Functions.Show_loader(context, false, false);
-        ApiRequest.Call_Api(context, Variables.fav_sound, parameters, new Callback() {
+        Functions.showLoader(context, false, false);
+        ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
             @Override
-            public void Response(String resp) {
-                Functions.cancel_loader();
+            public void response(String resp) {
+                Functions.cancelLoader();
                 datalist.remove(pos);
                 adapter.notifyItemRemoved(pos);
                 adapter.notifyDataSetChanged();
