@@ -4,20 +4,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.daasuu.gpuv.player.GPUPlayerView;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
+import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.services.ServiceCallback;
 import com.funnyvo.android.services.UploadService;
@@ -31,9 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import dagger.hilt.android.AndroidEntryPoint;
-
-public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener {
+public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener{
 
     ImageView video_thumbnail;
     String video_path;
@@ -41,6 +38,8 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
     EditText description_edit;
     UploadService mService;
     String draft_file;
+
+    PlayerEventListener eventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,20 +51,12 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             draft_file = intent.getStringExtra("draft_file");
         }
 
+        eventListener = new PlayerEventListener();
+
         video_path = Variables.output_filter_file;
-        video_thumbnail = findViewById(R.id.video_thumbnail);
-
-        description_edit = findViewById(R.id.description_edit);
-
-        // this will get the thumbnail of video and show them in imageview
-        Bitmap bmThumbnail;
-        bmThumbnail = ThumbnailUtils.createVideoThumbnail(video_path,
-                MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-
-        if (bmThumbnail != null) {
-            video_thumbnail.setImageBitmap(bmThumbnail);
-        } else {
-        }
+        GPUPlayerView gpuPlayerView = setPlayer(video_path, eventListener);
+        ((MovieWrapperView) findViewById(R.id.layout_post_movie_wrapper)).addView(gpuPlayerView);
+        gpuPlayerView.onResume();
 
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +65,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             }
         });
 
-
-        findViewById(R.id.post_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnUploadVideo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showProgressDialog();
@@ -83,14 +73,14 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             }
         });
 
-        findViewById(R.id.save_draft_btn).setOnClickListener(this);
+        findViewById(R.id.btnSaveLocal).setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.save_draft_btn:
+            case R.id.btnSaveLocal:
                 saveFileInDraft();
                 break;
         }
@@ -122,6 +112,36 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
     protected void onStop() {
         super.onStop();
         stopService();
+        if (player != null) {
+            player.setPlayWhenReady(false);
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (player != null) {
+            player.setPlayWhenReady(true);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (player != null) {
+            player.setPlayWhenReady(true);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            player.removeListener(eventListener);
+            player.release();
+            player = null;
+        }
     }
 
     @Override
@@ -178,13 +198,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
 
         }
     };
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
 
     // this function will stop the the ruuning service
     public void stopService() {

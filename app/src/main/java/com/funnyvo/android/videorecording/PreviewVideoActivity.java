@@ -3,46 +3,27 @@ package com.funnyvo.android.videorecording;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.daasuu.gpuv.composer.FillMode;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
-import com.daasuu.gpuv.player.PlayerScaleType;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
+import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import java.util.List;
 
-public class PreviewVideoActivity extends BaseActivity implements Player.EventListener {
+public class PreviewVideoActivity extends BaseActivity {
 
     private String video_url;
     private GPUPlayerView gpuPlayerView;
@@ -51,9 +32,10 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
     private FilterAdapter adapter;
     private RecyclerView recylerview;
 
+    private PlayerEventListener eventListener;
+
     private String draft_file;
     // this function will set the player to the current video
-    private SimpleExoPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +46,7 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         if (intent != null) {
             draft_file = intent.getStringExtra("draft_file");
         }
-
+        eventListener = new PlayerEventListener();
         select_postion = 0;
         video_url = Variables.outputfile2;
 
@@ -85,7 +67,9 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
             }
         });
 
-        setPlayer(video_url);
+        gpuPlayerView = setPlayer(video_url, eventListener);
+        ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
+        gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerview);
 
         adapter = new FilterAdapter(this, filterTypes, new FilterAdapter.OnItemClickListener() {
@@ -99,38 +83,7 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         recylerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recylerview.setAdapter(adapter);
 
-
     }
-
-    public void setPlayer(String path) {
-
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector();
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "FunnyVO"));
-
-        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(path));
-
-        player.prepare(videoSource);
-
-        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-        player.addListener(this);
-
-        player.setPlayWhenReady(true);
-
-        gpuPlayerView = new GPUPlayerView(this);
-        gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE);
-
-        gpuPlayerView.setSimpleExoPlayer(player);
-        gpuPlayerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
-
-        gpuPlayerView.onResume();
-
-    }
-
 
     // this is lifecyle of the Activity which is importent for play,pause video or relaese the player
     @Override
@@ -162,7 +115,7 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
     protected void onDestroy() {
         super.onDestroy();
         if (player != null) {
-            player.removeListener(PreviewVideoActivity.this);
+            player.removeListener(eventListener);
             player.release();
             player = null;
         }
@@ -229,59 +182,6 @@ public class PreviewVideoActivity extends BaseActivity implements Player.EventLi
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-    }
-
-
-    // Bottom all the function and the Call back listener of the Expo player
-    @Override
-    public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
-
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-
-    }
-
-    @Override
-    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
-    }
-
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity(int reason) {
-
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
-
-    @Override
-    public void onSeekProcessed() {
-
     }
 
     @Override
