@@ -59,7 +59,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.activity_request_varification, container, false);
+        view = inflater.inflate(R.layout.activity_request_verification, container, false);
         context = getContext();
 
         view.findViewById(R.id.Goback).setOnClickListener(this);
