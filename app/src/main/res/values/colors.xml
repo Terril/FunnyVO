@@ -30,6 +30,9 @@
 
     <color name="palette_milk">#ffffffff</color>
     <color name="palette_cheddar">#ffFDCA1B</color>
+    <color name="palette_cheddar_darker">#fffe630c</color>
+    <color name="palette_cheddar_dark">#fffd771c</color>
+    <color name="palette_cheddar_light">#ffffd95b</color>
 
 
 </resources>
