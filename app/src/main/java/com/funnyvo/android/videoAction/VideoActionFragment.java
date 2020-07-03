@@ -1,4 +1,4 @@
-package com.funnyvo.android.VideoAction;
+package com.funnyvo.android.videoAction;
 
 
 import android.annotation.SuppressLint;

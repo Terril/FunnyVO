@@ -2,7 +2,6 @@ package com.funnyvo.android.videorecording;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,8 +22,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
@@ -81,7 +78,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     LinearLayout camera_options;
     ImageButton rotate_camera;
 
-
     public static int Sounds_list_Request_code = 1;
     TextView add_sound_txt;
 
@@ -101,7 +97,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
         Variables.Selected_sound_id = "null";
         Variables.recording_duration = Variables.max_recording_duration;
-
 
         cameraView = findViewById(R.id.camera);
         camera_options = findViewById(R.id.camera_options);
@@ -125,12 +120,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
-
         record_image = findViewById(R.id.record_image);
 
-
         findViewById(R.id.upload_layout).setOnClickListener(this);
-
 
         done_btn = findViewById(R.id.done);
         done_btn.setEnabled(false);
@@ -201,20 +193,19 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         record_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Start_or_Stop_Recording();
+                startOrStopRecording();
             }
         });
 
         countdown_timer_txt = findViewById(R.id.countdown_timer_txt);
 
-
-        initlize_Video_progress();
+        initializeVideoProgress();
 
 
     }
 
 
-    public void initlize_Video_progress() {
+    public void initializeVideoProgress() {
         sec_passed = 0;
         video_progress = findViewById(R.id.video_progress);
         video_progress.enableAutoProgressView(Variables.recording_duration);
@@ -229,12 +220,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 sec_passed = (int) (mills / 1000);
 
                 if (sec_passed > (Variables.recording_duration / 1000) - 1) {
-                    Start_or_Stop_Recording();
+                    startOrStopRecording();
                 }
 
                 if (is_recording_timer_enable && sec_passed >= recording_time) {
                     is_recording_timer_enable = false;
-                    Start_or_Stop_Recording();
+                    startOrStopRecording();
                 }
 
             }
@@ -244,24 +235,20 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     // if the Recording is stop then it we start the recording
     // and if the mobile is recording the video then it will stop the recording
-    public void Start_or_Stop_Recording() {
+    public void startOrStopRecording() {
 
         if (!is_recording && sec_passed < (Variables.recording_duration / 1000) - 1) {
             number = number + 1;
-
             is_recording = true;
 
             File file = new File(Variables.app_folder + "myvideo" + (number) + ".mp4");
             videopaths.add(Variables.app_folder + "myvideo" + (number) + ".mp4");
             cameraView.captureVideo(file);
 
-
             if (audio != null)
                 audio.start();
 
-
             video_progress.resume();
-
 
             done_btn.setBackgroundResource(R.drawable.ic_not_done);
             done_btn.setEnabled(false);
@@ -273,9 +260,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             rotate_camera.setVisibility(View.GONE);
 
         } else if (is_recording) {
-
             is_recording = false;
-
             video_progress.pause();
             video_progress.addDivider();
 
@@ -296,24 +281,17 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         } else if (sec_passed > (Variables.recording_duration / 1000)) {
             Functions.showAlert(this, "Alert", "Video only can be a " + (int) Variables.recording_duration / 1000 + " S");
         }
-
-
     }
 
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
-        final ProgressDialog progressDialog = new ProgressDialog(VideoRecoderActivity.this);
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-
                 runOnUiThread(new Runnable() {
                     public void run() {
-
-                        progressDialog.setMessage("Please wait..");
-                        progressDialog.show();
+                        showProgressDialog();
                     }
                 });
 
@@ -340,14 +318,10 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
 
                 try {
-
                     Movie[] inMovies = new Movie[video_list.size()];
-
                     for (int i = 0; i < video_list.size(); i++) {
-
                         inMovies[i] = MovieCreator.build(video_list.get(i));
                     }
-
 
                     List<Track> videoTracks = new LinkedList<Track>();
                     List<Track> audioTracks = new LinkedList<Track>();
@@ -384,14 +358,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     runOnUiThread(new Runnable() {
                         public void run() {
-
-                            progressDialog.dismiss();
+                            dismissProgressDialog();
                             if (audio != null)
-                                Merge_withAudio();
+                                mergeWithAudio();
                             else {
-                                Go_To_preview_Activity();
+                                goToPreviewActivity();
                             }
-
                         }
                     });
 
@@ -402,28 +374,23 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             }
         }).start();
 
-
         return true;
     }
 
-
     // this will add the select audio with the video
-    public void Merge_withAudio() {
+    public void mergeWithAudio() {
 
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
-
 
         MergeVideoAudio merge_video_audio = new MergeVideoAudio(VideoRecoderActivity.this);
         merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
 
     }
 
-
     public void RotateCamera() {
         cameraView.toggleFacing();
     }
-
 
     @SuppressLint("WrongConstant")
     @Override
@@ -435,7 +402,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 break;
 
             case R.id.upload_layout:
-                Pick_video_from_gallery();
+                pickVideoFromGallery();
                 /*
                 Intent upload_intent=new Intent(this, GalleryVideos_A.class);
                 startActivity(upload_intent);
@@ -447,9 +414,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 append();
                 break;
 
-
             case R.id.flash_camera:
-
                 if (is_flash_on) {
                     is_flash_on = false;
                     cameraView.setFlash(0);
@@ -499,7 +464,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                                     public void onFinish() {
                                         record_image.setClickable(true);
                                         countdown_timer_txt.setVisibility(View.GONE);
-                                        Start_or_Stop_Recording();
+                                        startOrStopRecording();
                                     }
                                 }.start();
 
@@ -524,7 +489,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    public void Pick_video_from_gallery() {
+    public void pickVideoFromGallery() {
         Intent intent = new Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
@@ -555,7 +520,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                     File video_file = FileUtils.getFileFromUri(this, uri);
 
                     if (getfileduration(uri) < 19500) {
-                        Chnage_Video_size(video_file.getAbsolutePath(), Variables.gallery_resize_video);
+                        changeVideoSize(video_file.getAbsolutePath(), Variables.gallery_resize_video);
 
                     } else {
                         try {
@@ -591,19 +556,16 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    public void Chnage_Video_size(String src_path, String destination_path) {
-
-        Functions.showDeterminentLoader(this, false, false);
+    public void changeVideoSize(String src_path, String destination_path) {
+        showProgressDialog();
         new GPUMp4Composer(src_path, destination_path)
                 .size(720, 1280)
                 .videoBitrate((int) (0.25 * 16 * 540 * 960))
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-
                         Log.d("resp", "" + (int) (progress * 100));
-                        Functions.showLoadingProgress((int) (progress * 100));
-
+                        showProgressDialog();
                     }
 
                     @Override
@@ -612,17 +574,13 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-                                Functions.cancelDeterminentLoader();
-
+                                dismissProgressDialog();
                                 Intent intent = new Intent(VideoRecoderActivity.this, GallerySelectedVideoActivity.class);
                                 intent.putExtra("video_path", Variables.gallery_resize_video);
                                 startActivity(intent);
 
                             }
                         });
-
-
                     }
 
                     @Override
@@ -639,9 +597,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void run() {
                                 try {
-
-                                    Functions.cancelDeterminentLoader();
-
+                                    dismissProgressDialog();
                                     Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
 
@@ -729,7 +685,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Functions.showIndeterminentLoader(VideoRecoderActivity.this, true, true);
+                showProgressDialog();
             }
 
             @Override
@@ -737,8 +693,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 if (result.equals("error")) {
                     Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
-                    Functions.cancelIndeterminentLoader();
-                    Chnage_Video_size(Variables.gallery_trimed_video, Variables.gallery_resize_video);
+                    dismissProgressDialog();
+                    changeVideoSize(Variables.gallery_trimed_video, Variables.gallery_resize_video);
                 }
             }
 
@@ -769,7 +725,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
             if (file_duration < Variables.max_recording_duration) {
                 Variables.recording_duration = file_duration;
-                initlize_Video_progress();
+                initializeVideoProgress();
             }
 
         }
@@ -802,10 +758,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-
     @Override
     public void onBackPressed() {
-
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
                 .setMessage("Are you Sure? if you Go back you can't undo this action")
@@ -831,7 +785,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    public void Go_To_preview_Activity() {
+    public void goToPreviewActivity() {
         Intent intent = new Intent(this, PreviewVideoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

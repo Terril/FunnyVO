@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
 import com.bumptech.glide.Glide;
@@ -24,6 +22,7 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Functions;
@@ -48,14 +47,13 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 
-public class VideoSoundActivity extends AppCompatActivity implements View.OnClickListener {
+public class VideoSoundActivity extends BaseActivity implements View.OnClickListener {
 
     Home item;
     TextView sound_name, description_txt;
     ImageView sound_image;
-
     File video_file, audio_file;
-
+    SimpleExoPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,16 +88,13 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
         findViewById(R.id.pause_btn).setOnClickListener(this);
 
         if (video_file.exists()) {
-
             Glide.with(this)
                     .load(Uri.fromFile(video_file))
                     .into(sound_image);
 
-
-            Load_FFmpeg();
-
+            loadFFmpeg();
         } else {
-            Save_Video();
+            saveVideo();
         }
 
     }
@@ -127,27 +122,24 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
                 if (player.getPlayWhenReady())
                     player.setPlayWhenReady(false);
 
-                Convert_Mp3_to_acc();
+                convertMp3ToAcc();
                 break;
 
             case R.id.play_btn:
                 if (audio_file.exists())
                     playaudio();
                 else if (video_file.exists())
-                    Load_FFmpeg();
+                    loadFFmpeg();
                 else
-                    Save_Video();
+                    saveVideo();
 
                 break;
 
             case R.id.pause_btn:
-                StopPlaying();
+                stopPlaying();
                 break;
         }
     }
-
-
-    SimpleExoPlayer player;
 
     public void playaudio() {
 
@@ -164,36 +156,35 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
         player.prepare(videoSource);
         player.setPlayWhenReady(true);
 
-        Show_playing_state();
+        showPlayingState();
     }
 
 
-    public void StopPlaying() {
+    public void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
         }
-        Show_pause_state();
+        showPauseState();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        StopPlaying();
+        stopPlaying();
     }
 
-    public void Show_playing_state() {
+    public void showPlayingState() {
         findViewById(R.id.play_btn).setVisibility(View.GONE);
         findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
     }
 
-    public void Show_pause_state() {
+    public void showPauseState() {
         findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
         findViewById(R.id.pause_btn).setVisibility(View.GONE);
     }
 
 
-    public void Save_Video() {
-        Functions.showDeterminentLoader(this, false, false);
+    public void saveVideo() {
         PRDownloader.initialize(this);
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + ".mp4")
                 .build()
@@ -218,9 +209,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
                 .setOnProgressListener(new OnProgressListener() {
                     @Override
                     public void onProgress(Progress progress) {
-
-                        int prog = (int) ((progress.currentBytes * 100) / progress.totalBytes);
-                        Functions.showLoadingProgress(prog);
+                        showProgressDialog();
 
                     }
                 });
@@ -229,32 +218,25 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                Functions.cancelDeterminentLoader();
+                dismissProgressDialog();
                 audio_file = new File(Variables.app_folder + item.video_id + ".mp4");
                 Glide.with(VideoSoundActivity.this)
                         .load(Uri.fromFile(video_file))
                         .into(sound_image);
-                Load_FFmpeg();
+                loadFFmpeg();
             }
 
             @Override
             public void onError(Error error) {
-
-                Functions.cancelDeterminentLoader();
+                dismissProgressDialog();
             }
 
 
         });
-
-
     }
 
-    FFmpeg ffmpeg;
-
-    public void Load_FFmpeg() {
-
-
-        show_audio_loading();
+    public void loadFFmpeg() {
+        showAudioLoading();
 
         final String[] complexCommand = {"-y", "-i", Variables.app_folder + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
                 Variables.app_folder + Variables.SelectedAudio_MP3};
@@ -262,15 +244,8 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
 
         new AsyncTask<Object, Object, Object>() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-            }
-
-            @Override
             protected Object doInBackground(Object[] objects) {
                 int rc = FFmpeg.execute(complexCommand);
-
 
                 return rc;
             }
@@ -282,18 +257,18 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
 
                 if (rc == RETURN_CODE_SUCCESS) {
                     Log.d(Variables.tag, "Command execution completed successfully.");
-                    hide_audio_loading();
+                    hideAudioLoading();
                     audio_file = new File(Variables.app_folder + Variables.SelectedAudio_MP3);
                     if (audio_file.exists())
                         playaudio();
 
                 } else if (rc == RETURN_CODE_CANCEL) {
                     Log.d(Variables.tag, "Command execution cancelled by user.");
-                    hide_audio_loading();
+                    hideAudioLoading();
                 } else {
                     Log.d(Variables.tag, String.format("Command execution failed with rc=%d and the output below.", rc));
                     Config.printLastCommandOutput(Log.INFO);
-                    hide_audio_loading();
+                    hideAudioLoading();
                 }
 
             }
@@ -376,35 +351,27 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
     }
 */
 
-    public void show_audio_loading() {
+    public void showAudioLoading() {
         findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
         findViewById(R.id.play_btn).setVisibility(View.GONE);
         findViewById(R.id.pause_btn).setVisibility(View.GONE);
     }
 
-    public void hide_audio_loading() {
+    public void hideAudioLoading() {
         findViewById(R.id.loading_progress).setVisibility(View.GONE);
         findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
         findViewById(R.id.pause_btn).setVisibility(View.GONE);
     }
 
 
-    public void Convert_Mp3_to_acc() {
+    public void convertMp3ToAcc() {
         Functions.showLoader(this, false, false);
         final String[] complexCommand = new String[]{"-y", "-i", Variables.app_folder + Variables.SelectedAudio_MP3, Variables.app_folder + Variables.SelectedAudio_AAC};
 
         new AsyncTask<Object, Object, Object>() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-            }
-
-            @Override
             protected Object doInBackground(Object[] objects) {
                 int rc = FFmpeg.execute(complexCommand);
-
-
                 return rc;
             }
 
@@ -416,7 +383,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
                 if (rc == RETURN_CODE_SUCCESS) {
                     Log.d(Variables.tag, "Command execution completed successfully.");
                     Functions.cancelLoader();
-                    Open_video_recording();
+                    openVideoRecording();
 
                 } else if (rc == RETURN_CODE_CANCEL) {
                     Log.d(Variables.tag, "Command execution cancelled by user.");
@@ -434,7 +401,7 @@ public class VideoSoundActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    public void Open_video_recording() {
+    public void openVideoRecording() {
         Intent intent = new Intent(VideoSoundActivity.this, VideoRecoderActivity.class);
         intent.putExtra("sound_name", sound_name.getText().toString());
         intent.putExtra("sound_id", item.sound_id);

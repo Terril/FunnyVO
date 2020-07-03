@@ -57,14 +57,20 @@ import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_lis
 
 public class GallerySelectedVideoActivity extends AppCompatActivity implements View.OnClickListener, Player.EventListener {
 
-    String path;
-    TextView add_sound_txt;
-    String draft_file;
+    private String path;
+    private TextView add_sound_txt;
+    private String draft_file;
+    // this will call when swipe for another video and
+    // this function will set the player to the current video
+    private SimpleExoPlayer video_player;
+
+    // this will play the sound with the video when we select the audio
+    private MediaPlayer audio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Hide_navigation();
+        hideNavigation();
         setContentView(R.layout.activity_gallery_selected_video);
 
         Intent intent = getIntent();
@@ -82,15 +88,11 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
         findViewById(R.id.next_btn).setOnClickListener(this);
 
-        Set_Player();
+        setPlayer();
 
     }
 
-    // this will call when swipe for another video and
-    // this function will set the player to the current video
-    SimpleExoPlayer video_player;
-
-    public void Set_Player() {
+    public void setPlayer() {
 
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         video_player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
@@ -161,7 +163,7 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
                 if (data.getStringExtra("isSelected").equals("yes")) {
                     add_sound_txt.setText(data.getStringExtra("sound_name"));
                     Variables.Selected_sound_id = data.getStringExtra("sound_id");
-                    PreparedAudio();
+                    prepareAudio();
                 }
 
             }
@@ -169,11 +171,7 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
         }
     }
 
-
-    // this will play the sound with the video when we select the audio
-    MediaPlayer audio;
-
-    public void PreparedAudio() {
+    public void prepareAudio() {
         video_player.setVolume(0);
 
         File file = new File(Variables.app_folder + Variables.SelectedAudio_AAC);
@@ -275,9 +273,9 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
                             progressDialog.dismiss();
 
                             if (audio != null)
-                                Merge_withAudio();
+                                mergeWithAudio();
                             else {
-                                Go_To_preview_Activity();
+                                goToPreviewActivity();
                             }
 
                         }
@@ -295,7 +293,7 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
 
     // this will add the select audio with the video
-    public void Merge_withAudio() {
+    public void mergeWithAudio() {
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
@@ -303,7 +301,7 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
         merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2, draft_file);
     }
 
-    public void Go_To_preview_Activity() {
+    public void goToPreviewActivity() {
         Intent intent = new Intent(this, PreviewVideoActivity.class);
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
@@ -374,7 +372,6 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
         if (playbackState == Player.STATE_ENDED) {
-
             video_player.seekTo(0);
             video_player.setPlayWhenReady(true);
 
@@ -422,7 +419,7 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
 
     // this will hide the bottom mobile navigation controll
-    public void Hide_navigation() {
+    public void hideNavigation() {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -457,7 +454,6 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
 
     }
 
-
     @SuppressLint("NewApi")
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -472,6 +468,4 @@ public class GallerySelectedVideoActivity extends AppCompatActivity implements V
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
-
-
 }

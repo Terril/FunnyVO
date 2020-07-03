@@ -2,9 +2,12 @@ package com.funnyvo.android.customview
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color.TRANSPARENT
+import android.graphics.drawable.ColorDrawable
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import com.funnyvo.android.R
 import kotlinx.android.synthetic.main.view_progress_dialog.*
 
@@ -50,7 +53,10 @@ class LoaderDialog(val context: Context) {
 
         dialog.apply {
             setContentView(R.layout.view_progress_dialog)
+            val colorDrawable = ColorDrawable(TRANSPARENT)
+
             window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            window?.setBackgroundDrawable(colorDrawable)
 
             setOnDismissListener {
                 loader.visibility = INVISIBLE

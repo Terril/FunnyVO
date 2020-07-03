@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
-    tools:context=".VideoAction.VideoActionFragment">
+    tools:context=".videoAction.VideoActionFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

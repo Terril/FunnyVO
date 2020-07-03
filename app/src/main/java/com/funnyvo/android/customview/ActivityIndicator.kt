@@ -1,14 +1,19 @@
 package com.funnyvo.android.customview
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import dagger.hilt.android.scopes.ActivityScoped
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
-class ActivityIndicator(context: Context, private val lifecycle: Lifecycle) : LifecycleObserver {
-    private val dialog = LoaderDialog(context).apply { isCancellable = false }
+@ActivityScoped
+class ActivityIndicator@Inject constructor(appContext: Context) : LifecycleObserver {
+    private val dialog = LoaderDialog(appContext).apply { isCancellable = false }
     private var isRealHide = AtomicBoolean(true)
+    private val lifecycle: Lifecycle = (appContext as AppCompatActivity).lifecycle
 
     init {
         lifecycle.addObserver(this)

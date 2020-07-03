@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.galleryselectedvideo.GallerySelectedVideoActivity;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GalleryVideosActivity extends AppCompatActivity {
+public class GalleryVideosActivity extends BaseActivity {
 
     ArrayList<GalleryVideo> data_list;
     public RecyclerView recyclerView;
@@ -61,7 +62,6 @@ public class GalleryVideosActivity extends AppCompatActivity {
         pbar = findViewById(R.id.pbar);
 
         data_list = new ArrayList();
-
 
         recyclerView = findViewById(R.id.recylerview);
         final GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -88,7 +88,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
                 }
 
                 if (item.video_duration_ms < 19500) {
-                    Chnage_Video_size(item.video_path, Variables.gallery_resize_video);
+                    changeVideoSize(item.video_path, Variables.gallery_resize_video);
 
                 } else {
                     try {
@@ -114,13 +114,10 @@ public class GalleryVideosActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
 
     public void getAllVideoPathDraft() {
-
 
         String path = Variables.draft_app_folder;
         File directory = new File(path);
@@ -134,7 +131,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
             Log.d("resp", "" + item.video_duration_ms);
 
             if (item.video_duration_ms > 5000) {
-                item.video_time = change_sec_to_time(item.video_duration_ms);
+                item.video_time = changeSecToTime(item.video_duration_ms);
                 data_list.add(item);
             }
         }
@@ -168,7 +165,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
                                 Log.d("resp", "" + item.video_duration_ms);
 
                                 if (item.video_duration_ms > 5000) {
-                                    item.video_time = change_sec_to_time(item.video_duration_ms);
+                                    item.video_time = changeSecToTime(item.video_duration_ms);
                                     data_list.add(item);
                                 }
 
@@ -211,7 +208,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
     }
 
 
-    public String change_sec_to_time(long file_duration) {
+    public String changeSecToTime(long file_duration) {
         long second = (file_duration / 1000) % 60;
         long minute = (file_duration / (1000 * 60)) % 60;
 
@@ -220,7 +217,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
     }
 
 
-    public void Chnage_Video_size(String src_path, String destination_path) {
+    public void changeVideoSize(String src_path, String destination_path) {
 
       /*  Functions.Show_determinent_loader(this,false,false);
         new GPUMp4Composer(src_path, destination_path)
@@ -390,7 +387,7 @@ public class GalleryVideosActivity extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Functions.showIndeterminentLoader(GalleryVideosActivity.this, true, true);
+                showProgressDialog();
             }
 
             @Override
@@ -398,8 +395,8 @@ public class GalleryVideosActivity extends AppCompatActivity {
                 if (result.equals("error")) {
                     Toast.makeText(GalleryVideosActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
-                    Functions.cancelIndeterminentLoader();
-                    Chnage_Video_size(Variables.gallery_trimed_video, Variables.gallery_resize_video);
+                    dismissProgressDialog();
+                    changeVideoSize(Variables.gallery_trimed_video, Variables.gallery_resize_video);
                 }
             }
 
@@ -447,8 +444,5 @@ public class GalleryVideosActivity extends AppCompatActivity {
             gallery_resize_video.delete();
         }
 
-
     }
-
-
 }

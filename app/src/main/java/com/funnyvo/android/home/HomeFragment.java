@@ -49,7 +49,7 @@ import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
-import com.funnyvo.android.VideoAction.VideoActionFragment;
+import com.funnyvo.android.videoAction.VideoActionFragment;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;

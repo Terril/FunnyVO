@@ -1,14 +1,11 @@
 package com.funnyvo.android.videorecording;
 
-/**
- * Created by AQEEL on 3/24/2019.
- */
-
-
 import android.content.Context;
+
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -33,7 +30,7 @@ public class MovieWrapperView extends FrameLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int measuredWidth = getMeasuredWidth();
-        int measuredheight =getMeasuredHeight();
-        setMeasuredDimension(measuredWidth, measuredheight);
+        int measuredHeight = getMeasuredHeight();
+        setMeasuredDimension(measuredWidth, measuredHeight);
     }
 }

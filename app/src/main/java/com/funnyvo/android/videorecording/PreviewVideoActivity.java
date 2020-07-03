@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +17,7 @@ import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
 import com.daasuu.gpuv.player.PlayerScaleType;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.R;
@@ -40,16 +40,18 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.util.List;
 
-public class PreviewVideoActivity extends AppCompatActivity implements Player.EventListener {
+public class PreviewVideoActivity extends BaseActivity implements Player.EventListener {
 
-    String video_url;
-    GPUPlayerView gpuPlayerView;
+    private String video_url;
+    private GPUPlayerView gpuPlayerView;
     public static int select_postion = 0;
-    final List<FilterType> filterTypes = FilterType.createFilterList();
-    FilterAdapter adapter;
-    RecyclerView recylerview;
+    private final List<FilterType> filterTypes = FilterType.createFilterList();
+    private FilterAdapter adapter;
+    private RecyclerView recylerview;
 
-    String draft_file;
+    private String draft_file;
+    // this function will set the player to the current video
+    private SimpleExoPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +63,8 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
             draft_file = intent.getStringExtra("draft_file");
         }
 
-
         select_postion = 0;
         video_url = Variables.outputfile2;
-
 
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,15 +79,11 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
         findViewById(R.id.next_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Save_Video(Variables.outputfile2, Variables.output_filter_file);
+                saveVideo(Variables.outputfile2, Variables.output_filter_file);
             }
         });
 
-
-        Set_Player(video_url);
-
-
+        setPlayer(video_url);
         recylerview = findViewById(R.id.recylerview);
 
         adapter = new FilterAdapter(this, filterTypes, new FilterAdapter.OnItemClickListener() {
@@ -104,11 +100,7 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
 
     }
 
-
-    // this function will set the player to the current video
-    SimpleExoPlayer player;
-
-    public void Set_Player(String path) {
+    public void setPlayer(String path) {
 
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
@@ -124,7 +116,6 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
         player.addListener(this);
 
         player.setPlayWhenReady(true);
-
 
         gpuPlayerView = new GPUPlayerView(this);
         gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE);
@@ -152,7 +143,6 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     @Override
     protected void onStart() {
         super.onStart();
-
         if (player != null) {
             player.setPlayWhenReady(true);
         }
@@ -162,7 +152,6 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     @Override
     protected void onRestart() {
         super.onRestart();
-
         if (player != null) {
             player.setPlayWhenReady(true);
         }
@@ -181,10 +170,8 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
 
 
     // this function will add the filter to video and save that same video for post the video in post video screen
-    public void Save_Video(String srcMp4Path, final String destMp4Path) {
-
-        Functions.showDeterminentLoader(this, false, false);
-
+    public void saveVideo(String srcMp4Path, final String destMp4Path) {
+        showProgressDialog();
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
                 //.videoBitrate((int) (0.25 * 16 * 540 * 960))
@@ -192,29 +179,18 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-
-                        Log.d("resp", "" + (int) (progress * 100));
-                        Functions.showLoadingProgress((int) (progress * 100));
-
-
+                        showProgressDialog();
                     }
 
                     @Override
                     public void onCompleted() {
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-                                Functions.cancelDeterminentLoader();
-
-                                GotopostScreen();
-
-
+                                dismissProgressDialog();
+                                gotopostScreen();
                             }
                         });
-
-
                     }
 
                     @Override
@@ -224,16 +200,12 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
 
                     @Override
                     public void onFailed(Exception exception) {
-
                         Log.d("resp", exception.toString());
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
-
-                                    Functions.cancelDeterminentLoader();
-
+                                    dismissProgressDialog();
                                     Toast.makeText(PreviewVideoActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
 
@@ -247,13 +219,11 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
     }
 
 
-    public void GotopostScreen() {
-
+    public void gotopostScreen() {
         Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
     }
 
 
@@ -312,11 +282,8 @@ public class PreviewVideoActivity extends AppCompatActivity implements Player.Ev
 
     @Override
     public void onBackPressed() {
-
         finish();
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
-
     }
-
 
 }

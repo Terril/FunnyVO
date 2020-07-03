@@ -1,6 +1,5 @@
 package com.funnyvo.android.videorecording;
 
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.main_menu.MainMenuActivity;
-import com.funnyvo.android.R;
 import com.funnyvo.android.services.ServiceCallback;
 import com.funnyvo.android.services.UploadService;
 import com.funnyvo.android.simpleclasses.Functions;
@@ -34,11 +31,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener {
 
     ImageView video_thumbnail;
     String video_path;
-    ProgressDialog progressDialog;
     ServiceCallback serviceCallback;
     EditText description_edit;
     UploadService mService;
@@ -69,11 +67,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         } else {
         }
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
-        progressDialog.setCancelable(false);
-
-
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +78,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         findViewById(R.id.post_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
+                showProgressDialog();
                 startService();
             }
         });
@@ -154,7 +147,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
                 @Override
                 public void run() {
                     Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
+                    dismissProgressDialog();
 
                     startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
 
@@ -163,7 +156,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
 
         } else {
             Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
-            progressDialog.dismiss();
+            dismissProgressDialog();
         }
     }
 
@@ -195,9 +188,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
 
     // this function will stop the the ruuning service
     public void stopService() {
-
         serviceCallback = this;
-
         UploadService mService = new UploadService(serviceCallback);
 
         if (Functions.isMyServiceRunning(this, mService.getClass())) {
@@ -206,8 +197,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             startService(mServiceIntent);
 
         }
-
-
     }
 
 
@@ -253,8 +242,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         } catch (Exception e) {
 
         }
-
-
     }
 
 }
