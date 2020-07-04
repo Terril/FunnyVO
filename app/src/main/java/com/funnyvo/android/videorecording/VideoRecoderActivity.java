@@ -13,9 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
@@ -61,6 +60,8 @@ import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener {
 
@@ -122,6 +123,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         });
 
         record_image = findViewById(R.id.record_image);
+        record_image.setOnClickListener(this);
 
         findViewById(R.id.upload_layout).setOnClickListener(this);
 
@@ -151,27 +153,23 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
 
         // this is code hold to record the video
-       /* final Timer[] timer = {new Timer()};
+        final Timer[] timer = {new Timer()};
         final long[] press_time = {0};
-       record_image.setOnTouchListener(new View.OnTouchListener() {
+        record_image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                    timer[0] =new Timer();
-                    press_time[0] =System.currentTimeMillis();
-
+                    timer[0] = new Timer();
+                    press_time[0] = System.currentTimeMillis();
                     timer[0].schedule(new TimerTask() {
                         @Override
                         public void run() {
-
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(!is_recording) {
-                                        press_time[0] =System.currentTimeMillis();
-                                        Start_or_Stop_Recording();
+                                    if (!is_recording) {
+                                        press_time[0] = System.currentTimeMillis();
+                                        startOrStopRecording();
                                     }
                                 }
                             });
@@ -182,14 +180,14 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     timer[0].cancel();
-                    if(is_recording && (press_time[0] !=0 && (System.currentTimeMillis()- press_time[0])<2000)){
-                        Start_or_Stop_Recording();
+                    if (is_recording && (press_time[0] != 0 && (System.currentTimeMillis() - press_time[0]) < 2000)) {
+                        startOrStopRecording();
                     }
                 }
                 return false;
             }
 
-        });*/
+        });
 
         countdown_timer_txt = findViewById(R.id.countdown_timer_txt);
         initializeVideoProgress();
@@ -742,8 +740,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setTitle("Alert")
-                .setMessage("Are you Sure? if you Go back you can't undo this action")
+                .setTitle("Are you Sure?")
+                .setMessage("If you go back you can't undo this action")
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -753,10 +751,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         dialog.dismiss();
-
-                        DeleteFile();
+                        deleteFile();
                         finish();
                         overridePendingTransition(R.anim.in_from_top, R.anim.out_from_bottom);
 
@@ -776,7 +772,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     // this will delete all the video parts that is create during priviously created video
     int delete_count = 0;
 
-    public void DeleteFile() {
+    public void deleteFile() {
         delete_count++;
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
@@ -796,7 +792,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         File file = new File(Variables.app_folder + "myvideo" + (delete_count) + ".mp4");
         if (file.exists()) {
             file.delete();
-            DeleteFile();
+            deleteFile();
         }
 
     }

@@ -25,26 +25,26 @@
                 android:layout_height="match_parent">
 
                 <ImageButton
-                    android:id="@+id/Goback"
-                    android:layout_width="50dp"
-                    android:layout_height="24dp"
+                    android:id="@+id/btnMusicClose"
+                    android:layout_width="@dimen/margin_32"
+                    android:layout_height="@dimen/margin_32"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="@dimen/margin_15"
                     android:background="@color/transparent"
-                    android:scaleType="fitStart"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_close"
-                    android:tint="@color/black" />
+                    android:tint="@color/palette_cheddar" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="@dimen/margin_15"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Add Sound"
-                    android:textColor="@color/black"
-                    android:textSize="15dp"
+                    android:text="@string/add_sound"
+                    android:textColor="@color/palette_cheddar"
+                    android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>

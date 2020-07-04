@@ -24,4 +24,6 @@
     <string name="logout">Logout</string>
     <string name="post">Post</string>
     <string name="add_sound">Add Music</string>
+    <string name="discover">Discover</string>
+    <string name="user_fav">My Favorites</string>
 </resources>

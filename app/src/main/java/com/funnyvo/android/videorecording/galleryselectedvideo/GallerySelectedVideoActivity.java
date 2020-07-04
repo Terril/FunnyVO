@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_list_Request_code;
 
 public class GallerySelectedVideoActivity extends BaseActivity implements View.OnClickListener, Player.EventListener {
@@ -95,7 +96,7 @@ public class GallerySelectedVideoActivity extends BaseActivity implements View.O
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         video_player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "TikTok"));
+                Util.getUserAgent(this, APP_NAME));
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path));

@@ -11,13 +11,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.main_menu.CustomViewPager;
 import com.funnyvo.android.R;
 import com.funnyvo.android.soundlists.favouritesounds.FavouriteSoundFragment;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class SoundListMainActivity extends AppCompatActivity implements View.OnClickListener {
+public class SoundListMainActivity extends BaseActivity implements View.OnClickListener {
 
     protected TabLayout tablayout;
     protected CustomViewPager pager;
@@ -38,14 +39,14 @@ public class SoundListMainActivity extends AppCompatActivity implements View.OnC
         pager.setAdapter(adapter);
         tablayout.setupWithViewPager(pager);
 
-        findViewById(R.id.Goback).setOnClickListener(this);
+        findViewById(R.id.btnMusicClose).setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.Goback:
+            case R.id.btnMusicClose:
                 onBackPressed();
                 break;
         }
@@ -53,13 +54,8 @@ public class SoundListMainActivity extends AppCompatActivity implements View.OnC
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-
-
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
-
-
         public ViewPagerAdapter(final Resources resources, FragmentManager fm) {
-
             super(fm);
         }
 
@@ -90,16 +86,12 @@ public class SoundListMainActivity extends AppCompatActivity implements View.OnC
         public CharSequence getPageTitle(final int position) {
             switch (position) {
                 case 0:
-                    return "Discover";
+                    return getString(R.string.discover);
                 case 1:
-                    return "My Favorites";
-
+                    return getString(R.string.user_fav);
                 default:
                     return null;
-
             }
-
-
         }
 
         @Override
