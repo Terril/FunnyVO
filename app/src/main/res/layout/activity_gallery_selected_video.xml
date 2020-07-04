@@ -25,7 +25,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="?attr/actionBarSize"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp">
 
@@ -35,17 +35,17 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
-                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:id="@+id/btnAddMusic"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:scaleType="fitCenter"
-                    app:iconTint="@color/palette_cheddar"
-                    app:icon="@drawable/ic_library_music"
                     android:textColor="@color/palette_cheddar"
-                    android:tint="@color/palette_cheddar" />
+                    android:tint="@color/palette_cheddar"
+                    app:icon="@drawable/ic_library_music"
+                    app:iconTint="@color/palette_cheddar" />
 
                 <ImageButton
                     android:id="@+id/btnCloseGallery"

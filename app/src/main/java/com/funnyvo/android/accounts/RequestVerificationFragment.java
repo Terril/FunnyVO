@@ -91,7 +91,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
 
             case R.id.send_btn:
                 if (Check_Validation()) {
-                    Call_api();
+                    callApi();
                 }
                 break;
         }
@@ -341,7 +341,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
     }
 
 
-    public void Call_api() {
+    public void callApi() {
         JSONObject params = new JSONObject();
         try {
             params.put("fb_id", Variables.user_id);
