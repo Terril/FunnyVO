@@ -24,6 +24,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            android:paddingTop="@dimen/margin_20"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:contentInsetLeft="0dp"
@@ -42,9 +43,10 @@
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:scaleType="fitCenter"
+                    android:text="@string/add_sound"
                     android:textColor="@color/palette_cheddar"
                     android:tint="@color/palette_cheddar"
-                    app:icon="@drawable/ic_library_music"
+                    app:icon="@drawable/ic_music"
                     app:iconTint="@color/palette_cheddar" />
 
                 <ImageButton

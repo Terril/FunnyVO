@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -79,7 +80,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     ImageButton rotate_camera;
 
     public static int Sounds_list_Request_code = 1;
-    TextView add_sound_txt;
+    Button btnAddMusic;
 
     int sec_passed = 0;
 
@@ -134,16 +135,16 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         flash_btn = findViewById(R.id.flash_camera);
         flash_btn.setOnClickListener(this);
 
-        findViewById(R.id.Goback).setOnClickListener(this);
+        findViewById(R.id.btnCloseRecordVideo).setOnClickListener(this);
 
-        add_sound_txt = findViewById(R.id.add_sound_txt);
-        add_sound_txt.setOnClickListener(this);
+        btnAddMusic = findViewById(R.id.btnAddMusicRecord);
+        btnAddMusic.setOnClickListener(this);
 
         findViewById(R.id.time_btn).setOnClickListener(this);
 
         Intent intent = getIntent();
         if (intent.hasExtra("sound_name")) {
-            add_sound_txt.setText(intent.getStringExtra("sound_name"));
+            btnAddMusic.setText(intent.getStringExtra("sound_name"));
             Variables.Selected_sound_id = intent.getStringExtra("sound_id");
             PreparedAudio();
         }
@@ -190,18 +191,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
         });*/
 
-        record_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startOrStopRecording();
-            }
-        });
-
         countdown_timer_txt = findViewById(R.id.countdown_timer_txt);
-
         initializeVideoProgress();
-
-
     }
 
 
@@ -256,7 +247,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_recoding_yes));
 
             camera_options.setVisibility(View.GONE);
-            add_sound_txt.setClickable(false);
+            btnAddMusic.setClickable(false);
             rotate_camera.setVisibility(View.GONE);
 
         } else if (is_recording) {
@@ -397,10 +388,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.record_image:
+                startOrStopRecording();
+                break;
             case R.id.rotate_camera:
                 RotateCamera();
                 break;
-
             case R.id.upload_layout:
                 pickVideoFromGallery();
                 /*
@@ -409,11 +402,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.in_from_bottom,R.anim.out_to_top);
                 */
                 break;
-
             case R.id.done:
                 append();
                 break;
-
             case R.id.flash_camera:
                 if (is_flash_on) {
                     is_flash_on = false;
@@ -425,19 +416,15 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                     cameraView.setFlash(CameraKit.Constants.FLASH_TORCH);
                     flash_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off));
                 }
-
                 break;
-
-            case R.id.Goback:
+            case R.id.btnCloseRecordVideo:
                 onBackPressed();
                 break;
-
-            case R.id.add_sound_txt:
+            case R.id.btnAddMusicRecord:
                 Intent intent = new Intent(this, SoundListMainActivity.class);
                 startActivityForResult(intent, Sounds_list_Request_code);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
-
             case R.id.time_btn:
                 if (sec_passed + 1 < Variables.recording_duration / 1000) {
                     RecordingTimeRangeFragment recordingTimeRangeFragment = new RecordingTimeRangeFragment(new FragmentCallback() {
@@ -454,10 +441,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                                 new CountDownTimer(4000, 1000) {
                                     @Override
                                     public void onTick(long millisUntilFinished) {
-
                                         countdown_timer_txt.setText("" + (millisUntilFinished / 1000));
                                         countdown_timer_txt.setAnimation(scaleAnimation);
-
                                     }
 
                                     @Override
@@ -484,8 +469,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 break;
 
         }
-
-
     }
 
 
@@ -502,12 +485,10 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-
             if (requestCode == Sounds_list_Request_code) {
                 if (data != null) {
-
                     if (data.getStringExtra("isSelected").equals("yes")) {
-                        add_sound_txt.setText(data.getStringExtra("sound_name"));
+                        btnAddMusic.setText(data.getStringExtra("sound_name"));
                         Variables.Selected_sound_id = data.getStringExtra("sound_id");
                         PreparedAudio();
                     }

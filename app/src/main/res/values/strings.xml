@@ -11,13 +11,17 @@
 
     <string name="request_verification">Request Verification</string>
     <string name="apply_for_funny_vo_verification">Apply for FunnyVO Verification</string>
-    <string name="upper_body">A verified badge is check that aapears next to an \nfunnyvo accounts name to indicate that the \naccount is the authentic presence of notable \npublic figure , celebrity, global brand or entity it \nrepresents.</string>
+    <string name="upper_body">A verified badge is check that which appears next to an \nfunnyvo accounts name to indicate that the \naccount is the authentic. Presence of notable \npublic figure, celebrity, global brand or entity it \nrepresents.</string>
     <string name="upper_body_below">Submitting a request for verification \ndoes not guarantee that your account will be verified</string>
-    <string name="lower_body">We require a government-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license.\npassport or national identification card) or official \nbusiness documents(tax filing, recent utility bill, article of \nincorporation) in order to review your request.</string>
+    <string name="lower_body">We require a government-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license,passport or national identification card) or an official \nbusiness document(tax filing, recent utility bill, article of \nincorporation) in order to review your request.</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="version">1.0</string>
     <string name="device">android</string>
     <string name="delete_function_not_available_in_demo">Delete Function not available in demo</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="logout">Logout</string>
+    <string name="post">Post</string>
+    <string name="add_sound">Add Music</string>
 </resources>

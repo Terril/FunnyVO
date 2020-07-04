@@ -60,6 +60,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
@@ -69,23 +70,20 @@ import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
  */
 public class EditProfileFragment extends RootFragment implements View.OnClickListener {
 
-    View view;
-    Context context;
-
-    public EditProfileFragment() {
-
-    }
-
+    private View view;
+    private Context context;
     FragmentCallback fragment_callback;
+
+    public EditProfileFragment() { }
 
     public EditProfileFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
     }
 
-    ImageView profile_image;
-    EditText username_edit, firstname_edit, lastname_edit, user_bio_edit;
+    private ImageView profile_image;
+    private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit;
 
-    RadioButton male_btn, female_btn;
+    private RadioButton male_btn, female_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +91,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         context = getContext();
-
 
         view.findViewById(R.id.Goback).setOnClickListener(this);
         view.findViewById(R.id.save_btn).setOnClickListener(this);
@@ -123,7 +120,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         female_btn = view.findViewById(R.id.female_btn);
 
 
-        Call_Api_For_User_Details();
+        callApiForUserDetails();
 
         return view;
     }
@@ -131,19 +128,15 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.Goback:
-
                 getActivity().onBackPressed();
                 break;
 
             case R.id.save_btn:
                 if (Check_Validation()) {
-
-                    Call_Api_For_Edit_profile();
+                    callApiForEditProfile();
                 }
                 break;
-
             case R.id.upload_pic_btn:
                 selectImage();
                 break;
@@ -163,19 +156,16 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
-                    if (check_permissions())
+                    if (checkPermissions())
                         openCameraIntent();
 
                 } else if (options[item].equals("Choose from Gallery")) {
-
-                    if (check_permissions()) {
+                    if (checkPermissions()) {
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, 2);
                     }
                 } else if (options[item].equals("Cancel")) {
-
                     dialog.dismiss();
-
                 }
 
             }
@@ -187,7 +177,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
     }
 
 
-    public boolean check_permissions() {
+    public boolean checkPermissions() {
 
         String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -294,7 +284,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
                 InputStream imageStream = null;
                 try {
-                    imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
+                    imageStream = Objects.requireNonNull(getActivity()).getContentResolver().openInputStream(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -307,7 +297,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
                 image_byte_array = baos.toByteArray();
 
-                Save_Image();
+                saveImage();
 
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
@@ -344,15 +334,13 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
                 Bitmap rotatedBitmap = Bitmap.createBitmap(imagebitmap, 0, 0, imagebitmap.getWidth(), imagebitmap.getHeight(), matrix, true);
 
-
                 Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, (int) (rotatedBitmap.getWidth() * 0.5), (int) (rotatedBitmap.getHeight() * 0.5), true);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 resized.compress(Bitmap.CompressFormat.JPEG, 20, baos);
 
                 image_byte_array = baos.toByteArray();
-
-                Save_Image();
+                saveImage();
 
             }
 
@@ -387,10 +375,8 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     byte[] image_byte_array;
 
-    public void Save_Image() {
-
-        Functions.showLoader(context, false, false);
-
+    public void saveImage() {
+        showProgressDialog();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         String key = reference.push().getKey();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -404,18 +390,18 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                     filelocation.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Call_Api_For_image(uri.toString());
+                            callApiForImage(uri.toString());
                         }
                     });
                 } else {
-                    Functions.cancelLoader();
+                    dismissProgressDialog();
                 }
             }
         });
     }
 
 
-    public void Call_Api_For_image(final String image_link) {
+    public void callApiForImage(final String image_link) {
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -428,7 +414,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         ApiRequest.callApi(context, Variables.uploadImage, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
+                dismissProgressDialog();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -453,16 +439,11 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
             }
         });
-
-
     }
 
-
     // this will update the latest info of user in database
-    public void Call_Api_For_Edit_profile() {
-
-        Functions.showLoader(context, false, false);
-
+    public void callApiForEditProfile() {
+        showProgressDialog();
         String uname = username_edit.getText().toString().toLowerCase().replaceAll("\\s", "");
         JSONObject parameters = new JSONObject();
         try {
@@ -487,7 +468,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         ApiRequest.callApi(context, Variables.edit_profile, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
+                dismissProgressDialog();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -514,8 +495,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                             JSONObject jsonObject = msg.optJSONObject(0);
                             Toast.makeText(context, jsonObject.optString("response"), Toast.LENGTH_SHORT).show();
                         }
-
-
                     }
 
                 } catch (JSONException e) {
@@ -528,20 +507,19 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
 
     // this will get the user data and parse the data and show the data into views
-    public void Call_Api_For_User_Details() {
-        Functions.showLoader(getActivity(), false, false);
+    public void callApiForUserDetails() {
+        showProgressDialog();
         Functions.callApiForGetUserData(getActivity(),
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
                 new ApiCallBack() {
                     @Override
                     public void arrayData(ArrayList arrayList) {
-
                     }
 
                     @Override
                     public void onSuccess(String responce) {
-                        Functions.cancelLoader();
-                        Parse_user_data(responce);
+                        dismissProgressDialog();
+                        parseUserData(responce);
                     }
 
                     @Override
@@ -551,9 +529,9 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                 });
     }
 
-    public void Parse_user_data(String responce) {
+    public void parseUserData(String response) {
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
 
             String code = jsonObject.optString("code");
 

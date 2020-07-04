@@ -59,7 +59,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         ((MovieWrapperView) findViewById(R.id.layout_post_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
 
-        findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnGoBackPost).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
