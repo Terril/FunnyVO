@@ -1,7 +1,10 @@
 package com.funnyvo.android.filter;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.daasuu.gpuv.egl.filter.GlBilateralFilter;
@@ -26,6 +29,7 @@ import com.daasuu.gpuv.egl.filter.GlLuminanceFilter;
 import com.daasuu.gpuv.egl.filter.GlLuminanceThresholdFilter;
 import com.daasuu.gpuv.egl.filter.GlMonochromeFilter;
 import com.daasuu.gpuv.egl.filter.GlOpacityFilter;
+import com.daasuu.gpuv.egl.filter.GlOverlayFilter;
 import com.daasuu.gpuv.egl.filter.GlPixelationFilter;
 import com.daasuu.gpuv.egl.filter.GlPosterizeFilter;
 import com.daasuu.gpuv.egl.filter.GlRGBFilter;
@@ -42,13 +46,22 @@ import com.daasuu.gpuv.egl.filter.GlVignetteFilter;
 import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
 import com.daasuu.gpuv.egl.filter.GlWeakPixelInclusionFilter;
 import com.daasuu.gpuv.egl.filter.GlZoomBlurFilter;
+import com.funnyvo.android.R;
+import com.funnyvo.android.filter.addons.FunnyVOUserOverlayFilter;
+import com.funnyvo.android.simpleclasses.Variables;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 // this is the all available filters
 public enum FilterType {
@@ -223,6 +236,17 @@ public enum FilterType {
             default:
                 return returnWithWaterMarkToFilters(new GlFilter(), bitmap);
         }
+    }
+
+    public static Collection<GlFilter> createGlFilterWithOverlay(FilterType filterType, Context context, Bitmap bitmap) {
+
+        Collection<GlFilter> filters = createGlFilter(filterType, context, bitmap);
+        ContextWrapper cw = new ContextWrapper(context);
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File filePath = new File(directory, context.getString(R.string.user_profile));
+        Bitmap userBitmap = BitmapFactory.decodeFile(filePath.getPath());
+        filters.add(new FunnyVOUserOverlayFilter(userBitmap));
+        return filters;
     }
 
     private static List<GlFilter> returnWithWaterMarkToFilters(GlFilter filter, Bitmap bitmap) {

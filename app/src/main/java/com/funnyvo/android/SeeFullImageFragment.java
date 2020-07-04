@@ -65,13 +65,11 @@ public class SeeFullImageFragment extends Fragment {
                 .into(single_image, new Callback() {
                     @Override
                     public void onSuccess() {
-
                         p_bar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError() {
-                        // TODO Auto-generated method stub
                         p_bar.setVisibility(View.GONE);
                     }
                 });

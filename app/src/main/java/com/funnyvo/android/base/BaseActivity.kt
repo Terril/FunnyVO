@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.daasuu.gpuv.player.GPUPlayerView
 import com.daasuu.gpuv.player.PlayerScaleType
 import com.funnyvo.android.customview.ActivityIndicator
+import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -68,12 +69,11 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-
     open fun setPlayer(path: String?, listener: Player.EventListener): GPUPlayerView {
         val trackSelector = DefaultTrackSelector()
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
         val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "FunnyVO"))
+                Util.getUserAgent(this, APP_NAME))
         val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path))
         player.prepare(videoSource)
@@ -81,10 +81,10 @@ abstract class BaseActivity : AppCompatActivity() {
         player.addListener(listener)
         player.playWhenReady = true
         val gpuPlayerView = GPUPlayerView(this)
-        gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE)
         gpuPlayerView.setSimpleExoPlayer(player)
         gpuPlayerView.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
         return gpuPlayerView
     }
+
 }

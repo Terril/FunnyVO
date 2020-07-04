@@ -55,12 +55,9 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
     @Override
     public void onBindViewHolder(final SoundAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
-
-
         SoundCategory item = datalist.get(i);
 
         holder.title.setText(item.catagory);
-
 
         SoundItemsAdapter adapter = new SoundItemsAdapter(context, item.sound_list, new SoundItemsAdapter.OnItemClickListener() {
             @Override
@@ -101,7 +98,6 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
             //  image=view.findViewById(R.id.image);
             title = view.findViewById(R.id.title);
             recyclerView = view.findViewById(R.id.horizontal_recylerview);
-
 
         }
 

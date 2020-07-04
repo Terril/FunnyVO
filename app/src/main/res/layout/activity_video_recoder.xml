@@ -30,10 +30,7 @@
                 android:layout_height="5dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/timer_txt"
                 android:background="@color/fifty_transparent_black" />
-
-
         </RelativeLayout>
 
 
@@ -54,15 +51,29 @@
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginTop="@dimen/margin_35"
-            android:layout_alignParentTop="true"
             android:scaleType="fitCenter"
             android:text="@string/add_sound"
             android:textColor="@color/palette_cheddar"
             android:tint="@color/palette_cheddar"
             app:icon="@drawable/ic_music"
             app:iconTint="@color/palette_cheddar" />
+
+        <ImageButton
+            android:id="@+id/btnDone"
+            android:layout_width="@dimen/margin_32"
+            android:layout_height="@dimen/margin_32"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="@dimen/margin_40"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_marginBottom="@dimen/margin_15"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_done"
+            android:tint="@color/palette_cheddar" />
 
         <LinearLayout
             android:id="@+id/camera_options"
@@ -120,42 +131,13 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_recoding_no" />
 
-            <LinearLayout
-                android:id="@+id/upload_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+            <ImageView
+                android:id="@+id/imvGallery"
+                android:layout_width="@dimen/margin_40"
+                android:layout_height="@dimen/margin_40"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/done"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_gallery_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Upload"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/done"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:padding="3dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_not_done" />
+                android:src="@drawable/ic_gallery_icon" />
 
         </RelativeLayout>
 

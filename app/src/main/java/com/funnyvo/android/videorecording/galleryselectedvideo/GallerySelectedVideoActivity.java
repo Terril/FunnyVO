@@ -363,7 +363,6 @@ public class GallerySelectedVideoActivity extends BaseActivity implements View.O
 
     @Override
     public void onRepeatModeChanged(int repeatMode) {
-
         Toast.makeText(this, "Repeat mode change", Toast.LENGTH_SHORT).show();
 
     }

@@ -26,4 +26,5 @@
     <string name="add_sound">Add Music</string>
     <string name="discover">Discover</string>
     <string name="user_fav">My Favorites</string>
+    <string name="user_profile">userprofile.jpg</string>
 </resources>

@@ -2,17 +2,20 @@ package com.funnyvo.android.videorecording;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daasuu.gpuv.composer.FillMode;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
@@ -20,6 +23,7 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
+import com.funnyvo.android.filter.addons.FunnyVOUserOverlayFilter;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Variables;
 
@@ -69,7 +73,7 @@ public class PreviewVideoActivity extends BaseActivity {
         });
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
-        ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
+        ((FrameLayout) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerview);
 
@@ -83,7 +87,7 @@ public class PreviewVideoActivity extends BaseActivity {
                 select_postion = postion;
                 gpuPlayerView.setElevation(3.0F);
 
-                gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext(), getBitmapForLogo())));
+                gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext(), null)));
                 adapter.notifyDataSetChanged();
             }
         });
@@ -129,12 +133,12 @@ public class PreviewVideoActivity extends BaseActivity {
     }
 
     // this function will add the filter to video and save that same video for post the video in post video screen
-    public void saveVideo(String srcMp4Path, final String destMp4Path) {
+    private void saveVideo(String srcMp4Path, final String destMp4Path) {
         showProgressDialog();
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
                 //.videoBitrate((int) (0.25 * 16 * 540 * 960))
-                .filter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(select_postion), getApplicationContext(), getBitmapForLogo())))
+                .filter(new GlFilterGroup(FilterType.createGlFilterWithOverlay(filterTypes.get(select_postion), getApplicationContext(), getBitmapForLogo())))
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
@@ -178,10 +182,10 @@ public class PreviewVideoActivity extends BaseActivity {
     }
 
     private Bitmap getBitmapForLogo() {
-        Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
-        Bitmap reSizeBitmap = Bitmap.createScaledBitmap(myLogo, 50, 50, true);
-
-        return reSizeBitmap;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap source = BitmapFactory.decodeResource(getResources(), R.drawable.ic_watermark_image, options);
+        return source;
     }
 
     public void gotopostScreen() {

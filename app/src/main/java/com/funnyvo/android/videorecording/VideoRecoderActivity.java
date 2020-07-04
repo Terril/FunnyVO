@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -61,7 +60,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener {
 
@@ -70,8 +68,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     ArrayList<String> videopaths = new ArrayList<>();
 
-    ImageButton record_image;
-    ImageButton done_btn;
+    ImageButton record_image, done_btn;
     boolean is_recording = false;
     boolean is_flash_on = false;
 
@@ -84,7 +81,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     Button btnAddMusic;
 
     int sec_passed = 0;
-
+    // this will play the sound with the video when we select the audio
+    MediaPlayer audio;
     TextView countdown_timer_txt;
     boolean is_recording_timer_enable;
     int recording_time = 3;
@@ -125,12 +123,10 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         record_image = findViewById(R.id.record_image);
         record_image.setOnClickListener(this);
 
-        findViewById(R.id.upload_layout).setOnClickListener(this);
+        findViewById(R.id.imvGallery).setOnClickListener(this);
 
-        done_btn = findViewById(R.id.done);
+        done_btn = findViewById(R.id.btnDone);
         done_btn.setEnabled(false);
-        done_btn.setOnClickListener(this);
-
 
         rotate_camera = findViewById(R.id.rotate_camera);
         rotate_camera.setOnClickListener(this);
@@ -148,51 +144,49 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         if (intent.hasExtra("sound_name")) {
             btnAddMusic.setText(intent.getStringExtra("sound_name"));
             Variables.Selected_sound_id = intent.getStringExtra("sound_id");
-            PreparedAudio();
+            preparedAudio();
         }
-
 
         // this is code hold to record the video
         final Timer[] timer = {new Timer()};
-        final long[] press_time = {0};
-        record_image.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    timer[0] = new Timer();
-                    press_time[0] = System.currentTimeMillis();
-                    timer[0].schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!is_recording) {
-                                        press_time[0] = System.currentTimeMillis();
-                                        startOrStopRecording();
-                                    }
-                                }
-                            });
-
-                        }
-                    }, 200);
-
-
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    timer[0].cancel();
-                    if (is_recording && (press_time[0] != 0 && (System.currentTimeMillis() - press_time[0]) < 2000)) {
-                        startOrStopRecording();
-                    }
-                }
-                return false;
-            }
-
-        });
+//        final long[] press_time = {0};
+//        record_image.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    timer[0] = new Timer();
+//                    press_time[0] = System.currentTimeMillis();
+//                    timer[0].schedule(new TimerTask() {
+//                        @Override
+//                        public void run() {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if (!is_recording) {
+//                                        press_time[0] = System.currentTimeMillis();
+//                                        startOrStopRecording();
+//                                    }
+//                                }
+//                            });
+//
+//                        }
+//                    }, 200);
+//
+//
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    timer[0].cancel();
+//                    if (is_recording && (press_time[0] != 0 && (System.currentTimeMillis() - press_time[0]) < 2000)) {
+//                        startOrStopRecording();
+//                    }
+//                }
+//                return false;
+//            }
+//
+//        });
 
         countdown_timer_txt = findViewById(R.id.countdown_timer_txt);
         initializeVideoProgress();
     }
-
 
     public void initializeVideoProgress() {
         sec_passed = 0;
@@ -225,7 +219,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     // if the Recording is stop then it we start the recording
     // and if the mobile is recording the video then it will stop the recording
     public void startOrStopRecording() {
-
         if (!is_recording && sec_passed < (Variables.recording_duration / 1000) - 1) {
             number = number + 1;
             is_recording = true;
@@ -239,7 +232,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
             video_progress.resume();
 
-            done_btn.setBackgroundResource(R.drawable.ic_not_done);
             done_btn.setEnabled(false);
 
             record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_recoding_yes));
@@ -256,13 +248,14 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             if (audio != null)
                 audio.pause();
 
-            cameraView.stopVideo();
-
-
             if (sec_passed > ((Variables.recording_duration / 1000) / 3)) {
-                done_btn.setBackgroundResource(R.drawable.ic_done);
+                done_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_done));
                 done_btn.setEnabled(true);
+                done_btn.setOnClickListener(this);
+                done_btn.invalidate();
             }
+
+            cameraView.stopVideo();
 
             record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_recoding_no));
             camera_options.setVisibility(View.VISIBLE);
@@ -377,7 +370,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    public void RotateCamera() {
+    public void rotateCamera() {
         cameraView.toggleFacing();
     }
 
@@ -390,9 +383,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 startOrStopRecording();
                 break;
             case R.id.rotate_camera:
-                RotateCamera();
+                rotateCamera();
                 break;
-            case R.id.upload_layout:
+            case R.id.imvGallery:
                 pickVideoFromGallery();
                 /*
                 Intent upload_intent=new Intent(this, GalleryVideos_A.class);
@@ -400,7 +393,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.in_from_bottom,R.anim.out_to_top);
                 */
                 break;
-            case R.id.done:
+            case R.id.btnDone:
                 append();
                 break;
             case R.id.flash_camera:
@@ -488,7 +481,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                     if (data.getStringExtra("isSelected").equals("yes")) {
                         btnAddMusic.setText(data.getStringExtra("sound_name"));
                         Variables.Selected_sound_id = data.getStringExtra("sound_id");
-                        PreparedAudio();
+                        preparedAudio();
                     }
 
                 }
@@ -518,8 +511,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-
-    public long getfileduration(Uri uri) {
+    private long getfileduration(Uri uri) {
         try {
 
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -549,7 +541,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onCompleted() {
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -682,11 +673,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-
-    // this will play the sound with the video when we select the audio
-    MediaPlayer audio;
-
-    public void PreparedAudio() {
+    public void preparedAudio() {
         File file = new File(Variables.app_folder + Variables.SelectedAudio_AAC);
         if (file.exists()) {
             audio = new MediaPlayer();
@@ -706,10 +693,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 Variables.recording_duration = file_duration;
                 initializeVideoProgress();
             }
-
         }
-
-
     }
 
 
@@ -724,7 +708,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     protected void onDestroy() {
         super.onDestroy();
         try {
-
             if (audio != null) {
                 audio.stop();
                 audio.reset();
@@ -811,6 +794,4 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
-
-
 }

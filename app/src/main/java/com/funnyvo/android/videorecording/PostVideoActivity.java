@@ -32,7 +32,6 @@ import java.io.OutputStream;
 
 public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener{
 
-    ImageView video_thumbnail;
     String video_path;
     ServiceCallback serviceCallback;
     EditText description_edit;
