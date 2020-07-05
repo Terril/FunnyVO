@@ -73,7 +73,7 @@ public class PreviewVideoActivity extends BaseActivity {
         });
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
-        ((FrameLayout) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
+        ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerview);
 

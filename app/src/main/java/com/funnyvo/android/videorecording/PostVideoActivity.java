@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener{
+public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener {
 
     String video_path;
     ServiceCallback serviceCallback;
@@ -95,7 +96,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
             mServiceIntent.setAction("startservice");
             mServiceIntent.putExtra("uri", "" + Uri.fromFile(new File(video_path)));
-            mServiceIntent.putExtra("desc", "" );
+            mServiceIntent.putExtra("desc", "");
             startService(mServiceIntent);
 
             Intent intent = new Intent(this, UploadService.class);

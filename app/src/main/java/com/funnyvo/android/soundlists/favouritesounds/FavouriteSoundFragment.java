@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,22 +62,22 @@ import static android.app.Activity.RESULT_OK;
  */
 public class FavouriteSoundFragment extends RootFragment implements Player.EventListener {
 
-
-    Context context;
-    View view;
-    ArrayList<Sounds> datalist;
-    FavouriteSoundAdapter adapter;
+    private Context context;
+    private View view;
+    private ArrayList<Sounds> datalist;
+    private FavouriteSoundAdapter adapter;
     static boolean active = false;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
-    DownloadRequest prDownloader;
+    private DownloadRequest prDownloader;
 
+    static String running_sound_id;
+    private SwipeRefreshLayout swiperefresh;
 
-    public static String running_sound_id;
-
-
-    ProgressBar pbar;
-    SwipeRefreshLayout swiperefresh;
+    private View previous_view;
+    private Thread thread;
+    private SimpleExoPlayer player;
+    private String previous_url = "none";
 
     public FavouriteSoundFragment() {
         // Required empty public constructor
@@ -89,17 +89,20 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.activity_sound_list, container, false);
+        return view;
+    }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         context = getContext();
 
         running_sound_id = "none";
 
-
         PRDownloader.initialize(context);
 
-        pbar = view.findViewById(R.id.pbar);
-
-        recyclerView = view.findViewById(R.id.listview);
+        recyclerView = view.findViewById(R.id.recylerViewSoundList);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -108,36 +111,29 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-
-                Call_Api_For_get_allsound();
+                callApiForGetAllSound();
             }
         });
 
-        Call_Api_For_get_allsound();
-
-
-        return view;
+        callApiForGetAllSound();
     }
 
-
-    public void Set_adapter() {
-
+    public void setAdapter() {
         adapter = new FavouriteSoundAdapter(context, datalist, new FavouriteSoundAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {
 
                 if (view.getId() == R.id.done) {
-                    StopPlaying();
-                    Down_load_mp3(item.id, item.sound_name, item.acc_path);
+                    stopPlaying();
+                    downLoadMp3(item.id, item.sound_name, item.acc_path);
                 } else if (view.getId() == R.id.fav_btn) {
-                    Call_Api_For_Fav_sound(postion, item.id);
+                    callApiForFavSound(postion, item.id);
                 } else {
                     if (thread != null && !thread.isAlive()) {
-                        StopPlaying();
+                        stopPlaying();
                         playaudio(view, item);
                     } else if (thread == null) {
-                        StopPlaying();
+                        stopPlaying();
                         playaudio(view, item);
                     }
                 }
@@ -146,21 +142,19 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         });
 
         recyclerView.setAdapter(adapter);
-
-
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (view != null && isVisibleToUser) {
-            Call_Api_For_get_allsound();
+            callApiForGetAllSound();
         }
     }
 
 
-    private void Call_Api_For_get_allsound() {
-
+    private void callApiForGetAllSound() {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -173,21 +167,19 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
-                pbar.setVisibility(View.GONE);
-                Parse_data(resp);
+                dismissProgressDialog();
+                parseData(resp);
             }
         });
 
 
     }
 
-
-    public void Parse_data(String responce) {
-
+    public void parseData(String response) {
         datalist = new ArrayList<>();
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
 
@@ -203,8 +195,6 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
                     JSONObject audio_path = itemdata.optJSONObject("audio_path");
 
                     item.acc_path = audio_path.optString("acc");
-
-
                     item.sound_name = itemdata.optString("sound_name");
                     item.description = itemdata.optString("description");
                     item.section = itemdata.optString("section");
@@ -214,9 +204,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
                     datalist.add(item);
                 }
 
-                Set_adapter();
-
-
+                setAdapter();
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
@@ -234,12 +222,6 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         getActivity().onBackPressed();
         return super.onBackPressed();
     }
-
-
-    View previous_view;
-    Thread thread;
-    SimpleExoPlayer player;
-    String previous_url = "none";
 
     public void playaudio(View view, final Sounds item) {
         previous_view = view;
@@ -275,14 +257,14 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
     }
 
 
-    public void StopPlaying() {
+    public void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
             player.removeListener(this);
             player.release();
         }
 
-        show_Stop_state();
+        showStopState();
 
     }
 
@@ -306,12 +288,12 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             player.release();
         }
 
-        show_Stop_state();
+        showStopState();
 
     }
 
 
-    public void Show_Run_State() {
+    public void showRunState() {
 
         if (previous_view != null) {
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
@@ -322,13 +304,13 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
     }
 
 
-    public void Show_loading_state() {
+    public void showLoadingState() {
         previous_view.findViewById(R.id.play_btn).setVisibility(View.GONE);
         previous_view.findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
     }
 
 
-    public void show_Stop_state() {
+    public void showStopState() {
 
         if (previous_view != null) {
             previous_view.findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
@@ -342,7 +324,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
     }
 
 
-    public void Down_load_mp3(final String id, final String sound_name, String url) {
+    public void downLoadMp3(final String id, final String sound_name, String url) {
 
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please Wait...");
@@ -397,8 +379,8 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
     }
 
 
-    private void Call_Api_For_Fav_sound(final int pos, String video_id) {
-
+    private void callApiForFavSound(final int pos, String video_id) {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -408,11 +390,10 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             e.printStackTrace();
         }
 
-        Functions.showLoader(context, false, false);
         ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
+                dismissProgressDialog();
                 datalist.remove(pos);
                 adapter.notifyItemRemoved(pos);
                 adapter.notifyDataSetChanged();
@@ -442,11 +423,11 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
         if (playbackState == Player.STATE_BUFFERING) {
-            Show_loading_state();
+            showLoadingState();
         } else if (playbackState == Player.STATE_READY) {
-            Show_Run_State();
+            showRunState();
         } else if (playbackState == Player.STATE_ENDED) {
-            show_Stop_state();
+            showStopState();
         }
 
     }

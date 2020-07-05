@@ -63,7 +63,6 @@ public class GallerySelectedVideoActivity extends BaseActivity implements View.O
     // this will call when swipe for another video and
     // this function will set the player to the current video
     private SimpleExoPlayer video_player;
-
     // this will play the sound with the video when we select the audio
     private MediaPlayer audio;
 
@@ -174,7 +173,6 @@ public class GallerySelectedVideoActivity extends BaseActivity implements View.O
                 audio.setDataSource(Variables.app_folder + Variables.SelectedAudio_AAC);
                 audio.prepare();
                 audio.setLooping(true);
-
 
                 video_player.seekTo(0);
                 video_player.setPlayWhenReady(true);

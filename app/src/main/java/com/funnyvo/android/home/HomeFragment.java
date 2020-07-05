@@ -503,7 +503,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         player.addListener(this);
 
         View layout = layoutManager.findViewByPosition(currentPage);
-        final PlayerView playerView = layout.findViewById(R.id.playerview);
+        final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
         playerView.setPlayer(player);
 
         player.setPlayWhenReady(is_visible_to_user);

@@ -5,13 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/margin_20">
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -48,8 +45,6 @@
                     android:textStyle="bold" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -63,11 +58,11 @@
                 android:layout_weight="1"
                 android:background="@drawable/d_bottom_gray_line"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/black"
+                app:tabIndicatorColor="@color/palette_cheddar_darker"
                 app:tabMode="fixed"
                 app:tabPaddingEnd="0dp"
                 app:tabPaddingStart="0dp"
-                app:tabSelectedTextColor="@color/black"
+                app:tabSelectedTextColor="@color/palette_cheddar_dark"
                 app:tabTextAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 app:tabTextColor="@color/dark_gray" />
 
@@ -77,12 +72,6 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/groups_tab"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"></com.funnyvo.android.main_menu.CustomViewPager>
-
-
         </RelativeLayout>
-
-
     </RelativeLayout>
-
-
 </RelativeLayout>

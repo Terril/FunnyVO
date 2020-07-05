@@ -1,6 +1,5 @@
 package com.funnyvo.android.soundlists;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,9 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,23 +53,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 public class DiscoverSoundListFragment extends RootFragment implements Player.EventListener {
 
-    RecyclerView listview;
-    SoundAdapter adapter;
-    ArrayList<SoundCategory> datalist;
+    private RecyclerView recylerView;
+    private SoundAdapter adapter;
+    private ArrayList<SoundCategory> datalist;
 
-    DownloadRequest prDownloader;
+    private DownloadRequest prDownloader;
     static boolean active = false;
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    SwipeRefreshLayout swiperefresh;
-    ProgressBar pbar;
+    private SwipeRefreshLayout swiperefresh;
 
     public static String running_sound_id;
+
+    private View previous_view;
+    private Thread thread;
+    private SimpleExoPlayer player;
+    private String previous_url = "none";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,20 +82,22 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.activity_sound_list, container, false);
         context = getContext();
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         running_sound_id = "none";
 
-
         PRDownloader.initialize(context);
-        pbar = view.findViewById(R.id.pbar);
-
         datalist = new ArrayList<>();
 
-        listview = view.findViewById(R.id.listview);
-        listview.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        listview.setNestedScrollingEnabled(false);
-        listview.setHasFixedSize(true);
-        listview.getLayoutManager().setMeasurementCacheEnabled(false);
+        recylerView = view.findViewById(R.id.recylerViewSoundList);
+        recylerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        recylerView.setNestedScrollingEnabled(false);
+        recylerView.setHasFixedSize(true);
+        recylerView.getLayoutManager().setMeasurementCacheEnabled(false);
 
 
         swiperefresh = view.findViewById(R.id.swiperefresh);
@@ -100,51 +106,46 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             @Override
             public void onRefresh() {
                 previous_url = "none";
-                StopPlaying();
-                Call_Api_For_get_allsound();
+                stopPlaying();
+                callApiForGetAllSound();
             }
         });
 
-        Call_Api_For_get_allsound();
-
-        return view;
+        callApiForGetAllSound();
     }
 
-
-    public void Set_adapter() {
+    public void setAdapter() {
 
         adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {
-
                 Log.d("resp", item.acc_path);
-
                 if (view.getId() == R.id.done) {
-                    StopPlaying();
-                    Down_load_mp3(item.id, item.sound_name, item.acc_path);
+                    stopPlaying();
+                    downLoadMp3(item.id, item.sound_name, item.acc_path);
                 } else if (view.getId() == R.id.fav_btn) {
-                    Call_Api_For_Fav_sound(postion, item);
+                    callApiForFavSound(postion, item);
                 } else {
                     if (thread != null && !thread.isAlive()) {
-                        StopPlaying();
-                        playaudio(view, item);
+                        stopPlaying();
+                        playAudio(view, item);
                     } else if (thread == null) {
-                        StopPlaying();
-                        playaudio(view, item);
+                        stopPlaying();
+                        playAudio(view, item);
                     }
                 }
 
             }
         });
 
-        listview.setAdapter(adapter);
+        recylerView.setAdapter(adapter);
 
 
     }
 
 
-    private void Call_Api_For_get_allsound() {
-
+    private void callApiForGetAllSound() {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -159,8 +160,8 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
-                pbar.setVisibility(View.GONE);
-                Parse_data(resp);
+                dismissProgressDialog();
+                parseData(resp);
             }
         });
 
@@ -168,12 +169,12 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
 
-    public void Parse_data(String responce) {
+    public void parseData(String response) {
 
         datalist = new ArrayList<>();
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
 
@@ -198,7 +199,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                         JSONObject audio_path = itemdata.optJSONObject("audio_path");
                         item.acc_path = audio_path.optString("acc");
 
-
                         item.sound_name = itemdata.optString("sound_name");
                         item.description = itemdata.optString("description");
                         item.section = itemdata.optString("section");
@@ -212,13 +212,11 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                     SoundCategory sound_category = new SoundCategory();
                     sound_category.catagory = object.optString("section_name");
                     sound_category.sound_list = sound_list;
-
                     datalist.add(sound_category);
-
                 }
 
 
-                Set_adapter();
+                setAdapter();
 
 
             } else {
@@ -229,7 +227,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
             e.printStackTrace();
         }
-
     }
 
 
@@ -239,13 +236,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         return super.onBackPressed();
     }
 
-
-    View previous_view;
-    Thread thread;
-    SimpleExoPlayer player;
-    String previous_url = "none";
-
-    public void playaudio(View view, final Sounds item) {
+    public void playAudio(View view, final Sounds item) {
         previous_view = view;
 
         if (previous_url.equals(item.acc_path)) {
@@ -261,15 +252,13 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, "TikTok"));
+                    Util.getUserAgent(context, APP_NAME));
 
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(item.acc_path));
 
-
             player.prepare(videoSource);
             player.addListener(this);
-
 
             player.setPlayWhenReady(true);
 
@@ -278,16 +267,14 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
     }
 
-
-    public void StopPlaying() {
+    public void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
             player.removeListener(this);
             player.release();
         }
 
-        show_Stop_state();
-
+        showStopState();
     }
 
 
@@ -302,7 +289,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     public void onStop() {
         super.onStop();
         active = false;
-
         running_sound_id = "null";
 
         if (player != null) {
@@ -311,13 +297,12 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             player.release();
         }
 
-        show_Stop_state();
+        showStopState();
 
     }
 
 
-    public void Show_Run_State() {
-
+    public void showRunState() {
         if (previous_view != null) {
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
@@ -327,13 +312,13 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
 
-    public void Show_loading_state() {
+    public void showLoadingState() {
         previous_view.findViewById(R.id.play_btn).setVisibility(View.GONE);
         previous_view.findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
     }
 
 
-    public void show_Stop_state() {
+    public void showStopState() {
 
         if (previous_view != null) {
             previous_view.findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
@@ -347,12 +332,8 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
 
-    public void Down_load_mp3(final String id, final String sound_name, String url) {
-
-        final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.show();
-
+    public void downLoadMp3(final String id, final String sound_name, String url) {
+        showProgressDialog();
         prDownloader = PRDownloader.download(url, Variables.app_folder, Variables.SelectedAudio_AAC)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
@@ -383,7 +364,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                progressDialog.dismiss();
+                dismissProgressDialog();
                 Intent output = new Intent();
                 output.putExtra("isSelected", "yes");
                 output.putExtra("sound_name", sound_name);
@@ -395,15 +376,15 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
             @Override
             public void onError(Error error) {
-                progressDialog.dismiss();
+                dismissProgressDialog();
             }
         });
 
     }
 
 
-    private void Call_Api_For_Fav_sound(int pos, final Sounds item) {
-
+    private void callApiForFavSound(int pos, final Sounds item) {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -417,12 +398,10 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             e.printStackTrace();
         }
 
-        Functions.showLoader(context, false, false);
         ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
-
+                dismissProgressDialog();
                 if (item.fav.equals("1"))
                     item.fav = "0";
                 else
@@ -463,13 +442,12 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
         if (playbackState == Player.STATE_BUFFERING) {
-            Show_loading_state();
+            showLoadingState();
         } else if (playbackState == Player.STATE_READY) {
-            Show_Run_State();
+            showRunState();
         } else if (playbackState == Player.STATE_ENDED) {
-            show_Stop_state();
+            showStopState();
         }
 
     }

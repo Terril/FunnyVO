@@ -57,13 +57,8 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
         final Home item = dataList.get(i);
 
         try {
-
-
             holder.bind(i, item, listener);
-
             holder.username.setText(item.username);
-
-
             if ((item.sound_name == null || item.sound_name.equals("") || item.sound_name.equals("null"))) {
                 holder.sound_name.setText("original sound - " + item.first_name + " " + item.last_name);
             } else {
@@ -78,7 +73,6 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
                     .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
                     .resize(100, 100).into(holder.user_pic);
 
-
             if ((item.sound_name == null || item.sound_name.equals(""))
                     || item.sound_name.equals("null")) {
 
@@ -92,13 +86,11 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
                     .placeholder(context.getResources().getDrawable(R.drawable.ic_round_music))
                     .resize(100, 100).into(holder.sound_image);
 
-
             if (item.liked.equals("1")) {
                 holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));
             } else {
                 holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like));
             }
-
 
             holder.like_txt.setText(item.like_count);
             holder.comment_txt.setText(item.video_comment_count);
