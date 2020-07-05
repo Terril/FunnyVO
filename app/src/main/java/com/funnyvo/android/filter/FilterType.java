@@ -251,7 +251,7 @@ public enum FilterType {
 
     private static List<GlFilter> returnWithWaterMarkToFilters(GlFilter filter, Bitmap bitmap) {
         ArrayList<GlFilter> filters = new ArrayList<>();
-        GlWatermarkFilter watermarkFilter = new GlWatermarkFilter(bitmap, GlWatermarkFilter.Position.RIGHT_BOTTOM);
+        GlWatermarkFilter watermarkFilter = new GlWatermarkFilter(bitmap);
         filters.add(filter);
         filters.add(watermarkFilter);
 

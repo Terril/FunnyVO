@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/palette_milk">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
@@ -19,7 +19,7 @@
                 android:id="@+id/recylerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black" />
+                android:background="@color/palette_milk" />
 
             <ProgressBar
                 android:id="@+id/p_bar"
@@ -29,7 +29,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="43dp"
                 android:indeterminateOnly="true"
-                android:indeterminateTint="@color/white"
+                android:indeterminateTint="@color/black"
                 android:secondaryProgress="@android:integer/config_shortAnimTime"
                 android:visibility="visible" />
 

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -264,7 +265,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                     if (bundle.getString("action").equals("save")) {
                                         saveVideo(item);
                                     } else if (bundle.getString("action").equals("delete")) {
-                                        Functions.showLoader(context, false, false);
+                                        showProgressDialog();
                                         Functions.callApiForDeleteVideo(getActivity(), item.video_id, new ApiCallBack() {
                                             @Override
                                             public void arrayData(ArrayList arrayList) {
@@ -275,12 +276,13 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                             public void onSuccess(String responce) {
                                                 data_list.remove(currentPage);
                                                 adapter.notifyDataSetChanged();
+                                                dismissProgressDialog();
 
                                             }
 
                                             @Override
                                             public void onFailure(String responce) {
-
+                                                dismissProgressDialog();
                                             }
                                         });
 
@@ -380,6 +382,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     item.video_id = itemdata.optString("id");
                     item.liked = itemdata.optString("liked");
                     item.video_url = itemdata.optString("video");
+
+                    if (item.video_url.contains(Variables.base_url)) {
+                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                    }
+
                     item.video_description = itemdata.optString("description");
 
                     item.thum = itemdata.optString("thum");
@@ -411,7 +418,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
             @Override
@@ -458,6 +464,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     item.video_id = itemdata.optString("id");
                     item.liked = itemdata.optString("liked");
                     item.video_url = itemdata.optString("video");
+
+                    if (item.video_url.contains(Variables.base_url)) {
+                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                    }
+
                     item.video_description = itemdata.optString("description");
 
                     item.thum = itemdata.optString("thum");
@@ -603,7 +614,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             showAdd();
             swipe_count = 0;
         }
-
 
         callApiForSinglevideo(currentPage);
 
@@ -805,10 +815,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         final CharSequence[] options = {"Save Video", "Cancel"};
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context, R.style.AlertDialogCustom);
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogCustom);
         builder.setTitle(null);
-
         builder.setItems(options, new DialogInterface.OnClickListener() {
 
             @Override
@@ -820,7 +828,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         saveVideo(home_);
 
                 } else if (options[item].equals("Cancel")) {
-
                     dialog.dismiss();
 
                 }
@@ -833,7 +840,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-    public void saveVideo(final Home item) {
+    private void saveVideo(final Home item) {
         mActivity.showProgressDialog();
         PRDownloader.initialize(getActivity().getApplicationContext());
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
@@ -894,7 +901,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-                        Log.d("resp", "" + (int) (progress * 100));
                         mActivity.showProgressDialog();
                     }
 
@@ -920,14 +926,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                     @Override
                     public void onFailed(Exception exception) {
-
-                        Log.d("resp", exception.toString());
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
-
                                     deleteFileNoWatermark(item);
                                     mActivity.dismissProgressDialog();
                                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
@@ -1013,7 +1015,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     public boolean checkPermissions() {
-
         String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,

@@ -30,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.funnyvo.android.apirequest.MultipartRequest;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
@@ -63,7 +64,11 @@ public class UploadService extends Service {
     }
 
     boolean mAllowRebind;
-    ServiceCallback Callback;
+    private ServiceCallback Callback;
+    private Uri uri;
+    private String video_base64 = "", thumb_base_64 = "", Gif_base_64 = "";
+    private String description;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -75,11 +80,6 @@ public class UploadService extends Service {
     public boolean onUnbind(Intent intent) {
         return mAllowRebind;
     }
-
-    Uri uri;
-    String video_base64 = "", thumb_base_64 = "", Gif_base_64 = "";
-    String description;
-    SharedPreferences sharedPreferences;
 
     public UploadService() {
         super();
@@ -115,8 +115,11 @@ public class UploadService extends Service {
                         Bitmap bmThumbnail;
                         bmThumbnail = ThumbnailUtils.createVideoThumbnail(uri.getPath(),
                                 MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-                        Bitmap bmThumbnail_resized = Bitmap.createScaledBitmap(bmThumbnail, (int) (bmThumbnail.getWidth() * 0.4), (int) (bmThumbnail.getHeight() * 0.4), true);
-                        thumb_base_64 = bitmapToBase64(bmThumbnail_resized);
+                        Bitmap bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (int) (bmThumbnail.getWidth() * 0.4), (int) (bmThumbnail.getHeight() * 0.4), true);
+                        thumb_base_64 = bitmapToBase64(bmThumbnailResized);
+
+                        File videoFile = new File(uri.getPath());
+                        File thumbNail = saveBitmapInFile(bmThumbnailResized);
 
                         try {
                             video_base64 = encodeFileToBase64Binary(uri);
@@ -141,85 +144,60 @@ public class UploadService extends Service {
                         }
 
                         Gif_base_64 = Base64.encodeToString(generateGIF(frames), Base64.DEFAULT);
-                        JSONObject parameters = new JSONObject();
+                        File gifFile = new File(Variables.app_folder, "sample.gif");
 
-                        try {
-                            parameters.put("fb_id", sharedPreferences.getString(Variables.u_id, ""));
-                            parameters.put("sound_id", Variables.Selected_sound_id);
-                            parameters.put("description", description);
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("fb_id", sharedPreferences.getString(Variables.u_id, "0"));
+                        headers.put("version", getResources().getString(R.string.version));
+                        headers.put("device", getResources().getString(R.string.device));
+                        headers.put("tokon", sharedPreferences.getString(Variables.api_token, ""));
+                        headers.put("deviceid", sharedPreferences.getString(Variables.device_id, ""));
 
-                            JSONObject vidoefiledata = new JSONObject();
-                            vidoefiledata.put("file_data", video_base64);
-                            parameters.put("videobase64", vidoefiledata);
+                        HashMap<String, String> stringRequest = new HashMap<String, String>();
+                        stringRequest.put("fb_id", sharedPreferences.getString(Variables.u_id, ""));
+                        stringRequest.put("sound_id", Variables.Selected_sound_id);
+                        stringRequest.put("description", description);
 
-                            JSONObject imagefiledata = new JSONObject();
-                            imagefiledata.put("file_data", thumb_base_64);
-                            parameters.put("picbase64", imagefiledata);
-
-                            JSONObject giffiledata = new JSONObject();
-                            giffiledata.put("file_data", Gif_base_64);
-                            parameters.put("gifbase64", giffiledata);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        generateNoteOnSD("parameters", parameters.toString());
-
-                        RequestQueue rq = Volley.newRequestQueue(UploadService.this);
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                                (Request.Method.POST, Variables.uploadVideo, parameters, new Response.Listener<JSONObject>() {
-
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        String respo = response.toString();
-
-                                        if (!Variables.is_secure_info)
-                                            Log.d("responce", respo);
-
-                                        stopForeground(true);
-                                        stopSelf();
-
-                                        Callback.showResponse("Your Video is uploaded Successfully");
-
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        if (!Variables.is_secure_info)
-                                            Log.d("respo", error.toString());
-                                        stopForeground(true);
-                                        stopSelf();
-
-                                        Callback.showResponse("Their is some kind of problem from Server side Please Try Later");
-                                    }
-                                }) {
-                            @Override
-                            public String getBodyContentType() {
-                                return "application/json; charset=utf-8";
-                            }
+                        HashMap<String, File> fileRequest = new HashMap<String, File>();
+                        fileRequest.put("video", videoFile);
+                        fileRequest.put("thum", thumbNail);
+                        fileRequest.put("gif", gifFile);
+                        MultipartRequest multipartRequest = new MultipartRequest(Variables.uploadVideo, new Response.ErrorListener() {
 
                             @Override
-                            public Map<String, String> getHeaders() throws AuthFailureError {
-                                HashMap<String, String> headers = new HashMap<String, String>();
-                                headers.put("fb_id", sharedPreferences.getString(Variables.u_id, "0"));
-                                headers.put("version", getResources().getString(R.string.version));
-                                headers.put("device", getResources().getString(R.string.device));
-                                headers.put("tokon", sharedPreferences.getString(Variables.api_token, ""));
-                                headers.put("deviceid", sharedPreferences.getString(Variables.device_id, ""));
-                                Log.d(Variables.tag, headers.toString());
-                                return headers;
-                            }
-                        };
+                            public void onErrorResponse(VolleyError error) {
 
-                        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(120000,
-                                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                        rq.getCache().clear();
-                        rq.add(jsonObjectRequest);
+                                if (!Variables.is_secure_info)
+                                    Log.e("Volley Request Error", error.getLocalizedMessage());
+                                Log.d("respo", error.toString());
+                                stopForeground(true);
+                                stopSelf();
+
+                                Callback.showResponse("Their is some kind of problem from Server side Please Try Later");
+
+                            }
+
+                        }, new Response.Listener<String>() {
+
+                            @Override
+                            public void onResponse(String response) {
+                                if (!Variables.is_secure_info)
+                                    Log.d("response", response);
+
+                                stopForeground(true);
+                                stopSelf();
+
+                                Callback.showResponse("Your Video is uploaded Successfully");
+                            }
+
+                        }, fileRequest, stringRequest, headers);
+                        RequestQueue request = Volley.newRequestQueue(UploadService.this);
+                        request.getCache().clear();
+                        request.add(multipartRequest);
 
                     }
-                }).start();
+                }
+                ).start();
 
 
             } else if (intent.getAction().equals("stopservice")) {
@@ -230,6 +208,18 @@ public class UploadService extends Service {
         }
 
         return Service.START_STICKY;
+    }
+
+    private File saveBitmapInFile(Bitmap bmp) {
+        File fileName = new File(Variables.app_folder, "thumbNail.jpg");
+        try (FileOutputStream out = new FileOutputStream(fileName)) {
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileName;
     }
 
     // this will show the sticky notification during uploading video
@@ -334,22 +324,5 @@ public class UploadService extends Service {
         }
 
         return bos.toByteArray();
-    }
-
-
-    public void generateNoteOnSD(String sFileName, String sBody) {
-        try {
-            File root = new File(Environment.getExternalStorageDirectory(), "Notes");
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-            File gpxfile = new File(root, sFileName + ".txt");
-            FileWriter writer = new FileWriter(gpxfile);
-            writer.append(sBody);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

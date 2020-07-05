@@ -9,4 +9,5 @@
 
     <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_15">15sp</dimen>
+    <dimen name="margin_70">70dp</dimen>
 </resources>

@@ -184,8 +184,7 @@ public class PreviewVideoActivity extends BaseActivity {
     private Bitmap getBitmapForLogo() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        Bitmap source = BitmapFactory.decodeResource(getResources(), R.drawable.ic_watermark_image, options);
-        return source;
+        return BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher, options);
     }
 
     public void gotopostScreen() {

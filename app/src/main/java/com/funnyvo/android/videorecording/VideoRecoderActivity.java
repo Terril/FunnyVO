@@ -63,30 +63,29 @@ import java.util.Timer;
 
 public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener {
 
-    CameraView cameraView;
-    int number = 0;
+    private CameraView cameraView;
+    private int number = 0;
 
-    ArrayList<String> videopaths = new ArrayList<>();
+    private ArrayList<String> videopaths = new ArrayList<>();
 
-    ImageButton record_image, done_btn;
-    boolean is_recording = false;
-    boolean is_flash_on = false;
+    private ImageButton record_image, done_btn;
+    private boolean is_recording = false;
+    private boolean is_flash_on = false;
 
-    ImageButton flash_btn;
-    SegmentedProgressBar video_progress;
-    LinearLayout camera_options;
-    ImageButton rotate_camera;
+    private ImageButton flash_btn;
+    private SegmentedProgressBar video_progress;
+    private LinearLayout camera_options;
+    private ImageButton rotate_camera;
 
     public static int Sounds_list_Request_code = 1;
-    Button btnAddMusic;
+    private Button btnAddMusic;
 
-    int sec_passed = 0;
+    private int sec_passed = 0;
     // this will play the sound with the video when we select the audio
-    MediaPlayer audio;
-    TextView countdown_timer_txt;
-    boolean is_recording_timer_enable;
-    int recording_time = 3;
-
+    private MediaPlayer audio;
+    private TextView countdown_timer_txt;
+    private boolean is_recording_timer_enable;
+    private int recording_time = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

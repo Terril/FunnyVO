@@ -10,8 +10,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.daasuu.gpuv.player.GPUPlayerView;
@@ -33,13 +31,13 @@ import java.io.OutputStream;
 
 public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener {
 
-    String video_path;
-    ServiceCallback serviceCallback;
-    EditText description_edit;
-    UploadService mService;
-    String draft_file;
+    private String video_path;
+    private ServiceCallback serviceCallback;
+    private EditText description_edit;
+    private UploadService mService;
+    private String draft_file;
 
-    PlayerEventListener eventListener;
+    private PlayerEventListener eventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

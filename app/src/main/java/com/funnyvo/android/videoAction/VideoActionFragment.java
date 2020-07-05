@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.customview.ActivityIndicator;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
@@ -42,7 +42,8 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
     RecyclerView recyclerView;
     FragmentCallback fragment_callback;
     String video_id, user_id;
-    ProgressBar progressBar;
+
+    ActivityIndicator indicator;
 
     public VideoActionFragment() {
     }
@@ -61,14 +62,14 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
         view = inflater.inflate(R.layout.fragment_video_action, container, false);
         context = getContext();
 
+        indicator = new ActivityIndicator(context);
         Bundle bundle = getArguments();
         if (bundle != null) {
             video_id = bundle.getString("video_id");
             user_id = bundle.getString("user_id");
         }
 
-        progressBar = view.findViewById(R.id.progress_bar);
-
+        indicator.show();
         view.findViewById(R.id.save_video_layout).setOnClickListener(this);
         view.findViewById(R.id.copy_layout).setOnClickListener(this);
         view.findViewById(R.id.delete_layout).setOnClickListener(this);
@@ -81,15 +82,13 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
 
         if (Variables.is_secure_info) {
             view.findViewById(R.id.share_notice_txt).setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+            indicator.hide();
             view.findViewById(R.id.copy_layout).setVisibility(View.GONE);
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
-                    Get_Shared_app();
-
+                    getSharedApp();
                 }
             }, 1000);
         }
@@ -98,7 +97,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
 
     VideoSharingAppsAdapter adapter;
 
-    public void Get_Shared_app() {
+    public void getSharedApp() {
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerview);
         final GridLayoutManager layoutManager = new GridLayoutManager(context, 5);
         recyclerView.setLayoutManager(layoutManager);
@@ -107,18 +106,13 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 try {
-
                     PackageManager pm = getActivity().getPackageManager();
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_TEXT, "https://google.com");
-
+                    intent.putExtra(Intent.EXTRA_TEXT, "https://funnyvo.com");
                     List<ResolveInfo> launchables = pm.queryIntentActivities(intent, 0);
-
                     for (int i = 0; i < launchables.size(); i++) {
-
                         if (launchables.get(i).activityInfo.name.contains("SendTextToClipboardActivity")) {
                             launchables.remove(i);
                             break;
@@ -133,7 +127,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
                         @Override
                         public void onItemClick(int positon, ResolveInfo item, View view) {
                             Toast.makeText(context, "" + item.activityInfo.name, Toast.LENGTH_SHORT).show();
-                            Open_App(item);
+                            openApp(item);
                         }
                     });
 
@@ -141,7 +135,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
                         @Override
                         public void run() {
                             recyclerView.setAdapter(adapter);
-                            progressBar.setVisibility(View.GONE);
+                            indicator.hide();
                         }
                     });
 
@@ -156,7 +150,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
     }
 
 
-    public void Open_App(ResolveInfo resolveInfo) {
+    public void openApp(ResolveInfo resolveInfo) {
         try {
 
             ActivityInfo activity = resolveInfo.activityInfo;
@@ -183,9 +177,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.save_video_layout:
-
                 if (Functions.checkstoragepermision(getActivity())) {
-
                     Bundle bundle = new Bundle();
                     bundle.putString("action", "save");
                     dismiss();
@@ -196,7 +188,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
 
             case R.id.copy_layout:
                 ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Copied Text", "http://bringthings.com/API/tictic/view.php?id=" + video_id);
+                ClipData clip = ClipData.newPlainText("Copied Text", Variables.base_url + "view.php?id=" + video_id);
                 clipboard.setPrimaryClip(clip);
 
                 Toast.makeText(context, "Link Copy in clipboard", Toast.LENGTH_SHORT).show();

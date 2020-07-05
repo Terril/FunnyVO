@@ -59,7 +59,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         try {
 
             holder.bind(i, item, listener);
-
             holder.username.setText(item.username);
 
 
@@ -129,7 +128,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
         public CustomViewHolder(View view) {
             super(view);
-
 
             username = view.findViewById(R.id.username);
             user_pic = view.findViewById(R.id.user_pic);
