@@ -32,4 +32,6 @@
     <string name="notifications">Notifications</string>
     <string name="save">Save</string>
     <string name="privacy_and_settings">Privacy and Settings</string>
+    <string name="following">Following</string>
+    <string name="username">Username</string>
 </resources>

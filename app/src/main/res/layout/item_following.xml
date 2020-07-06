@@ -1,85 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:id="@+id/mainlayout"
     android:background="@android:color/white">
 
     <LinearLayout
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line"
-        android:orientation="vertical"
-        android:background="@color/lightgraycolor"/>
+        android:background="@color/lightgraycolor"
+        android:orientation="vertical" />
 
     <RelativeLayout
+        android:id="@+id/upperlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/upperlayout"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerVertical="true">
+        android:layout_marginBottom="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:id="@+id/user_image"
+            android:layout_width="@dimen/margin_60"
+            android:layout_height="@dimen/margin_60"
             android:layout_centerVertical="true"
-            android:src="@drawable/profile_image_placeholder"
-            android:id="@+id/user_image"/>
+            android:src="@drawable/profile_image_placeholder" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/user_image"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/user_image"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toLeftOf="@+id/action">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Username"
-                    android:textSize="15dp"
-                    android:id="@+id/user_name"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="10dp" />
+                android:layout_toLeftOf="@+id/action"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:text="@string/username"
+                    android:textColor="@color/palette_cheddar_dark"
+                    android:textSize="@dimen/text_size_18" />
+
+                <TextView
                     android:id="@+id/user_id"
-                    android:text="User name upload a new Video"
-                    android:textSize="13dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_5"
                     android:maxLines="2"
-                    android:layout_marginTop="5dp"
+                    android:text="User name upload a new Video"
                     android:textColor="@color/black"
-                    android:layout_marginLeft="10dp"/>
+                    android:textSize="@dimen/text_size_13" />
 
 
             </LinearLayout>
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonUserAction"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/action_txt"
-                android:textSize="10sp"
-                android:text="Following"
-                android:textStyle="bold"
-                android:background="@drawable/d_gray_border"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="10dp"
-                android:textColor="@color/black"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_15"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingTop="@dimen/margin_5"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_5"
+                android:text="@string/following"
+                android:textColor="@color/palette_cheddar"
+                android:textSize="10sp" />
 
         </RelativeLayout>
 

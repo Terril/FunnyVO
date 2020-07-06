@@ -1,6 +1,7 @@
 package com.funnyvo.android.following;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -90,7 +91,7 @@ public class FollowingFragment extends RootFragment {
             public void onItemClick(View view, int postion, Following item) {
 
                 switch (view.getId()) {
-                    case R.id.action_txt:
+                    case R.id.buttonUserAction:
                         if (user_id.equals(Variables.sharedPreferences.getString(Variables.u_id, "")))
                             followUnFollowUser(item, postion);
                         break;
@@ -291,8 +292,7 @@ public class FollowingFragment extends RootFragment {
     }
 
 
-    public void followUnFollowUser(final Following item, final int position) {
-
+    private void followUnFollowUser(final Following item, final int position) {
         final String send_status;
         if (item.follow.equals("0")) {
             send_status = "1";
@@ -300,19 +300,23 @@ public class FollowingFragment extends RootFragment {
             send_status = "0";
         }
 
-        Functions.callApiForFollowOrUnFollow(getActivity(),
-                Variables.sharedPreferences.getString(Variables.u_id, ""),
-                item.fb_id,
-                send_status,
-                new ApiCallBack() {
-                    @Override
-                    public void arrayData(ArrayList arrayList) {
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
+            parameters.put("followed_fb_id", item.fb_id);
+            parameters.put("status", send_status);
 
-                    }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-                    @Override
-                    public void onSuccess(String responce) {
-
+        ApiRequest.callApi(getActivity(), Variables.follow_users, parameters, new Callback() {
+            @Override
+            public void response(String resp) {
+                try {
+                    JSONObject response = new JSONObject(resp);
+                    String code = response.optString("code");
+                    if (code.equals("200")) {
                         if (send_status.equals("1")) {
                             item.follow = "1";
                             datalist.remove(position);
@@ -325,16 +329,16 @@ public class FollowingFragment extends RootFragment {
 
                         adapter.notifyDataSetChanged();
 
+                    } else {
+                        Toast.makeText(getActivity(), "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
-                    @Override
-                    public void onFailure(String responce) {
-
-                    }
-
-                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
-
 
     @Override
     public void onDetach() {

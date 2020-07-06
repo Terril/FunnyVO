@@ -1,6 +1,7 @@
 package com.funnyvo.android.following;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
 import com.funnyvo.android.following.datamodel.Following;
+import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Cust
         ImageView user_image;
         TextView user_name;
         TextView user_id;
-        TextView action_txt;
+        MaterialButton buttonUserAction;
         RelativeLayout mainlayout;
 
         public CustomViewHolder(View view) {
@@ -65,7 +66,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Cust
             user_name = view.findViewById(R.id.user_name);
             user_id = view.findViewById(R.id.user_id);
 
-            action_txt = view.findViewById(R.id.action_txt);
+            buttonUserAction = view.findViewById(R.id.buttonUserAction);
         }
 
         public void bind(final int pos, final Following item, final FollowingAdapter.OnItemClickListener listener) {
@@ -78,7 +79,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Cust
                 }
             });
 
-            action_txt.setOnClickListener(new View.OnClickListener() {
+            buttonUserAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v, pos, item);
@@ -103,36 +104,30 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Cust
         holder.user_id.setText(item.username);
 
         if (item.is_show_follow_unfollow_btn) {
-            holder.action_txt.setVisibility(View.VISIBLE);
+            holder.buttonUserAction.setVisibility(View.VISIBLE);
 
             if (following_or_fans.equals("following")) {
 
                 if (item.follow.equals("0")) {
-                    holder.action_txt.setText("Follow");
-                    holder.action_txt.setBackgroundColor(ContextCompat.getColor(context, R.color.redcolor));
-                    holder.action_txt.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    holder.buttonUserAction.setText("Follow");
+                    holder.buttonUserAction.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.palette_cheddar_dark)));
                 } else {
-                    holder.action_txt.setText("UnFollow");
-                    holder.action_txt.setBackground(ContextCompat.getDrawable(context, R.drawable.d_gray_border));
-                    holder.action_txt.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.buttonUserAction.setText("UnFollow");
                 }
 
 
             } else {
 
                 if (item.follow.equals("0")) {
-                    holder.action_txt.setText("Follow");
-                    holder.action_txt.setBackgroundColor(ContextCompat.getColor(context, R.color.redcolor));
-                    holder.action_txt.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    holder.buttonUserAction.setText("Follow");
+                    holder.buttonUserAction.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.palette_cheddar_dark)));
                 } else {
-                    holder.action_txt.setText("Friends");
-                    holder.action_txt.setBackground(ContextCompat.getDrawable(context, R.drawable.d_gray_border));
-                    holder.action_txt.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.buttonUserAction.setText("Friends");
                 }
             }
 
         } else {
-            holder.action_txt.setVisibility(View.GONE);
+            holder.buttonUserAction.setVisibility(View.GONE);
         }
 
         holder.bind(i, datalist.get(i), listener);

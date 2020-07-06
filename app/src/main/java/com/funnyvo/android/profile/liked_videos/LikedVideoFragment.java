@@ -162,6 +162,15 @@ public class LikedVideoFragment extends Fragment {
                         item.created_date = itemdata.optString("created");
                         item.video_description = itemdata.optString("description");
 
+                        if (item.video_url.contains(Variables.base_url)) {
+                            item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                        }
+                        if (item.sound_pic.contains(Variables.base_url)) {
+                            item.sound_pic = item.sound_pic.replace(Variables.base_url + "/", "");
+                        }
+                        if (item.thum.contains(Variables.base_url)) {
+                            item.thum = item.thum.replace(Variables.base_url + "/", "");
+                        }
                         data_list.add(item);
                     }
 

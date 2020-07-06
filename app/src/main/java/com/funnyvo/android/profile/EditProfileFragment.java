@@ -497,7 +497,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
 
     // this will get the user data and parse the data and show the data into views
-    public void callApiForUserDetails() {
+    private void callApiForUserDetails() {
         showProgressDialog();
         Functions.callApiForGetUserData(getActivity(),
                 Variables.sharedPreferences.getString(Variables.u_id, ""),
