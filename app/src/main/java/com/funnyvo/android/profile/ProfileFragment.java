@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -49,19 +50,19 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends RootFragment implements View.OnClickListener {
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    public TextView follow_unfollow_btn;
-    public TextView username, username2_txt, video_count_txt;
-    public ImageView imageView;
-    public TextView follow_count_txt, fans_count_txt, heart_count_txt;
+    private TextView follow_unfollow_btn;
+    private TextView username, username2_txt, video_count_txt;
+    private ImageView imageView;
+    private TextView follow_count_txt, fans_count_txt, heart_count_txt;
 
-    ImageView back_btn, setting_btn;
+    private ImageView back_btn, setting_btn;
 
-    String user_id, user_name, user_pic;
+    private String user_id, user_name, user_pic;
 
-    Bundle bundle;
+    private Bundle bundle;
 
     protected TabLayout tabLayout;
 
@@ -69,25 +70,34 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     private ViewPagerAdapter adapter;
 
-    public boolean isdataload = false;
+    private boolean isdataload = false;
 
-    RelativeLayout tabs_main_layout;
-    LinearLayout top_layout;
+    private RelativeLayout tabs_main_layout;
+    private LinearLayout top_layout;
 
     public static String pic_url;
-
-    public ProfileFragment() {
-
-    }
-
+    private boolean is_run_first_time = false;
+    private String follow_status = "0";
 
     FragmentCallback fragment_callback;
+
+    public ProfileFragment() { }
 
     @SuppressLint("ValidFragment")
     public ProfileFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bundle = getArguments();
+        if (bundle != null) {
+            user_id = bundle.getString("user_id");
+            user_name = bundle.getString("user_name");
+            user_pic = bundle.getString("user_pic");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,16 +105,6 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getContext();
-
-        getActivity();
-
-        bundle = getArguments();
-        if (bundle != null) {
-            user_id = bundle.getString("user_id");
-            user_name = bundle.getString("user_name");
-            user_pic = bundle.getString("user_pic");
-        }
-
 
         return init();
     }
@@ -114,28 +114,28 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_image:
-                OpenfullsizeImage(pic_url);
+                openfullsizeImage(pic_url);
                 break;
 
             case R.id.follow_unfollow_btn:
 
                 if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-                    Follow_unFollow_User();
+                    followUnFollowUser();
                 else
                     Toast.makeText(context, "Please login in to app", Toast.LENGTH_SHORT).show();
 
                 break;
 
             case R.id.setting_btn:
-                Open_Setting();
+                openChat();
                 break;
 
             case R.id.following_layout:
-                Open_Following();
+                openFollowing();
                 break;
 
             case R.id.fans_layout:
-                Open_Followers();
+                openFollowers();
                 break;
 
             case R.id.back_btn:
@@ -218,11 +218,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         view.findViewById(R.id.fans_layout).setOnClickListener(this);
 
         isdataload = true;
-
-
-        Call_Api_For_get_Allvideos();
-
-
+        callApiForGetAllvideos();
         return view;
     }
 
@@ -231,7 +227,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         if (is_run_first_time) {
-            Call_Api_For_get_Allvideos();
+            callApiForGetAllvideos();
         }
 
     }
@@ -293,18 +289,12 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             }
 
         });
-
-
     }
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-
         private final Resources resources;
-
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
-
-
         public ViewPagerAdapter(final Resources resources, FragmentManager fm) {
             super(fm);
             this.resources = resources;
@@ -368,10 +358,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-
-    boolean is_run_first_time = false;
-
-    private void Call_Api_For_get_Allvideos() {
+    private void callApiForGetAllvideos() {
 
         if (bundle == null) {
             user_id = Variables.sharedPreferences.getString(Variables.u_id, "0");
@@ -391,14 +378,14 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             @Override
             public void response(String resp) {
                 is_run_first_time = true;
-                Parse_data(resp);
+                parseData(resp);
             }
         });
 
 
     }
 
-    public void Parse_data(String responce) {
+    public void parseData(String responce) {
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");
@@ -453,14 +440,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void Open_Setting() {
-        Open_Chat_F();
-    }
-
-
-    public String follow_status = "0";
-
-    public void Follow_unFollow_User() {
+    public void followUnFollowUser() {
 
         final String send_status;
         if (follow_status.equals("0")) {
@@ -490,7 +470,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                             follow_status = "0";
                         }
 
-                        Call_Api_For_get_Allvideos();
+                        callApiForGetAllvideos();
                     }
 
                     @Override
@@ -505,7 +485,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
 
     //this method will get the big size of profile image.
-    public void OpenfullsizeImage(String url) {
+    public void openfullsizeImage(String url) {
         SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -523,7 +503,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void Open_Chat_F() {
+    public void openChat() {
         ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
@@ -543,7 +523,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void Open_Following() {
+    public void openFollowing() {
 
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -565,7 +545,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void Open_Followers() {
+    public void openFollowers() {
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);

@@ -29,15 +29,15 @@
 
                 <ImageButton
                     android:id="@+id/back_btn"
-                    android:layout_width="50dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentLeft="true"
+                    android:layout_width="@dimen/margin_32"
+                    android:layout_height="@dimen/margin_32"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="@dimen/margin_15"
                     android:background="@color/transparent"
                     android:scaleType="fitStart"
                     android:src="@drawable/ic_back"
-                    android:tint="@color/black" />
+                    android:tint="@color/palette_cheddar" />
 
 
                 <TextView
@@ -48,21 +48,21 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:text="UserName"
-                    android:textColor="@color/black"
-                    android:textSize="15dp"
+                    android:textColor="@color/palette_cheddar"
+                    android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />
 
 
                 <ImageButton
                     android:id="@+id/setting_btn"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_width="@dimen/margin_32"
+                    android:layout_height="@dimen/margin_32"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="@dimen/margin_15"
                     android:background="@color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_send_black" />
+                    android:src="@drawable/ic_chat" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
