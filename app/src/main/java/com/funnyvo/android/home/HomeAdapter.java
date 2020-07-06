@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     @Override
     public void onBindViewHolder(final HomeAdapter.CustomViewHolder holder, final int i) {
         final Home item = dataList.get(i);
-        holder.setIsRecyclable(false);
+      //  holder.setIsRecyclable(false);
 
         try {
 
@@ -68,8 +69,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                 holder.sound_name.setText(item.sound_name);
             }
             holder.sound_name.setSelected(true);
-
-
             holder.desc_txt.setText(item.video_description);
 
             Picasso.with(context).
@@ -96,7 +95,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             if (item.liked.equals("1")) {
                 holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));
             } else {
-                holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like));
+                holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart));
+            }
+
+            if (item.isMute) {
+                holder.btnMuteUnMuteAudio.setImageDrawable(context.getDrawable(R.drawable.ic_music_off));
+            } else {
+                holder.btnMuteUnMuteAudio.setImageDrawable(context.getDrawable(R.drawable.ic_music_on));
             }
 
 
@@ -121,10 +126,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         TextView username, desc_txt, sound_name;
         ImageView user_pic, sound_image, varified_btn;
 
-        LinearLayout like_layout, comment_layout, shared_layout, sound_image_layout;
-        ImageView like_image, comment_image;
+        LinearLayout like_layout, comment_layout, sound_image_layout;
+        ImageView like_image;
         TextView like_txt, comment_txt;
 
+        ImageButton btnShare, btnMuteUnMuteAudio;
 
         public CustomViewHolder(View view) {
             super(view);
@@ -143,12 +149,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             desc_txt = view.findViewById(R.id.desc_txt);
 
             comment_layout = view.findViewById(R.id.comment_layout);
-            comment_image = view.findViewById(R.id.comment_image);
             comment_txt = view.findViewById(R.id.comment_txt);
 
+            btnShare = view.findViewById(R.id.btnShare);
+            btnMuteUnMuteAudio = view.findViewById(R.id.btnMuteUnMuteAudio);
 
             sound_image_layout = view.findViewById(R.id.sound_image_layout);
-            shared_layout = view.findViewById(R.id.shared_layout);
         }
 
         public void bind(final int postion, final Home item, final HomeAdapter.OnItemClickListener listener) {
@@ -160,11 +166,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                 }
             });
 
-
             user_pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     listener.onItemClick(postion, item, v);
                 }
             });
@@ -172,11 +176,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             username.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     listener.onItemClick(postion, item, v);
                 }
             });
-
 
             like_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -186,19 +188,23 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                 }
             });
 
-
             comment_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     listener.onItemClick(postion, item, v);
                 }
             });
 
-            shared_layout.setOnClickListener(new View.OnClickListener() {
+            btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    listener.onItemClick(postion, item, v);
+                }
+            });
 
+            btnMuteUnMuteAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(postion, item, v);
                 }
             });
@@ -209,12 +215,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                     listener.onItemClick(postion, item, v);
                 }
             });
-
-
         }
-
-
     }
-
-
 }

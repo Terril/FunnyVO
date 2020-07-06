@@ -287,7 +287,6 @@ public class Functions {
             e.printStackTrace();
         }
 
-
         ApiRequest.callApi(activity, Variables.likeDislikeVideo, parameters, new Callback() {
             @Override
             public void response(String resp) {

@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -122,9 +122,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     boolean is_add_show = false;
     HomeAdapter adapter;
 
+    // when we swipe for another video this will relaese the privious player
+    SimpleExoPlayer previousPlayer;
     int swipe_count = 0;
 
     BaseActivity mActivity;
+    private boolean isMuted = false;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -172,10 +175,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                 if (page_no != currentPage) {
                     currentPage = page_no;
-
                     releasePreviousPlayer();
                     setPlayer(currentPage);
-
                 }
             }
         });
@@ -230,11 +231,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     public void setAdapter() {
-
         adapter = new HomeAdapter(context, data_list, new HomeAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int postion, final Home item, View view) {
+            public void onItemClick(int position, final Home item, View view) {
                 switch (view.getId()) {
+                    case R.id.btnMuteUnMuteAudio:
+                        isMuted = item.isMute;
+                        toggleSound(position, item);
+                        break;
                     case R.id.user_pic:
                     case R.id.username:
                         onPause();
@@ -242,7 +246,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         break;
                     case R.id.like_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            likeVideo(postion, item);
+                            likeVideo(position, item);
                         } else {
                             Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show();
                         }
@@ -397,6 +401,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         item.thum = item.thum.replace(Variables.base_url + "/", "");
                     }
 
+                    item.isMute = isMuted;
                     data_list.add(item);
                 }
 
@@ -431,8 +436,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 singleVideoParseData(postion, resp);
             }
         });
-
-
     }
 
     public void singleVideoParseData(int pos, String response) {
@@ -470,6 +473,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     item.liked = itemdata.optString("liked");
                     item.video_url = itemdata.optString("video");
 
+                    item.isMute = isMuted;
                     if (item.video_url.contains(Variables.base_url)) {
                         item.video_url = item.video_url.replace(Variables.base_url + "/", "");
                     }
@@ -483,14 +487,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     data_list.add(pos, item);
                     adapter.notifyDataSetChanged();
                 }
-
-
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
-
             e.printStackTrace();
         }
 
@@ -523,7 +524,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         playerView.setPlayer(player);
 
         player.setPlayWhenReady(is_visible_to_user);
-        privious_player = player;
+        previousPlayer = player;
 
         final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
         playerView.setOnTouchListener(new View.OnTouchListener() {
@@ -550,10 +551,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     super.onSingleTapUp(e);
                     if (!player.getPlayWhenReady()) {
                         is_user_stop_video = false;
-                        privious_player.setPlayWhenReady(true);
+                        previousPlayer.setPlayWhenReady(true);
                     } else {
                         is_user_stop_video = true;
-                        privious_player.setPlayWhenReady(false);
+                        previousPlayer.setPlayWhenReady(false);
                     }
 
 
@@ -572,7 +573,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                     if (!player.getPlayWhenReady()) {
                         is_user_stop_video = false;
-                        privious_player.setPlayWhenReady(true);
+                        previousPlayer.setPlayWhenReady(true);
                     }
 
 
@@ -613,7 +614,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
             Functions.callApiForUpdateView(getActivity(), item.video_id);
 
-
         swipe_count++;
         if (swipe_count > 4) {
             showAdd();
@@ -621,7 +621,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         }
 
         callApiForSinglevideo(currentPage);
-
     }
 
 
@@ -665,13 +664,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-
     public void showAdd() {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         }
     }
-
 
     @Override
     public void onDataSent(String yourData) {
@@ -693,21 +690,18 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         super.setUserVisibleHint(isVisibleToUser);
         is_visible_to_user = isVisibleToUser;
 
-        if (privious_player != null && (isVisibleToUser && !is_user_stop_video)) {
-            privious_player.setPlayWhenReady(true);
-        } else if (privious_player != null && !isVisibleToUser) {
-            privious_player.setPlayWhenReady(false);
+        if (previousPlayer != null && (isVisibleToUser && !is_user_stop_video)) {
+            previousPlayer.setPlayWhenReady(true);
+        } else if (previousPlayer != null && !isVisibleToUser) {
+            previousPlayer.setPlayWhenReady(false);
         }
     }
 
 
-    // when we swipe for another video this will relaese the privious player
-    SimpleExoPlayer privious_player;
-
     public void releasePreviousPlayer() {
-        if (privious_player != null) {
-            privious_player.removeListener(this);
-            privious_player.release();
+        if (previousPlayer != null) {
+            previousPlayer.removeListener(this);
+            previousPlayer.release();
         }
     }
 
@@ -723,7 +717,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             action = "1";
             home_.like_count = "" + (Integer.parseInt(home_.like_count) + 1);
         }
-
 
         data_list.remove(position);
         home_.liked = action;
@@ -888,15 +881,13 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                 mActivity.dismissProgressDialog();
             }
-
-
         });
-
-
     }
 
     public void applyWatermark(final Home item) {
-        Bitmap logo = ((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher_watermark)).getBitmap();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_watermark, options);
         GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
         new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
                 Variables.app_folder + item.video_id + ".mp4")
@@ -971,6 +962,21 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
+    private void toggleSound(int position, Home item) {
+        if (previousPlayer != null) {
+            float volume = !item.isMute ? 0.0F : 1.0F;
+            previousPlayer.setVolume(volume);
+            isMuted = !item.isMute;
+        }
+
+        if (item != null) {
+            data_list.remove(position);
+            item.isMute = isMuted;
+            data_list.add(position, item);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     public boolean doesfragmentExits() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         if (fm.getBackStackEntryCount() == 0) {
@@ -985,8 +991,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onResume() {
         super.onResume();
-        if ((privious_player != null && (is_visible_to_user && !is_user_stop_video)) && !doesfragmentExits()) {
-            privious_player.setPlayWhenReady(true);
+        if ((previousPlayer != null && (is_visible_to_user && !is_user_stop_video)) && !doesfragmentExits()) {
+            previousPlayer.setPlayWhenReady(true);
         }
     }
 
@@ -994,8 +1000,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onPause() {
         super.onPause();
-        if (privious_player != null) {
-            privious_player.setPlayWhenReady(false);
+        if (previousPlayer != null) {
+            previousPlayer.setPlayWhenReady(false);
         }
     }
 
@@ -1003,8 +1009,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onStop() {
         super.onStop();
-        if (privious_player != null) {
-            privious_player.setPlayWhenReady(false);
+        if (previousPlayer != null) {
+            previousPlayer.setPlayWhenReady(false);
         }
     }
 
@@ -1012,8 +1018,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (privious_player != null) {
-            privious_player.release();
+        if (previousPlayer != null) {
+            previousPlayer.release();
         }
     }
 

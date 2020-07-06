@@ -149,7 +149,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
     }
 
 
-    // when the video is uploading successfully it will restart the appliaction
+    // when the video is uploading successfully it will restart the application
     @Override
     public void showResponse(final String response) {
 
@@ -165,7 +165,11 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
                 public void run() {
                     Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
                     dismissProgressDialog();
-
+                    if (player != null) {
+                        player.removeListener(eventListener);
+                        player.release();
+                        player = null;
+                    }
                     startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
 
                 }
@@ -205,7 +209,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
             mServiceIntent.setAction("stopservice");
             startService(mServiceIntent);
-
         }
     }
 
