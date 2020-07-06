@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Profile_F"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/Profile_F"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".profile.ProfileTabFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="24dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:paddingTop="24dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:background="@color/white"
             app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            android:background="@color/white">
+            app:contentInsetStart="0dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -32,34 +33,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:text="UserName"
                     android:textColor="@color/black"
                     android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"/>
+                    android:textStyle="bold" />
 
                 <ImageButton
+                    android:id="@+id/setting_btn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_black_dots"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
+                    android:background="@color/transparent"
                     android:scaleType="fitCenter"
-                    android:id="@+id/setting_btn"
-                    android:background="@color/transparent"/>
+                    android:src="@drawable/ic_black_dots" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
             android:layout_above="@+id/bannerad"
-            android:fillViewport="true"
-            android:id="@+id/scrollview">
+            android:layout_below="@+id/toolbar"
+            android:fillViewport="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -67,11 +68,11 @@
                 android:descendantFocusability="blocksDescendants">
 
                 <LinearLayout
+                    android:id="@+id/top_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/top_layout"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="100dp"
@@ -79,21 +80,21 @@
                         android:layout_marginTop="25dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/user_image"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:id="@+id/user_image"
-                            android:src="@drawable/profile_image_placeholder"/>
+                            android:src="@drawable/profile_image_placeholder" />
 
                         <ImageView
+                            android:id="@+id/varified_btn"
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:scaleType="fitCenter"
                             android:layout_margin="2dp"
-                            android:visibility="gone"
-                            android:id="@+id/varified_btn"
-                            android:src="@drawable/ic_verified"/>
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_verified"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <TextView
@@ -107,26 +108,26 @@
                         android:textStyle="bold" />
 
 
-
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:cardElevation="0dp"
                         android:layout_marginTop="20dp"
+                        app:cardBackgroundColor="@color/lightgraycolor"
                         app:cardCornerRadius="15dp"
-                        app:cardBackgroundColor="@color/lightgraycolor">
+                        app:cardElevation="0dp">
+
                         <TextView
+                            android:id="@+id/video_count_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 Video"
-                            android:id="@+id/video_count_txt"
-                            android:textColor="@color/dimgray"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
                             android:paddingLeft="20dp"
+                            android:paddingTop="5dp"
                             android:paddingRight="20dp"
+                            android:paddingBottom="5dp"
+                            android:text="0 Video"
+                            android:textColor="@color/dimgray"
                             android:textSize="15dp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
                     </androidx.cardview.widget.CardView>
 
 
@@ -134,147 +135,145 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal">
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:id="@+id/following_layout"
-                            android:gravity="center_horizontal">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
                                 android:id="@+id/follow_count_txt"
-                                android:paddingTop="2dp"
-                                android:paddingBottom="2dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:paddingLeft="15dp"
+                                android:paddingTop="2dp"
                                 android:paddingRight="15dp"
-                                android:textSize="18dp"
+                                android:paddingBottom="2dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"/>
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="15dp"
+                                android:paddingBottom="5dp"
                                 android:text="Following"
-                                android:textStyle="bold"
                                 android:textColor="@color/darkgray"
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
-                                android:paddingLeft="15dp"
-                                android:paddingRight="15dp"
-                                android:textSize="13dp" />
+                                android:textSize="13dp"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:id="@+id/fans_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:gravity="center_horizontal">
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
                                 android:id="@+id/fan_count_txt"
-                                android:paddingTop="2dp"
-                                android:paddingBottom="2dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:paddingLeft="15dp"
+                                android:paddingTop="2dp"
                                 android:paddingRight="15dp"
-                                android:textSize="18dp"
+                                android:paddingBottom="2dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"/>
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="15dp"
+                                android:paddingBottom="5dp"
                                 android:text="Followers"
-                                android:textStyle="bold"
                                 android:textColor="@color/darkgray"
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
-                                android:paddingLeft="15dp"
-                                android:paddingRight="15dp"
-                                android:textSize="13dp" />
+                                android:textSize="13dp"
+                                android:textStyle="bold" />
                         </LinearLayout>
-
 
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:layout_marginLeft="10dp"
-                            android:gravity="center_horizontal">
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
                                 android:id="@+id/heart_count_txt"
-                                android:paddingTop="2dp"
-                                android:paddingBottom="2dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:paddingLeft="15dp"
+                                android:paddingTop="2dp"
                                 android:paddingRight="15dp"
-                                android:textSize="18dp"
+                                android:paddingBottom="2dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"/>
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Heart"
-                                android:textStyle="bold"
-                                android:textColor="@color/darkgray"
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
                                 android:paddingLeft="15dp"
+                                android:paddingTop="5dp"
                                 android:paddingRight="15dp"
-                                android:textSize="13dp" />
+                                android:paddingBottom="5dp"
+                                android:text="Heart"
+                                android:textColor="@color/darkgray"
+                                android:textSize="13dp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
 
-
                         <LinearLayout
+                            android:id="@+id/draft_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:layout_marginLeft="10dp"
-                            android:id="@+id/draft_btn"
-                            android:gravity="center_horizontal">
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
                                 android:id="@+id/draft_count_txt"
-                                android:paddingTop="2dp"
-                                android:paddingBottom="2dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:paddingLeft="15dp"
+                                android:paddingTop="2dp"
                                 android:paddingRight="15dp"
-                                android:textSize="18dp"
+                                android:paddingBottom="2dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"/>
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Draft"
-                                android:textStyle="bold"
-                                android:textColor="@color/darkgray"
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
                                 android:paddingLeft="15dp"
+                                android:paddingTop="5dp"
                                 android:paddingRight="15dp"
-                                android:textSize="13dp" />
+                                android:paddingBottom="5dp"
+                                android:text="Draft"
+                                android:textColor="@color/darkgray"
+                                android:textSize="13dp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -288,19 +287,19 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/edit_profile_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
+                            android:background="@color/redcolor"
                             android:paddingLeft="20dp"
+                            android:paddingTop="10dp"
                             android:paddingRight="20dp"
+                            android:paddingBottom="10dp"
+                            android:text=""
+                            android:textColor="@color/white"
                             android:textSize="15dp"
                             android:textStyle="bold"
-                            android:visibility="gone"
-                            android:id="@+id/edit_profile_btn"
-                            android:background="@color/redcolor"
-                            android:textColor="@color/white"/>
+                            android:visibility="gone" />
 
 
                     </LinearLayout>
@@ -310,40 +309,39 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginTop="15dp"
-                        android:background="@color/gainsboro"/>
+                        android:background="@color/gainsboro" />
 
                 </LinearLayout>
 
 
                 <RelativeLayout
+                    android:id="@+id/tabs_main_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:id="@+id/tabs_main_layout"
-                    android:layout_below="@+id/top_layout">
+                    android:layout_below="@+id/top_layout"
+                    android:orientation="vertical">
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabs"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_weight="1"
                         android:layout_alignParentTop="true"
-                        app:tabMode="fixed"
-                        app:tabBackground="@color/white"
-                        app:tabTextColor="@color/dimgray"
-                        app:tabSelectedTextColor="@color/black"
+                        android:layout_weight="1"
                         android:gravity="center"
+                        app:tabBackground="@color/white"
                         app:tabGravity="fill"
-                        app:tabPaddingStart="0dp"
+                        app:tabIndicatorColor="@android:color/transparent"
+                        app:tabMode="fixed"
                         app:tabPaddingEnd="0dp"
-                        app:tabIndicatorColor="@android:color/transparent"/>
+                        app:tabPaddingStart="0dp"
+                        app:tabSelectedTextColor="@color/black"
+                        app:tabTextColor="@color/dimgray" />
 
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/pager"
-                        android:layout_below="@+id/tabs"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        />
+                        android:layout_below="@+id/tabs" />
 
                 </RelativeLayout>
 
@@ -352,29 +350,29 @@
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
+            android:id="@+id/create_popup_layout"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
-            android:gravity="center"
-            android:layout_margin="20dp"
-            android:visibility="gone"
-            android:animateLayoutChanges="true"
-            android:id="@+id/create_popup_layout"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/popup_background">
+            android:layout_margin="20dp"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/popup_background"
+            android:gravity="center"
+            android:visibility="gone">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Tap + to create\n your first short video"/>
+                android:text="@string/tap_to_create_n_your_first_short_video"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
         </LinearLayout>
 
 
     </RelativeLayout>
-
 
 
 </FrameLayout>

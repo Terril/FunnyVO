@@ -143,7 +143,7 @@ public class SearchFragment extends RootFragment {
                     public void onItemClick(View view, int pos, Object object) {
 
                         Users item = (Users) object;
-                        Open_Profile(item.fb_id, item.first_name, item.last_name, item.profile_pic);
+                        openProfile(item.fb_id, item.first_name, item.last_name, item.profile_pic);
                     }
                 });
                 recyclerView.setAdapter(adapter);
@@ -210,10 +210,10 @@ public class SearchFragment extends RootFragment {
                     public void onItemClick(View view, int pos, Object object) {
 
                         Home item = (Home) object;
-                        if (view.getId() == R.id.watch_btn) {
-                            OpenWatchVideo(item.video_id);
+                        if (view.getId() == R.id.btnWatch) {
+                            openWatchVideo(item.video_id);
                         } else {
-                            Open_Profile(item.fb_id, item.first_name, item.last_name, item.profile_pic);
+                            openProfile(item.fb_id, item.first_name, item.last_name, item.profile_pic);
                         }
                     }
                 });
@@ -231,13 +231,13 @@ public class SearchFragment extends RootFragment {
     }
 
 
-    private void OpenWatchVideo(String video_id) {
+    private void openWatchVideo(String video_id) {
         Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("video_id", video_id);
         startActivity(intent);
     }
 
-    public void Open_Profile(String fb_id, String first_name, String last_name, String profile_pic) {
+    public void openProfile(String fb_id, String first_name, String last_name, String profile_pic) {
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(fb_id)) {
 
             TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);

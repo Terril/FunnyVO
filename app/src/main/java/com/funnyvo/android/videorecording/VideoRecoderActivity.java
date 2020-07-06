@@ -758,7 +758,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         delete_count++;
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
-        File output_filter_file = new File(Variables.output_filter_file);
+        File outputFilterFile = new File(Variables.output_filter_file);
 
         if (output.exists()) {
             output.delete();
@@ -767,8 +767,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
             output2.delete();
         }
-        if (output_filter_file.exists()) {
-            output_filter_file.delete();
+        if (outputFilterFile.exists()) {
+            outputFilterFile.delete();
         }
 
         File file = new File(Variables.app_folder + "myvideo" + (delete_count) + ".mp4");

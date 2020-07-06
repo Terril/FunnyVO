@@ -39,15 +39,15 @@ import java.util.ArrayList;
  */
 public class NotificationFragment extends RootFragment implements View.OnClickListener {
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    NotificationAdapter adapter;
-    RecyclerView recyclerView;
+    private NotificationAdapter adapter;
+    private RecyclerView recyclerView;
 
-    ArrayList<Notification> datalist;
+    private ArrayList<Notification> datalist;
 
-    SwipeRefreshLayout swiperefresh;
+    private SwipeRefreshLayout swiperefresh;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -72,8 +72,8 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
             public void onItemClick(View view, int postion, Notification item) {
 
                 switch (view.getId()) {
-                    case R.id.watch_btn:
-                        OpenWatchVideo(item);
+                    case R.id.btnWatch:
+                        openWatchVideo(item);
                         break;
                     default:
                         Open_Profile(item);
@@ -213,7 +213,7 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
 
     }
 
-    private void OpenWatchVideo(Notification item) {
+    private void openWatchVideo(Notification item) {
         Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("video_id", item.id);
         startActivity(intent);

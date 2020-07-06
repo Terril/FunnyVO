@@ -421,7 +421,7 @@ public class GalleryVideosActivity extends BaseActivity {
     public void DeleteFile() {
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
-        File output_filter_file = new File(Variables.output_filter_file);
+        File outputFilterFile = new File(Variables.output_filter_file);
         File gallery_trim_video = new File(Variables.gallery_trimed_video);
         File gallery_resize_video = new File(Variables.gallery_resize_video);
 
@@ -432,8 +432,8 @@ public class GalleryVideosActivity extends BaseActivity {
 
             output2.delete();
         }
-        if (output_filter_file.exists()) {
-            output_filter_file.delete();
+        if (outputFilterFile.exists()) {
+            outputFilterFile.delete();
         }
 
         if (gallery_trim_video.exists()) {

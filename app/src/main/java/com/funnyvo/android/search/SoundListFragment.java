@@ -121,14 +121,14 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if ((view != null && isVisibleToUser) && data_list.isEmpty()) {
-            Call_Api();
+    public void onResume() {
+        super.onResume();
+        if (view != null && data_list.isEmpty()) {
+            callApi();
         }
     }
 
-    public void Call_Api() {
+    public void callApi() {
 
         JSONObject params = new JSONObject();
         try {
@@ -145,13 +145,13 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
                 shimmerFrameLayout.setVisibility(View.GONE);
 
                 if (type.equals("sound"))
-                    Parse_sounds(resp);
+                    parseSounds(resp);
             }
         });
 
     }
 
-    public void Parse_sounds(String responce) {
+    public void parseSounds(String responce) {
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");

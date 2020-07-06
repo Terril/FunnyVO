@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -48,6 +47,7 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.keyboard.KeyboardHeightObserver;
@@ -97,7 +97,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 
-public class WatchVideosFragment extends AppCompatActivity implements Player.EventListener,
+public class WatchVideosFragment extends BaseActivity implements Player.EventListener,
         KeyboardHeightObserver, View.OnClickListener, FragmentDataSend {
 
     Context context;
@@ -142,7 +142,6 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
 
         p_bar = findViewById(R.id.p_bar);
 
-
         Intent bundle = getIntent();
         if (bundle != null) {
 
@@ -150,7 +149,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
             video_id = bundle.getStringExtra("video_id");
 
             if (video_id != null) {
-                Call_Api_For_get_Allvideos(video_id);
+                callApiForGetAllvideos(video_id);
             } else if (appLinkData == null) {
                 data_list = (ArrayList<Home>) bundle.getSerializableExtra("arraylist");
                 position = bundle.getIntExtra("position", 0);
@@ -159,7 +158,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
                 link = appLinkData.toString();
                 String[] parts = link.split("=");
                 video_id = parts[1];
-                Call_Api_For_get_Allvideos(parts[1]);
+                callApiForGetAllvideos(parts[1]);
             }
 
         }
@@ -209,7 +208,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
     }
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void Call_Api_For_get_Allvideos(String id) {
+    private void callApiForGetAllvideos(String id) {
         if (MainMenuActivity.token == null)
             MainMenuActivity.token = FirebaseInstanceId.getInstance().getToken();
 
@@ -536,7 +535,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
 
                     String comment_txt = message_edit.getText().toString();
                     if (!TextUtils.isEmpty(comment_txt)) {
-                        Send_Comments(data_list.get(currentPage).fb_id, data_list.get(currentPage).video_id, comment_txt);
+                        sendComments(data_list.get(currentPage).fb_id, data_list.get(currentPage).video_id, comment_txt);
                     }
 
 
@@ -859,7 +858,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
     }
 
 
-    public void Send_Comments(final String user_id, String video_id, final String comment) {
+    public void sendComments(final String user_id, String video_id, final String comment) {
 
         send_progress.setVisibility(View.VISIBLE);
         send_btn.setVisibility(View.GONE);
@@ -1009,7 +1008,7 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                Applywatermark(item);
+                applyWatermark(item);
             }
 
             @Override
@@ -1025,11 +1024,9 @@ public class WatchVideosFragment extends AppCompatActivity implements Player.Eve
 
     }
 
-    public void Applywatermark(final Home item) {
-
-        Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
-        Bitmap bitmap_resize = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
-        GlWatermarkFilter filter = new GlWatermarkFilter(bitmap_resize, GlWatermarkFilter.Position.LEFT_TOP);
+    public void applyWatermark(final Home item) {
+        Bitmap logo = ((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher_watermark)).getBitmap();
+        GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
         new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
                 Variables.app_folder + item.video_id + ".mp4")
                 .filter(filter)

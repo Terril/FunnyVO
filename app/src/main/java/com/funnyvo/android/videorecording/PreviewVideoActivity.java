@@ -25,6 +25,7 @@ import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.filter.addons.FunnyVOUserOverlayFilter;
 import com.funnyvo.android.helper.PlayerEventListener;
+import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 
 import java.util.List;
@@ -68,6 +69,7 @@ public class PreviewVideoActivity extends BaseActivity {
         findViewById(R.id.btnNext).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              //  Variables.output_filter_file = Variables.output_filter_file + Functions.getRandomString() + ".mp4";
                 saveVideo(Variables.outputfile2, Variables.output_filter_file);
             }
         });
@@ -184,7 +186,7 @@ public class PreviewVideoActivity extends BaseActivity {
     private Bitmap getBitmapForLogo() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        return BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher, options);
+        return BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_watermark, options);
     }
 
     public void gotopostScreen() {

@@ -50,11 +50,11 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <style name="white_progressbar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CustomProgressbar" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorPrimary">@color/palette_cheddar_light</item>
+        <item name="colorPrimaryDark">@color/palette_cheddar_dark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,15 +36,17 @@ import java.util.ArrayList;
  */
 public class UserVideoFragment extends Fragment {
 
-    public RecyclerView recyclerView;
-    ArrayList<Home> data_list;
-    MyVideosAdapter adapter;
-    View view;
-    Context context;
-    String user_id;
+    private RecyclerView recyclerView;
+    private ArrayList<Home> data_list;
+    private MyVideosAdapter adapter;
+    private View view;
+    private Context context;
+    private String user_id;
 
-    RelativeLayout no_data_layout;
+    private RelativeLayout no_data_layout;
     public static int myvideo_count = 0;
+
+    private Boolean is_api_run = false;
 
     public UserVideoFragment() {
 
@@ -60,6 +64,12 @@ public class UserVideoFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_user_video, container, false);
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         context = getContext();
 
         recyclerView = view.findViewById(R.id.recylerview);
@@ -72,7 +82,7 @@ public class UserVideoFragment extends Fragment {
             @Override
             public void onItemClick(int postion, Home item, View view) {
 
-                OpenWatchVideo(postion);
+                openWatchVideo(postion);
 
             }
         });
@@ -81,35 +91,19 @@ public class UserVideoFragment extends Fragment {
 
         no_data_layout = view.findViewById(R.id.no_data_layout);
 
-        Call_Api_For_get_Allvideos();
-
-        return view;
+        callApiForGetAllvideos();
     }
-
-    Boolean isVisibleToUser = false;
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        this.isVisibleToUser = isVisibleToUser;
-        if (view != null && isVisibleToUser) {
-            Call_Api_For_get_Allvideos();
-        }
-    }
-
 
     @Override
     public void onResume() {
         super.onResume();
-        if ((view != null && isVisibleToUser) && (!data_list.isEmpty() && !is_api_run)) {
-            Call_Api_For_get_Allvideos();
+        if (view != null && (!data_list.isEmpty() && !is_api_run)) {
+            callApiForGetAllvideos();
         }
     }
 
-    Boolean is_api_run = false;
-
     //this will get the all videos data of user and then parse the data
-    private void Call_Api_For_get_Allvideos() {
+    private void callApiForGetAllvideos() {
         is_api_run = true;
         JSONObject parameters = new JSONObject();
         try {
@@ -124,12 +118,12 @@ public class UserVideoFragment extends Fragment {
             @Override
             public void response(String resp) {
                 is_api_run = false;
-                Parse_data(resp);
+                parseData(resp);
             }
         });
     }
 
-    public void Parse_data(String responce) {
+    public void parseData(String responce) {
         data_list.clear();
         try {
             JSONObject jsonObject = new JSONObject(responce);
@@ -178,6 +172,16 @@ public class UserVideoFragment extends Fragment {
 
                         item.video_description = itemdata.optString("description");
 
+                        if (item.video_url.contains(Variables.base_url)) {
+                            item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                        }
+                        if (item.sound_pic.contains(Variables.base_url)) {
+                            item.sound_pic = item.sound_pic.replace(Variables.base_url + "/", "");
+                        }
+                        if (item.thum.contains(Variables.base_url)) {
+                            item.thum = item.thum.replace(Variables.base_url + "/", "");
+                        }
+
                         data_list.add(item);
                     }
 
@@ -199,7 +203,7 @@ public class UserVideoFragment extends Fragment {
 
     }
 
-    private void OpenWatchVideo(int postion) {
+    private void openWatchVideo(int postion) {
         Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);

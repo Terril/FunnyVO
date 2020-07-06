@@ -27,4 +27,5 @@
     <string name="discover">Discover</string>
     <string name="user_fav">My Favorites</string>
     <string name="user_profile">userprofile.jpg</string>
+    <string name="tap_to_create_n_your_first_short_video">Tap + to create\n your first short video</string>
 </resources>

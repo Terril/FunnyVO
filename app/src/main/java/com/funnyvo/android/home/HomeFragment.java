@@ -383,14 +383,19 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     item.liked = itemdata.optString("liked");
                     item.video_url = itemdata.optString("video");
 
-                    if (item.video_url.contains(Variables.base_url)) {
-                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
-                    }
-
                     item.video_description = itemdata.optString("description");
 
                     item.thum = itemdata.optString("thum");
                     item.created_date = itemdata.optString("created");
+                    if (item.video_url.contains(Variables.base_url)) {
+                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                    }
+                    if (item.sound_pic.contains(Variables.base_url)) {
+                        item.sound_pic = item.sound_pic.replace(Variables.base_url + "/", "");
+                    }
+                    if (item.thum.contains(Variables.base_url)) {
+                        item.thum = item.thum.replace(Variables.base_url + "/", "");
+                    }
 
                     data_list.add(item);
                 }
@@ -891,9 +896,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     public void applyWatermark(final Home item) {
-        Bitmap myLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_watermark_image)).getBitmap();
-        Bitmap bitmap_resize = Bitmap.createScaledBitmap(myLogo, 50, 50, false);
-        GlWatermarkFilter filter = new GlWatermarkFilter(bitmap_resize, GlWatermarkFilter.Position.LEFT_TOP);
+        Bitmap logo = ((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher_watermark)).getBitmap();
+        GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
         new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
                 Variables.app_folder + item.video_id + ".mp4")
                 .filter(filter)

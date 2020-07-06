@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,24 +48,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
-
         SimpleDraweeView user_image;
-
-        TextView username, message, watch_btn;
-
-
+        TextView username, message;
+        ImageButton btnWatch;
         public CustomViewHolder(View view) {
             super(view);
             user_image = view.findViewById(R.id.user_image);
             username = view.findViewById(R.id.username);
             message = view.findViewById(R.id.message);
-            watch_btn = view.findViewById(R.id.watch_btn);
-
+            btnWatch = view.findViewById(R.id.btnWatch);
 
         }
 
         public void bind(final int pos, final Notification item, final NotificationAdapter.OnItemClickListener listener) {
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -72,7 +68,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 }
             });
 
-            watch_btn.setOnClickListener(new View.OnClickListener() {
+            btnWatch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v, pos, item);
@@ -98,13 +94,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         if (item.type.equalsIgnoreCase("comment_video")) {
             holder.message.setText(item.first_name + " have comment on your video");
-            holder.watch_btn.setVisibility(View.VISIBLE);
+            holder.btnWatch.setVisibility(View.VISIBLE);
         } else if (item.type.equalsIgnoreCase("video_like")) {
             holder.message.setText(item.first_name + " liked your video");
-            holder.watch_btn.setVisibility(View.VISIBLE);
+            holder.btnWatch.setVisibility(View.VISIBLE);
         } else if (item.type.equalsIgnoreCase("following_you")) {
             holder.message.setText(item.first_name + " following you");
-            holder.watch_btn.setVisibility(View.GONE);
+            holder.btnWatch.setVisibility(View.GONE);
         }
 
 

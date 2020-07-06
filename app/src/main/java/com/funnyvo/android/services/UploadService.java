@@ -21,6 +21,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -33,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.funnyvo.android.apirequest.MultipartRequest;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.R;
+import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.AnimatedGifEncoder;
 
@@ -51,6 +53,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 // this the background service which will upload the video into database
 public class UploadService extends Service {
@@ -127,11 +131,10 @@ public class UploadService extends Service {
                             e.printStackTrace();
                         }
 
-                        File myVideo = new File(uri.getPath());
-                        Uri myVideoUri = Uri.parse(myVideo.toString());
+                        Uri myVideoUri = Uri.parse(videoFile.toString());
 
                         final MediaMetadataRetriever mmRetriever = new MediaMetadataRetriever();
-                        mmRetriever.setDataSource(myVideo.getAbsolutePath());
+                        mmRetriever.setDataSource(videoFile.getAbsolutePath());
 
                         final MediaPlayer mp = MediaPlayer.create(getBaseContext(), myVideoUri);
 
@@ -144,7 +147,8 @@ public class UploadService extends Service {
                         }
 
                         Gif_base_64 = Base64.encodeToString(generateGIF(frames), Base64.DEFAULT);
-                        File gifFile = new File(Variables.app_folder, "sample.gif");
+                        // + Functions.getRandomString()
+                        File gifFile = new File(Variables.app_folder, "sample" +  ".gif");
 
                         HashMap<String, String> headers = new HashMap<String, String>();
                         headers.put("fb_id", sharedPreferences.getString(Variables.u_id, "0"));
@@ -168,8 +172,8 @@ public class UploadService extends Service {
                             public void onErrorResponse(VolleyError error) {
 
                                 if (!Variables.is_secure_info)
-                                    Log.e("Volley Request Error", error.getLocalizedMessage());
-                                Log.d("respo", error.toString());
+                                    Log.e(APP_NAME, error.getLocalizedMessage());
+
                                 stopForeground(true);
                                 stopSelf();
 
@@ -182,7 +186,7 @@ public class UploadService extends Service {
                             @Override
                             public void onResponse(String response) {
                                 if (!Variables.is_secure_info)
-                                    Log.d("response", response);
+                                    Log.d(APP_NAME, response);
 
                                 stopForeground(true);
                                 stopSelf();
@@ -211,7 +215,8 @@ public class UploadService extends Service {
     }
 
     private File saveBitmapInFile(Bitmap bmp) {
-        File fileName = new File(Variables.app_folder, "thumbNail.jpg");
+        // + Functions.getRandomString()
+        File fileName = new File(Variables.app_folder, "thumbnail" + Functions.getRandomString() + ".jpg");
         try (FileOutputStream out = new FileOutputStream(fileName)) {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
             // PNG is a lossless format, the compression factor (100) is ignored
@@ -238,7 +243,7 @@ public class UploadService extends Service {
             notificationManager.createNotificationChannel(defaultChannel);
         }
 
-        androidx.core.app.NotificationCompat.Builder builder = (androidx.core.app.NotificationCompat.Builder) new androidx.core.app.NotificationCompat.Builder(this, CHANNEL_ID)
+        androidx.core.app.NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setContentTitle("Uploading Video")
                 .setContentText("Please wait! Video is uploading....")

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,14 +44,15 @@ public class VideosListAdapter extends RecyclerView.Adapter<VideosListAdapter.Cu
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         ImageView user_image;
-        TextView username, message, watch_btn;
+        TextView username, message;
+        ImageButton watch_btn;
 
         public CustomViewHolder(View view) {
             super(view);
             user_image = view.findViewById(R.id.user_image);
             username = view.findViewById(R.id.username);
             message = view.findViewById(R.id.message);
-            watch_btn = view.findViewById(R.id.watch_btn);
+            watch_btn = view.findViewById(R.id.btnWatch);
         }
 
         public void bind(final int pos, final Home item, final AdapterClickListener listener) {

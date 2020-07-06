@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.SparseArray;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -64,24 +63,24 @@ import java.io.IOException;
  * A simple {@link Fragment} subclass.
  */
 public class ProfileTabFragment extends RootFragment implements View.OnClickListener {
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    public TextView username, username2_txt, video_count_txt;
-    public ImageView imageView;
-    public TextView follow_count_txt, fans_count_txt, heart_count_txt, draft_count_txt;
+    private TextView username, username2_txt, video_count_txt;
+    private ImageView imageView;
+    private TextView follow_count_txt, fans_count_txt, heart_count_txt, draft_count_txt;
 
-    ImageView setting_btn;
+    private ImageView setting_btn;
 
     protected TabLayout tabLayout;
     protected ViewPager pager;
     private ViewPagerAdapter adapter;
-    public boolean isdataload = false;
-    RelativeLayout tabs_main_layout;
+    private boolean isdataload = false;
+    private RelativeLayout tabs_main_layout;
 
-    LinearLayout top_layout;
-    public static String pic_url;
-    public LinearLayout create_popup_layout;
+    private LinearLayout top_layout;
+    private static String pic_url;
+    private LinearLayout create_popup_layout;
 
     public ProfileTabFragment() {
     }
@@ -125,30 +124,20 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         }
     }
 
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if ((view != null && isVisibleToUser) && !isdataload) {
-            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-                init();
-        }
-        if ((view != null && isVisibleToUser) && isdataload) {
-            callApiForGetAllVideos();
-        }
-
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        Show_draft_count();
+        showDraftCount();
+        if (view != null && !isdataload) {
+            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
+                init();
+        }
+        if (view != null && isdataload) {
+            callApiForGetAllVideos();
+        }
     }
 
     public View init() {
-
         username = view.findViewById(R.id.username);
         username2_txt = view.findViewById(R.id.username2_txt);
         imageView = view.findViewById(R.id.user_image);
@@ -161,7 +150,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         heart_count_txt = view.findViewById(R.id.heart_count_txt);
         draft_count_txt = view.findViewById(R.id.draft_count_txt);
 
-        Show_draft_count();
+        showDraftCount();
 
         setting_btn = view.findViewById(R.id.setting_btn);
         setting_btn.setOnClickListener(this);
@@ -177,10 +166,8 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
         setupTabIcons();
 
-
         tabs_main_layout = view.findViewById(R.id.tabs_main_layout);
         top_layout = view.findViewById(R.id.top_layout);
-
 
         ViewTreeObserver observer = top_layout.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -214,7 +201,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
         create_popup_layout = view.findViewById(R.id.create_popup_layout);
 
-
         view.findViewById(R.id.following_layout).setOnClickListener(this);
         view.findViewById(R.id.fans_layout).setOnClickListener(this);
 
@@ -227,7 +213,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         return view;
     }
 
-    public void Show_draft_count() {
+    public void showDraftCount() {
         try {
 
             String path = Variables.draft_app_folder;
@@ -317,7 +303,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
                 switch (tab.getPosition()) {
                     case 0:
-
                         if (UserVideoFragment.myvideo_count > 0) {
                             create_popup_layout.setVisibility(View.GONE);
                         } else {
@@ -478,7 +463,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                     create_popup_layout.setVisibility(View.GONE);
 
                 } else {
-
                     create_popup_layout.setVisibility(View.VISIBLE);
                     Animation aniRotate = AnimationUtils.loadAnimation(context, R.anim.up_and_down_animation);
                     create_popup_layout.startAnimation(aniRotate);
@@ -489,8 +473,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 if (verified != null && verified.equalsIgnoreCase("1")) {
                     view.findViewById(R.id.varified_btn).setVisibility(View.VISIBLE);
                 }
-
-
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
@@ -548,9 +530,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 switch (item.getItemId()) {
-
                     case R.id.edit_Profile_id:
                         openEditProfile();
                         break;

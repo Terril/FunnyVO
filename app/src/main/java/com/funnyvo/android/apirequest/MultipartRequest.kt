@@ -26,7 +26,7 @@ class MultipartRequest @Inject constructor(url: String?, errorListener: Response
 
     private fun buildMultipartEntity() {
         for ((key, value) in mFilePart) {
-            entity.addPart(key, FileBody(value, ContentType.MULTIPART_FORM_DATA, value.name + Functions.getRandomString()))
+            entity.addPart(key, FileBody(value, ContentType.MULTIPART_FORM_DATA, value.name))
         }
         if (stringPart != null) {
             for ((key, value) in stringPart) {
