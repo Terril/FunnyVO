@@ -179,7 +179,7 @@ public class UserVideoFragment extends Fragment {
                             item.thum = item.thum.replace(Variables.base_url + "/", "");
                         }
 
-                        data_list.add(item);
+                        data_list.add(i, item);
                     }
 
                     myvideo_count = data_list.size();

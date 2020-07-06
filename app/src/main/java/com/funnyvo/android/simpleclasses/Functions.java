@@ -419,53 +419,6 @@ public class Functions {
         }
 
         ApiRequest.callApi(activity, Variables.updateVideoView, parameters, null);
-
-
-    }
-
-
-    public static void callApiForFollowOrUnFollow
-            (final Activity activity,
-             String fb_id,
-             String followed_fb_id,
-             String status,
-             final ApiCallBack api_callBack) {
-
-        Functions.showLoader(activity, false, false);
-
-
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("fb_id", fb_id);
-            parameters.put("followed_fb_id", followed_fb_id);
-            parameters.put("status", status);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ApiRequest.callApi(activity, Variables.follow_users, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                Functions.cancelLoader();
-                try {
-                    JSONObject response = new JSONObject(resp);
-                    String code = response.optString("code");
-                    if (code.equals("200")) {
-                        api_callBack.onSuccess(response.toString());
-
-                    } else {
-                        Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
-                    api_callBack.onFailure(e.toString());
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
     }
 
 
@@ -549,56 +502,9 @@ public class Functions {
 
     }
 
-
-    public static Dialog indeterminant_dialog;
-
-    public static void showIndeterminentLoader(Context context, boolean outside_touch, boolean cancleable) {
-
-        indeterminant_dialog = new Dialog(context);
-        indeterminant_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        indeterminant_dialog.setContentView(R.layout.item_indeterminant_progress_layout);
-        indeterminant_dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.d_round_white_background));
-
-
-        if (!outside_touch)
-            indeterminant_dialog.setCanceledOnTouchOutside(false);
-
-        if (!cancleable)
-            indeterminant_dialog.setCancelable(false);
-
-        indeterminant_dialog.show();
-
-    }
-
-
-    public static void cancelIndeterminentLoader() {
-        if (indeterminant_dialog != null) {
-            indeterminant_dialog.cancel();
-        }
-    }
-
-
     public static Dialog determinant_dialog;
     public static ProgressBar determinant_progress;
 
-    public static void showDeterminentLoader(Context context, boolean outside_touch, boolean cancleable) {
-
-        determinant_dialog = new Dialog(context);
-        determinant_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        determinant_dialog.setContentView(R.layout.item_determinant_progress_layout);
-        determinant_dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.d_round_white_background));
-
-        determinant_progress = determinant_dialog.findViewById(R.id.pbar);
-
-        if (!outside_touch)
-            determinant_dialog.setCanceledOnTouchOutside(false);
-
-        if (!cancleable)
-            determinant_dialog.setCancelable(false);
-
-        determinant_dialog.show();
-
-    }
 
     public static void showLoadingProgress(int progress) {
         if (determinant_progress != null) {

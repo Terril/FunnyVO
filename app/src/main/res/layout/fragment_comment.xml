@@ -86,7 +86,6 @@
                     android:layout_height="32dp"
                     android:id="@+id/send_btn"
                     android:padding="4dp"
-                    android:rotation="-45"
                     android:scaleType="fitCenter"
                     android:background="@color/transparent"
                     android:src="@drawable/ic_send"/>

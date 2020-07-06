@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -143,21 +142,19 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             } else if (appLinkData == null) {
                 data_list = (ArrayList<Home>) bundle.getSerializableExtra("arraylist");
                 position = bundle.getIntExtra("position", 0);
-                Set_Adapter();
+                setAdapter();
             } else {
                 link = appLinkData.toString();
                 String[] parts = link.split("=");
                 video_id = parts[1];
                 callApiForGetAllvideos(parts[1]);
             }
-
         }
 
 
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 onBackPressed();
 
             }
@@ -172,11 +169,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         send_progress = findViewById(R.id.send_progress);
 
         keyboardHeightProvider = new KeyboardHeightProvider(this);
-
-
         findViewById(R.id.WatchVideo_F).post(new Runnable() {
             public void run() {
-
                 keyboardHeightProvider.start();
 
             }
@@ -216,12 +210,12 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Parse_data(resp);
+                parseData(resp);
             }
         });
     }
 
-    public void Parse_data(String responce) {
+    public void parseData(String responce) {
 
         data_list = new ArrayList<>();
 
@@ -253,23 +247,24 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     item.like_count = count.optString("like_count");
                     item.video_comment_count = count.optString("video_comment_count");
 
-
                     item.video_id = itemdata.optString("id");
                     item.liked = itemdata.optString("liked");
 
-
                     item.video_url = itemdata.optString("video");
-
-
                     item.video_description = itemdata.optString("description");
 
                     item.thum = itemdata.optString("thum");
                     item.created_date = itemdata.optString("created");
-
+                    if (item.video_url.contains(Variables.base_url)) {
+                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                    }
+                    if (item.thum.contains(Variables.base_url)) {
+                        item.thum = item.thum.replace(Variables.base_url + "/", "");
+                    }
                     data_list.add(item);
                 }
 
-                Set_Adapter();
+                adapter.notifyDataSetChanged();
 
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -283,7 +278,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    private void Call_Api_For_Singlevideos(final int postion) {
+    private void callApiForSinglevideos(final int postion) {
 
         try {
             JSONObject parameters = new JSONObject();
@@ -296,7 +291,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
                 @Override
                 public void response(String resp) {
-                    Singal_Video_Parse_data(postion, resp);
+                    singalVideoParseData(postion, resp);
                 }
             });
 
@@ -307,7 +302,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         }
     }
 
-    public void Singal_Video_Parse_data(int pos, String responce) {
+    public void singalVideoParseData(int pos, String responce) {
 
         try {
             JSONObject jsonObject = new JSONObject(responce);
@@ -347,6 +342,12 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                     item.thum = itemdata.optString("thum");
                     item.created_date = itemdata.optString("created");
+                    if (item.video_url.contains(Variables.base_url)) {
+                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                    }
+                    if (item.thum.contains(Variables.base_url)) {
+                        item.thum = item.thum.replace(Variables.base_url + "/", "");
+                    }
 
                     data_list.remove(pos);
                     data_list.add(pos, item);
@@ -366,7 +367,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    public void Set_Adapter() {
+    public void setAdapter() {
         recyclerView = findViewById(R.id.recylerview);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -379,13 +380,11 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         adapter = new WatchVideosAdapter(context, data_list, new WatchVideosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int postion, final Home item, View view) {
-
                 switch (view.getId()) {
-
                     case R.id.user_pic:
                         onPause();
 
-                        OpenProfile(item, false);
+                        openProfile(item, false);
                         break;
 
                     case R.id.like_layout:
@@ -397,21 +396,19 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                         break;
 
                     case R.id.comment_layout:
-                        OpenComment(item);
+                        openComment(item);
                         break;
 
-                    case R.id.shared_layout:
-
+                    case R.id.btnShare:
                         final VideoActionFragment fragment = new VideoActionFragment(item.video_id, new FragmentCallback() {
                             @Override
                             public void responseCallBackFromFragment(Bundle bundle) {
 
                                 if (bundle.getString("action").equals("save")) {
-                                    Save_Video(item);
+                                    saveVideo(item);
                                 }
                                 if (bundle.getString("action").equals("delete")) {
-
-                                    Functions.showLoader(WatchVideosActivity.this, false, false);
+                                    showProgressDialog();
                                     Functions.callApiForDeleteVideo(WatchVideosActivity.this, item.video_id, new ApiCallBack() {
                                         @Override
                                         public void arrayData(ArrayList arrayList) {
@@ -421,7 +418,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                                         @Override
                                         public void onSuccess(String responce) {
 
-                                            Functions.cancelLoader();
+                                            dismissProgressDialog();
                                             finish();
 
                                         }
@@ -589,7 +586,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
                     if ((deltaXAbs > 100) && (deltaXAbs < 1000)) {
                         if (deltaX > 0) {
-                            OpenProfile(item, true);
+                            openProfile(item, true);
                         }
                     }
 
@@ -663,7 +660,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             Functions.callApiForUpdateView(WatchVideosActivity.this, item.video_id);
 
 
-        Call_Api_For_Singlevideos(currentPage);
+        callApiForSinglevideos(currentPage);
     }
 
 
@@ -792,7 +789,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
 
     // this will open the comment screen
-    public void OpenComment(Home item) {
+    public void openComment(Home item) {
         int comment_count = Integer.parseInt(item.video_comment_count);
         FragmentDataSend fragment_data_send = this;
 
@@ -810,7 +807,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private void OpenProfile(Home item, boolean from_right_to_left) {
+    private void openProfile(Home item, boolean from_right_to_left) {
 
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
 
@@ -823,7 +820,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 @Override
                 public void responseCallBackFromFragment(Bundle bundle) {
 
-                    Call_Api_For_Singlevideos(currentPage);
+                    callApiForSinglevideos(currentPage);
 
                 }
             });
@@ -919,7 +916,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                 if (options[item].equals("Save Video")) {
                     if (Functions.checkstoragepermision(WatchVideosActivity.this))
-                        Save_Video(home_);
+                        saveVideo(home_);
 
                 } else if (options[item].equals("Delete Video")) {
                     if (Variables.is_secure_info) {
@@ -960,9 +957,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     }
 
-    public void Save_Video(final Home item) {
-
-        Functions.showDeterminentLoader(context, false, false);
+    public void saveVideo(final Home item) {
+        showProgressDialog();
         PRDownloader.initialize(getApplicationContext());
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
                 .build()
@@ -988,9 +984,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     @Override
                     public void onProgress(Progress progress) {
 
-                        int prog = (int) ((progress.currentBytes * 100) / progress.totalBytes);
-                        Functions.showLoadingProgress(prog / 2);
-
                     }
                 });
 
@@ -1005,7 +998,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             public void onError(Error error) {
                 Delete_file_no_watermark(item);
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-                Functions.cancelDeterminentLoader();
+                dismissProgressDialog();
             }
 
 
@@ -1024,9 +1017,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-
-                        Log.d("resp", "" + (int) (progress * 100));
-                        Functions.showLoadingProgress((int) ((progress * 100) / 2) + 50);
+                        showProgressDialog();
 
                     }
 
@@ -1036,8 +1027,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-                                Functions.cancelDeterminentLoader();
+                                dismissProgressDialog();
                                 Delete_file_no_watermark(item);
                                 Scan_file(item);
 
@@ -1063,7 +1053,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                                 try {
 
                                     Delete_file_no_watermark(item);
-                                    Functions.cancelDeterminentLoader();
+                                    dismissProgressDialog();
                                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
 
                                 } catch (Exception e) {

@@ -4,14 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.R;
+import com.funnyvo.android.home.datamodel.Home;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.squareup.picasso.Picasso;
 
@@ -89,7 +90,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
             if (item.liked.equals("1")) {
                 holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));
             } else {
-                holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like));
+                holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart));
             }
 
             holder.like_txt.setText(item.like_count);
@@ -113,10 +114,11 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
         TextView username, sound_name;
         ImageView user_pic, sound_image, varified_btn;
 
-        LinearLayout like_layout, comment_layout, shared_layout, sound_image_layout;
+        LinearLayout like_layout, comment_layout, sound_image_layout;
         ImageView like_image, comment_image;
         TextView like_txt, desc_txt, comment_txt;
 
+        ImageButton btnShare;
 
         public CustomViewHolder(View view) {
             super(view);
@@ -141,7 +143,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
             desc_txt = view.findViewById(R.id.desc_txt);
 
             sound_image_layout = view.findViewById(R.id.sound_image_layout);
-            shared_layout = view.findViewById(R.id.shared_layout);
+            btnShare = view.findViewById(R.id.btnShare);
         }
 
         public void bind(final int postion, final Home item, final WatchVideosAdapter.OnItemClickListener listener) {
@@ -187,7 +189,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
                 }
             });
 
-            shared_layout.setOnClickListener(new View.OnClickListener() {
+            btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 

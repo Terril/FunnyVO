@@ -20,17 +20,8 @@ public class Variables {
     public static final String app_folder = root + "/FunnyVO/";
     public static final String draft_app_folder = app_folder + "Draft/";
 
-
     public static int max_recording_duration = 18000;
     public static int recording_duration = 18000;
-
-    public static String outputfile = app_folder + "output.mp4";
-    public static String outputfile2 = app_folder + "output2.mp4";
-    public static String output_filter_file = app_folder + "output-filtered" + Functions.getRandomString() + ".mp4" ;
-
-    public static String gallery_trimed_video = app_folder + "gallery_trimed_video.mp4";
-    public static String gallery_resize_video = app_folder + "gallery_resize_video.mp4";
-
 
     public static SharedPreferences sharedPreferences;
     public static final String pref_name = "pref_name";
@@ -45,10 +36,16 @@ public class Variables {
     public static final String api_token = "api_token";
     public static final String device_id = "device_id";
 
+    public static String outputfile = app_folder + "output.mp4";
+    public static String outputfile2 = app_folder + "output2.mp4";
+    public static String output_filter_file = app_folder + "output-filtered" + Functions.getRandomString() + ".mp4";
+
+    public static String gallery_trimed_video = app_folder + "gallery_trimed_video.mp4";
+    public static String gallery_resize_video = app_folder + "gallery_resize_video.mp4";
+
     public static String user_id;
     public static String user_name;
     public static String user_pic;
-
 
     public static String tag = "FunnyVO";
 

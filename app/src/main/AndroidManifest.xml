@@ -52,7 +52,6 @@
             android:name=".watchvideos.WatchVideosActivity"
             android:parentActivityName=".main_menu.MainMenuActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/transparent_status"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity">
             <intent-filter android:autoVerify="true">

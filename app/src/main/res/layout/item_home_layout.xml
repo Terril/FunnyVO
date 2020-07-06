@@ -233,8 +233,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/sound_image"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/margin_32"
+                    android:layout_height="@dimen/margin_32"
                     android:src="@drawable/ic_round_music" />
 
             </LinearLayout>

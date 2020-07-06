@@ -256,7 +256,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         openComment(item);
                         break;
 
-                    case R.id.shared_layout:
+                    case R.id.btnShare:
                         if (!is_add_show && (mInterstitialAd != null && mInterstitialAd.isLoaded())) {
                             mInterstitialAd.show();
                             is_add_show = true;
@@ -473,7 +473,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     item.liked = itemdata.optString("liked");
                     item.video_url = itemdata.optString("video");
 
-                    item.isMute = isMuted;
+                    item.isMute = false;
                     if (item.video_url.contains(Variables.base_url)) {
                         item.video_url = item.video_url.replace(Variables.base_url + "/", "");
                     }

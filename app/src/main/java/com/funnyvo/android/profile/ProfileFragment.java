@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -51,9 +52,6 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends RootFragment implements View.OnClickListener {
 
-    private View view;
-    private Context context;
-
     private MaterialButton follow_unfollow_btn;
     private TextView username, username2_txt, video_count_txt;
     private ImageView imageView;
@@ -62,20 +60,13 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     private ImageView back_btn, setting_btn;
 
     private String user_id, user_name, user_pic;
-
     private Bundle bundle;
-
     protected TabLayout tabLayout;
-
     protected ViewPager pager;
-
     private ViewPagerAdapter adapter;
-
     private boolean isdataload = false;
-
     private RelativeLayout tabs_main_layout;
     private LinearLayout top_layout;
-
     public static String pic_url;
     private boolean is_run_first_time = false;
     private String follow_status = "0";
@@ -105,10 +96,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
-        context = getContext();
-
-        return init();
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
 
@@ -124,7 +112,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
                     followUnFollowUser();
                 else
-                    Toast.makeText(context, "Please login in to app", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please login in to app", Toast.LENGTH_SHORT).show();
 
                 break;
 
@@ -139,16 +127,19 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             case R.id.fans_layout:
                 openFollowers();
                 break;
-
             case R.id.back_btn:
                 getActivity().onBackPressed();
                 break;
         }
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+    }
 
-    public View init() {
-
+    private void init(View view) {
         username = view.findViewById(R.id.username);
         username2_txt = view.findViewById(R.id.username2_txt);
         imageView = view.findViewById(R.id.user_image);
@@ -221,7 +212,6 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
         isdataload = true;
         callApiForGetAllvideos();
-        return view;
     }
 
 
@@ -236,12 +226,12 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     private void setupTabIcons() {
 
-        View view1 = LayoutInflater.from(context).inflate(R.layout.item_tabs_profile_menu, null);
+        View view1 = LayoutInflater.from(getActivity()).inflate(R.layout.item_tabs_profile_menu, null);
         ImageView imageView1 = view1.findViewById(R.id.image);
         imageView1.setImageDrawable(getResources().getDrawable(R.drawable.ic_my_video_color));
         tabLayout.getTabAt(0).setCustomView(view1);
 
-        View view2 = LayoutInflater.from(context).inflate(R.layout.item_tabs_profile_menu, null);
+        View view2 = LayoutInflater.from(getActivity()).inflate(R.layout.item_tabs_profile_menu, null);
         ImageView imageView2 = view2.findViewById(R.id.image);
         imageView2.setImageDrawable(getResources().getDrawable(R.drawable.ic_liked_video_gray));
         tabLayout.getTabAt(1).setCustomView(view2);
@@ -377,7 +367,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         }
 
 
-        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.showMyAllVideos, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 is_run_first_time = true;
@@ -401,9 +391,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 username2_txt.setText(user_info.optString("username"));
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
-                Picasso.with(context)
+                Picasso.with(getActivity())
                         .load(ProfileFragment.pic_url)
-                        .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
+                        .placeholder(getActivity().getResources().getDrawable(R.drawable.profile_image_placeholder))
                         .resize(200, 200).centerCrop().into(imageView);
 
                 follow_count_txt.setText(data.optString("total_following"));
@@ -429,12 +419,12 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
                 String verified = user_info.optString("verified");
                 if (verified != null && verified.equalsIgnoreCase("1")) {
-                    view.findViewById(R.id.varified_btn).setVisibility(View.VISIBLE);
+                    getView().findViewById(R.id.varified_btn).setVisibility(View.VISIBLE);
                 }
 
 
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -587,7 +577,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         if (fragment_callback != null)
             fragment_callback.responseCallBackFromFragment(new Bundle());
 
-        Functions.deleteCache(context);
+        Functions.deleteCache(getActivity());
 
     }
 

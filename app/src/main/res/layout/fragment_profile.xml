@@ -58,7 +58,8 @@
                     android:layout_marginEnd="@dimen/margin_15"
                     android:background="@color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_chat" />
+                    android:src="@drawable/ic_chat"
+                    android:visibility="gone" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -246,28 +247,25 @@
                                 android:textColor="@color/darkgray"
                                 android:textSize="13dp"
                                 android:textStyle="bold" />
-
                         </LinearLayout>
-
-
                     </LinearLayout>
-
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/follow_unfollow_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_20"
-                        app:backgroundTint="@color/palette_cheddar_dark"
                         android:paddingLeft="@dimen/margin_20"
                         android:paddingTop="@dimen/margin_10"
                         android:paddingRight="@dimen/margin_20"
                         android:paddingBottom="@dimen/margin_10"
                         android:text=""
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_15"
                         android:textStyle="bold"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        app:backgroundTint="@color/palette_cheddar_dark" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

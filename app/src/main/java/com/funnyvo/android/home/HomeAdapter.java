@@ -104,10 +104,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                 holder.btnMuteUnMuteAudio.setImageDrawable(context.getDrawable(R.drawable.ic_music_on));
             }
 
-
             holder.like_txt.setText(item.like_count);
             holder.comment_txt.setText(item.video_comment_count);
-
 
             if (item.verified != null && item.verified.equalsIgnoreCase("1")) {
                 holder.varified_btn.setVisibility(View.VISIBLE);

@@ -21,6 +21,7 @@ import com.funnyvo.android.services.ServiceCallback;
 import com.funnyvo.android.services.UploadService;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,11 +65,13 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             }
         });
 
-        findViewById(R.id.btnUploadVideo).setOnClickListener(new View.OnClickListener() {
+        final FloatingActionButton btnUploadVideo = findViewById(R.id.btnUploadVideo);
+        btnUploadVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showProgressDialog();
                 startService();
+                btnUploadVideo.setEnabled(false);
             }
         });
 

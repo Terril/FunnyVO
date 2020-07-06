@@ -94,10 +94,7 @@ public class MyVideosAdapter extends RecyclerView.Adapter<MyVideosAdapter.Custom
         } catch (Exception e) {
 
         }
-
-
         holder.view_txt.setText(item.views);
-
         holder.bind(i, item, listener);
 
     }
