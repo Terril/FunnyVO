@@ -48,8 +48,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/profile"
                     android:textColor="@color/palette_cheddar"
-                    android:textSize="@dimen/text_size_18"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_size_18" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/save_btn"

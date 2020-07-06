@@ -24,7 +24,7 @@ import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.watchvideos.WatchVideosActivity;
 import com.funnyvo.android.search.datamodel.Users;
 import com.google.android.material.tabs.TabLayout;
 
@@ -232,7 +232,7 @@ public class SearchFragment extends RootFragment {
 
 
     private void openWatchVideo(String video_id) {
-        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
+        Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("video_id", video_id);
         startActivity(intent);
     }

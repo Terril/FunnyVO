@@ -25,7 +25,6 @@ public class WebviewFragment extends RootFragment {
     View view;
     Context context;
 
-    ProgressBar progress_bar;
     WebView webView;
     String url = "www.google.com";
     String title;
@@ -59,14 +58,12 @@ public class WebviewFragment extends RootFragment {
         title_txt = view.findViewById(R.id.title_txt);
         title_txt.setText(title);
 
+        showProgressDialog();
         webView = view.findViewById(R.id.webview);
-        progress_bar = view.findViewById(R.id.progress_bar);
         webView.setWebChromeClient(new WebChromeClient() {
 
             public void onProgressChanged(WebView view, int progress) {
-                if (progress >= 80) {
-                    progress_bar.setVisibility(View.GONE);
-                }
+                dismissProgressDialog();
             }
         });
 

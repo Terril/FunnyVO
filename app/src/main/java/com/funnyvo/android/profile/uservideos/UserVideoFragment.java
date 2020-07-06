@@ -23,7 +23,7 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.watchvideos.WatchVideosActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,29 +81,26 @@ public class UserVideoFragment extends Fragment {
         adapter = new MyVideosAdapter(context, data_list, new MyVideosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int postion, Home item, View view) {
-
                 openWatchVideo(postion);
 
             }
         });
 
         recyclerView.setAdapter(adapter);
-
         no_data_layout = view.findViewById(R.id.no_data_layout);
-
-        callApiForGetAllvideos();
+        callApiForGetAllVideos();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (view != null && (!data_list.isEmpty() && !is_api_run)) {
-            callApiForGetAllvideos();
+            callApiForGetAllVideos();
         }
     }
 
     //this will get the all videos data of user and then parse the data
-    private void callApiForGetAllvideos() {
+    private void callApiForGetAllVideos() {
         is_api_run = true;
         JSONObject parameters = new JSONObject();
         try {
@@ -192,6 +189,7 @@ public class UserVideoFragment extends Fragment {
                 }
 
                 adapter.notifyDataSetChanged();
+                recyclerView.invalidate();
 
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -204,7 +202,7 @@ public class UserVideoFragment extends Fragment {
     }
 
     private void openWatchVideo(int postion) {
-        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
+        Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);

@@ -107,7 +107,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         TextView title1 = view1.findViewById(R.id.text);
         imageView1.setImageDrawable(getResources().getDrawable(R.drawable.ic_home_white));
         title1.setText("Home");
-        title1.setTextColor(context.getResources().getColor(R.color.white));
+        title1.setTextColor(context.getResources().getColor(R.color.palette_milk));
         tabLayout.getTabAt(0).setCustomView(view1);
 
         View view2 = LayoutInflater.from(context).inflate(R.layout.item_tablayout, null);
@@ -160,22 +160,22 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
                     case 1:
                         onOtherTabClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_discover_red));
-                        image.setColorFilter(ContextCompat.getColor(context, R.color.app_color), android.graphics.PorterDuff.Mode.SRC_IN);
-                        title.setTextColor(context.getResources().getColor(R.color.app_color));
+                        image.setColorFilter(ContextCompat.getColor(context, R.color.palette_cheddar_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                        title.setTextColor(context.getResources().getColor(R.color.palette_cheddar_dark));
                         break;
 
 
                     case 3:
                         onOtherTabClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_notification_red));
-                        image.setColorFilter(ContextCompat.getColor(context, R.color.app_color), android.graphics.PorterDuff.Mode.SRC_IN);
-                        title.setTextColor(context.getResources().getColor(R.color.app_color));
+                        image.setColorFilter(ContextCompat.getColor(context, R.color.palette_cheddar_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                        title.setTextColor(context.getResources().getColor(R.color.palette_cheddar_dark));
                         break;
                     case 4:
                         onOtherTabClick();
                         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_red));
-                        image.setColorFilter(ContextCompat.getColor(context, R.color.app_color), android.graphics.PorterDuff.Mode.SRC_IN);
-                        title.setTextColor(context.getResources().getColor(R.color.app_color));
+                        image.setColorFilter(ContextCompat.getColor(context, R.color.palette_cheddar_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                        title.setTextColor(context.getResources().getColor(R.color.palette_cheddar_dark));
                         break;
                 }
                 tab.setCustomView(v);

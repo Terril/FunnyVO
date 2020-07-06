@@ -20,7 +20,7 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.watchvideos.WatchVideosActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,16 +33,16 @@ import java.util.ArrayList;
  */
 public class LikedVideoFragment extends Fragment {
 
-    public static RecyclerView recyclerView;
-    ArrayList<Home> data_list;
-    MyVideosAdapter adapter;
+    private RecyclerView recyclerView;
+    private ArrayList<Home> data_list;
+    private MyVideosAdapter adapter;
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    String user_id;
+    private String user_id;
 
-    RelativeLayout no_data_layout;
+    private RelativeLayout no_data_layout;
 
     public LikedVideoFragment() {
         // Required empty public constructor
@@ -71,16 +71,14 @@ public class LikedVideoFragment extends Fragment {
         adapter = new MyVideosAdapter(context, data_list, new MyVideosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int postion, Home item, View view) {
-
-                OpenWatchVideo(postion);
-
+                openWatchVideo(postion);
             }
         });
 
         recyclerView.setAdapter(adapter);
         no_data_layout = view.findViewById(R.id.no_data_layout);
 
-        Call_Api_For_get_Allvideos();
+        callApiForGetAllVideos();
 
         return view;
     }
@@ -89,14 +87,13 @@ public class LikedVideoFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (view != null && isVisibleToUser) {
-            Call_Api_For_get_Allvideos();
+            callApiForGetAllVideos();
         }
     }
 
 
     //this will get the all liked videos data of user and then parse the data
-    private void Call_Api_For_get_Allvideos() {
-
+    private void callApiForGetAllVideos() {
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", user_id);
@@ -108,7 +105,7 @@ public class LikedVideoFragment extends Fragment {
         ApiRequest.callApi(context, Variables.my_liked_video, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Parse_data(resp);
+                parseData(resp);
             }
         });
 
@@ -116,7 +113,7 @@ public class LikedVideoFragment extends Fragment {
     }
 
 
-    public void Parse_data(String responce) {
+    public void parseData(String responce) {
         data_list.clear();
         try {
             JSONObject jsonObject = new JSONObject(responce);
@@ -173,6 +170,7 @@ public class LikedVideoFragment extends Fragment {
                 }
 
                 adapter.notifyDataSetChanged();
+                recyclerView.invalidate();
 
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -184,12 +182,11 @@ public class LikedVideoFragment extends Fragment {
 
     }
 
-    private void OpenWatchVideo(int postion) {
-        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
+    private void openWatchVideo(int postion) {
+        Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);
     }
-
 
 }

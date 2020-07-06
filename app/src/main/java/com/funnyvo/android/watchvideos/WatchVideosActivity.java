@@ -92,40 +92,30 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-
-public class WatchVideosFragment extends BaseActivity implements Player.EventListener,
+public class WatchVideosActivity extends BaseActivity implements Player.EventListener,
         KeyboardHeightObserver, View.OnClickListener, FragmentDataSend {
 
-    Context context;
+    private Context context;
 
-    RecyclerView recyclerView;
-    ArrayList<Home> data_list;
-    int position = 0;
-    int currentPage = -1;
-    LinearLayoutManager layoutManager;
+    private RecyclerView recyclerView;
+    private ArrayList<Home> data_list;
+    private int position = 0;
+    private int currentPage = -1;
+    private LinearLayoutManager layoutManager;
 
-    WatchVideosAdapter adapter;
-
-    ProgressBar p_bar;
-
+    private WatchVideosAdapter adapter;
+    private ProgressBar p_bar;
     private KeyboardHeightProvider keyboardHeightProvider;
+    private RelativeLayout write_layout;
 
-    RelativeLayout write_layout;
+    private EditText message_edit;
+    private ImageButton send_btn;
+    private ProgressBar send_progress;
 
+    private String video_id;
+    private String link;
 
-    EditText message_edit;
-    ImageButton send_btn;
-    ProgressBar send_progress;
-
-
-    String video_id;
-    String link;
-
-    public WatchVideosFragment() {
+    public WatchVideosActivity() {
 
     }
 
@@ -421,8 +411,8 @@ public class WatchVideosFragment extends BaseActivity implements Player.EventLis
                                 }
                                 if (bundle.getString("action").equals("delete")) {
 
-                                    Functions.showLoader(WatchVideosFragment.this, false, false);
-                                    Functions.callApiForDeleteVideo(WatchVideosFragment.this, item.video_id, new ApiCallBack() {
+                                    Functions.showLoader(WatchVideosActivity.this, false, false);
+                                    Functions.callApiForDeleteVideo(WatchVideosActivity.this, item.video_id, new ApiCallBack() {
                                         @Override
                                         public void arrayData(ArrayList arrayList) {
 
@@ -459,7 +449,7 @@ public class WatchVideosFragment extends BaseActivity implements Player.EventLis
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                             if (check_permissions()) {
-                                Intent intent = new Intent(WatchVideosFragment.this, VideoSoundActivity.class);
+                                Intent intent = new Intent(WatchVideosActivity.this, VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
                             }
@@ -670,7 +660,7 @@ public class WatchVideosFragment extends BaseActivity implements Player.EventLis
         soundimage.startAnimation(aniRotate);
 
         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-            Functions.callApiForUpdateView(WatchVideosFragment.this, item.video_id);
+            Functions.callApiForUpdateView(WatchVideosActivity.this, item.video_id);
 
 
         Call_Api_For_Singlevideos(currentPage);
@@ -928,15 +918,15 @@ public class WatchVideosFragment extends BaseActivity implements Player.EventLis
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Save Video")) {
-                    if (Functions.checkstoragepermision(WatchVideosFragment.this))
+                    if (Functions.checkstoragepermision(WatchVideosActivity.this))
                         Save_Video(home_);
 
                 } else if (options[item].equals("Delete Video")) {
                     if (Variables.is_secure_info) {
                         Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show();
                     } else {
-                        Functions.showLoader(WatchVideosFragment.this, false, false);
-                        Functions.callApiForDeleteVideo(WatchVideosFragment.this, home_.video_id, new ApiCallBack() {
+                        Functions.showLoader(WatchVideosActivity.this, false, false);
+                        Functions.callApiForDeleteVideo(WatchVideosActivity.this, home_.video_id, new ApiCallBack() {
                             @Override
                             public void arrayData(ArrayList arrayList) {
 
@@ -1096,7 +1086,7 @@ public class WatchVideosFragment extends BaseActivity implements Player.EventLis
     }
 
     public void Scan_file(Home item) {
-        MediaScannerConnection.scanFile(WatchVideosFragment.this,
+        MediaScannerConnection.scanFile(WatchVideosActivity.this,
                 new String[]{Variables.app_folder + item.video_id + ".mp4"},
                 null,
                 new MediaScannerConnection.OnScanCompletedListener() {

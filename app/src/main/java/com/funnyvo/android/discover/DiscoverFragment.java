@@ -25,7 +25,7 @@ import com.funnyvo.android.search.SearchMainFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.watchvideos.WatchVideosActivity;
 import com.funnyvo.android.discover.datamodel.Discover;
 
 import org.json.JSONArray;
@@ -221,7 +221,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
 
     // When you click on any Video a new activity is open which will play the Clicked video
     private void OpenWatchVideo(int postion, ArrayList<Home> data_list) {
-        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
+        Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);

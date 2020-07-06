@@ -35,6 +35,7 @@ import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -53,7 +54,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     private View view;
     private Context context;
 
-    private TextView follow_unfollow_btn;
+    private MaterialButton follow_unfollow_btn;
     private TextView username, username2_txt, video_count_txt;
     private ImageView imageView;
     private TextView follow_count_txt, fans_count_txt, heart_count_txt;
@@ -81,7 +82,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     FragmentCallback fragment_callback;
 
-    public ProfileFragment() { }
+    public ProfileFragment() {
+    }
 
     @SuppressLint("ValidFragment")
     public ProfileFragment(FragmentCallback fragment_callback) {
@@ -295,6 +297,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final Resources resources;
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
         public ViewPagerAdapter(final Resources resources, FragmentManager fm) {
             super(fm);
             this.resources = resources;
@@ -441,45 +444,56 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     }
 
     public void followUnFollowUser() {
-
-        final String send_status;
+        final String status;
         if (follow_status.equals("0")) {
-            send_status = "1";
+            status = "1";
         } else {
-            send_status = "0";
+            status = "0";
         }
 
-        Functions.callApiForFollowOrUnFollow(getActivity(),
-                Variables.sharedPreferences.getString(Variables.u_id, ""),
-                user_id,
-                send_status,
-                new ApiCallBack() {
-                    @Override
-                    public void arrayData(ArrayList arrayList) {
-                    }
+        callApiForFollowUnFollow(status);
+    }
 
-                    @Override
-                    public void onSuccess(String responce) {
+    private void callApiForFollowUnFollow(final String status) {
+        showProgressDialog();
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
+            parameters.put("followed_fb_id", user_id);
+            parameters.put("status", status);
 
-                        if (send_status.equals("1")) {
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(getActivity(), Variables.follow_users, parameters, new Callback() {
+            @Override
+            public void response(String resp) {
+                dismissProgressDialog();
+                try {
+                    JSONObject response = new JSONObject(resp);
+                    String code = response.optString("code");
+                    if (code.equals("200")) {
+                        if (status.equals("1")) {
                             follow_unfollow_btn.setText("UnFollow");
                             follow_status = "1";
 
-                        } else if (send_status.equals("0")) {
+                        } else if (status.equals("0")) {
                             follow_unfollow_btn.setText("Follow");
                             follow_status = "0";
                         }
 
                         callApiForGetAllvideos();
+
+                    } else {
+                        Toast.makeText(getActivity(), "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
-                    @Override
-                    public void onFailure(String responce) {
-
-                    }
-
-                });
-
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 

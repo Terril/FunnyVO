@@ -29,7 +29,7 @@ import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.watchvideos.WatchVideosActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -283,7 +283,7 @@ public class TaggedVideosFragment extends RootFragment {
     }
 
     private void OpenWatchVideo(int postion) {
-        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
+        Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);

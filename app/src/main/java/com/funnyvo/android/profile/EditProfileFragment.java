@@ -85,6 +85,8 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     private RadioButton male_btn, female_btn;
 
+    private String imageFilePath;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,7 +135,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                 break;
 
             case R.id.save_btn:
-                if (Check_Validation()) {
+                if (checkValidation()) {
                     callApiForEditProfile();
                 }
                 break;
@@ -216,7 +218,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         }
     }
 
-    String imageFilePath;
 
     private File createImageFile() throws IOException {
         String timeStamp =
@@ -255,11 +256,10 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
 
+        byte[] imageByteArray = new byte[0];
         if (resultCode == RESULT_OK) {
-
             if (requestCode == 1) {
                 Matrix matrix = new Matrix();
                 try {
@@ -295,10 +295,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 resized.compress(Bitmap.CompressFormat.JPEG, 20, baos);
 
-                image_byte_array = baos.toByteArray();
-
-                saveImage();
-
+                imageByteArray = baos.toByteArray();
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
                 InputStream imageStream = null;
@@ -333,24 +330,20 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                 }
 
                 Bitmap rotatedBitmap = Bitmap.createBitmap(imagebitmap, 0, 0, imagebitmap.getWidth(), imagebitmap.getHeight(), matrix, true);
-
                 Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, (int) (rotatedBitmap.getWidth() * 0.5), (int) (rotatedBitmap.getHeight() * 0.5), true);
-
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 resized.compress(Bitmap.CompressFormat.JPEG, 20, baos);
 
-                image_byte_array = baos.toByteArray();
-                saveImage();
-
+                imageByteArray = baos.toByteArray();
             }
+            saveImage(imageByteArray);
 
         }
 
     }
 
-
     // this will check the validations like none of the field can be the empty
-    public boolean Check_Validation() {
+    public boolean checkValidation() {
 
         String uname = username_edit.getText().toString();
         String firstname = firstname_edit.getText().toString();
@@ -372,10 +365,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         return true;
     }
 
-
-    byte[] image_byte_array;
-
-    public void saveImage() {
+    private void saveImage(byte[] imageByteArray) {
         showProgressDialog();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         String key = reference.push().getKey();
@@ -383,7 +373,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         final StorageReference filelocation = storageReference.child("User_image")
                 .child(key + ".jpg");
 
-        filelocation.putBytes(image_byte_array).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        filelocation.putBytes(imageByteArray).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {

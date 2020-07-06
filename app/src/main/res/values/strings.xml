@@ -31,4 +31,5 @@
     <string name="profile">Profile</string>
     <string name="notifications">Notifications</string>
     <string name="save">Save</string>
+    <string name="privacy_and_settings">Privacy and Settings</string>
 </resources>

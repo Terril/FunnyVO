@@ -55,21 +55,21 @@ public class SettingFragment extends RootFragment implements View.OnClickListene
                 break;
 
             case R.id.request_verification_txt:
-                Open_request_verification();
+                openRequestVerification();
                 break;
 
             case R.id.privacy_policy_txt:
-                Open_Privacy_url();
+                openPrivacyUrl();
                 break;
 
             case R.id.logout_txt:
-                Logout();
+                logout();
                 break;
         }
     }
 
 
-    public void Open_request_verification() {
+    public void openRequestVerification() {
         RequestVerificationFragment request_verificationFragment = new RequestVerificationFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
@@ -77,7 +77,7 @@ public class SettingFragment extends RootFragment implements View.OnClickListene
         transaction.replace(R.id.Setting_F, request_verificationFragment).commit();
     }
 
-    public void Open_Privacy_url() {
+    public void openPrivacyUrl() {
         WebviewFragment webview_fragment = new WebviewFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
@@ -90,7 +90,7 @@ public class SettingFragment extends RootFragment implements View.OnClickListene
     }
 
     // this will erase all the user info store in locally and logout the user
-    public void Logout() {
+    public void logout() {
         SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
         editor.putString(Variables.u_id, "").clear();
         editor.putString(Variables.u_name, "").clear();

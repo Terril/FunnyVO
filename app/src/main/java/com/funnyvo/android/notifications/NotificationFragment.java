@@ -22,7 +22,7 @@ import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.watchvideos.WatchVideosFragment;
+import com.funnyvo.android.watchvideos.WatchVideosActivity;
 import com.funnyvo.android.notifications.datamodel.Notification;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -214,7 +214,7 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
     }
 
     private void openWatchVideo(Notification item) {
-        Intent intent = new Intent(getActivity(), WatchVideosFragment.class);
+        Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("video_id", item.id);
         startActivity(intent);
     }

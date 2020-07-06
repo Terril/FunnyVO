@@ -49,7 +49,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".watchvideos.WatchVideosFragment"
+            android:name=".watchvideos.WatchVideosActivity"
             android:parentActivityName=".main_menu.MainMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status"
