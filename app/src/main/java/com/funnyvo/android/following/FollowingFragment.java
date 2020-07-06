@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FollowingFragment extends Fragment {
+public class FollowingFragment extends RootFragment {
 
     View view;
     Context context;
@@ -46,8 +46,6 @@ public class FollowingFragment extends Fragment {
 
     ArrayList<Following> datalist;
     RelativeLayout no_data_layout;
-
-    ProgressBar pbar;
     String following_or_fan = "Followers";
 
     TextView title_txt;
@@ -94,11 +92,11 @@ public class FollowingFragment extends Fragment {
                 switch (view.getId()) {
                     case R.id.action_txt:
                         if (user_id.equals(Variables.sharedPreferences.getString(Variables.u_id, "")))
-                            Follow_unFollow_User(item, postion);
+                            followUnFollowUser(item, postion);
                         break;
 
                     case R.id.mainlayout:
-                        OpenProfile(item);
+                        openProfile(item);
                         break;
                 }
             }
@@ -109,8 +107,6 @@ public class FollowingFragment extends Fragment {
 
 
         no_data_layout = view.findViewById(R.id.no_data_layout);
-        pbar = view.findViewById(R.id.pbar);
-
 
         view.findViewById(R.id.back_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,10 +117,10 @@ public class FollowingFragment extends Fragment {
 
 
         if (following_or_fan.equals("following")) {
-            Call_Api_For_get_Allfollowing();
+            callApiForGetAllfollowing();
             title_txt.setText("Following");
         } else {
-            Call_Api_For_get_Allfan();
+            callApiForGetAllfan();
             title_txt.setText("Followers");
         }
 
@@ -133,8 +129,8 @@ public class FollowingFragment extends Fragment {
 
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void Call_Api_For_get_Allfollowing() {
-
+    private void callApiForGetAllfollowing() {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", user_id);
@@ -147,12 +143,12 @@ public class FollowingFragment extends Fragment {
         ApiRequest.callApi(context, Variables.get_followings, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Parse_following_data(resp);
+                parseFollowingData(resp);
             }
         });
     }
 
-    public void Parse_following_data(String responce) {
+    public void parseFollowingData(String responce) {
 
         datalist.clear();
 
@@ -186,9 +182,9 @@ public class FollowingFragment extends Fragment {
                     adapter.notifyItemInserted(i);
                 }
 
+                dismissProgressDialog();
                 adapter.notifyDataSetChanged();
 
-                pbar.setVisibility(View.GONE);
 
                 if (datalist.isEmpty()) {
                     no_data_layout.setVisibility(View.VISIBLE);
@@ -205,8 +201,8 @@ public class FollowingFragment extends Fragment {
     }
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void Call_Api_For_get_Allfan() {
-
+    private void callApiForGetAllfan() {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", user_id);
@@ -219,13 +215,13 @@ public class FollowingFragment extends Fragment {
         ApiRequest.callApi(context, Variables.get_followers, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Parse_fans_data(resp);
+                parseFansData(resp);
             }
         });
 
     }
 
-    public void Parse_fans_data(String responce) {
+    public void parseFansData(String responce) {
 
         datalist.clear();
 
@@ -256,9 +252,8 @@ public class FollowingFragment extends Fragment {
                     adapter.notifyItemInserted(i);
                 }
 
+                dismissProgressDialog();
                 adapter.notifyDataSetChanged();
-
-                pbar.setVisibility(View.GONE);
 
                 if (datalist.isEmpty()) {
                     no_data_layout.setVisibility(View.VISIBLE);
@@ -277,7 +272,7 @@ public class FollowingFragment extends Fragment {
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private void OpenProfile(final Following item) {
+    private void openProfile(final Following item) {
         ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -296,7 +291,7 @@ public class FollowingFragment extends Fragment {
     }
 
 
-    public void Follow_unFollow_User(final Following item, final int position) {
+    public void followUnFollowUser(final Following item, final int position) {
 
         final String send_status;
         if (item.follow.equals("0")) {
