@@ -16,7 +16,8 @@
             android:adjustViewBounds="true"
             app:ckFacing="back"
             app:ckLockVideoAspectRatio="true"
-            app:ckVideoQuality="max480p" />
+            app:ckFocus="continuous"
+             />
 
 
         <RelativeLayout
@@ -86,18 +87,19 @@
 
             <ImageButton
                 android:id="@+id/rotate_camera"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/margin_40"
+                android:layout_height="@dimen/margin_40"
                 android:background="@color/transparent"
                 android:padding="5dp"
+                android:layout_marginTop="@dimen/margin_20"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_rotate_cam" />
 
             <ImageButton
                 android:id="@+id/flash_camera"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="@dimen/margin_40"
+                android:layout_height="@dimen/margin_40"
+                android:layout_marginTop="@dimen/margin_10"
                 android:background="@color/transparent"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
@@ -105,9 +107,9 @@
 
             <ImageButton
                 android:id="@+id/time_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="@dimen/margin_40"
+                android:layout_height="@dimen/margin_40"
+                android:layout_marginTop="@dimen/margin_10"
                 android:background="@color/transparent"
                 android:padding="5dp"
                 android:scaleType="fitCenter"

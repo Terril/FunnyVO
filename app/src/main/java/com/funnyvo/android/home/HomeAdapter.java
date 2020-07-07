@@ -55,7 +55,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     @Override
     public void onBindViewHolder(final HomeAdapter.CustomViewHolder holder, final int i) {
         final Home item = dataList.get(i);
-      //  holder.setIsRecyclable(false);
+        holder.setIsRecyclable(false);
 
         try {
 

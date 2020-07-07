@@ -128,6 +128,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     BaseActivity mActivity;
     private boolean isMuted = false;
+    private boolean isScrollingUp;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -169,6 +170,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 //here we find the current item number
+                Log.d(APP_NAME, "Recycler View position : " + dy);
+                if (dy > 0) {
+                    isScrollingUp = true;
+                } else {
+                    isScrollingUp = false;
+                }
                 final int scrollOffset = recyclerView.computeVerticalScrollOffset();
                 final int height = recyclerView.getHeight();
                 int page_no = scrollOffset / height;
@@ -418,85 +425,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
-    private void callApiForSinglevideo(final int postion) {
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-            parameters.put("token", Variables.sharedPreferences.getString(Variables.device_token, "Null"));
-            parameters.put("video_id", data_list.get(postion).video_id);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                swiperefresh.setRefreshing(false);
-                singleVideoParseData(postion, resp);
-            }
-        });
+    private void callSingleVideo() {
+        adapter.notifyDataSetChanged();
     }
-
-    public void singleVideoParseData(int pos, String response) {
-
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            String code = jsonObject.optString("code");
-            if (code.equals("200")) {
-                JSONArray msgArray = jsonObject.getJSONArray("msg");
-                for (int i = 0; i < msgArray.length(); i++) {
-                    JSONObject itemdata = msgArray.optJSONObject(i);
-                    Home item = new Home();
-                    item.fb_id = itemdata.optString("fb_id");
-
-                    JSONObject user_info = itemdata.optJSONObject("user_info");
-
-                    item.username = user_info.optString("username");
-                    item.first_name = user_info.optString("first_name", context.getResources().getString(R.string.app_name));
-                    item.last_name = user_info.optString("last_name", "User");
-                    item.profile_pic = user_info.optString("profile_pic", "null");
-                    item.verified = user_info.optString("verified");
-
-                    JSONObject sound_data = itemdata.optJSONObject("sound");
-                    item.sound_id = sound_data.optString("id");
-                    item.sound_name = sound_data.optString("sound_name");
-                    item.sound_pic = sound_data.optString("thum");
-
-
-                    JSONObject count = itemdata.optJSONObject("count");
-                    item.like_count = count.optString("like_count");
-                    item.video_comment_count = count.optString("video_comment_count");
-
-
-                    item.video_id = itemdata.optString("id");
-                    item.liked = itemdata.optString("liked");
-                    item.video_url = itemdata.optString("video");
-
-                    item.isMute = false;
-                    if (item.video_url.contains(Variables.base_url)) {
-                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
-                    }
-
-                    item.video_description = itemdata.optString("description");
-
-                    item.thum = itemdata.optString("thum");
-                    item.created_date = itemdata.optString("created");
-
-                    data_list.remove(pos);
-                    data_list.add(pos, item);
-                    adapter.notifyDataSetChanged();
-                }
-            } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 
     // this will call when swipe for another video and
     // this function will set the player to the current video
@@ -620,7 +551,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             swipe_count = 0;
         }
 
-        callApiForSinglevideo(currentPage);
+        callSingleVideo();
     }
 
 
@@ -772,7 +703,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void responseCallBackFromFragment(Bundle bundle) {
-                    callApiForSinglevideo(currentPage);
+                    callSingleVideo();
                 }
             });
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

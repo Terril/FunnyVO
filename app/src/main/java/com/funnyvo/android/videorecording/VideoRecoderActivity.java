@@ -1,7 +1,6 @@
 package com.funnyvo.android.videorecording;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
@@ -251,13 +252,13 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 done_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_done));
                 done_btn.setEnabled(true);
                 done_btn.setOnClickListener(this);
-                done_btn.invalidate();
             }
 
             cameraView.stopVideo();
 
             record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_recoding_no));
             camera_options.setVisibility(View.VISIBLE);
+//            rotate_camera.setVisibility(View.VISIBLE);
 
         } else if (sec_passed > (Variables.recording_duration / 1000)) {
             Functions.showAlert(this, "Alert", "Video only can be a " + (int) Variables.recording_duration / 1000 + " S");

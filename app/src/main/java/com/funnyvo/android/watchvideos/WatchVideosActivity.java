@@ -152,6 +152,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         }
 
 
+        data_list = new ArrayList<>();
+        setAdapter();
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,9 +218,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
     public void parseData(String responce) {
-
-        data_list = new ArrayList<>();
-
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");
@@ -264,7 +263,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     data_list.add(item);
                 }
 
-                adapter.notifyDataSetChanged();
+               adapter.notifyDataSetChanged();
 
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -374,6 +373,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         recyclerView.setHasFixedSize(false);
 
         SnapHelper snapHelper = new PagerSnapHelper();
+        recyclerView.setOnFlingListener(null);
         snapHelper.attachToRecyclerView(recyclerView);
 
 
@@ -383,7 +383,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 switch (view.getId()) {
                     case R.id.user_pic:
                         onPause();
-
                         openProfile(item, false);
                         break;
 
