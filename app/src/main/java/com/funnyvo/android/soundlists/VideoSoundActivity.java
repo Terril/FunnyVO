@@ -45,6 +45,7 @@ import java.nio.channels.FileChannel;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 
 public class VideoSoundActivity extends BaseActivity implements View.OnClickListener {
@@ -147,7 +148,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "TikTok"));
+                Util.getUserAgent(this, APP_NAME));
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.fromFile(audio_file));
@@ -364,8 +365,8 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
     }
 
 
-    public void convertMp3ToAcc() {
-        Functions.showLoader(this, false, false);
+    private void convertMp3ToAcc() {
+        showProgressDialog();
         final String[] complexCommand = new String[]{"-y", "-i", Variables.app_folder + Variables.SelectedAudio_MP3, Variables.app_folder + Variables.SelectedAudio_AAC};
 
         new AsyncTask<Object, Object, Object>() {
@@ -382,22 +383,20 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
                 if (rc == RETURN_CODE_SUCCESS) {
                     Log.d(Variables.tag, "Command execution completed successfully.");
-                    Functions.cancelLoader();
+                    dismissProgressDialog();
                     openVideoRecording();
 
                 } else if (rc == RETURN_CODE_CANCEL) {
                     Log.d(Variables.tag, "Command execution cancelled by user.");
-                    Functions.cancelLoader();
+                    dismissProgressDialog();
                 } else {
                     Log.d(Variables.tag, String.format("Command execution failed with rc=%d and the output below.", rc));
                     Config.printLastCommandOutput(Log.INFO);
-                    Functions.cancelLoader();
+                    dismissProgressDialog();
                 }
 
             }
         }.execute();
-
-
     }
 
 

@@ -239,20 +239,15 @@ public enum FilterType {
     }
 
     public static Collection<GlFilter> createGlFilterWithOverlay(FilterType filterType, Context context, Bitmap bitmap) {
-
         Collection<GlFilter> filters = createGlFilter(filterType, context, bitmap);
-        ContextWrapper cw = new ContextWrapper(context);
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        File filePath = new File(directory, context.getString(R.string.user_profile));
-        Bitmap userBitmap = BitmapFactory.decodeFile(filePath.getPath());
-        filters.add(new FunnyVOUserOverlayFilter(userBitmap));
+        filters.add(new FunnyVOUserOverlayFilter(bitmap));
         return filters;
     }
 
     private static List<GlFilter> returnWithWaterMarkToFilters(GlFilter filter, Bitmap bitmap) {
         ArrayList<GlFilter> filters = new ArrayList<>();
-        //  GlWatermarkFilter watermarkFilter = new GlWatermarkFilter(bitmap);
         filters.add(filter);
+        //  GlWatermarkFilter watermarkFilter = new GlWatermarkFilter(bitmap);
         //     filters.add(watermarkFilter);
 
         return filters;

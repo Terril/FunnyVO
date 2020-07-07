@@ -57,6 +57,8 @@
             android:layout_marginTop="@dimen/margin_35"
             android:scaleType="fitCenter"
             android:text="@string/add_sound"
+            android:layout_marginStart="@dimen/margin_5"
+            android:layout_marginEnd="@dimen/margin_5"
             android:textColor="@color/palette_cheddar"
             android:tint="@color/palette_cheddar"
             app:icon="@drawable/ic_music"

@@ -87,4 +87,12 @@ abstract class BaseActivity : AppCompatActivity() {
         return gpuPlayerView
     }
 
+    open fun updateMediaSource(path: String?) {
+        val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this,
+                Util.getUserAgent(this, APP_NAME))
+        val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(Uri.parse(path))
+        player.prepare(videoSource)
+    }
+
 }

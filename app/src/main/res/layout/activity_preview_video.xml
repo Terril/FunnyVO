@@ -10,11 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <ImageButton
+        android:id="@+id/btnSlowMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_slow_motion" />
+
+    <ImageButton
+        android:id="@+id/btnFastMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSlowMotion"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_fast_play">
+
+    </ImageButton>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_marginTop="@dimen/margin_20"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/margin_20"
         android:background="@android:color/transparent"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp">

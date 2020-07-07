@@ -53,7 +53,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
 
         eventListener = new PlayerEventListener();
 
-        video_path = Variables.output_filter_file;
+        video_path = Variables.OUTPUT_FILTER_FILE;
         GPUPlayerView gpuPlayerView = setPlayer(video_path, eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_post_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
@@ -69,9 +69,10 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         btnUploadVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnUploadVideo.setEnabled(false);
                 showProgressDialog();
                 startService();
-                btnUploadVideo.setEnabled(false);
+
             }
         });
 

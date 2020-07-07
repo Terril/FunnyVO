@@ -170,7 +170,6 @@ public class UploadService extends Service {
 
                             @Override
                             public void onErrorResponse(VolleyError error) {
-
                                 if (!Variables.is_secure_info)
                                     Log.e(APP_NAME, error.getLocalizedMessage());
 
@@ -178,7 +177,6 @@ public class UploadService extends Service {
                                 stopSelf();
 
                                 Callback.showResponse("Their is some kind of problem from Server side Please Try Later");
-
                             }
 
                         }, new Response.Listener<String>() {

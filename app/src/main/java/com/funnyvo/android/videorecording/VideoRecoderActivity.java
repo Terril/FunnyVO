@@ -759,7 +759,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         delete_count++;
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
-        File outputFilterFile = new File(Variables.output_filter_file);
+        File outputFilterFile = new File(Variables.OUTPUT_FILTER_FILE);
 
         if (output.exists()) {
             output.delete();

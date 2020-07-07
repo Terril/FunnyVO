@@ -3,19 +3,20 @@ package com.funnyvo.android.videorecording;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.daasuu.gpuv.composer.FillMode;
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
@@ -23,14 +24,15 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
-import com.funnyvo.android.filter.addons.FunnyVOUserOverlayFilter;
 import com.funnyvo.android.helper.PlayerEventListener;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 
 import java.util.List;
 
-public class PreviewVideoActivity extends BaseActivity {
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+
+public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener {
 
     private GPUPlayerView gpuPlayerView;
     public static int select_postion = 0;
@@ -40,6 +42,7 @@ public class PreviewVideoActivity extends BaseActivity {
 
     private PlayerEventListener eventListener;
 
+    ImageButton btnSlowMotion;
     private String draft_file;
     // this function will set the player to the current video
 
@@ -57,22 +60,10 @@ public class PreviewVideoActivity extends BaseActivity {
         select_postion = 0;
         String videoUrl = Variables.outputfile2;
 
-        findViewById(R.id.btnGoBackPreview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
-
-            }
-        });
-
-        findViewById(R.id.btnNext).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              //  Variables.output_filter_file = Variables.output_filter_file + Functions.getRandomString() + ".mp4";
-                saveVideo(Variables.outputfile2, Variables.output_filter_file);
-            }
-        });
+        findViewById(R.id.btnGoBackPreview).setOnClickListener(this);
+        findViewById(R.id.btnSlowMotion).setOnClickListener(this);
+        findViewById(R.id.btnNext).setOnClickListener(this);
+        findViewById(R.id.btnFastMotion).setOnClickListener(this);
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
@@ -202,4 +193,84 @@ public class PreviewVideoActivity extends BaseActivity {
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
     }
 
+    private void applySlowMoVideo() {
+        showProgressDialog();
+        final String[] complexCommand = {"-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION};
+
+        new AsyncTask<Object, Object, Object>() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                int rc = FFmpeg.execute(complexCommand);
+                return rc;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                int rc = (int) o;
+
+                if (rc == RETURN_CODE_SUCCESS) {
+                    Log.d(Variables.tag, "Command execution completed successfully.");
+                    dismissProgressDialog();
+                    updateMediaSource(Variables.OUTPUT_FILE_MOTION);
+                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
+                } else if (rc == RETURN_CODE_CANCEL) {
+                    dismissProgressDialog();
+                } else {
+                    Config.printLastCommandOutput(Log.INFO);
+                    dismissProgressDialog();
+                }
+
+            }
+        }.execute();
+    }
+
+    private void applyFastMoVideo() {
+        showProgressDialog();
+        final String[] complexCommand = {"-y", "-i",  Variables.outputfile2, "-filter_complex", "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION};
+
+        new AsyncTask<Object, Object, Object>() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                int rc = FFmpeg.execute(complexCommand);
+                return rc;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                int rc = (int) o;
+                if (rc == RETURN_CODE_SUCCESS) {
+                    dismissProgressDialog();
+                    updateMediaSource(Variables.OUTPUT_FILE_MOTION);
+                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
+                } else if (rc == RETURN_CODE_CANCEL) {
+                    dismissProgressDialog();
+                } else {
+                    Config.printLastCommandOutput(Log.INFO);
+                    dismissProgressDialog();
+                }
+
+            }
+        }.execute();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnSlowMotion:
+                applySlowMoVideo();
+                break;
+            case R.id.btnFastMotion:
+                applyFastMoVideo();
+                break;
+            case R.id.btnGoBackPreview:
+                finish();
+                overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+                break;
+            case R.id.btnNext:
+                saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
+                break;
+        }
+    }
 }

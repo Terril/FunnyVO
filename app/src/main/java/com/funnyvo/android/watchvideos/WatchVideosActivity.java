@@ -97,7 +97,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     private Context context;
 
     private RecyclerView recyclerView;
-    private ArrayList<Home> data_list;
+    private ArrayList<Home> data_list = new ArrayList<>();
+    ;
     private int position = 0;
     private int currentPage = -1;
     private LinearLayoutManager layoutManager;
@@ -142,7 +143,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             } else if (appLinkData == null) {
                 data_list = (ArrayList<Home>) bundle.getSerializableExtra("arraylist");
                 position = bundle.getIntExtra("position", 0);
-                setAdapter();
             } else {
                 link = appLinkData.toString();
                 String[] parts = link.split("=");
@@ -151,8 +151,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             }
         }
 
-
-        data_list = new ArrayList<>();
         setAdapter();
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +159,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
             }
         });
-
 
         write_layout = findViewById(R.id.write_layout);
         message_edit = findViewById(R.id.message_edit);
@@ -263,7 +260,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     data_list.add(item);
                 }
 
-               adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
 
             } else {
                 Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
@@ -483,7 +480,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     currentPage = page_no;
 
                     Privious_Player();
-                    Set_Player(currentPage);
+                    setPlayer(currentPage);
                 }
 
             }
@@ -543,7 +540,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    public void Set_Player(final int currentPage) {
+    public void setPlayer(final int currentPage) {
 
         final Home item = data_list.get(currentPage);
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();

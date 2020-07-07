@@ -54,7 +54,6 @@ public class UserVideoFragment extends Fragment {
 
     @SuppressLint("ValidFragment")
     public UserVideoFragment(String user_id) {
-
         this.user_id = user_id;
     }
 
@@ -201,10 +200,10 @@ public class UserVideoFragment extends Fragment {
 
     }
 
-    private void openWatchVideo(int postion) {
+    private void openWatchVideo(int position) {
         Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
-        intent.putExtra("position", postion);
+        intent.putExtra("position", position);
         startActivity(intent);
     }
 }
