@@ -94,7 +94,10 @@
             android:name=".videorecording.PreviewVideoActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
+        <activity
+            android:name=".videorecording.VideoCropActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".videorecording.PostVideoActivity"
             android:screenOrientation="portrait"

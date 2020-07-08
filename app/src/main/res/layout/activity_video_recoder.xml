@@ -76,6 +76,7 @@
             android:background="@color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_done"
+            android:visibility="invisible"
             android:tint="@color/palette_cheddar" />
 
         <LinearLayout

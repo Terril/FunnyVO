@@ -16,4 +16,8 @@
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="margin_18">18dp</dimen>
     <dimen name="margin_50">50dp</dimen>
+    <dimen name="margin_90">90dp</dimen>
+
+<!--    <dimen name="progress_video_line_height">2dp</dimen>-->
+<!--    <dimen name="frames_video_height">40dip</dimen>-->
 </resources>

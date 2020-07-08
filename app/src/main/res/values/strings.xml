@@ -16,6 +16,7 @@
     <string name="lower_body">We require a government-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license,passport or national identification card) or an official \nbusiness document(tax filing, recent utility bill, article of \nincorporation) in order to review your request.</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="short_seconds">sec</string>
 
     <string name="version">1.0</string>
     <string name="device">android</string>
@@ -34,4 +35,10 @@
     <string name="privacy_and_settings">Privacy and Settings</string>
     <string name="following">Following</string>
     <string name="username">Username</string>
+    <string name="next">Next</string>
+    <string name="try_again">Try Again</string>
+    <string name="failed_trimming">Failed Trimming</string>
+    <string name="error_view_trim_video">Error while previewing video</string>
+    <string name="crop_video">Crop</string>
+    <string name="preview">Preview</string>
 </resources>

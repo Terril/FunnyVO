@@ -249,7 +249,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 audio.pause();
 
             if (sec_passed > ((Variables.recording_duration / 1000) / 3)) {
-                done_btn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_done));
+                done_btn.setVisibility(View.VISIBLE);
                 done_btn.setEnabled(true);
                 done_btn.setOnClickListener(this);
             }
@@ -490,10 +490,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 Uri uri = data.getData();
                 try {
                     File video_file = FileUtils.getFileFromUri(this, uri);
-
                     if (getfileduration(uri) < 19500) {
                         changeVideoSize(video_file.getAbsolutePath(), Variables.gallery_resize_video);
-
                     } else {
                         try {
                             startTrim(video_file, new File(Variables.gallery_trimed_video), 1000, 18000);
@@ -535,8 +533,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-                        Log.d("resp", "" + (int) (progress * 100));
-                        showProgressDialog();
                     }
 
                     @Override
@@ -560,15 +556,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onFailed(Exception exception) {
-
-                        Log.d("resp", exception.toString());
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     dismissProgressDialog();
-                                    Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(VideoRecoderActivity.this, R.string.try_again, Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
 
                                 }
@@ -661,9 +654,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             @Override
             protected void onPostExecute(String result) {
                 if (result.equals("error")) {
-                    Toast.makeText(VideoRecoderActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VideoRecoderActivity.this, getString(R.string.try_again), Toast.LENGTH_SHORT).show();
                 } else {
-                    dismissProgressDialog();
                     changeVideoSize(Variables.gallery_trimed_video, Variables.gallery_resize_video);
                 }
             }

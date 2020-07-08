@@ -30,9 +30,31 @@
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
-        android:src="@drawable/ic_fast_play">
+        android:src="@drawable/ic_fast_play" />
 
-    </ImageButton>
+    <ImageButton
+        android:id="@+id/btnCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnFastMotion"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_scissors" />
+
+    <ImageButton
+        android:id="@+id/btnFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnCrop"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_filter" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -48,19 +70,16 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
-                android:id="@+id/btnFilter"
-                android:layout_width="@dimen/margin_32"
-                android:layout_height="@dimen/margin_32"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_filter"
+                android:layout_marginStart="10dp"
+                android:text="@string/preview"
                 android:textColor="@color/palette_cheddar"
-                android:tint="@color/palette_cheddar" />
-
-
+                android:textSize="@dimen/text_size_18"
+                />
             <ImageButton
                 android:id="@+id/btnGoBackPreview"
                 android:layout_width="@dimen/margin_32"
@@ -82,19 +101,19 @@
                 android:layout_centerVertical="true"
                 android:background="@color/transparent"
                 android:scaleType="fitCenter"
-                android:text="Next"
+                android:text="@string/next"
                 android:tint="@color/palette_cheddar" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylerview"
+        android:id="@+id/recylerviewPreview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/fifty_transparent_black"
-        android:paddingBottom="20dp" />
+        android:paddingBottom="@dimen/margin_20"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

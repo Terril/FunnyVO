@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
+import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +34,7 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final int CROP_RESULT = 101;
     private GPUPlayerView gpuPlayerView;
     public static int select_postion = 0;
     private final List<FilterType> filterTypes = FilterType.createFilterList();
@@ -41,9 +42,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private RecyclerView recylerview;
 
     private PlayerEventListener eventListener;
-
-    ImageButton btnSlowMotion;
     private String draft_file;
+    private boolean isFilterSelected = false;
+    private boolean isUp = false;
     // this function will set the player to the current video
 
     @Override
@@ -64,11 +65,13 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.btnSlowMotion).setOnClickListener(this);
         findViewById(R.id.btnNext).setOnClickListener(this);
         findViewById(R.id.btnFastMotion).setOnClickListener(this);
+        findViewById(R.id.btnCrop).setOnClickListener(this);
+        findViewById(R.id.btnFilter).setOnClickListener(this);
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
-        recylerview = findViewById(R.id.recylerview);
+        recylerview = findViewById(R.id.recylerviewPreview);
 
         Bitmap bmThumbnail = ThumbnailUtils.createVideoThumbnail(videoUrl,
                 MediaStore.Video.Thumbnails.MINI_KIND);
@@ -213,7 +216,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     Log.d(Variables.tag, "Command execution completed successfully.");
                     dismissProgressDialog();
                     updateMediaSource(Variables.OUTPUT_FILE_MOTION);
-                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
+                    isFilterSelected = true;
                 } else if (rc == RETURN_CODE_CANCEL) {
                     dismissProgressDialog();
                 } else {
@@ -227,7 +230,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     private void applyFastMoVideo() {
         showProgressDialog();
-        final String[] complexCommand = {"-y", "-i",  Variables.outputfile2, "-filter_complex", "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION};
+        final String[] complexCommand = {"-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION};
 
         new AsyncTask<Object, Object, Object>() {
             @Override
@@ -243,7 +246,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 if (rc == RETURN_CODE_SUCCESS) {
                     dismissProgressDialog();
                     updateMediaSource(Variables.OUTPUT_FILE_MOTION);
-                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
+                    isFilterSelected = true;
                 } else if (rc == RETURN_CODE_CANCEL) {
                     dismissProgressDialog();
                 } else {
@@ -253,6 +256,44 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
             }
         }.execute();
+    }
+
+    private void slideUp(View view) {
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                view.getHeight(),  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+    // slide the view from its current position to below itself
+    private void slideDown(View view) {
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                view.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+    private void slideFilterView() {
+        if (isUp) {
+            slideDown(recylerview);
+        } else {
+            slideUp(recylerview);
+        }
+        isUp = !isUp;
+    }
+
+    private void openVideoCropActivity() {
+        Intent intent = new Intent(this, VideoCropActivity.class);
+        startActivityForResult(intent, CROP_RESULT);
     }
 
     @Override
@@ -269,7 +310,16 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
                 break;
             case R.id.btnNext:
+                if (isFilterSelected) {
+                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
+                }
                 saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
+                break;
+            case R.id.btnFilter:
+                slideFilterView();
+                break;
+            case R.id.btnCrop:
+                openVideoCropActivity();
                 break;
         }
     }

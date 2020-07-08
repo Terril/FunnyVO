@@ -3,21 +3,22 @@ package com.funnyvo.android.base;
 import android.net.Uri
 import android.os.Build
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.daasuu.gpuv.player.GPUPlayerView
 import com.daasuu.gpuv.player.PlayerScaleType
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -41,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
             activityIndicator.hide()
     }
 
-//     This will hide the bottom mobile navigation control
+    //     This will hide the bottom mobile navigation control
     open fun hideNavigation() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -77,12 +78,15 @@ abstract class BaseActivity : AppCompatActivity() {
         val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path))
         player.prepare(videoSource)
-        player.repeatMode = Player.REPEAT_MODE_ALL
+        player.repeatMode = Player.REPEAT_MODE_OFF
         player.addListener(listener)
         player.playWhenReady = true
+        player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+
         val gpuPlayerView = GPUPlayerView(this)
+        gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_FIT_HEIGHT)
         gpuPlayerView.setSimpleExoPlayer(player)
-        gpuPlayerView.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        gpuPlayerView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
 
         return gpuPlayerView
     }

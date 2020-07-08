@@ -40,7 +40,7 @@
                 android:text="@string/post"
                 android:textColor="@color/palette_cheddar"
                 android:textSize="@dimen/text_size_18"
-                android:textStyle="bold" />
+                />
 
 
             <ImageButton

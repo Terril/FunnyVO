@@ -17,15 +17,17 @@
     <color name="darkgray">#93959A</color>
     <color name="dimgray">#696969</color>
     <color name="lightblack">#5d5d5d</color>
+<!--    <color name="background_video_color">#2f3031</color>-->
 
     <color name="delete_message_bg">#f2f2f2</color>
     <color name="delete_message_text">#b8b8b8</color>
 
     <color name="transparent">#00ffffff</color>
     <color name="fifty_transparent_black">#802F2F2F</color>
-
+    <color name="background_progress_color">#6C6D6D</color>
+    <color name="progress_color">@color/colorPrimary</color>
     <color name="redcolor">#ff0008</color>
-
+<!--    <color name="line_color">#FF15FF00</color>-->
     <color name="app_color">#c52127</color>
 
     <color name="palette_milk">#ffffffff</color>
