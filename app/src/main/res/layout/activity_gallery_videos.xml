@@ -14,28 +14,29 @@
         <RelativeLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="@dimen/margin_20">
 
             <ImageButton
                 android:id="@+id/Goback"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/margin_32"
+                android:layout_height="@dimen/margin_32"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:background="@color/transparent"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_close"
-                android:tint="@color/black" />
+                android:tint="@color/palette_cheddar" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Select Video"
-                android:textColor="@color/black"
-                android:textSize="17dp"
-                android:textStyle="bold" />
+                android:text="@string/select_video"
+                android:textColor="@color/palette_cheddar"
+                android:textSize="@dimen/text_size_18"
+                />
 
         </RelativeLayout>
 

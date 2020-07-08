@@ -27,7 +27,7 @@ class VideoTrimmerView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     override fun initRootView() {
         LayoutInflater.from(context).inflate(R.layout.view_video_trimmer, this, true)
-      //  fab.setOnClickListener { initiateTrimming() }
+        fab.setOnClickListener { initiateTrimming() }
     }
 
     override fun getTimeLineView(): TimeLineView = timeLineView
