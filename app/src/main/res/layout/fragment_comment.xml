@@ -1,101 +1,99 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/comment_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
     android:clickable="true"
-    android:fitsSystemWindows="true"
-    android:id="@+id/comment_screen"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    android:fitsSystemWindows="true">
 
     <androidx.percentlayout.widget.PercentRelativeLayout
-         android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
-           android:layout_width="match_parent"
-            app:layout_heightPercent="75%"
-            android:background="@drawable/d_top_left_right_radius"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_alignParentBottom="true"
-            android:layout_height="0dp">
+            android:background="@drawable/d_top_left_right_radius"
+            app:layout_heightPercent="75%">
 
             <RelativeLayout
+                android:id="@+id/top_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/top_layout">
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:id="@+id/Goback"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_close"
-                android:tint="@color/black"
-                android:padding="5dp"
-                android:layout_margin="5dp"
-                />
+                <ImageView
+                    android:id="@+id/Goback"
+                    android:layout_width="@dimen/margin_32"
+                    android:layout_height="@dimen/margin_32"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/palette_cheddar" />
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
+                    android:id="@+id/comment_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15dp"
-                    android:id="@+id/comment_count"
+                    android:layout_centerInParent="true"
                     android:textColor="@color/black"
-                    android:layout_centerInParent="true"/>
+                    android:textSize="@dimen/text_size_15" />
 
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recylerviewComments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/recylerview"
-                android:layout_below="@+id/top_layout"
-                android:layout_above="@+id/write_layout"/>
+                android:layout_above="@+id/write_layout"
+                android:layout_below="@+id/top_layout" />
 
 
             <RelativeLayout
+                android:id="@+id/write_layout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:id="@+id/write_layout"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/d_top_gray_line"
-                android:layout_alignParentBottom="true">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
-                <EditText
+                <com.funnyvo.android.customview.FunnyVOEditTextView
+                    android:id="@+id/message_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Leave a comment..."
-                    android:textSize="14dp"
-                    android:id="@+id/message_edit"
-                    android:textColorHint="@color/darkgray"
-                    android:textColor="@color/black"
                     android:layout_toLeftOf="@+id/send_btn_layout"
-                    android:backgroundTint="@color/transparent"/>
+                    android:backgroundTint="@color/transparent"
+                    android:hint="@string/leave_a_comment"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/darkgray"
+                    android:textSize="@dimen/text_size_13" />
 
                 <RelativeLayout
+                    android:id="@+id/send_btn_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/send_btn_layout"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true">
-                
-                <ImageButton
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:id="@+id/send_btn"
-                    android:padding="4dp"
-                    android:scaleType="fitCenter"
-                    android:background="@color/transparent"
-                    android:src="@drawable/ic_send"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true">
+
+                    <ImageButton
+                        android:id="@+id/send_btn"
+                        android:layout_width="@dimen/margin_32"
+                        android:layout_height="@dimen/margin_32"
+                        android:background="@color/transparent"
+                        android:padding="4dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_send" />
 
                     <ProgressBar
+                        android:id="@+id/send_progress"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:visibility="gone"
                         android:padding="5dp"
-                        android:id="@+id/send_progress"/>
+                        android:visibility="gone" />
 
                 </RelativeLayout>
             </RelativeLayout>

@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.customview.FunnyVOTextView;
 import com.funnyvo.android.home.datamodel.Home;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     // meker the onitemclick listener interface and this interface is impliment in Chatinbox activity
     // for to do action when user click on item
     public interface OnItemClickListener {
-        void onItemClick(int positon, Home item, View view);
+        void onItemClick(int position, Home item, View view);
     }
 
     public HomeAdapter(Context context, ArrayList<Home> dataList, HomeAdapter.OnItemClickListener listener) {
@@ -55,16 +57,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     @Override
     public void onBindViewHolder(final HomeAdapter.CustomViewHolder holder, final int i) {
         final Home item = dataList.get(i);
-      //  holder.setIsRecyclable(false);
-
+        //  holder.setIsRecyclable(false);
         try {
-
             holder.bind(i, item, listener);
             holder.username.setText(item.username);
 
-
             if ((item.sound_name == null || item.sound_name.equals("") || item.sound_name.equals("null"))) {
-                holder.sound_name.setText("original sound - " + item.first_name + " " + item.last_name);
+                holder.sound_name.setText(context.getString(R.string.original_sound) + " " + item.first_name + " " + item.last_name);
             } else {
                 holder.sound_name.setText(item.sound_name);
             }
@@ -75,7 +74,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                     load(item.profile_pic)
                     .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
                     .resize(100, 100).into(holder.user_pic);
-
 
             if ((item.sound_name == null || item.sound_name.equals(""))
                     || item.sound_name.equals("null")) {
@@ -112,7 +110,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             } else {
                 holder.varified_btn.setVisibility(View.GONE);
             }
-
         } catch (Exception e) {
 
         }
@@ -121,28 +118,30 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        TextView username, desc_txt, sound_name;
+        FunnyVOTextView username, desc_txt, sound_name;
         ImageView user_pic, sound_image, varified_btn;
 
-        LinearLayout like_layout, comment_layout, sound_image_layout;
+        LinearLayout like_layout, comment_layout, sound_image_layout, soundImageLayour;
         ImageView like_image;
-        TextView like_txt, comment_txt;
+        FunnyVOTextView like_txt, comment_txt;
 
         ImageButton btnShare, btnMuteUnMuteAudio;
+        PlayerView playerView;
+
+        RelativeLayout mainlayout;
 
         public CustomViewHolder(View view) {
             super(view);
 
-            username = view.findViewById(R.id.username);
+            username = view.findViewById(R.id.txtUsernameHome);
             user_pic = view.findViewById(R.id.user_pic);
-            sound_name = view.findViewById(R.id.sound_name);
+            sound_name = view.findViewById(R.id.txtSoundNameHome);
             sound_image = view.findViewById(R.id.sound_image);
             varified_btn = view.findViewById(R.id.varified_btn);
 
             like_layout = view.findViewById(R.id.like_layout);
             like_image = view.findViewById(R.id.like_image);
             like_txt = view.findViewById(R.id.like_txt);
-
 
             desc_txt = view.findViewById(R.id.desc_txt);
 
@@ -153,6 +152,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             btnMuteUnMuteAudio = view.findViewById(R.id.btnMuteUnMuteAudio);
 
             sound_image_layout = view.findViewById(R.id.sound_image_layout);
+            playerView = view.findViewById(R.id.playerViewHome);
+            soundImageLayour = view.findViewById(R.id.sound_image_layout);
+
+            mainlayout = view.findViewById(R.id.mainlayout);
         }
 
         public void bind(final int postion, final Home item, final HomeAdapter.OnItemClickListener listener) {

@@ -83,10 +83,6 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.tabs.TabLayout;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
@@ -128,7 +124,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     BaseActivity mActivity;
     private boolean isMuted = false;
-    private boolean isScrollingUp;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -170,12 +165,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 //here we find the current item number
-                Log.d(APP_NAME, "Recycler View position : " + dy);
-                if (dy > 0) {
-                    isScrollingUp = true;
-                } else {
-                    isScrollingUp = false;
-                }
                 final int scrollOffset = recyclerView.computeVerticalScrollOffset();
                 final int height = recyclerView.getHeight();
                 int page_no = scrollOffset / height;
@@ -203,38 +192,38 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         callApiForGetAllvideos();
 
-        if (!Variables.is_remove_ads)
-            loadAdd();
+//        if (!Variables.is_remove_ads)
+//            loadAdd();
 
         return view;
     }
 
 
-    InterstitialAd mInterstitialAd;
-
-    public void loadAdd() {
-
-        // this is test app id you will get the actual id when you add app in your
-        //add mob account
-        MobileAds.initialize(context,
-                getResources().getString(R.string.ad_app_id));
-
-
-        //code for intertial add
-        mInterstitialAd = new InterstitialAd(context);
-
-        //here we will get the add id keep in mind above id is app id and below Id is add Id
-        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.my_Interstitial_Add));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-        });
-
-
-    }
+//    InterstitialAd mInterstitialAd;
+//
+//    public void loadAdd() {
+//
+//        // this is test app id you will get the actual id when you add app in your
+//        //add mob account
+//        MobileAds.initialize(context,
+//                getResources().getString(R.string.ad_app_id));
+//
+//
+//        //code for intertial add
+//        mInterstitialAd = new InterstitialAd(context);
+//
+//        //here we will get the add id keep in mind above id is app id and below Id is add Id
+//        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.my_Interstitial_Add));
+//        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//        mInterstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdClosed() {
+//                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//            }
+//        });
+//
+//
+//    }
 
 
     public void setAdapter() {
@@ -264,54 +253,51 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         break;
 
                     case R.id.btnShare:
-                        if (!is_add_show && (mInterstitialAd != null && mInterstitialAd.isLoaded())) {
-                            mInterstitialAd.show();
-                            is_add_show = true;
-                        } else {
-                            is_add_show = false;
-                            final VideoActionFragment fragment = new VideoActionFragment(item.video_id, new FragmentCallback() {
-                                @Override
-                                public void responseCallBackFromFragment(Bundle bundle) {
+//                        if (!is_add_show && (mInterstitialAd != null && mInterstitialAd.isLoaded())) {
+//                          //  mInterstitialAd.show();
+//                            is_add_show = true;
+//                        } else {
+                        is_add_show = false;
+                        final VideoActionFragment fragment = new VideoActionFragment(item.video_id, new FragmentCallback() {
+                            @Override
+                            public void responseCallBackFromFragment(Bundle bundle) {
 
-                                    if (bundle.getString("action").equals("save")) {
-                                        saveVideo(item);
-                                    } else if (bundle.getString("action").equals("delete")) {
-                                        showProgressDialog();
-                                        Functions.callApiForDeleteVideo(getActivity(), item.video_id, new ApiCallBack() {
-                                            @Override
-                                            public void arrayData(ArrayList arrayList) {
+                                if (bundle.getString("action").equals("save")) {
+                                    saveVideo(item);
+                                } else if (bundle.getString("action").equals("delete")) {
+                                    showProgressDialog();
+                                    Functions.callApiForDeleteVideo(getActivity(), item.video_id, new ApiCallBack() {
+                                        @Override
+                                        public void arrayData(ArrayList arrayList) {
 
-                                            }
+                                        }
 
-                                            @Override
-                                            public void onSuccess(String responce) {
-                                                data_list.remove(currentPage);
-                                                adapter.notifyDataSetChanged();
-                                                dismissProgressDialog();
+                                        @Override
+                                        public void onSuccess(String responce) {
+                                            data_list.remove(currentPage);
+                                            adapter.notifyDataSetChanged();
+                                            dismissProgressDialog();
 
-                                            }
+                                        }
 
-                                            @Override
-                                            public void onFailure(String responce) {
-                                                dismissProgressDialog();
-                                            }
-                                        });
-
-                                    }
+                                        @Override
+                                        public void onFailure(String responce) {
+                                            dismissProgressDialog();
+                                        }
+                                    });
 
                                 }
-                            });
 
-                            Bundle bundle = new Bundle();
-                            bundle.putString("video_id", item.video_id);
-                            bundle.putString("user_id", item.fb_id);
-                            fragment.setArguments(bundle);
-                            fragment.show(getChildFragmentManager(), "");
-                        }
+                            }
+                        });
 
+                        Bundle bundle = new Bundle();
+                        bundle.putString("video_id", item.video_id);
+                        bundle.putString("user_id", item.fb_id);
+                        fragment.setArguments(bundle);
+                        fragment.show(getChildFragmentManager(), "");
+                        //             }
                         break;
-
-
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                             if (checkPermissions()) {
@@ -327,6 +313,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 }
 
             }
+
         });
 
         adapter.setHasStableIds(true);
@@ -424,38 +411,27 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-
-    private void callSingleVideo() {
-        adapter.notifyDataSetChanged();
-    }
-
     // this will call when swipe for another video and
     // this function will set the player to the current video
-    public void setPlayer(final int currentPage) {
-
+    private void setPlayer(final int currentPage) {
         final Home item = data_list.get(currentPage);
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
-        final SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+        previousPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, APP_NAME));
-
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(item.video_url));
+        previousPlayer.prepare(videoSource);
 
-        Log.d("resp", item.video_url);
-
-        player.prepare(videoSource);
-
-        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-        player.addListener(this);
+        previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
+        previousPlayer.addListener(this);
 
         View layout = layoutManager.findViewByPosition(currentPage);
         final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
-        playerView.setPlayer(player);
+        playerView.setPlayer(previousPlayer);
 
-        player.setPlayWhenReady(is_visible_to_user);
-        previousPlayer = player;
+        previousPlayer.setPlayWhenReady(is_visible_to_user);
+
 
         final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
         playerView.setOnTouchListener(new View.OnTouchListener() {
@@ -480,7 +456,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
                     super.onSingleTapUp(e);
-                    if (!player.getPlayWhenReady()) {
+                    if (!previousPlayer.getPlayWhenReady()) {
                         is_user_stop_video = false;
                         previousPlayer.setPlayWhenReady(true);
                     } else {
@@ -496,18 +472,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 public void onLongPress(MotionEvent e) {
                     super.onLongPress(e);
                     showVideoOption(item);
-
                 }
 
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-
-                    if (!player.getPlayWhenReady()) {
+                    if (!previousPlayer.getPlayWhenReady()) {
                         is_user_stop_video = false;
                         previousPlayer.setPlayWhenReady(true);
                     }
-
-
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                         showHeartOnDoubleTap(item, mainlayout, e);
                         likeVideo(currentPage, item);
@@ -530,13 +502,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         HashTagHelper.Creator.create(context.getResources().getColor(R.color.maincolor), new HashTagHelper.OnHashTagClickListener() {
             @Override
             public void onHashTagClicked(String hashTag) {
-
                 onPause();
                 openHashtag(hashTag);
-
             }
         }).handle(desc_txt);
-
 
         LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
         Animation sound_animation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
@@ -547,11 +516,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         swipe_count++;
         if (swipe_count > 4) {
-            showAdd();
+            // showAdd();
             swipe_count = 0;
         }
 
-        callSingleVideo();
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -595,11 +564,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-    public void showAdd() {
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-    }
+//    public void showAdd() {
+//        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+//            mInterstitialAd.show();
+//        }
+//    }
 
     @Override
     public void onDataSent(String yourData) {
@@ -675,9 +644,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private void openComment(Home item) {
 
         int comment_counnt = Integer.parseInt(item.video_comment_count);
-
         FragmentDataSend fragment_data_send = this;
-
         CommentFragment comment_fragment = new CommentFragment(comment_counnt, fragment_data_send);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
@@ -695,7 +662,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this will open the profile of user which have uploaded the currenlty running video
     private void openProfile(Home item, boolean from_right_to_left) {
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
-
             TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);
             profile.select();
 
@@ -703,7 +669,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void responseCallBackFromFragment(Bundle bundle) {
-                    callSingleVideo();
+                    adapter.notifyDataSetChanged();
                 }
             });
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

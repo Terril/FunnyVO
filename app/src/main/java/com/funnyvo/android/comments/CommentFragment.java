@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -20,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.funnyvo.android.customview.FunnyVOEditTextView;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -39,25 +39,23 @@ import java.util.ArrayList;
  */
 public class CommentFragment extends RootFragment {
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
-    CommentAdapter adapter;
+    private CommentAdapter adapter;
 
-    ArrayList<Comments> data_list;
+    private ArrayList<Comments> data_list;
 
-    String video_id;
-    String user_id;
+    private String video_id;
+    private String user_id;
 
-    EditText message_edit;
-    ImageButton send_btn;
-    ProgressBar send_progress;
-
-    TextView comment_count_txt;
-
-    FrameLayout comment_screen;
+    private FunnyVOEditTextView message_edit;
+    private ImageButton send_btn;
+    private ProgressBar send_progress;
+    private TextView comment_count_txt;
+    private FrameLayout comment_screen;
 
     public static int comment_count = 0;
 
@@ -85,20 +83,16 @@ public class CommentFragment extends RootFragment {
         comment_screen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getActivity().onBackPressed();
-
             }
         });
 
         view.findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getActivity().onBackPressed();
             }
         });
-
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -106,14 +100,12 @@ public class CommentFragment extends RootFragment {
             user_id = bundle.getString("user_id");
         }
 
-
         comment_count_txt = view.findViewById(R.id.comment_count);
 
-        recyclerView = view.findViewById(R.id.recylerview);
+        recyclerView = view.findViewById(R.id.recylerviewComments);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
-
 
         data_list = new ArrayList<>();
         adapter = new CommentAdapter(context, data_list, new CommentAdapter.OnItemClickListener() {
@@ -125,21 +117,16 @@ public class CommentFragment extends RootFragment {
         });
 
         recyclerView.setAdapter(adapter);
-
-
         message_edit = view.findViewById(R.id.message_edit);
-
-
         send_progress = view.findViewById(R.id.send_progress);
         send_btn = view.findViewById(R.id.send_btn);
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String message = message_edit.getText().toString();
                 if (!TextUtils.isEmpty(message)) {
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                        Send_Comments(video_id, message);
+                        sendComments(video_id, message);
                         message_edit.setText(null);
                         send_progress.setVisibility(View.VISIBLE);
                         send_btn.setVisibility(View.GONE);
@@ -152,7 +139,7 @@ public class CommentFragment extends RootFragment {
         });
 
 
-        Get_All_Comments();
+        getAllComments();
 
 
         return view;
@@ -167,7 +154,7 @@ public class CommentFragment extends RootFragment {
     }
 
     // this funtion will get all the comments against post
-    public void Get_All_Comments() {
+    public void getAllComments() {
 
         Functions.callApiForGetComment(getActivity(), video_id, new ApiCallBack() {
             @Override
@@ -196,7 +183,7 @@ public class CommentFragment extends RootFragment {
 
 
     // this function will call an api to upload your comment
-    public void Send_Comments(String video_id, final String comment) {
+    public void sendComments(String video_id, final String comment) {
 
         Functions.callApiToSendComment(getActivity(), video_id, comment, new ApiCallBack() {
             @Override
@@ -209,7 +196,7 @@ public class CommentFragment extends RootFragment {
                     data_list.add(0, item);
                     comment_count++;
 
-                    SendPushNotification(getActivity(), user_id, comment);
+                    sendPushNotification(getActivity(), user_id, comment);
 
                     comment_count_txt.setText(comment_count + " comments");
 
@@ -235,7 +222,7 @@ public class CommentFragment extends RootFragment {
     }
 
 
-    public void SendPushNotification(Activity activity, String user_id, String comment) {
+    public void sendPushNotification(Activity activity, String user_id, String comment) {
 
         JSONObject notimap = new JSONObject();
         try {
@@ -248,7 +235,6 @@ public class CommentFragment extends RootFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         ApiRequest.callApi(context, Variables.sendPushNotification, notimap, null);
 
     }

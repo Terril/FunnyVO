@@ -407,7 +407,7 @@ public class Functions {
     }
 
 
-    public static void callApiForUpdateView(final Activity activity,
+    public static void callApiForUpdateView(final Context context,
                                             String video_id) {
 
         JSONObject parameters = new JSONObject();
@@ -418,7 +418,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(activity, Variables.updateVideoView, parameters, null);
+        ApiRequest.callApi(context, Variables.updateVideoView, parameters, null);
     }
 
 

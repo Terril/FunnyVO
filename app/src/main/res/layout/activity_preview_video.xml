@@ -11,6 +11,18 @@
         android:layout_height="match_parent" />
 
     <ImageButton
+        android:id="@+id/btnTextEditor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSlowMotion"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_text_fields" />
+
+    <ImageButton
         android:id="@+id/btnSlowMotion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,8 +90,8 @@
                 android:layout_marginStart="10dp"
                 android:text="@string/preview"
                 android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_18"
-                />
+                android:textSize="@dimen/text_size_18" />
+
             <ImageButton
                 android:id="@+id/btnGoBackPreview"
                 android:layout_width="@dimen/margin_32"
@@ -114,6 +126,5 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="@dimen/margin_20"
         android:visibility="invisible" />
-
 
 </RelativeLayout>

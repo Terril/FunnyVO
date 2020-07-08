@@ -1,5 +1,6 @@
 package com.funnyvo.android.videorecording;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,6 +46,8 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private String draft_file;
     private boolean isFilterSelected = false;
     private boolean isUp = false;
+    private boolean isSlowMoEnabled = true;
+    private boolean isFastMoEnabled = true;
     // this function will set the player to the current video
 
     @Override
@@ -291,6 +294,26 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         isUp = !isUp;
     }
 
+    private void toggleSlowMo() {
+        if (isSlowMoEnabled) {
+           applySlowMoVideo();
+        } else {
+            isFilterSelected = false;
+            updateMediaSource(Variables.outputfile2);
+        }
+        isSlowMoEnabled = !isSlowMoEnabled;
+    }
+
+    private void toggleFastMo() {
+        if (isFastMoEnabled) {
+            applyFastMoVideo();
+        } else {
+            isFilterSelected = false;
+            updateMediaSource(Variables.outputfile2);
+        }
+        isFastMoEnabled = !isFastMoEnabled;
+    }
+
     private void openVideoCropActivity() {
         Intent intent = new Intent(this, VideoCropActivity.class);
         startActivityForResult(intent, CROP_RESULT);
@@ -300,10 +323,10 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnSlowMotion:
-                applySlowMoVideo();
+                toggleSlowMo();
                 break;
             case R.id.btnFastMotion:
-                applyFastMoVideo();
+                toggleFastMo();
                 break;
             case R.id.btnGoBackPreview:
                 finish();
@@ -321,6 +344,21 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             case R.id.btnCrop:
                 openVideoCropActivity();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CROP_RESULT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getStringExtra("result");
+                updateMediaSource(result);
+                Variables.outputfile2 = result;
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
         }
     }
 }
