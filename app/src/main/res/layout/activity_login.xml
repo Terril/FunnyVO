@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="0dp">
 
     <LinearLayout
@@ -28,18 +29,18 @@
             android:layout_margin="5dp"
             android:padding="5dp"
             android:src="@drawable/ic_close"
-            android:tint="@color/black" />
+            android:tint="@color/palette_cheddar" />
 
 
-        <TextView
+        <com.funnyvo.android.customview.FunnyVOTextView
             android:id="@+id/login_title_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="17dp" />
+            android:textColor="@color/palette_cheddar"
+            android:textSize="@dimen/text_size_18" />
 
         <RelativeLayout
             android:id="@+id/login_details_RL3_id"
@@ -75,31 +76,24 @@
                         android:layout_toRightOf="@+id/facebook_btn"
                         android:padding="2dp"
                         android:src="@drawable/ic_goggle" />
-
-
                 </RelativeLayout>
 
-
             </HorizontalScrollView>
-
-
         </RelativeLayout>
 
-        <TextView
+        <com.funnyvo.android.customview.FunnyVOTextView
             android:id="@+id/login_terms_condition_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/login_details_RL3_id"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_20"
             android:gravity="center"
-            android:paddingTop="15dp"
-            android:text="By signing up, you confirm that you agree to our \n Terms of Use and have read and understood \n our Privacy Policy."
+            android:paddingTop="@dimen/margin_15"
+            android:text="@string/login_message"
             android:textColor="@color/dimgray" />
-
-
     </RelativeLayout>
 
 </RelativeLayout>
