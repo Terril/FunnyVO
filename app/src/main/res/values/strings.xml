@@ -47,4 +47,5 @@
     <string name="original_sound">Original sound - </string>
     <string name="_0_video">0 Video</string>
     <string name="followers">Followers</string>
+    <string name="login_message">By signing up, you confirm that you agree to our \n Terms of Use and have read and understood \n our Privacy Policy.</string>
 </resources>
