@@ -42,28 +42,25 @@
                 android:layout_toStartOf="@+id/btnWatch"
                 android:orientation="vertical">
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="Username"
                     android:textColor="@color/black"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_size_15"
+                    app:customFont="latobold.ttf" />
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:id="@+id/message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_5"
                     android:maxLines="2"
-                    android:text="User name upload a new Video"
                     android:textColor="@color/black"
-                    android:textSize="13dp" />
-
-
+                    android:textSize="@dimen/text_size_13" />
             </LinearLayout>
 
             <ImageButton
@@ -74,9 +71,7 @@
                 android:layout_centerVertical="true"
                 android:background="@color/transparent"
                 android:padding="@dimen/margin_10"
-                android:src="@drawable/ic_ondemand_video"
-                android:textStyle="bold"
-                />
+                android:src="@drawable/ic_ondemand_video" />
 
         </RelativeLayout>
 

@@ -44,12 +44,12 @@
                     android:tint="@color/dimgray"
                     android:src="@drawable/ic_discovery_gray"/>
 
-                <EditText
+                <com.funnyvo.android.customview.FunnyVOEditTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search"
+                    android:hint="@string/search"
                     android:padding="7dp"
-                    android:textSize="14dp"
+                    android:textSize="@dimen/text_size_15"
                     android:inputType="textNoSuggestions"
                     android:id="@+id/search_edit"
                     android:textColorHint="@color/darkgray"
@@ -58,12 +58,12 @@
                     android:backgroundTint="@color/transparent"
                     />
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Search"
                     android:id="@+id/search_btn"
-                    android:textSize="16dp"
+                    android:textSize="@dimen/text_size_16"
                     android:visibility="gone"
                     android:layout_marginEnd="10dp"
                     android:layout_centerVertical="true"

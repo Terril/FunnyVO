@@ -30,11 +30,11 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_eye_white"/>
 
-      <TextView
+      <com.funnyvo.android.customview.FunnyVOTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/view_txt"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="@dimen/margin_5"
         android:shadowColor="@color/darkgray"
         android:shadowDx="2"
         android:shadowDy="2"

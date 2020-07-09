@@ -39,12 +39,12 @@
                 android:tint="@color/dimgray"
                 android:src="@drawable/ic_discovery_gray"/>
 
-            <EditText
+            <com.funnyvo.android.customview.FunnyVOEditTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search"
+                android:hint="@string/search"
                 android:padding="7dp"
-                android:textSize="14dp"
+                android:textSize="@dimen/text_size_15"
                 android:focusable="false"
                 android:clickable="false"
                 android:id="@+id/search_edit"

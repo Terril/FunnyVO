@@ -10,14 +10,17 @@
 
     <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_15">15sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+
     <dimen name="margin_70">70dp</dimen>
     <dimen name="margin_5">5dp</dimen>
     <dimen name="margin_60">60dp</dimen>
-    <dimen name="text_size_13">13sp</dimen>
     <dimen name="margin_18">18dp</dimen>
     <dimen name="margin_50">50dp</dimen>
     <dimen name="margin_90">90dp</dimen>
 
-<!--    <dimen name="progress_video_line_height">2dp</dimen>-->
+
+    <!--    <dimen name="progress_video_line_height">2dp</dimen>-->
 <!--    <dimen name="frames_video_height">40dip</dimen>-->
 </resources>

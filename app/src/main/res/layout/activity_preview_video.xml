@@ -82,12 +82,12 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/margin_10"
                 android:text="@string/preview"
                 android:textColor="@color/palette_cheddar"
                 android:textSize="@dimen/text_size_18" />

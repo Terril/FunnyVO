@@ -59,7 +59,7 @@
         app:layout_constraintTop_toTopOf="@+id/pause_btn" />
 
 
-    <TextView
+    <com.funnyvo.android.customview.FunnyVOTextView
         android:id="@+id/sound_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,12 +70,12 @@
         android:textColor="@color/palette_cheddar_darker"
         android:textSize="@dimen/text_size_15"
         android:ellipsize="marquee"
-        android:textStyle="bold"
+        app:customFont="@string/font_bold"
         android:gravity="start"
         app:layout_constraintStart_toEndOf="@+id/sound_image"
         app:layout_constraintTop_toTopOf="@+id/sound_image" />
 
-    <TextView
+    <com.funnyvo.android.customview.FunnyVOTextView
         android:id="@+id/description_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,7 +86,6 @@
         android:gravity="start"
         android:textColor="@color/palette_cheddar_light"
         android:textSize="@dimen/text_size_13"
-        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/sound_image"
         app:layout_constraintTop_toBottomOf="@+id/sound_name" />
 

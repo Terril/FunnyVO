@@ -32,17 +32,17 @@
                     android:src="@drawable/ic_close"
                     android:tint="@color/palette_cheddar" />
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="@dimen/margin_15"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:layout_marginBottom="@dimen/margin_5"
                     android:text="@string/add_sound"
                     android:textColor="@color/palette_cheddar"
                     android:textSize="@dimen/text_size_18"
-                    android:textStyle="bold" />
+                     />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
         <RelativeLayout

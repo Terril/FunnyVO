@@ -91,6 +91,7 @@
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginRight="@dimen/margin_20"
             android:gravity="center"
+            app:customFont="latolight.ttf"
             android:paddingTop="@dimen/margin_15"
             android:text="@string/login_message"
             android:textColor="@color/dimgray" />

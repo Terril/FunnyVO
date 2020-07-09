@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,8 +72,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
         adapter = new DiscoverAdapter(context, datalist, new DiscoverAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ArrayList<Home> datalist, int postion) {
-
-                OpenWatchVideo(postion, datalist);
+                openWatchVideo(postion, datalist);
 
             }
         });
@@ -108,14 +106,14 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
             @Override
             public void onRefresh() {
 
-                Call_Api_For_get_Allvideos();
+                callApiForGetAllvideos();
             }
         });
 
         view.findViewById(R.id.search_layout).setOnClickListener(this);
         view.findViewById(R.id.search_edit).setOnClickListener(this);
 
-        Call_Api_For_get_Allvideos();
+        callApiForGetAllvideos();
 
         return view;
     }
@@ -124,8 +122,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
     // Bottom two function will get the Discover videos
     // from api and parse the json data which is shown in Discover tab
 
-    private void Call_Api_For_get_Allvideos() {
-
+    private void callApiForGetAllvideos() {
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -133,13 +130,10 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Log.d("resp", parameters.toString());
-
         ApiRequest.callApi(context, Variables.discover, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Parse_data(resp);
+                parseData(resp);
                 swiperefresh.setRefreshing(false);
             }
         });
@@ -148,7 +142,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
     }
 
 
-    public void Parse_data(String responce) {
+    private void parseData(String responce) {
 
         datalist.clear();
 
@@ -220,14 +214,14 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
     }
 
     // When you click on any Video a new activity is open which will play the Clicked video
-    private void OpenWatchVideo(int postion, ArrayList<Home> data_list) {
+    private void openWatchVideo(int postion, ArrayList<Home> data_list) {
         Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);
         startActivity(intent);
     }
 
-    public void Open_search() {
+    public void openSearch() {
         SearchMainFragment search_main_fragment = new SearchMainFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
@@ -239,10 +233,8 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_layout:
-                Open_search();
-                break;
             case R.id.search_edit:
-                Open_search();
+                openSearch();
                 break;
 
         }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.daasuu.gpuv.player.GPUPlayerView;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
+import com.funnyvo.android.customview.FunnyVOEditTextView;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.services.ServiceCallback;
@@ -34,7 +35,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
 
     private String video_path;
     private ServiceCallback serviceCallback;
-    private EditText description_edit;
+    private FunnyVOEditTextView descriptionEdit;
     private UploadService mService;
     private String draft_file;
 
@@ -77,6 +78,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         });
 
         findViewById(R.id.btnSaveLocal).setOnClickListener(this);
+        descriptionEdit = findViewById(R.id.edtDescriptionAndHashTags);
     }
 
 
@@ -98,7 +100,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
             mServiceIntent.setAction("startservice");
             mServiceIntent.putExtra("uri", "" + Uri.fromFile(new File(video_path)));
-            mServiceIntent.putExtra("desc", "");
+            mServiceIntent.putExtra("desc", descriptionEdit.getText().toString().trim());
             startService(mServiceIntent);
 
             Intent intent = new Intent(this, UploadService.class);

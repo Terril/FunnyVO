@@ -41,7 +41,7 @@
                     android:src="@drawable/ic_back"
                     android:tint="@color/palette_cheddar" />
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -120,7 +120,7 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_profile_gray" />
 
-                    <EditText
+                    <com.funnyvo.android.customview.FunnyVOEditTextView
                         android:id="@+id/username_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -128,10 +128,9 @@
                         android:layout_marginStart="25dp"
                         android:backgroundTint="@color/transparent"
                         android:hint="Username"
-                        android:inputType=""
                         android:textColor="@color/black"
                         android:textColorHint="@color/graycolor"
-                        android:textSize="14dp" />
+                        android:textSize="@dimen/text_size_15" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -164,18 +163,19 @@
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_profile_gray" />
 
-                        <EditText
+                        <com.funnyvo.android.customview.FunnyVOEditTextView
                             android:id="@+id/firstname_edit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="@dimen/margin_10"
                             android:layout_toRightOf="@+id/profile_icon"
                             android:backgroundTint="@color/transparent"
                             android:hint="First name"
+                            android:inputType="textCapSentences"
                             android:textColor="@color/black"
                             android:textColorHint="@color/graycolor"
-                            android:textSize="14dp" />
+                            android:textSize="@dimen/text_size_15" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -196,7 +196,7 @@
                         android:minHeight="50dp">
 
                         <ImageView
-                            android:id="@+id/profile_icon"
+                            android:id="@+id/profile_icon_lastname"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_centerVertical="true"
@@ -204,25 +204,26 @@
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_profile_gray" />
 
-                        <EditText
+                        <com.funnyvo.android.customview.FunnyVOEditTextView
                             android:id="@+id/lastname_edit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_toRightOf="@+id/profile_icon"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:inputType="textCapSentences"
+                            android:layout_toRightOf="@+id/profile_icon_lastname"
                             android:backgroundTint="@color/transparent"
                             android:hint="Last name"
                             android:textColor="@color/black"
                             android:textColorHint="@color/graycolor"
-                            android:textSize="14dp" />
+                            android:textSize="@dimen/text_size_15" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="49dp"
-                            android:layout_toRightOf="@+id/profile_icon"
+                            android:layout_toRightOf="@+id/profile_icon_lastname"
                             android:background="@color/graycolor" />
 
                     </RelativeLayout>
@@ -236,41 +237,49 @@
                     android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.funnyvo.android.customview.FunnyVOTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/lightgraycolor"
                         android:elevation="0.5dp"
-                        android:padding="10dp"
-                        android:text="Gender"
-                        android:textColor="@color/dimgray"
-                        android:textSize="16dp"
+                        android:padding="@dimen/margin_10"
+                        android:text="@string/gender"
+                        android:textColor="@color/palette_cheddar_dark"
+                        android:textSize="@dimen/text_size_15"
                         android:textStyle="italic" />
 
 
                     <RadioGroup
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/margin_10"
                         android:orientation="vertical"
-                        android:paddingLeft="10dp">
+                        android:paddingLeft="@dimen/margin_10">
 
                         <RadioButton
                             android:id="@+id/male_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Male"
-                            android:textColor="@color/black"
-                            android:textSize="15dp"
+                            android:text="@string/male"
+                            android:textColor="@color/palette_cheddar"
+                            android:textSize="@dimen/text_size_15"
                             android:theme="@style/RadioButton" />
 
                         <RadioButton
                             android:id="@+id/female_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="female"
-                            android:textColor="@color/black"
-                            android:textSize="15dp"
+                            android:text="@string/female"
+                            android:textColor="@color/palette_cheddar"
+                            android:textSize="@dimen/text_size_15"
+                            android:theme="@style/RadioButton" />
+                        <RadioButton
+                            android:id="@+id/none_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/don_t_want_to_disclose_it"
+                            android:textColor="@color/palette_cheddar"
+                            android:textSize="@dimen/text_size_15"
                             android:theme="@style/RadioButton" />
                     </RadioGroup>
 
@@ -283,31 +292,32 @@
                     android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.funnyvo.android.customview.FunnyVOTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/lightgraycolor"
                         android:elevation="0.5dp"
-                        android:padding="10dp"
-                        android:text="Bio"
-                        android:textColor="@color/dimgray"
+                        android:padding="@dimen/margin_10"
+                        android:text="@string/bio"
+                        android:textColor="@color/palette_cheddar_dark"
                         android:textSize="16dp"
                         android:textStyle="italic" />
 
-                    <EditText
+                    <com.funnyvo.android.customview.FunnyVOEditTextView
                         android:id="@+id/user_bio_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/transparent"
-                        android:hint="Your Bio"
+                        android:hint="@string/your_bio"
+                        android:inputType="textCapSentences"
                         android:imeOptions="flagNavigateNext"
                         android:minLines="2"
                         android:nextFocusForward="@+id/jobtitle_edit"
-                        android:paddingLeft="15dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@color/dimgray"
-                        android:textColorHint="@color/gainsboro"
-                        android:textSize="15dp" />
+                        android:paddingLeft="@dimen/margin_15"
+                        android:paddingTop="@dimen/margin_5"
+                        android:textColor="@color/palette_cheddar"
+                        android:textColorHint="@color/palette_cheddar"
+                        android:textSize="@dimen/text_size_15" />
                 </LinearLayout>
 
 

@@ -80,7 +80,7 @@
 
 
     <style name="RadioButton" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/app_color</item>
+        <item name="colorAccent">@color/palette_cheddar_darker</item>
         <item name="android:textColorSecondary">@color/graycolor</item>
         <item name="colorControlNormal">@color/graycolor</item>
     </style>

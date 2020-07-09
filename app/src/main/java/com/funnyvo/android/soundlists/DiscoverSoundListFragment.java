@@ -119,7 +119,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {
-                Log.d("resp", item.acc_path);
                 if (view.getId() == R.id.done) {
                     stopPlaying();
                     downLoadMp3(item.id, item.sound_name, item.acc_path);

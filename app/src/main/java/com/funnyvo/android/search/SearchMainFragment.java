@@ -52,7 +52,7 @@ public class SearchMainFragment extends RootFragment {
                 if (menu_pager != null) {
                     menu_pager.removeAllViews();
                 }
-                Set_tabs();
+                setTabs();
             }
         });
 
@@ -91,7 +91,7 @@ public class SearchMainFragment extends RootFragment {
     protected ViewPager menu_pager;
     ViewPagerAdapter adapter;
 
-    public void Set_tabs() {
+    public void setTabs() {
 
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         menu_pager = (ViewPager) view.findViewById(R.id.viewpager);

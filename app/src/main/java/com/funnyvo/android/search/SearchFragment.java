@@ -70,13 +70,13 @@ public class SearchFragment extends RootFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        Call_Api();
+        callApi();
 
         return view;
     }
 
 
-    public void Call_Api() {
+    public void callApi() {
 
         JSONObject params = new JSONObject();
         try {
@@ -93,10 +93,10 @@ public class SearchFragment extends RootFragment {
                 shimmerFrameLayout.setVisibility(View.GONE);
 
                 if (type.equalsIgnoreCase("users"))
-                    Parse_users(resp);
+                    parseUsers(resp);
 
                 if (type.equals("video"))
-                    Parse_video(resp);
+                    parseVideo(resp);
 
 
             }
@@ -107,7 +107,7 @@ public class SearchFragment extends RootFragment {
 
     ArrayList<Object> data_list;
 
-    public void Parse_users(String responce) {
+    public void parseUsers(String responce) {
 
         data_list = new ArrayList<>();
 
@@ -156,7 +156,7 @@ public class SearchFragment extends RootFragment {
     }
 
 
-    public void Parse_video(String responce) {
+    public void parseVideo(String responce) {
 
         data_list = new ArrayList<>();
 

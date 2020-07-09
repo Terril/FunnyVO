@@ -82,8 +82,8 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
         findViewById(R.id.back_btn).setOnClickListener(this);
 
-        findViewById(R.id.save_btn).setOnClickListener(this);
-        findViewById(R.id.create_btn).setOnClickListener(this);
+        findViewById(R.id.btnSaveSound).setOnClickListener(this);
+        findViewById(R.id.btnOpenVideo).setOnClickListener(this);
 
         findViewById(R.id.play_btn).setOnClickListener(this);
         findViewById(R.id.pause_btn).setOnClickListener(this);
@@ -108,7 +108,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
             case R.id.back_btn:
                 finish();
                 break;
-            case R.id.save_btn:
+            case R.id.btnSaveSound:
                 try {
                     copyFile(new File(Variables.app_folder + Variables.SelectedAudio_MP3),
                             new File(Variables.app_folder + item.video_id + ".mp3"));
@@ -119,7 +119,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
                 break;
 
-            case R.id.create_btn:
+            case R.id.btnOpenVideo:
                 if (player.getPlayWhenReady())
                     player.setPlayWhenReady(false);
 

@@ -36,7 +36,7 @@
                 android:src="@drawable/ic_back"
                 android:tint="@color/colorAccent" />
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,24 +66,24 @@
             android:orientation="vertical">
 
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/apply_for_funny_vo_verification"
                 android:textColor="@color/dark_gray"
-                android:textSize="16dp" />
+                android:textSize="@dimen/text_size_15" />
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_10"
                 android:justificationMode="inter_word"
                 android:text="@string/upper_body"
                 android:textColor="@color/dark_gray"
-                android:textSize="14dp" />
+                android:textSize="@dimen/text_size_13" />
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
@@ -91,7 +91,7 @@
                 android:justificationMode="inter_word"
                 android:text="@string/upper_body_below"
                 android:textColor="@color/dark_gray"
-                android:textSize="14dp" />
+                android:textSize="@dimen/text_size_13" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,27 +99,27 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:id="@+id/title_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Username"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:text="@string/username"
+                    android:textColor="@color/palette_cheddar_dark"
+                    android:textSize="@dimen/text_size_15" />
 
 
-                <EditText
+                <com.funnyvo.android.customview.FunnyVOEditTextView
                     android:id="@+id/username_edit"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:backgroundTint="@color/transparent"
-                    android:hint="username"
+                    android:hint="@string/username"
                     android:imeOptions="actionNext"
                     android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/dark_gray"
-                    android:textSize="14dp" />
+                    android:textColor="@color/palette_cheddar"
+                    android:textColorHint="@color/palette_cheddar"
+                    android:textSize="@dimen/margin_15" />
 
             </LinearLayout>
 
@@ -134,14 +134,14 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:id="@+id/title_fullname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Full name"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:text="@string/full_name"
+                    android:textColor="@color/palette_cheddar_dark"
+                    android:textSize="@dimen/text_size_15" />
 
 
                 <EditText
@@ -149,11 +149,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:backgroundTint="@color/transparent"
-                    android:hint="full name"
+                    android:hint="@string/full_name"
                     android:imeOptions="actionNext"
                     android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/dark_gray"
+                    android:textColor="@color/palette_cheddar"
+                    android:textColorHint="@color/palette_cheddar"
                     android:textSize="14dp" />
 
             </LinearLayout>
@@ -168,16 +168,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:id="@+id/file_name_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/margin_10"
                     android:layout_toStartOf="@+id/choose_file_btn"
                     android:padding="5dp"
                     android:text="@string/apply_for_funny_vo_verification"
                     android:textColor="@color/black"
-                    android:textSize="16dp" />
+                    android:textSize="@dimen/text_size_16" />
 
                 <TextView
                     android:id="@+id/choose_file_btn"
@@ -187,21 +187,21 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:padding="5dp"
-                    android:text="Choose File"
+                    android:text="@string/choose_file"
                     android:textColor="@color/colorAccent"
-                    android:textSize="16dp" />
+                    android:textSize="@dimen/text_size_16" />
 
             </RelativeLayout>
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_10"
                 android:justificationMode="inter_word"
                 android:text="@string/lower_body"
                 android:textColor="@color/dark_gray"
-                android:textSize="14dp" />
+                android:textSize="@dimen/text_size_13" />
 
 
             <Button
@@ -217,10 +217,8 @@
                 android:gravity="center"
                 android:text="Send"
                 android:textColor="@color/white"
-                android:textSize="16dp"
+                android:textSize="@dimen/text_size_15"
                 android:textStyle="bold" />
-
-
         </LinearLayout>
 
 

@@ -77,16 +77,11 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
 
     @Override
     public void onBindViewHolder(final DiscoverAdapter.CustomViewHolder holder, final int i) {
-
         Discover item = datalist_filter.get(i);
-
         holder.title.setText(item.title);
-
-        Horizontal_Adapter adapter = new Horizontal_Adapter(context, item.arrayList);
+        HorizontalAdapter adapter = new HorizontalAdapter(context, item.arrayList);
         holder.horizontal_reycerview.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         holder.horizontal_reycerview.setAdapter(adapter);
-
-
     }
 
 
@@ -128,22 +123,20 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
     }
 
 
-    class Horizontal_Adapter extends RecyclerView.Adapter<Horizontal_Adapter.CustomViewHolder> {
+    class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.CustomViewHolder> {
         public Context context;
-
         ArrayList<Home> datalist;
 
-
-        public Horizontal_Adapter(Context context, ArrayList<Home> arrayList) {
+        public HorizontalAdapter(Context context, ArrayList<Home> arrayList) {
             this.context = context;
             datalist = arrayList;
         }
 
         @Override
-        public Horizontal_Adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+        public HorizontalAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_discover_horizontal_layout, viewGroup, false);
             view.setLayoutParams(new RecyclerView.LayoutParams((Variables.screen_width / 3) - 20, RecyclerView.LayoutParams.WRAP_CONTENT));
-            Horizontal_Adapter.CustomViewHolder viewHolder = new Horizontal_Adapter.CustomViewHolder(view);
+            HorizontalAdapter.CustomViewHolder viewHolder = new HorizontalAdapter.CustomViewHolder(view);
             return viewHolder;
         }
 
@@ -153,9 +146,7 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
         }
 
         class CustomViewHolder extends RecyclerView.ViewHolder {
-
             ImageView video_thumbnail;
-
 
             public CustomViewHolder(View view) {
                 super(view);
@@ -176,7 +167,7 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
         }
 
         @Override
-        public void onBindViewHolder(final Horizontal_Adapter.CustomViewHolder holder, final int i) {
+        public void onBindViewHolder(final HorizontalAdapter.CustomViewHolder holder, final int i) {
             holder.setIsRecyclable(false);
 
             try {

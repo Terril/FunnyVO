@@ -48,4 +48,23 @@
     <string name="_0_video">0 Video</string>
     <string name="followers">Followers</string>
     <string name="login_message">By signing up, you confirm that you agree to our \n Terms of Use and have read and understood \n our Privacy Policy.</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">female</string>
+    <string name="don_t_want_to_disclose_it">Don\'t want to disclose it</string>
+    <string name="bio">Bio</string>
+    <string name="your_bio">Your Bio</string>
+    <string name="full_name">Full name</string>
+    <string name="choose_file">Choose File</string>
+
+    <string name="font_bold">latobold.ttf</string>
+    <string name="font_thin">latothin.ttf</string>
+    <string name="font_light">latolight.ttf</string>
+    <string name="font_regular">latoregular.ttf</string>
+    <string name="description_hashtags">Description and HashTags</string>
+    <string name="title">Title</string>
+    <string name="search">Search</string>
+    <string name="audio">Audio</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
 </resources>
