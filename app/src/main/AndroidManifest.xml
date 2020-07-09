@@ -30,7 +30,7 @@
         <activity
             android:name=".accounts.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent"
+            android:theme="@style/Transparent"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".SplashActivity"

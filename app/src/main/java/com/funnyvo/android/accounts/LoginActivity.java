@@ -1,6 +1,5 @@
 package com.funnyvo.android.accounts;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -38,6 +37,8 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
+import com.funnyvo.android.customview.ActivityIndicator;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -64,7 +65,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
@@ -72,6 +73,10 @@ public class LoginActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private View top_view;
     private TextView login_title_txt;
+    private ActivityIndicator activityIndicator;
+
+    //Google Implimentation
+    GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +99,6 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.activity_login);
 
-
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
 
@@ -106,15 +110,13 @@ public class LoginActivity extends Activity {
         findViewById(R.id.facebook_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Loginwith_FB();
+                loginwithFB();
             }
         });
-
-
         findViewById(R.id.google_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Sign_in_with_gmail();
+                signInWithGmail();
             }
         });
 
@@ -134,7 +136,7 @@ public class LoginActivity extends Activity {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View textView) {
-                Open_Privacy_policy();
+                openPrivacyPolicy();
             }
 
             @Override
@@ -149,15 +151,11 @@ public class LoginActivity extends Activity {
         textView.setText(ss);
         textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-
         printKeyHash();
-
-
     }
 
 
-    public void Open_Privacy_policy() {
+    public void openPrivacyPolicy() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Variables.privacy_policy));
         startActivity(browserIntent);
     }
@@ -181,12 +179,11 @@ public class LoginActivity extends Activity {
 
     }
 
-
     // Bottom two function are related to Fb implimentation
     private CallbackManager mCallbackManager;
 
     //facebook implimentation
-    public void Loginwith_FB() {
+    public void loginwithFB() {
 
         LoginManager.getInstance()
                 .logInWithReadPermissions(LoginActivity.this,
@@ -223,19 +220,18 @@ public class LoginActivity extends Activity {
         // if user is login then this method will call and
         // facebook will return us a token which will user for get the info of user
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        Log.d("resp_token", token.getToken() + "");
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Functions.showLoader(LoginActivity.this, false, false);
+                            showProgressDialog();
                             final String id = Profile.getCurrentProfile().getId();
                             GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
                                 @Override
                                 public void onCompleted(JSONObject user, GraphResponse graphResponse) {
 
-                                    Functions.cancelLoader();
+                                    dismissProgressDialog();
                                     Log.d("resp", user.toString());
                                     //after get the info of user we will pass to function which will store the info in our server
 
@@ -285,11 +281,7 @@ public class LoginActivity extends Activity {
 
     }
 
-
-    //google Implimentation
-    GoogleSignInClient mGoogleSignInClient;
-
-    public void Sign_in_with_gmail() {
+    public void signInWithGmail() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -341,8 +333,6 @@ public class LoginActivity extends Activity {
                 } else {
                     pic_url = "null";
                 }
-
-
                 if (fname.equals("") || fname.equals("null"))
                     fname = getResources().getString(R.string.app_name);
 
@@ -350,8 +340,6 @@ public class LoginActivity extends Activity {
                     lname = "User";
 
                 callApiForSignup(id, fname, lname, pic_url, "gmail");
-
-
             }
         } catch (ApiException e) {
             Log.w("Error message", "signInResult:failed code=" + e.getStatusCode());
@@ -390,12 +378,12 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
 
-        Functions.showLoader(this, false, false);
+        showProgressDialog();
         ApiRequest.callApi(this, Variables.SignUp, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
-                Parse_signup_data(resp);
+                dismissProgressDialog();
+                parseSignupData(resp);
 
             }
         });
@@ -404,7 +392,7 @@ public class LoginActivity extends Activity {
 
 
     // if the signup successfull then this method will call and it store the user info in local
-    public void Parse_signup_data(String loginData) {
+    public void parseSignupData(String loginData) {
         try {
             JSONObject jsonObject = new JSONObject(loginData);
             String code = jsonObject.optString("code");
@@ -441,7 +429,7 @@ public class LoginActivity extends Activity {
 
 
     // this function will print the keyhash of your project
-    // which is very helpfull during Fb login implimentation
+    // which is very helpfull during Fb login implementation
     public void printKeyHash() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);

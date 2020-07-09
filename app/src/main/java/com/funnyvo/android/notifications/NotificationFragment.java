@@ -70,7 +70,6 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
         adapter = new NotificationAdapter(context, datalist, new NotificationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Notification item) {
-
                 switch (view.getId()) {
                     case R.id.btnWatch:
                         openWatchVideo(item);

@@ -247,11 +247,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show();
                         }
                         break;
-
                     case R.id.comment_layout:
                         openComment(item);
                         break;
-
                     case R.id.btnShare:
 //                        if (!is_add_show && (mInterstitialAd != null && mInterstitialAd.isLoaded())) {
 //                          //  mInterstitialAd.show();
