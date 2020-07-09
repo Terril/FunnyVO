@@ -78,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path))
         player.prepare(videoSource)
-        player.repeatMode = Player.REPEAT_MODE_OFF
+        player.repeatMode = Player.REPEAT_MODE_ALL
         player.addListener(listener)
         player.playWhenReady = true
         player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING

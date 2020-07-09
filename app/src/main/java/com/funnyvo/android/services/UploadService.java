@@ -73,6 +73,7 @@ public class UploadService extends Service {
     private String video_base64 = "", thumb_base_64 = "", Gif_base_64 = "";
     private String description;
     private SharedPreferences sharedPreferences;
+    private File gifFilePath;
 
     @Nullable
     @Override
@@ -148,7 +149,6 @@ public class UploadService extends Service {
 
                         Gif_base_64 = Base64.encodeToString(generateGIF(frames), Base64.DEFAULT);
                         // + Functions.getRandomString()
-                        File gifFile = new File(Variables.app_folder, "sample" +  ".gif");
 
                         HashMap<String, String> headers = new HashMap<String, String>();
                         headers.put("fb_id", sharedPreferences.getString(Variables.u_id, "0"));
@@ -165,7 +165,7 @@ public class UploadService extends Service {
                         HashMap<String, File> fileRequest = new HashMap<String, File>();
                         fileRequest.put("video", videoFile);
                         fileRequest.put("thum", thumbNail);
-                        fileRequest.put("gif", gifFile);
+                        fileRequest.put("gif", gifFilePath);
                         MultipartRequest multipartRequest = new MultipartRequest(Variables.uploadVideo, new Response.ErrorListener() {
 
                             @Override
@@ -305,7 +305,6 @@ public class UploadService extends Service {
         AnimatedGifEncoder encoder = new AnimatedGifEncoder();
         encoder.start(bos);
         for (Bitmap bitmap : bitmaps) {
-
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 10, out);
             Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
@@ -317,10 +316,10 @@ public class UploadService extends Service {
         encoder.finish();
 
 
-        File filePath = new File(Variables.app_folder, "sample.gif");
+        gifFilePath = new File(Variables.app_folder, "upload" + Functions.getRandomString() + ".gif");
         FileOutputStream outputStream;
         try {
-            outputStream = new FileOutputStream(filePath);
+            outputStream = new FileOutputStream(gifFilePath);
             outputStream.write(bos.toByteArray());
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
