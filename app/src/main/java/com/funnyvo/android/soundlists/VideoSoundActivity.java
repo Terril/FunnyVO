@@ -73,7 +73,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         sound_image = findViewById(R.id.sound_image);
 
         if ((item.sound_name == null || item.sound_name.equals("") || item.sound_name.equals("null"))) {
-            sound_name.setText("original sound - " + item.first_name + " " + item.last_name);
+            sound_name.setText(getString(R.string.original_sound) + " " + item.first_name + " " + item.last_name);
         } else {
             sound_name.setText(item.sound_name);
         }

@@ -248,7 +248,7 @@
                     android:layout_weight=".5"
                     android:layout_marginStart="@dimen/margin_15"
                     android:layout_marginEnd="@dimen/margin_15"
-                    android:text="@string/save"
+                    android:text="@string/create"
                     android:backgroundTint="@color/palette_cheddar_dark"
                     app:icon="@drawable/ic_video"
                     app:iconGravity="start"></com.google.android.material.button.MaterialButton>

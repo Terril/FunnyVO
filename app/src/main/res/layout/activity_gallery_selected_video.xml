@@ -45,7 +45,10 @@
                 android:layout_marginEnd="@dimen/margin_5"
                 android:textColor="@color/palette_cheddar"
                 android:tint="@color/palette_cheddar"
+                android:layout_toEndOf="@+id/btnCloseGallery"
+                android:layout_toStartOf="@+id/btnPrevNext"
                 app:icon="@drawable/ic_music"
+                app:iconGravity="textStart"
                 app:iconTint="@color/palette_cheddar" />
 
             <ImageButton

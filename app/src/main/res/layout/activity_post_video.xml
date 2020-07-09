@@ -67,6 +67,7 @@
         android:hint="@string/description_hashtags"
         android:gravity="start"
         android:textSize="@dimen/text_size_15"
+        android:textColor="@color/palette_cheddar"
         android:layout_margin="@dimen/margin_10"
         app:layout_constraintBottom_toTopOf="@+id/btnUploadVideo">
 

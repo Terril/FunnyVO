@@ -106,7 +106,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         ImageView imageView1 = view1.findViewById(R.id.image);
         TextView title1 = view1.findViewById(R.id.text);
         imageView1.setImageDrawable(getResources().getDrawable(R.drawable.ic_home_white));
-        title1.setText("Home");
+        title1.setText(R.string.home);
         title1.setTextColor(context.getResources().getColor(R.color.palette_milk));
         tabLayout.getTabAt(0).setCustomView(view1);
 
@@ -115,7 +115,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         TextView title2 = view2.findViewById(R.id.text);
         imageView2.setImageDrawable(getResources().getDrawable(R.drawable.ic_discovery_gray));
         imageView2.setColorFilter(ContextCompat.getColor(context, R.color.colorwhite_50), android.graphics.PorterDuff.Mode.SRC_IN);
-        title2.setText("Discover");
+        title2.setText(R.string.discover);
         title2.setTextColor(context.getResources().getColor(R.color.colorwhite_50));
         tabLayout.getTabAt(1).setCustomView(view2);
 
@@ -128,7 +128,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         TextView title4 = view4.findViewById(R.id.text);
         imageView4.setImageDrawable(getResources().getDrawable(R.drawable.ic_notification_gray));
         imageView4.setColorFilter(ContextCompat.getColor(context, R.color.colorwhite_50), android.graphics.PorterDuff.Mode.SRC_IN);
-        title4.setText("Inbox");
+        title4.setText(R.string.inbox);
         title4.setTextColor(context.getResources().getColor(R.color.colorwhite_50));
         tabLayout.getTabAt(3).setCustomView(view4);
 
@@ -137,7 +137,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         TextView title5 = view5.findViewById(R.id.text);
         imageView5.setImageDrawable(getResources().getDrawable(R.drawable.ic_profile_gray));
         imageView5.setColorFilter(ContextCompat.getColor(context, R.color.colorwhite_50), android.graphics.PorterDuff.Mode.SRC_IN);
-        title5.setText("Profile");
+        title5.setText(R.string.profile);
         title5.setTextColor(context.getResources().getColor(R.color.colorwhite_50));
         tabLayout.getTabAt(4).setCustomView(view5);
 
