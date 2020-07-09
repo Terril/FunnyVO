@@ -162,8 +162,6 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
                     }
                 });
             }
-
-
         }
 
         @Override

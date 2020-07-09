@@ -46,6 +46,7 @@ public class SearchFragment extends RootFragment {
     String type, key;
     ShimmerFrameLayout shimmerFrameLayout;
     RecyclerView recyclerView;
+    ArrayList<Object> data_list;
 
     public SearchFragment(String type) {
         this.type = type;
@@ -104,8 +105,6 @@ public class SearchFragment extends RootFragment {
 
     }
 
-
-    ArrayList<Object> data_list;
 
     public void parseUsers(String responce) {
 

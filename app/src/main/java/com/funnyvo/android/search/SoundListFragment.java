@@ -99,16 +99,16 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             public void onItemClick(View view, int pos, Object object) {
                 Sounds item = (Sounds) object;
                 if (view.getId() == R.id.done) {
-                    StopPlaying();
-                    Down_load_mp3(item.id, item.sound_name, item.acc_path);
+                    stopPlaying();
+                    downLoadMp3(item.id, item.sound_name, item.acc_path);
                 } else if (view.getId() == R.id.fav_btn) {
-                    Call_Api_For_Fav_sound(pos, item);
+                    callApiForFavSound(pos, item);
                 } else {
                     if (thread != null && !thread.isAlive()) {
-                        StopPlaying();
+                        stopPlaying();
                         playaudio(view, item);
                     } else if (thread == null) {
-                        StopPlaying();
+                        stopPlaying();
                         playaudio(view, item);
                     }
                 }
@@ -196,7 +196,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
     }
 
 
-    private void Call_Api_For_Fav_sound(final int pos, final Sounds item) {
+    private void callApiForFavSound(final int pos, final Sounds item) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -272,7 +272,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
     }
 
 
-    public void StopPlaying() {
+    public void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
             player.removeListener(this);
@@ -336,12 +336,8 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
     }
 
 
-    public void Down_load_mp3(final String id, final String sound_name, String url) {
-
-        final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.show();
-
+    public void downLoadMp3(final String id, final String sound_name, String url) {
+        showProgressDialog();
         prDownloader = PRDownloader.download(url, Variables.app_folder, sound_name + id)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
@@ -372,13 +368,13 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                progressDialog.dismiss();
+                dismissProgressDialog();
                 Toast.makeText(context, "audio saved into your phone", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Error error) {
-                progressDialog.dismiss();
+                dismissProgressDialog();
             }
         });
 

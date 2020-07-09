@@ -234,7 +234,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
             done_btn.setEnabled(false);
 
-            record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_recoding_yes));
+            record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_record_video_post));
 
             camera_options.setVisibility(View.GONE);
             btnAddMusic.setClickable(false);
@@ -256,7 +256,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
             cameraView.stopVideo();
 
-            record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_recoding_no));
+            record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_record_video_pre));
             camera_options.setVisibility(View.VISIBLE);
 //            rotate_camera.setVisibility(View.VISIBLE);
 
@@ -752,6 +752,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
         File outputFilterFile = new File(Variables.OUTPUT_FILTER_FILE);
+        File outputFilterMotionFile = new File(Variables.OUTPUT_FILE_MOTION);
+        File outputFilterTrimmedFile = new File(Variables.OUTPUT_FILE_TRIMMED);
+        File outputFilterMessageFile = new File(Variables.OUTPUT_FILE_MESSAGE);
 
         if (output.exists()) {
             output.delete();
@@ -762,6 +765,15 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         }
         if (outputFilterFile.exists()) {
             outputFilterFile.delete();
+        }
+        if (outputFilterMotionFile.exists()) {
+            outputFilterMotionFile.delete();
+        }
+        if (outputFilterTrimmedFile.exists()) {
+            outputFilterTrimmedFile.delete();
+        }
+        if (outputFilterMessageFile.exists()) {
+            outputFilterMessageFile.delete();
         }
 
         File file = new File(Variables.app_folder + "myvideo" + (delete_count) + ".mp4");

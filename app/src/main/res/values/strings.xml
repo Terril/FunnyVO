@@ -69,4 +69,5 @@
     <string name="create">Create</string>
     <string name="home">Home</string>
     <string name="inbox">Inbox</string>
+    <string name="video_message">Video Message</string>
 </resources>

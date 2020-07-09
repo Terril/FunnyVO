@@ -31,6 +31,10 @@ public class SearchMainFragment extends RootFragment {
     public static EditText search_edit;
     TextView search_btn;
 
+    protected TabLayout tabLayout;
+    protected ViewPager menu_pager;
+    ViewPagerAdapter adapter;
+
     public SearchMainFragment() {
         // Required empty public constructor
     }
@@ -87,10 +91,6 @@ public class SearchMainFragment extends RootFragment {
     }
 
 
-    protected TabLayout tabLayout;
-    protected ViewPager menu_pager;
-    ViewPagerAdapter adapter;
-
     public void setTabs() {
 
         adapter = new ViewPagerAdapter(getChildFragmentManager());
@@ -98,11 +98,9 @@ public class SearchMainFragment extends RootFragment {
         menu_pager.setOffscreenPageLimit(3);
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
 
-
         adapter.addFrag(new SearchFragment("users"), "Users");
         adapter.addFrag(new SearchFragment("video"), "Videos");
         adapter.addFrag(new SoundListFragment("sound"), "Sounds");
-
 
         menu_pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(menu_pager);

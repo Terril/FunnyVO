@@ -20,6 +20,7 @@
         android:layout_marginTop="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_20"
         android:background="@color/transparent"
+        android:visibility="invisible"
         android:src="@drawable/ic_text_fields" />
 
     <ImageButton
@@ -127,4 +128,11 @@
         android:paddingBottom="@dimen/margin_20"
         android:visibility="invisible" />
 
+    <include
+        layout="@layout/view_video_input_message"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_70"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:visibility="invisible"></include>
 </RelativeLayout>

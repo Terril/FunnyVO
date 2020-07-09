@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -46,6 +48,7 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.home.datamodel.Home;
@@ -54,7 +57,6 @@ import com.funnyvo.android.keyboard.KeyboardHeightProvider;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
 import com.funnyvo.android.profile.ProfileFragment;
-import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -115,17 +117,12 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     private String video_id;
     private String link;
 
-    public WatchVideosActivity() {
-
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_watchvideo);
         context = this;
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         if (Variables.sharedPreferences == null) {
             Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, Context.MODE_PRIVATE);
         }
