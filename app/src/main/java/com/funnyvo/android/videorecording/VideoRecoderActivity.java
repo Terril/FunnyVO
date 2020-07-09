@@ -265,7 +265,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
         new Thread(new Runnable() {
@@ -361,13 +360,11 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     // this will add the select audio with the video
     public void mergeWithAudio() {
-
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
         MergeVideoAudio merge_video_audio = new MergeVideoAudio(VideoRecoderActivity.this);
         merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
-
     }
 
     public void rotateCamera() {
@@ -377,7 +374,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     @SuppressLint("WrongConstant")
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.record_image:
                 startOrStopRecording();

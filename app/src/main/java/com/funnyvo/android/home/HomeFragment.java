@@ -400,7 +400,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 setAdapter();
 
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -773,7 +773,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             @Override
             public void onError(Error error) {
                 deleteFileNoWatermark(item);
-                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.error_saving_video, Toast.LENGTH_SHORT).show();
                 mActivity.dismissProgressDialog();
             }
         });
@@ -802,11 +802,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                 mActivity.dismissProgressDialog();
                                 deleteFileNoWatermark(item);
                                 scanFile(item);
-
                             }
                         });
-
-
                     }
 
                     @Override
@@ -822,7 +819,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                 try {
                                     deleteFileNoWatermark(item);
                                     mActivity.dismissProgressDialog();
-                                    Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.try_again, Toast.LENGTH_SHORT).show();
 
                                 } catch (Exception e) {
 

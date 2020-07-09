@@ -71,4 +71,5 @@
     <string name="inbox">Inbox</string>
     <string name="video_message">Video Message</string>
     <string name="hashtag">#HashTag</string>
+    <string name="error_saving_video">Error saving the video</string>
 </resources>
