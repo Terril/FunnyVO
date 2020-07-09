@@ -59,9 +59,10 @@
             android:layout_below="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutMusicInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="@dimen/margin_20">
 
 
                 <ImageView
@@ -163,98 +164,46 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/layoutContent"
+                android:layout_below="@+id/layoutMusicInfo" />
 
             <LinearLayout
+                android:id="@+id/layoutContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/margin_50">
+                android:layout_marginBottom="@dimen/margin_20"
+                android:orientation="horizontal">
 
-                <!--                <LinearLayout-->
-                <!--                    android:id="@+id/save_btn"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="@dimen/margin_50"-->
-                <!--                    android:layout_marginStart="15dp"-->
-                <!--                    android:layout_marginEnd="15dp"-->
-                <!--                    android:layout_weight="1"-->
-                <!--                    android:background="@drawable/d_round_gray25"-->
-                <!--                    android:gravity="center"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    <ImageView-->
-                <!--                        android:layout_width="32dp"-->
-                <!--                        android:layout_height="32dp"-->
-                <!--                        android:background="@color/transparent"-->
-                <!--                        android:scaleType="fitCenter"-->
-                <!--                        android:src="@drawable/ic_my_un_favourite" />-->
-
-                <!--                    <com.funnyvo.android.customview.FunnyVOTextView-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginStart="10dp"-->
-                <!--                        android:text="@string/save"-->
-                <!--                        android:textColor="@color/black"-->
-                <!--                        android:textSize="@dimen/text_size_18"-->
-                <!--                        android:textStyle="bold" />-->
-                <!--                </LinearLayout>-->
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveSound"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
-                    android:layout_weight=".5"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/margin_15"
                     android:layout_marginEnd="@dimen/margin_15"
+                    android:layout_weight=".5"
                     android:text="@string/save"
                     app:icon="@drawable/ic_local_save"
                     app:iconGravity="start"></com.google.android.material.button.MaterialButton>
-
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/create_btn"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:layout_marginStart="15dp"-->
-<!--                    android:layout_marginEnd="15dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:background="@drawable/d_round_red25"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="32dp"-->
-<!--                        android:layout_height="32dp"-->
-<!--                        android:background="@color/transparent"-->
-<!--                        android:scaleType="fitCenter"-->
-<!--                        android:src="@drawable/ic_video" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginStart="10dp"-->
-<!--                        android:text="Create"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:textSize="20dp"-->
-<!--                        android:textStyle="bold" />-->
-
-<!--                </LinearLayout>-->
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnOpenVideo"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5"
                     android:layout_marginStart="@dimen/margin_15"
                     android:layout_marginEnd="@dimen/margin_15"
-                    android:text="@string/create"
+                    android:layout_weight=".5"
                     android:backgroundTint="@color/palette_cheddar_dark"
+                    android:text="@string/create"
                     app:icon="@drawable/ic_video"
                     app:iconGravity="start"></com.google.android.material.button.MaterialButton>
 
             </LinearLayout>
-
 
         </RelativeLayout>
 

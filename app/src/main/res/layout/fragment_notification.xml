@@ -120,17 +120,17 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/bannerad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/write_layout"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad"></com.google.android.gms.ads.AdView>
+<!--        <com.google.android.gms.ads.AdView-->
+<!--            android:id="@+id/bannerad"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_above="@+id/write_layout"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            ads:adSize="BANNER"-->
+<!--            ads:adUnitId="@string/banner_ad"></com.google.android.gms.ads.AdView>-->
 
 
     </RelativeLayout>
