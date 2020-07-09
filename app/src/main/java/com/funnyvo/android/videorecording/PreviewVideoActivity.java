@@ -70,6 +70,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.btnFastMotion).setOnClickListener(this);
         findViewById(R.id.btnCrop).setOnClickListener(this);
         findViewById(R.id.btnFilter).setOnClickListener(this);
+        findViewById(R.id.btnTextEditor).setOnClickListener(this);
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
@@ -261,6 +262,38 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         }.execute();
     }
 
+    private void applyMessageOnVideo() {
+        showProgressDialog();
+      //  final String[] complexCommand = {"-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION};
+        final String[] complexCommand = new String[]{
+                "-y", "-i", Variables.outputfile2, "-vf", "drawtext=text='Title of this Video':fontfile=/system/fonts/Sans.ttf: fontcolor=white: fontsize=24: x=(w-tw)/2: y=(h/PHI)+th box=0:", Variables.OUTPUT_FILE_MOTION
+        };
+        new AsyncTask<Object, Object, Object>() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                int rc = FFmpeg.execute(complexCommand);
+                return rc;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                int rc = (int) o;
+                if (rc == RETURN_CODE_SUCCESS) {
+                    dismissProgressDialog();
+                    updateMediaSource(Variables.OUTPUT_FILE_MOTION);
+                    isFilterSelected = true;
+                } else if (rc == RETURN_CODE_CANCEL) {
+                    dismissProgressDialog();
+                } else {
+                    Config.printLastCommandOutput(Log.INFO);
+                    dismissProgressDialog();
+                }
+
+            }
+        }.execute();
+    }
+
     private void slideUp(View view) {
         view.setVisibility(View.VISIBLE);
         TranslateAnimation animate = new TranslateAnimation(
@@ -296,7 +329,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     private void toggleSlowMo() {
         if (isSlowMoEnabled) {
-           applySlowMoVideo();
+            applySlowMoVideo();
         } else {
             isFilterSelected = false;
             updateMediaSource(Variables.outputfile2);
@@ -343,6 +376,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btnCrop:
                 openVideoCropActivity();
+                break;
+            case R.id.btnTextEditor:
+                applyMessageOnVideo();
                 break;
         }
     }

@@ -45,4 +45,6 @@
     <string name="done">Done</string>
     <string name="leave_a_comment">Leave a comment...</string>
     <string name="original_sound">Original sound - </string>
+    <string name="_0_video">0 Video</string>
+    <string name="followers">Followers</string>
 </resources>

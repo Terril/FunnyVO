@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/d_bottom_gray_line">
 
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,8 +35,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/notifications"
                     android:textColor="@color/palette_cheddar"
-                    android:textSize="@dimen/text_size_18"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_size_18" />
 
 
                 <ImageButton
@@ -46,10 +45,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margin_15"
-                    android:visibility="gone"
                     android:background="@color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_chat" />
+                    android:src="@drawable/ic_chat"
+                    android:visibility="gone" />
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
