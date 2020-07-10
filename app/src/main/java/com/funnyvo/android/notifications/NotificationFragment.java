@@ -24,7 +24,6 @@ import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.watchvideos.WatchVideosActivity;
 import com.funnyvo.android.notifications.datamodel.Notification;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -75,7 +74,7 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
                         openWatchVideo(item);
                         break;
                     default:
-                        Open_Profile(item);
+                        openProfile(item);
                         break;
                 }
             }
@@ -90,12 +89,12 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Call_api();
+                callApi();
             }
         });
 
 
-        Call_api();
+        callApi();
         return view;
     }
 
@@ -105,17 +104,17 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
     @Override
     public void onStart() {
         super.onStart();
-        adView = view.findViewById(R.id.bannerad);
-        if (!Variables.is_remove_ads) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
-        } else {
-            adView.setVisibility(View.GONE);
-        }
+//        adView = view.findViewById(R.id.bannerad);
+//        if (!Variables.is_remove_ads) {
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            adView.loadAd(adRequest);
+//        } else {
+//            adView.setVisibility(View.GONE);
+//        }
     }
 
 
-    public void Call_api() {
+    public void callApi() {
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -128,13 +127,13 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
-                parse_data(resp);
+                parseData(resp);
             }
         });
 
     }
 
-    public void parse_data(String resp) {
+    public void parseData(String resp) {
         try {
             JSONObject jsonObject = new JSONObject(resp);
             String code = jsonObject.optString("code");
@@ -167,11 +166,8 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
                         item.gif = value_data.optString("gif");
 
                     }
-
                     item.created = fb_id_details.optString("created");
-
                     temp_list.add(item);
-
 
                 }
 
@@ -198,12 +194,12 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.inbox_btn:
-                Open_inbox_F();
+                openInbox();
                 break;
         }
     }
 
-    private void Open_inbox_F() {
+    private void openInbox() {
         InboxFragment inbox_fragment = new InboxFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
@@ -219,7 +215,7 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
     }
 
 
-    public void Open_Profile(Notification item) {
+    public void openProfile(Notification item) {
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
 
             TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);

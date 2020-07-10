@@ -52,7 +52,6 @@ import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
-import com.funnyvo.android.videoAction.VideoActionFragment;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
@@ -68,6 +67,7 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
 import com.funnyvo.android.taged.TaggedVideosFragment;
+import com.funnyvo.android.videoAction.VideoActionFragment;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -80,7 +80,6 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.material.tabs.TabLayout;
@@ -95,6 +94,7 @@ import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
+import static com.funnyvo.android.simpleclasses.Variables.is_secure_info;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,8 +107,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     Context context;
 
     RecyclerView recyclerView;
-    ArrayList<Home> data_list;
-    int currentPage = -1;
+    private ArrayList<Home> data_list = new ArrayList<>();
+    private int currentPage = -1;
     LinearLayoutManager layoutManager;
     ProgressBar p_bar;
     SwipeRefreshLayout swiperefresh;
@@ -124,6 +124,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     BaseActivity mActivity;
     private boolean isMuted = false;
+    private int pageNumber = 1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -144,7 +145,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         p_bar = view.findViewById(R.id.p_bar);
 
-        recyclerView = view.findViewById(R.id.recylerview);
+        recyclerView = view.findViewById(R.id.recylerviewHome);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
@@ -153,6 +154,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         snapHelper.attachToRecyclerView(recyclerView);
 
 
+        setAdapter();
         // this is the scroll listener of recycler view which will tell the current item number
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -186,11 +188,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             @Override
             public void onRefresh() {
                 currentPage = -1;
-                callApiForGetAllvideos();
+                pageNumber = 1;
+                callApiForGetAllVideos();
             }
         });
 
-        callApiForGetAllvideos();
+        callApiForGetAllVideos();
 
 //        if (!Variables.is_remove_ads)
 //            loadAdd();
@@ -321,12 +324,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void callApiForGetAllvideos() {
-        Log.d(Variables.tag, MainMenuActivity.token);
+    private void callApiForGetAllVideos() {
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
             parameters.put("token", MainMenuActivity.token);
+            parameters.put("page_number", pageNumber);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -339,12 +342,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 parseData(resp);
             }
         });
-
-
     }
 
     public void parseData(String response) {
-        data_list = new ArrayList<>();
 
         try {
             JSONObject jsonObject = new JSONObject(response);
@@ -397,12 +397,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     data_list.add(item);
                 }
 
-                setAdapter();
-
             } else {
-             //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
-
+            adapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -518,7 +516,18 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             swipe_count = 0;
         }
 
-        adapter.notifyDataSetChanged();
+        if (currentPage == data_list.size() - 1) {
+            pageNumber = pageNumber + 1;
+            callApiForGetAllVideos();
+        } else {
+            recyclerView.post(new Runnable() {
+                public void run() {
+                    // There is no need to use notifyDataSetChanged()
+                    adapter.notifyDataSetChanged();
+                }
+            });
+
+        }
     }
 
 
@@ -653,7 +662,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         transaction.addToBackStack(null);
         transaction.replace(R.id.MainMenuFragment, comment_fragment).commit();
 
-
     }
 
 
@@ -699,7 +707,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         taged_videos_fragment.setArguments(args);
         transaction.addToBackStack(null);
         transaction.replace(R.id.MainMenuFragment, taged_videos_fragment).commit();
-
 
     }
 
