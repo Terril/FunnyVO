@@ -9,15 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.wonderkiln.camerakit.CameraView
-            android:id="@+id/camera"
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraRecording"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            app:ckFacing="back"
-            app:ckLockVideoAspectRatio="true"
-            app:ckFocus="continuous"
-             />
+            app:cameraFacing="front"
+            app:cameraWhiteBalance="auto"
+            app:cameraMode="video"
+            app:cameraVideoCodec="h264"
+            app:cameraUseDeviceOrientation="false"
+            app:cameraAudio="on"
+            app:cameraFlash="off"/>
 
 
         <RelativeLayout
@@ -26,7 +29,7 @@
             android:layout_margin="5dp">
 
             <com.funnyvo.android.segmentprogress.SegmentedProgressBar
-                android:id="@+id/video_progress"
+                android:id="@+id/videoProgress"
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_centerVertical="true"
@@ -50,59 +53,44 @@
         <Button
             android:id="@+id/btnAddMusicRecord"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/margin_5"
             android:layout_marginTop="@dimen/margin_35"
+            android:layout_marginEnd="@dimen/margin_50"
+            android:layout_toEndOf="@+id/btnCloseRecordVideo"
             android:scaleType="fitCenter"
             android:text="@string/add_sound"
-            android:layout_marginStart="@dimen/margin_5"
-            android:layout_marginEnd="@dimen/margin_5"
-            android:layout_toEndOf="@+id/btnCloseRecordVideo"
-            android:layout_toStartOf="@+id/btnDone"
             android:textColor="@color/palette_cheddar"
             android:tint="@color/palette_cheddar"
             app:icon="@drawable/ic_music"
             app:iconGravity="textStart"
             app:iconTint="@color/palette_cheddar" />
 
-        <ImageButton
-            android:id="@+id/btnDone"
-            android:layout_width="@dimen/margin_32"
-            android:layout_height="@dimen/margin_32"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="@dimen/margin_40"
-            android:layout_marginEnd="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_15"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_done"
-            android:visibility="invisible"
-            android:tint="@color/palette_cheddar" />
-
         <LinearLayout
-            android:id="@+id/camera_options"
+            android:id="@+id/layoutCameraOptions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="70dp"
-            android:layout_marginRight="15dp"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/margin_70"
+            android:layout_marginRight="@dimen/margin_10"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageButton
-                android:id="@+id/rotate_camera"
+                android:id="@+id/btnRotateCamera"
                 android:layout_width="@dimen/margin_40"
                 android:layout_height="@dimen/margin_40"
+                android:layout_marginTop="@dimen/margin_20"
                 android:background="@color/transparent"
                 android:padding="5dp"
-                android:layout_marginTop="@dimen/margin_20"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_rotate_cam" />
 
             <ImageButton
-                android:id="@+id/flash_camera"
+                android:id="@+id/btnFlashCamera"
                 android:layout_width="@dimen/margin_40"
                 android:layout_height="@dimen/margin_40"
                 android:layout_marginTop="@dimen/margin_10"
@@ -112,17 +100,75 @@
                 android:src="@drawable/ic_flash_on" />
 
             <ImageButton
-                android:id="@+id/time_btn"
+                android:id="@+id/btnTimer"
                 android:layout_width="@dimen/margin_40"
                 android:layout_height="@dimen/margin_40"
                 android:layout_marginTop="@dimen/margin_10"
                 android:background="@color/transparent"
-                android:padding="5dp"
+                android:padding="@dimen/margin_5"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_timer" />
 
+            <ImageButton
+                android:id="@+id/btnTextEditor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:background="@color/transparent"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/ic_text_fields"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/btnSlowMotion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:background="@color/transparent"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/ic_slow_motion" />
+
+            <ImageButton
+                android:id="@+id/btnFastMotion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:background="@color/transparent"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/ic_fast_play" />
+
+            <ImageButton
+                android:id="@+id/btnFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/transparent"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/ic_filter" />
+
+            <ImageButton
+                android:id="@+id/btnCrop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/transparent"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/ic_scissors"
+                android:visibility="invisible" />
 
         </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recylerviewFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="@dimen/margin_20"
+            android:visibility="invisible" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -131,7 +177,7 @@
             android:layout_margin="15dp">
 
             <ImageButton
-                android:id="@+id/record_image"
+                android:id="@+id/btnRecord"
                 android:layout_width="@dimen/margin_90"
                 android:layout_height="@dimen/margin_90"
                 android:layout_centerHorizontal="true"
@@ -147,11 +193,24 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_gallery" />
 
+            <ImageButton
+                android:id="@+id/btnDone"
+                android:layout_width="@dimen/margin_32"
+                android:layout_height="@dimen/margin_32"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/margin_15"
+                android:background="@color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_done"
+                android:tint="@color/palette_cheddar"
+                android:visibility="invisible" />
+
+
         </RelativeLayout>
 
-
         <com.funnyvo.android.customview.FunnyVOTextView
-            android:id="@+id/countdown_timer_txt"
+            android:id="@+id/txtCountdownTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -162,8 +221,8 @@
             android:text="3"
             android:textColor="@color/colorAccent"
             android:textSize="100sp"
-            app:customFont="@string/font_bold"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:customFont="@string/font_bold" />
 
     </RelativeLayout>
 

@@ -81,7 +81,7 @@
            android:layout_width="match_parent"
            android:layout_height="40dp"
            app:tabMode="fixed"
-           app:tabTextColor="@color/dark_gray"
+           app:tabTextColor="@color/darkgray"
            app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextAppearance="@style/tab_text"
            app:tabGravity="fill"

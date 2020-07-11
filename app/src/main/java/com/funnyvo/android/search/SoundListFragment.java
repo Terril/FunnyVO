@@ -211,11 +211,11 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             e.printStackTrace();
         }
 
-        Functions.showLoader(context, false, false);
+        showProgressDialog();
         ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
+              dismissProgressDialog();
 
                 if (item.fav.equals("1"))
                     item.fav = "0";

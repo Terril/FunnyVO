@@ -94,8 +94,8 @@ public class SegmentedProgressBar extends View {
     }
 
 
-    public void SetListener(ProgressBarListener listeter) {
-        this.listener = listeter;
+    public void setListener(ProgressBarListener listener) {
+        this.listener = listener;
     }
 
     /**

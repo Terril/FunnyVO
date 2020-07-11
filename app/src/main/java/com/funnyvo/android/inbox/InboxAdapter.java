@@ -117,7 +117,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.CustomViewHo
             holder.last_message.setTextColor(context.getResources().getColor(R.color.black));
         } else {
             holder.last_message.setTypeface(null, Typeface.NORMAL);
-            holder.last_message.setTextColor(context.getResources().getColor(R.color.dark_gray));
+            holder.last_message.setTextColor(context.getResources().getColor(R.color.darkgray));
         }
 
 

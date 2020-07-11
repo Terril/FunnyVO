@@ -71,4 +71,10 @@
     <string name="inbox">Inbox</string>
     <string name="video_message">Video Message</string>
     <string name="hashtag">#HashTag</string>
+    <string name="_18s">18s</string>
+    <string name="start_shooting">Start Shooting</string>
+    <string name="are_you_sure">Are you Sure?</string>
+    <string name="cant_undo">If you go back you can\'t undo this action</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

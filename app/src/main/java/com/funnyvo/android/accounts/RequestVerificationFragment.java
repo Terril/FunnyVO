@@ -351,11 +351,11 @@ public class RequestVerificationFragment extends RootFragment implements View.On
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Functions.showLoader(context, false, false);
+       showProgressDialog();
         ApiRequest.callApi(context, Variables.getVerified, params, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
+              dismissProgressDialog();
                 try {
                     JSONObject jsonObject = new JSONObject(resp);
                     String code = jsonObject.optString("code");

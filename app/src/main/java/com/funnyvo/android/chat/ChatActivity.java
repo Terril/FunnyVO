@@ -67,7 +67,6 @@ import com.giphy.sdk.core.network.api.CompletionHandler;
 import com.giphy.sdk.core.network.api.GPHApi;
 import com.giphy.sdk.core.network.api.GPHApiClient;
 import com.giphy.sdk.core.network.response.ListMediaResponse;
-import com.gmail.samehadar.iosdialog.IOSDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -134,7 +133,6 @@ public class ChatActivity extends Fragment {
     public static String uploading_image_id = "none";
 
     public Context context;
-    IOSDialog lodding_view;
     View view;
     LinearLayout gif_layout;
     ImageButton upload_gif_btn;
@@ -208,11 +206,6 @@ public class ChatActivity extends Fragment {
 
         p_bar = view.findViewById(R.id.progress_bar);
         // this is the black color loader that we see whan we click on save button
-        lodding_view = new IOSDialog.Builder(context)
-                .setCancelable(false)
-                .setSpinnerClockwise(false)
-                .setMessageContentGravity(Gravity.END)
-                .build();
 
         //set layout manager to chat recycler view and get all the privous chat of th user which spacifc user
         chatrecyclerview = (RecyclerView) view.findViewById(R.id.chatlist);
@@ -286,7 +279,6 @@ public class ChatActivity extends Fragment {
 
                 if (userScrolled && (scrollOutitems == 0 && mChats.size() > 9)) {
                     userScrolled = false;
-                    lodding_view.show();
                     rootref.child("chat").child(senderid + "-" + Receiverid).orderByChild("chat_id")
                             .endAt(mChats.get(0).getChat_id()).limitToLast(20)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -302,8 +294,6 @@ public class ChatActivity extends Fragment {
                                     }
 
                                     mAdapter.notifyDataSetChanged();
-                                    lodding_view.cancel();
-
                                     if (arrayList.size() > 8) {
                                         chatrecyclerview.scrollToPosition(arrayList.size());
                                     }

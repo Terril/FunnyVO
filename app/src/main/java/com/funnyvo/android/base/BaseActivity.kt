@@ -11,6 +11,8 @@ import com.daasuu.gpuv.player.GPUPlayerView
 import com.daasuu.gpuv.player.PlayerScaleType
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
+import com.funnyvo.android.videorecording.VideoRecorderActivityNew
+import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -18,12 +20,12 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.properties.ReadOnlyProperty
 
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {

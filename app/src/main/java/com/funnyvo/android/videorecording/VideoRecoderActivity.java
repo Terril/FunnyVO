@@ -197,7 +197,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         video_progress.setDividerWidth(4);
         video_progress.setShader(new int[]{Color.CYAN, Color.CYAN, Color.CYAN});
 
-        video_progress.SetListener(new ProgressBarListener() {
+        video_progress.setListener(new ProgressBarListener() {
             @Override
             public void TimeinMills(long mills) {
                 sec_passed = (int) (mills / 1000);
@@ -248,7 +248,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             if (audio != null)
                 audio.pause();
 
-            if (sec_passed > ((Variables.recording_duration / 1000) / 3)) {
+            if (sec_passed > ((Variables.recording_duration / 1000) / 4)) {
                 done_btn.setVisibility(View.VISIBLE);
                 done_btn.setEnabled(true);
                 done_btn.setOnClickListener(this);
@@ -277,32 +277,32 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                     }
                 });
 
-                ArrayList<String> video_list = new ArrayList<>();
-                for (int i = 0; i < videopaths.size(); i++) {
-
-                    File file = new File(videopaths.get(i));
-                    if (file.exists()) {
-                        try {
-                            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                            retriever.setDataSource(VideoRecoderActivity.this, Uri.fromFile(file));
-                            String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
-                            boolean isVideo = "yes".equals(hasVideo);
-
-                            if (isVideo && file.length() > 3000) {
-                                Log.d("resp", videopaths.get(i));
-                                video_list.add(videopaths.get(i));
-                            }
-                        } catch (Exception e) {
-                            Log.d(Variables.tag, e.toString());
-                        }
-                    }
-                }
+//                ArrayList<String> video_list = new ArrayList<>();
+//                for (int i = 0; i < videopaths.size(); i++) {
+//
+//                    File file = new File(videopaths.get(i));
+//                    if (file.exists()) {
+//                        try {
+//                            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//                            retriever.setDataSource(VideoRecoderActivity.this, Uri.fromFile(file));
+//                            String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
+//                            boolean isVideo = "yes".equals(hasVideo);
+//
+//                            if (isVideo && file.length() > 3000) {
+//                                Log.d("resp", videopaths.get(i));
+//                                video_list.add(videopaths.get(i));
+//                            }
+//                        } catch (Exception e) {
+//                            Log.d(Variables.tag, e.toString());
+//                        }
+//                    }
+//                }
 
 
                 try {
-                    Movie[] inMovies = new Movie[video_list.size()];
-                    for (int i = 0; i < video_list.size(); i++) {
-                        inMovies[i] = MovieCreator.build(video_list.get(i));
+                    Movie[] inMovies = new Movie[videopaths.size()];
+                    for (int i = 0; i < videopaths.size(); i++) {
+                        inMovies[i] = MovieCreator.build(videopaths.get(i));
                     }
 
                     List<Track> videoTracks = new LinkedList<Track>();
@@ -490,7 +490,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 Uri uri = data.getData();
                 try {
                     File video_file = FileUtils.getFileFromUri(this, uri);
-                    if (getfileduration(uri) < 19500) {
+                    if (getFileDuration(uri) < 19500) {
                         changeVideoSize(video_file.getAbsolutePath(), Variables.gallery_resize_video);
                     } else {
                         try {
@@ -509,9 +509,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private long getfileduration(Uri uri) {
+    private long getFileDuration(Uri uri) {
         try {
-
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             mmr.setDataSource(this, uri);
             String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);

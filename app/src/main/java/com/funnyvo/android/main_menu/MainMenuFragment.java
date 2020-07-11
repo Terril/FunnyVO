@@ -35,6 +35,7 @@ import com.funnyvo.android.notifications.NotificationFragment;
 import com.funnyvo.android.profile.ProfileTabFragment;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.VideoRecoderActivity;
+import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainMenuFragment extends RootFragment implements View.OnClickListener {
@@ -228,7 +229,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
                 if (checkPermissions()) {
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
 
-                        Intent intent = new Intent(getActivity(), VideoRecoderActivity.class);
+                        Intent intent = new Intent(getActivity(), VideoRecorderActivityNew.class);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                     } else {

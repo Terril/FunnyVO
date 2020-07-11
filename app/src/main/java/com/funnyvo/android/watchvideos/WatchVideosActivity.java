@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -603,7 +602,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 @Override
                 public void onLongPress(MotionEvent e) {
                     super.onLongPress(e);
-                    Show_video_option(item);
+                    showVideoOption(item);
 
                 }
 
@@ -890,7 +889,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     CharSequence[] options;
 
-    private void Show_video_option(final Home home_) {
+    private void showVideoOption(final Home home_) {
 
         options = new CharSequence[]{"Save Video", "Cancel"};
 
@@ -915,7 +914,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     if (Variables.is_secure_info) {
                         Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show();
                     } else {
-                        Functions.showLoader(WatchVideosActivity.this, false, false);
+                        showProgressDialog();
                         Functions.callApiForDeleteVideo(WatchVideosActivity.this, home_.video_id, new ApiCallBack() {
                             @Override
                             public void arrayData(ArrayList arrayList) {
@@ -924,8 +923,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                             @Override
                             public void onSuccess(String responce) {
-
-                                Functions.cancelLoader();
+                                dismissProgressDialog();
                                 finish();
 
                             }

@@ -17,17 +17,12 @@ import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
 import com.funnyvo.android.comments.datamodel.Comments;
-import com.funnyvo.android.R;
-import com.gmail.samehadar.iosdialog.CamomileSpinner;
 import com.googlecode.mp4parser.authoring.Track;
 
 import org.json.JSONArray;
@@ -68,36 +63,6 @@ public class Functions {
                     }
                 }).show();
     }
-
-
-    public static Dialog dialog;
-
-    public static void showLoader(Context context, boolean outside_touch, boolean cancleable) {
-        dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.item_dialog_loading_view);
-        dialog.getWindow().setBackgroundDrawable(context.getResources().getDrawable(R.drawable.d_round_white_background));
-
-
-        CamomileSpinner loader = dialog.findViewById(R.id.loader);
-        loader.start();
-
-
-        if (!outside_touch)
-            dialog.setCanceledOnTouchOutside(false);
-
-        if (!cancleable)
-            dialog.setCancelable(false);
-
-        dialog.show();
-    }
-
-    public static void cancelLoader() {
-        if (dialog != null) {
-            dialog.cancel();
-        }
-    }
-
 
     public static float dpToPx(final Context context, final float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
@@ -440,7 +405,6 @@ public class Functions {
         ApiRequest.callApi(activity, Variables.get_user_data, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
@@ -474,11 +438,9 @@ public class Functions {
             e.printStackTrace();
         }
 
-
         ApiRequest.callApi(activity, Variables.DeleteVideo, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                Functions.cancelLoader();
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
