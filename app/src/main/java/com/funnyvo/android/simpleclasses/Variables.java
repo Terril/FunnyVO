@@ -3,6 +3,8 @@ package com.funnyvo.android.simpleclasses;
 import android.content.SharedPreferences;
 import android.os.Environment;
 
+import com.funnyvo.android.BuildConfig;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -72,22 +74,18 @@ public class Variables {
     public static final boolean is_secure_info = false;
     public static final boolean is_remove_ads = false;
 
-
     public final static int permission_camera_code = 786;
     public final static int permission_write_data = 788;
     public final static int permission_Read_data = 789;
     public final static int permission_Recording_audio = 790;
     public final static int Pick_video_from_gallery = 791;
 
-
     public static String gif_api_key1 = "giphy_api_key_here";
 
     public static final String privacy_policy = "https://www.privacypolicygenerator.info/live.php?token=";
 
-
-    public static String base_url = "http://api.funnyvo.com/API/";
+    public static String base_url =  BuildConfig.hostAPI ;
     public static String domain = base_url + "index.php?p=";
-
 
     public static final String SignUp = domain + "signup";
     public static final String uploadVideo = domain + "uploadVideo";
@@ -114,6 +112,4 @@ public class Variables {
     public static final String search = domain + "search";
     public static final String getNotifications = domain + "getNotifications";
     public static final String getVerified = domain + "getVerified";
-
-
 }

@@ -108,13 +108,13 @@
                     android:id="@+id/recylerview_main_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
+                    android:layout_below="@+id/top_layout"
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recylerview"
                         android:layout_width="match_parent"
-                        android:layout_below="@+id/top_layout"
+
                         android:layout_height="match_parent"
                         android:scrollingCache="true" />
 

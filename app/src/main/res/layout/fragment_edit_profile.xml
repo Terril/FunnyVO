@@ -274,7 +274,7 @@
                             android:textSize="@dimen/text_size_15"
                             android:theme="@style/RadioButton" />
                         <RadioButton
-                            android:id="@+id/none_btn"
+                            android:id="@+id/btnNone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/don_t_want_to_disclose_it"

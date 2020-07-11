@@ -50,7 +50,7 @@
     <string name="login_message">By signing up, you confirm that you agree to our \n Terms of Use and have read and understood \n our Privacy Policy.</string>
     <string name="gender">Gender</string>
     <string name="male">Male</string>
-    <string name="female">female</string>
+    <string name="female">Female</string>
     <string name="don_t_want_to_disclose_it">Don\'t want to disclose it</string>
     <string name="bio">Bio</string>
     <string name="your_bio">Your Bio</string>

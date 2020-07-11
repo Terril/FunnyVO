@@ -563,7 +563,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                                 }
                             }
                         });
-
                     }
                 })
                 .start();
@@ -656,7 +655,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 }
             }
 
-
         }.execute();
 
     }
@@ -729,16 +727,13 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     }
                 }).show();
-
     }
-
 
     public void goToPreviewActivity() {
         Intent intent = new Intent(this, PreviewVideoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
-
 
     // this will delete all the video parts that is create during priviously created video
     int delete_count = 0;

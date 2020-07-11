@@ -1,6 +1,5 @@
 package com.funnyvo.android.videorecording;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,6 +7,7 @@ import android.util.Log;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
+import com.funnyvo.android.customview.ActivityIndicator;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -27,15 +27,14 @@ import java.util.List;
 // this is the class which will add the selected soung to the created video
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
-    ProgressDialog progressDialog;
     Context context;
 
-    String audio, video, output, draft_file;
+    private String audio, video, output, draft_file;
+    private ActivityIndicator indicator;
 
     public MergeVideoAudio(Context context) {
         this.context = context;
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Please Wait...");
+        indicator = new ActivityIndicator(context);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     @Override
     public String doInBackground(String... strings) {
         try {
-            progressDialog.show();
+            indicator.show();
         } catch (Exception e) {
 
         }
@@ -57,8 +56,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         if (strings.length == 4) {
             draft_file = strings[3];
         }
-
-        Log.d("resp", audio + "----" + video + "-----" + output);
 
         Thread thread = new Thread(runnable);
         thread.start();
@@ -73,7 +70,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     }
 
 
-    public void Go_To_preview_Activity() {
+    public void goToPreviewActivity() {
         Intent intent = new Intent(context, PreviewVideoActivity.class);
         intent.putExtra("path", Variables.outputfile2);
         intent.putExtra("draft_file", draft_file);
@@ -89,14 +86,9 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
             double lengthInSeconds = (double)
                     isoFile.getMovieBox().getMovieHeaderBox().getDuration() /
                     isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
-
-
             Track audioTrack = (Track) fullAudio;
-
-
             double startTime1 = 0;
             double endTime1 = lengthInSeconds;
-
 
             long currentSample = 0;
             double currentTime = 0;
@@ -107,7 +99,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
             for (int i = 0; i < audioTrack.getSampleDurations().length; i++) {
                 long delta = audioTrack.getSampleDurations()[i];
-
 
                 if (currentTime > lastTime && currentTime <= startTime1) {
                     // current sample is still before the new starttime
@@ -138,11 +129,8 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     public Runnable runnable = new Runnable() {
         @Override
         public void run() {
-
             try {
-
                 Movie m = MovieCreator.build(video);
-
 
                 List nuTracks = new ArrayList<>();
 
@@ -161,12 +149,11 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
                 mp4file.writeContainer(fc);
                 fc.close();
                 try {
-                    progressDialog.dismiss();
+                    indicator.hide();
                 } catch (Exception e) {
                     Log.d(Variables.tag, e.toString());
-
                 } finally {
-                    Go_To_preview_Activity();
+                    goToPreviewActivity();
                 }
 
             } catch (IOException e) {

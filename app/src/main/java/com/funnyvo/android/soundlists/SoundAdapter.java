@@ -81,8 +81,6 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.findSnapView(gridLayoutManager);
         snapHelper.attachToRecyclerView(holder.recyclerView);
-
-
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -97,11 +95,7 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
             recyclerView = view.findViewById(R.id.horizontal_recylerview);
 
         }
-
-
     }
-
-
 }
 
 
@@ -186,7 +180,6 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
             done = view.findViewById(R.id.done);
             fav_btn = view.findViewById(R.id.fav_btn);
 
-
             sound_name = view.findViewById(R.id.sound_name);
             description_txt = view.findViewById(R.id.description_txt);
             sound_image = view.findViewById(R.id.sound_image);
@@ -217,10 +210,6 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
             });
 
         }
-
-
     }
-
-
 }
 
