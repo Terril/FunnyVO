@@ -115,7 +115,6 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
 
 
     public void callApi() {
-
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("fb_id", Variables.user_id);
