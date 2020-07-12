@@ -126,6 +126,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.imvGallery).setOnClickListener(this);
 
         done_btn = findViewById(R.id.btnDone);
+        done_btn.setOnClickListener(this);
         done_btn.setEnabled(false);
 
         rotate_camera = findViewById(R.id.rotate_camera);
@@ -133,7 +134,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         flash_btn = findViewById(R.id.flash_camera);
         flash_btn.setOnClickListener(this);
 
-        findViewById(R.id.btnCloseRecordVideo).setOnClickListener(this);
+        ImageButton btnCloseRecordVideo = findViewById(R.id.btnCloseRecordVideo);
+        btnCloseRecordVideo.setOnClickListener(this);
 
         btnAddMusic = findViewById(R.id.btnAddMusicRecord);
         btnAddMusic.setOnClickListener(this);
@@ -237,7 +239,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_record_video_post));
 
             camera_options.setVisibility(View.GONE);
-            btnAddMusic.setClickable(false);
+            // btnAddMusic.setClickable(false);
             rotate_camera.setVisibility(View.GONE);
 
         } else if (is_recording) {
@@ -251,7 +253,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             if (sec_passed > ((Variables.recording_duration / 1000) / 3)) {
                 done_btn.setVisibility(View.VISIBLE);
                 done_btn.setEnabled(true);
-                done_btn.setOnClickListener(this);
             }
 
             cameraView.stopVideo();
@@ -371,7 +372,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         cameraView.toggleFacing();
     }
 
-    @SuppressLint("WrongConstant")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -486,7 +486,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 Uri uri = data.getData();
                 try {
                     File video_file = FileUtils.getFileFromUri(this, uri);
-                    if (getfileduration(uri) < 19500) {
+                    if (getFileDuration(uri) < 19500) {
                         changeVideoSize(video_file.getAbsolutePath(), Variables.gallery_resize_video);
                     } else {
                         try {
@@ -505,7 +505,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private long getfileduration(Uri uri) {
+    private long getFileDuration(Uri uri) {
         try {
 
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -686,7 +686,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        cameraView.start();
+        if (cameraView != null) {
+            cameraView.start();
+        }
     }
 
 
