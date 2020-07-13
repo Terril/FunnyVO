@@ -182,7 +182,7 @@ public class LikedVideoFragment extends Fragment {
                 recyclerView.invalidate();
 
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {

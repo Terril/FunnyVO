@@ -54,6 +54,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
     private EditText username_edit, fullname_edit;
     private TextView file_name_txt;
     private String base_64;
+    private File image_file;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -213,8 +214,6 @@ public class RequestVerificationFragment extends RootFragment implements View.On
     }
 
 
-    File image_file;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -302,7 +301,6 @@ public class RequestVerificationFragment extends RootFragment implements View.On
 
                 Bitmap rotatedBitmap = Bitmap.createBitmap(imagebitmap, 0, 0, imagebitmap.getWidth(), imagebitmap.getHeight(), matrix, true);
 
-
                 Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, (int) (rotatedBitmap.getWidth() * 0.5), (int) (rotatedBitmap.getHeight() * 0.5), true);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -312,14 +310,9 @@ public class RequestVerificationFragment extends RootFragment implements View.On
 
                 if (image_file != null)
                     file_name_txt.setText(image_file.getName());
-
-
             }
-
         }
-
     }
-
 
     // this will check the validations like none of the field can be the empty
     public boolean Check_Validation() {
@@ -351,6 +344,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
        showProgressDialog();
         ApiRequest.callApi(context, Variables.getVerified, params, new Callback() {
             @Override
@@ -360,7 +354,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
                     JSONObject jsonObject = new JSONObject(resp);
                     String code = jsonObject.optString("code");
                     if (code.equalsIgnoreCase("200")) {
-                        Toast.makeText(context, "Request Sent Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.request_sent, Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (JSONException e) {

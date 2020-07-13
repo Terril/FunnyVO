@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -42,23 +40,21 @@ import java.util.ArrayList;
  */
 public class TaggedVideosFragment extends RootFragment {
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    NestedScrollView scrollView;
-    RelativeLayout recylerview_main_layout;
+    private NestedScrollView scrollView;
+    private RelativeLayout recylerview_main_layout;
 
-    LinearLayout top_layout;
+    private LinearLayout top_layout;
 
-    RecyclerView recyclerView;
-    ArrayList<Home> data_list;
-    MyVideosAdapter adapter;
+    private RecyclerView recyclerView;
+    private ArrayList<Home> data_list;
+    private MyVideosAdapter adapter;
 
-    String tag_txt;
+    private String tag_txt;
 
-    TextView tag_txt_view, tag_title_txt;
-
-    ProgressBar progress_bar;
+    private TextView tag_txt_view, tag_title_txt;
 
     public TaggedVideosFragment() {
         // Required empty public constructor
@@ -75,13 +71,11 @@ public class TaggedVideosFragment extends RootFragment {
         if (Variables.sharedPreferences == null) {
             Variables.sharedPreferences = getActivity().getSharedPreferences(Variables.pref_name, Context.MODE_PRIVATE);
         }
-
-
+        
         Bundle bundle = getArguments();
         if (bundle != null) {
             tag_txt = bundle.getString("tag");
         }
-
 
         tag_txt_view = view.findViewById(R.id.tag_txt_view);
         tag_title_txt = view.findViewById(R.id.tag_title_txt);
@@ -91,7 +85,6 @@ public class TaggedVideosFragment extends RootFragment {
 
         recyclerView = view.findViewById(R.id.recylerview);
         scrollView = view.findViewById(R.id.scrollview);
-
 
         top_layout = view.findViewById(R.id.top_layout);
         recylerview_main_layout = view.findViewById(R.id.recylerview_main_layout);
@@ -146,7 +139,6 @@ public class TaggedVideosFragment extends RootFragment {
             });
         }
 
-
         recyclerView = view.findViewById(R.id.recylerview);
         final GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(layoutManager);
@@ -162,16 +154,11 @@ public class TaggedVideosFragment extends RootFragment {
         adapter = new MyVideosAdapter(context, data_list, new MyVideosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int postion, Home item, View view) {
-
-                OpenWatchVideo(postion);
-
+                openWatchVideo(postion);
             }
         });
 
         recyclerView.setAdapter(adapter);
-
-
-        progress_bar = view.findViewById(R.id.progress_bar);
 
         view.findViewById(R.id.back_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,16 +167,14 @@ public class TaggedVideosFragment extends RootFragment {
             }
         });
 
-        Call_Api_For_get_Allvideos();
-
-
+        callApiForGetAllVideos();
         return view;
     }
 
 
     //this will get the all videos data of user and then parse the data
-    private void Call_Api_For_get_Allvideos() {
-        progress_bar.setVisibility(View.VISIBLE);
+    private void callApiForGetAllVideos() {
+        showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
@@ -204,16 +189,15 @@ public class TaggedVideosFragment extends RootFragment {
         ApiRequest.callApi(context, Variables.SearchByHashTag, parameters, new Callback() {
             @Override
             public void response(String resp) {
-                progress_bar.setVisibility(View.GONE);
-                Parse_data(resp);
+                dismissProgressDialog();
+                parseData(resp);
             }
         });
 
 
     }
 
-    public void Parse_data(String responce) {
-
+    public void parseData(String responce) {
         data_list.clear();
 
         try {
@@ -255,22 +239,17 @@ public class TaggedVideosFragment extends RootFragment {
                     item.created_date = itemdata.optString("created");
 
                     item.video_description = itemdata.optString("description");
-
-
                     data_list.add(item);
                 }
-
-
                 adapter.notifyDataSetChanged();
-                progress_bar.setVisibility(View.GONE);
+                dismissProgressDialog();
 
             } else {
-                progress_bar.setVisibility(View.GONE);
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                dismissProgressDialog();
             }
 
         } catch (JSONException e) {
-            progress_bar.setVisibility(View.GONE);
+            dismissProgressDialog();
             e.printStackTrace();
         }
 
@@ -282,7 +261,7 @@ public class TaggedVideosFragment extends RootFragment {
         Functions.deleteCache(context);
     }
 
-    private void OpenWatchVideo(int postion) {
+    private void openWatchVideo(int postion) {
         Intent intent = new Intent(getActivity(), WatchVideosActivity.class);
         intent.putExtra("arraylist", data_list);
         intent.putExtra("position", postion);

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,15 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.funnyvo.android.R;
+import com.funnyvo.android.discover.datamodel.Discover;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
-import com.funnyvo.android.R;
 import com.funnyvo.android.search.SearchMainFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.watchvideos.WatchVideosActivity;
-import com.funnyvo.android.discover.datamodel.Discover;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,7 +72,6 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
             @Override
             public void onItemClick(ArrayList<Home> datalist, int postion) {
                 openWatchVideo(postion, datalist);
-
             }
         });
 
@@ -118,7 +116,6 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
         return view;
     }
 
-
     // Bottom two function will get the Discover videos
     // from api and parse the json data which is shown in Discover tab
 
@@ -126,7 +123,6 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -142,12 +138,11 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
     }
 
 
-    private void parseData(String responce) {
-
+    private void parseData(String response) {
         datalist.clear();
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
@@ -186,9 +181,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
                         item.video_id = itemdata.optString("id");
                         item.liked = itemdata.optString("liked");
 
-
                         item.video_url = itemdata.optString("video");
-
 
                         item.thum = itemdata.optString("thum");
                         item.gif = itemdata.optString("gif");
@@ -199,12 +192,12 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
                     }
 
                     discover.arrayList = video_list;
-
                     datalist.add(discover);
                 }
+
                 adapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {

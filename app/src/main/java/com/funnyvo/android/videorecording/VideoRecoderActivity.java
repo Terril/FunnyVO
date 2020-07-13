@@ -126,6 +126,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.imvGallery).setOnClickListener(this);
 
         done_btn = findViewById(R.id.btnDone);
+        done_btn.setOnClickListener(this);
         done_btn.setEnabled(false);
 
         rotate_camera = findViewById(R.id.rotate_camera);
@@ -133,7 +134,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         flash_btn = findViewById(R.id.flash_camera);
         flash_btn.setOnClickListener(this);
 
-        findViewById(R.id.btnCloseRecordVideo).setOnClickListener(this);
+        ImageButton btnCloseRecordVideo = findViewById(R.id.btnCloseRecordVideo);
+        btnCloseRecordVideo.setOnClickListener(this);
 
         btnAddMusic = findViewById(R.id.btnAddMusicRecord);
         btnAddMusic.setOnClickListener(this);
@@ -237,7 +239,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             record_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_record_video_post));
 
             camera_options.setVisibility(View.GONE);
-            btnAddMusic.setClickable(false);
+            // btnAddMusic.setClickable(false);
             rotate_camera.setVisibility(View.GONE);
 
         } else if (is_recording) {
@@ -251,7 +253,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             if (sec_passed > ((Variables.recording_duration / 1000) / 4)) {
                 done_btn.setVisibility(View.VISIBLE);
                 done_btn.setEnabled(true);
-                done_btn.setOnClickListener(this);
             }
 
             cameraView.stopVideo();
@@ -264,7 +265,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             Functions.showAlert(this, "Alert", "Video only can be a " + (int) Variables.recording_duration / 1000 + " S");
         }
     }
-
 
     // this will apped all the videos parts in one  fullvideo
     private boolean append() {
@@ -361,23 +361,19 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
     // this will add the select audio with the video
     public void mergeWithAudio() {
-
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
         MergeVideoAudio merge_video_audio = new MergeVideoAudio(VideoRecoderActivity.this);
         merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
-
     }
 
     public void rotateCamera() {
         cameraView.toggleFacing();
     }
 
-    @SuppressLint("WrongConstant")
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.record_image:
                 startOrStopRecording();
@@ -566,7 +562,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                                 }
                             }
                         });
-
                     }
                 })
                 .start();
@@ -659,7 +654,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 }
             }
 
-
         }.execute();
 
     }
@@ -691,7 +685,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        cameraView.start();
+        if (cameraView != null) {
+            cameraView.start();
+        }
     }
 
 
@@ -732,16 +728,13 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     }
                 }).show();
-
     }
-
 
     public void goToPreviewActivity() {
         Intent intent = new Intent(this, PreviewVideoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
-
 
     // this will delete all the video parts that is create during priviously created video
     int delete_count = 0;

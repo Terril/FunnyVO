@@ -120,7 +120,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                 break;
 
             case R.id.btnOpenVideo:
-                if (player.getPlayWhenReady())
+                if (player != null && player.getPlayWhenReady())
                     player.setPlayWhenReady(false);
 
                 convertMp3ToAcc();
@@ -128,7 +128,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
             case R.id.play_btn:
                 if (audio_file.exists())
-                    playaudio();
+                    playAudio();
                 else if (video_file.exists())
                     loadFFmpeg();
                 else
@@ -142,7 +142,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    public void playaudio() {
+    public void playAudio() {
 
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
@@ -238,7 +238,6 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
     public void loadFFmpeg() {
         showAudioLoading();
-
         final String[] complexCommand = {"-y", "-i", Variables.app_folder + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
                 Variables.app_folder + Variables.SelectedAudio_MP3};
 
@@ -261,7 +260,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                     hideAudioLoading();
                     audio_file = new File(Variables.app_folder + Variables.SelectedAudio_MP3);
                     if (audio_file.exists())
-                        playaudio();
+                        playAudio();
 
                 } else if (rc == RETURN_CODE_CANCEL) {
                     Log.d(Variables.tag, "Command execution cancelled by user.");

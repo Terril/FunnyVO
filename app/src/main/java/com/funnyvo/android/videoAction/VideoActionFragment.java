@@ -126,7 +126,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
                     adapter = new VideoSharingAppsAdapter(context, launchables, new VideoSharingAppsAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int positon, ResolveInfo item, View view) {
-                            Toast.makeText(context, "" + item.activityInfo.name, Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(context, "" + item.activityInfo.name, Toast.LENGTH_SHORT).show();
                             openApp(item);
                         }
                     });
@@ -138,7 +138,6 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
                             indicator.hide();
                         }
                     });
-
 
                 } catch (Exception e) {
 

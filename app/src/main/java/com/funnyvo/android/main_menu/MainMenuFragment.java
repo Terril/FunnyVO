@@ -53,24 +53,19 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
         context = getContext();
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
         pager = view.findViewById(R.id.viewpager);
-        pager.setOffscreenPageLimit(5);
+      //  pager.setOffscreenPageLimit(5);
         pager.setPagingEnabled(false);
         view.setOnClickListener(this);
 
         return view;
     }
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
-        }
-
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

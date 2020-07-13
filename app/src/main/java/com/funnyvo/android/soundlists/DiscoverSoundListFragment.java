@@ -95,7 +95,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
         recylerView = view.findViewById(R.id.recylerViewSoundList);
         recylerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        recylerView.setNestedScrollingEnabled(false);
+        recylerView.setNestedScrollingEnabled(true);
         recylerView.setHasFixedSize(true);
         recylerView.getLayoutManager().setMeasurementCacheEnabled(false);
 
@@ -121,7 +121,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             public void onItemClick(View view, int postion, Sounds item) {
                 if (view.getId() == R.id.done) {
                     stopPlaying();
-                    downLoadMp3(item.id, item.sound_name, item.acc_path);
+                    downLoadMp3(item.id, item.sound_name, item.soundUrl);
                 } else if (view.getId() == R.id.fav_btn) {
                     callApiForFavSound(postion, item);
                 } else {
@@ -139,7 +139,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
         recylerView.setAdapter(adapter);
 
-
     }
 
 
@@ -153,8 +152,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             e.printStackTrace();
         }
 
-        Log.d("resp", parameters.toString());
-
         ApiRequest.callApi(context, Variables.allSounds, parameters, new Callback() {
             @Override
             public void response(String resp) {
@@ -164,14 +161,11 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             }
         });
 
-
     }
 
 
     public void parseData(String response) {
-
         datalist = new ArrayList<>();
-
         try {
             JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
@@ -181,9 +175,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
                 for (int i = msgArray.length() - 1; i >= 0; i--) {
                     JSONObject object = msgArray.getJSONObject(i);
-
-                    Log.d("resp", object.toString());
-
                     JSONArray section_array = object.optJSONArray("sections_sounds");
 
                     ArrayList<Sounds> sound_list = new ArrayList<>();
@@ -192,7 +183,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                         JSONObject itemdata = section_array.optJSONObject(j);
 
                         Sounds item = new Sounds();
-
                         item.id = itemdata.optString("id");
 
                         JSONObject audio_path = itemdata.optJSONObject("audio_path");
@@ -204,6 +194,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                         item.thum = itemdata.optString("thum");
                         item.date_created = itemdata.optString("created");
                         item.fav = itemdata.optString("fav");
+                        item.soundUrl = itemdata.optString("sound_url");
 
                         sound_list.add(item);
                     }
@@ -214,16 +205,12 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                     datalist.add(sound_category);
                 }
 
-
                 setAdapter();
-
-
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
-
             e.printStackTrace();
         }
     }
@@ -239,12 +226,10 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         previous_view = view;
 
         if (previous_url.equals(item.acc_path)) {
-
             previous_url = "none";
             running_sound_id = "none";
         } else {
-
-            previous_url = item.acc_path;
+            previous_url = item.soundUrl;
             running_sound_id = item.id;
 
             DefaultTrackSelector trackSelector = new DefaultTrackSelector();
@@ -254,16 +239,13 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                     Util.getUserAgent(context, APP_NAME));
 
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(item.acc_path));
+                    .createMediaSource(Uri.parse(item.soundUrl));
 
             player.prepare(videoSource);
             player.addListener(this);
 
             player.setPlayWhenReady(true);
-
-
         }
-
     }
 
     public void stopPlaying() {
@@ -307,7 +289,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
             previous_view.findViewById(R.id.done).setVisibility(View.VISIBLE);
         }
-
     }
 
 

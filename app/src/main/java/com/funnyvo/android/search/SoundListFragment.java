@@ -1,6 +1,5 @@
 package com.funnyvo.android.search;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.AdapterClickListener;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.Sounds;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -53,22 +51,28 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SoundListFragment extends RootFragment implements Player.EventListener {
 
-    View view;
-    Context context;
-    String type;
-    ShimmerFrameLayout shimmerFrameLayout;
-    ArrayList<Object> data_list;
-    RecyclerView recyclerView;
-    SoundListAdapter adapter;
+    private View view;
+    private Context context;
+    private String type;
+    private ShimmerFrameLayout shimmerFrameLayout;
+    private ArrayList<Object> data_list;
+    private RecyclerView recyclerView;
+    private SoundListAdapter adapter;
     static boolean active = false;
 
     DownloadRequest prDownloader;
 
+    private View previous_view;
+    private Thread thread;
+    private SimpleExoPlayer player;
+    private String previous_url = "none";
     public static String running_sound_id;
 
     public SoundListFragment(String type) {
@@ -174,6 +178,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
                     item.thum = Variables.base_url + itemdata.optString("thum");
                     item.date_created = itemdata.optString("created");
                     item.fav = itemdata.optString("fav");
+                    item.soundUrl = itemdata.optString("sound_url");
 
                     data_list.add(item);
                 }
@@ -186,7 +191,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
                 adapter.notifyDataSetChanged();
 
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -216,7 +221,6 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             @Override
             public void response(String resp) {
               dismissProgressDialog();
-
                 if (item.fav.equals("1"))
                     item.fav = "0";
                 else
@@ -233,16 +237,11 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
 
     }
 
-    View previous_view;
-    Thread thread;
-    SimpleExoPlayer player;
-    String previous_url = "none";
 
     public void playaudio(View view, final Sounds item) {
         previous_view = view;
 
         if (previous_url.equals(item.acc_path)) {
-
             previous_url = "none";
             running_sound_id = "none";
         } else {
@@ -254,21 +253,16 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, "TikTok"));
+                    Util.getUserAgent(context, APP_NAME));
 
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(item.acc_path));
-
+                    .createMediaSource(Uri.parse(item.soundUrl));
 
             player.prepare(videoSource);
             player.addListener(this);
 
-
             player.setPlayWhenReady(true);
-
-
         }
-
     }
 
 

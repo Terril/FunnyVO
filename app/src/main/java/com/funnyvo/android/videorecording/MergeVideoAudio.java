@@ -30,7 +30,8 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     Context context;
     ActivityIndicator indicator;
 
-    String audio, video, output, draft_file;
+    private String audio, video, output, draft_file;
+    private ActivityIndicator indicator;
 
     public MergeVideoAudio(Context context) {
         this.context = context;
@@ -56,8 +57,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         if (strings.length == 4) {
             draft_file = strings[3];
         }
-
-        Log.d("resp", audio + "----" + video + "-----" + output);
 
         Thread thread = new Thread(runnable);
         thread.start();
@@ -88,14 +87,9 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
             double lengthInSeconds = (double)
                     isoFile.getMovieBox().getMovieHeaderBox().getDuration() /
                     isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
-
-
             Track audioTrack = (Track) fullAudio;
-
-
             double startTime1 = 0;
             double endTime1 = lengthInSeconds;
-
 
             long currentSample = 0;
             double currentTime = 0;
@@ -138,6 +132,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         public void run() {
             try {
                 Movie m = MovieCreator.build(video);
+
                 List nuTracks = new ArrayList<>();
 
                 for (Track t : m.getTracks()) {
@@ -158,7 +153,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
                     indicator.hide();
                 } catch (Exception e) {
                     Log.d(Variables.tag, e.toString());
-
                 } finally {
                     goToPreviewActivity();
                 }

@@ -99,7 +99,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     private RecyclerView recyclerView;
     private ArrayList<Home> data_list = new ArrayList<>();
-    ;
+
     private int position = 0;
     private int currentPage = -1;
     private LinearLayoutManager layoutManager;

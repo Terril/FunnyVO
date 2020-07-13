@@ -47,8 +47,8 @@
                 <com.funnyvo.android.customview.FunnyVOEditTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/search"
-                    android:padding="7dp"
+                    android:hint="@string/search_dara"
+                    android:padding="@dimen/margin_5"
                     android:textSize="@dimen/text_size_15"
                     android:inputType="textNoSuggestions"
                     android:id="@+id/search_edit"

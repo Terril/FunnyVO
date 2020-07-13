@@ -74,7 +74,8 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
     private Context context;
     FragmentCallback fragment_callback;
 
-    public EditProfileFragment() { }
+    public EditProfileFragment() {
+    }
 
     public EditProfileFragment(FragmentCallback fragment_callback) {
         this.fragment_callback = fragment_callback;
@@ -83,8 +84,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
     private ImageView profile_image;
     private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit;
 
-    private RadioButton male_btn, female_btn;
-
+    private RadioButton male_btn, female_btn, btnNone;
     private String imageFilePath;
 
     @Override
@@ -120,7 +120,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
         male_btn = view.findViewById(R.id.male_btn);
         female_btn = view.findViewById(R.id.female_btn);
-
+        btnNone = view.findViewById(R.id.btnNone);
 
         callApiForUserDetails();
 
@@ -447,6 +447,8 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
             } else if (female_btn.isChecked()) {
                 parameters.put("gender", "Female");
+            } else {
+                parameters.put("gender", "none");
             }
 
             parameters.put("bio", user_bio_edit.getText().toString());
@@ -542,14 +544,15 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                 String gender = data.optString("gender");
                 if (gender.equals("Male")) {
                     male_btn.setChecked(true);
-                } else {
+                } else if (gender.equals("Female")) {
                     female_btn.setChecked(true);
+                } else  {
+                    btnNone.setChecked(true);
                 }
 
                 user_bio_edit.setText(data.optString("bio"));
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
-
+                // Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();

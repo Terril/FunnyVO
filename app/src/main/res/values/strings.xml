@@ -50,7 +50,7 @@
     <string name="login_message">By signing up, you confirm that you agree to our \n Terms of Use and have read and understood \n our Privacy Policy.</string>
     <string name="gender">Gender</string>
     <string name="male">Male</string>
-    <string name="female">female</string>
+    <string name="female">Female</string>
     <string name="don_t_want_to_disclose_it">Don\'t want to disclose it</string>
     <string name="bio">Bio</string>
     <string name="your_bio">Your Bio</string>
@@ -64,6 +64,7 @@
     <string name="description_hashtags">Description and HashTags</string>
     <string name="title">Title</string>
     <string name="search">Search</string>
+    <string name="search_dara">Search Users, Music and Videos</string>
     <string name="audio">Audio</string>
     <string name="description">Description</string>
     <string name="create">Create</string>
@@ -77,4 +78,10 @@
     <string name="cant_undo">If you go back you can\'t undo this action</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="error_saving_video">Error saving the video</string>
+    <string name="skip">Skip</string>
+    <string name="finish">Finish</string>
+    <string name="to">To</string>
+    <string name="request_sent">Request Sent Successfully</string>
+
 </resources>
