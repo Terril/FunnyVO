@@ -107,7 +107,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     Context context;
 
     RecyclerView recyclerView;
-    private ArrayList<Home> data_list = new ArrayList<>();
+    private ArrayList<Home> data_list;
     private int currentPage = -1;
     LinearLayoutManager layoutManager;
     ProgressBar p_bar;
@@ -153,7 +153,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-
+        data_list = new ArrayList<>();
         setAdapter();
         // this is the scroll listener of recycler view which will tell the current item number
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
