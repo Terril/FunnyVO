@@ -14,13 +14,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            app:cameraFacing="front"
-            app:cameraWhiteBalance="auto"
-            app:cameraMode="video"
-            app:cameraVideoCodec="h264"
-            app:cameraUseDeviceOrientation="false"
             app:cameraAudio="on"
-            app:cameraFlash="off"/>
+            app:cameraFacing="front"
+            app:cameraFlash="off"
+            app:cameraMode="video"
+            app:cameraUseDeviceOrientation="false"
+            app:cameraVideoCodec="h264"
+            app:cameraWhiteBalance="auto">
+
+            <com.funnyvo.android.customview.FunnyVOEditTextView
+                android:id="@+id/edtTxtVideoMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences|textMultiLine"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_35"
+                android:visibility="gone" />
+        </com.otaliastudios.cameraview.CameraView>
 
 
         <RelativeLayout
@@ -117,8 +132,7 @@
                 android:layout_marginEnd="@dimen/margin_20"
                 android:background="@color/transparent"
                 android:padding="@dimen/margin_5"
-                android:src="@drawable/ic_text_fields"
-                android:visibility="invisible" />
+                android:src="@drawable/ic_text_fields" />
 
             <ImageButton
                 android:id="@+id/btnSlowMotion"
@@ -223,6 +237,20 @@
             android:textSize="100sp"
             android:visibility="gone"
             app:customFont="@string/font_bold" />
+
+<!--        <com.funnyvo.android.customview.FunnyVOEditTextView-->
+<!--            android:id="@+id/edtTxtVideoMessage"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:focusable="true"-->
+<!--            android:gravity="center"-->
+<!--            android:imeOptions="actionDone"-->
+<!--            android:inputType="textCapSentences|textMultiLine"-->
+<!--            android:textColor="@color/colorAccent"-->
+<!--            android:textSize="@dimen/text_size_35"-->
+<!--            android:visibility="gone" />-->
 
     </RelativeLayout>
 

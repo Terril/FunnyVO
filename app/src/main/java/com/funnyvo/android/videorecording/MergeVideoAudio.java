@@ -28,7 +28,6 @@ import java.util.List;
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     Context context;
-    ActivityIndicator indicator;
 
     private String audio, video, output, draft_file;
     private ActivityIndicator indicator;
@@ -41,16 +40,15 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        if (indicator != null) {
+            indicator.show();
+        }
+
     }
 
 
     @Override
     public String doInBackground(String... strings) {
-        try {
-            indicator.show();
-        } catch (Exception e) {
-
-        }
         audio = strings[0];
         video = strings[1];
         output = strings[2];
@@ -150,7 +148,9 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
                 mp4file.writeContainer(fc);
                 fc.close();
                 try {
-                    indicator.hide();
+                    if (indicator != null) {
+                        indicator.hide();
+                    }
                 } catch (Exception e) {
                     Log.d(Variables.tag, e.toString());
                 } finally {

@@ -1,5 +1,7 @@
 package com.funnyvo.android.videorecording.viewModel
 
+import android.content.Context
+import android.net.Uri
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
@@ -8,9 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
+import com.daasuu.gpuv.composer.GPUMp4Composer
 import com.funnyvo.android.FunnyVOExceptions
 import com.funnyvo.android.helper.Result
 import com.funnyvo.android.simpleclasses.Variables
+import com.funnyvo.android.videorecording.data.VideoRecording
+import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
+import com.lb.video_trimmer_library.utils.TrimVideoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,7 +26,8 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val motionFilter = MutableLiveData<Boolean>();
+    val motionFilter = MutableLiveData<Boolean>()
+    val videoRecordingLiveEvent = MutableLiveData<VideoRecording>()
 
     private var deleteCount = 0;
 //
@@ -53,7 +60,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             when (applyFameMotionFilter(srcFile, destFile)) {
                 is Result.Success -> motionFilter.value = true
-                else ->  motionFilter.value = false
+                else -> motionFilter.value = false
             }
         }
     }
@@ -72,6 +79,49 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         val complexCommand = arrayOf("-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION)
         viewModelScope.launch(Dispatchers.IO) {
             FFmpeg.execute(complexCommand)
+        }
+    }
+
+    fun changeVideoSize(src_path: String?, destination_path: String?) {
+        var recording: VideoRecording
+        GPUMp4Composer(src_path, destination_path)
+                .size(720, 1280)
+                .videoBitrate((0.25 * 16 * 540 * 960).toInt())
+                .listener(object : GPUMp4Composer.Listener {
+                    override fun onProgress(progress: Double) {
+                        recording = VideoRecording(isInProgress = true)
+                        viewModelScope.launch(Dispatchers.Main) {
+                            videoRecordingLiveEvent.value = recording
+                        }
+                    }
+
+                    override fun onCompleted() {
+                        recording = VideoRecording(hasCompleted = true)
+                        viewModelScope.launch(Dispatchers.Main) {
+                            videoRecordingLiveEvent.value = recording
+                        }
+                    }
+
+                    override fun onCanceled() {
+                        recording = VideoRecording(isCancelled = true)
+                        viewModelScope.launch(Dispatchers.Main) {
+                            videoRecordingLiveEvent.value = recording
+                        }
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                        recording = VideoRecording(hasFailed = true)
+                        viewModelScope.launch(Dispatchers.Main) {
+                            videoRecordingLiveEvent.value = recording
+                        }
+                    }
+                })
+                .start()
+    }
+
+    fun trimVideo(context: Context, uri: Uri, trimmingListener: VideoTrimmingListener) {
+        viewModelScope.launch(Dispatchers.IO) {
+            TrimVideoUtils.startTrim(context, uri, File(Variables.gallery_trimed_video), 1000, 18000, 18000, trimmingListener)
         }
     }
 

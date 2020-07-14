@@ -28,6 +28,9 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SplashActivity extends BaseActivity {
     private SplashPagerAdapter pagerAdapter;
     private ViewPager viewPager;

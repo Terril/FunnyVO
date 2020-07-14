@@ -1,5 +1,9 @@
 package com.funnyvo.android.videorecording
 
+import android.app.Activity
+import android.content.ClipData
+import android.content.ClipDescription
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.MediaMetadataRetriever
@@ -8,39 +12,46 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.MediaStore
+import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.DragShadowBuilder
+import android.view.View.OnTouchListener
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.funnyvo.android.R
 import com.funnyvo.android.base.BaseActivity
+import com.funnyvo.android.customview.FunnyVOEditTextView
+import com.funnyvo.android.extensions.filterNull
 import com.funnyvo.android.filter.CameraFilter
 import com.funnyvo.android.filter.CameraFilterAdapter
 import com.funnyvo.android.filter.CameraFilterAdapter.OnItemClickListener
-import com.funnyvo.android.helper.CameraEventListener
-import com.funnyvo.android.segmentprogress.ProgressBarListener
+import com.funnyvo.android.simpleclasses.FileUtils
 import com.funnyvo.android.simpleclasses.FragmentCallback
 import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.soundlists.SoundListMainActivity
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
+import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.otaliastudios.cameraview.filter.Filters
+import com.otaliastudios.cameraview.overlay.OverlayLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_video_recoder_new.*
 import java.io.File
 import java.io.IOException
 import java.util.*
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
-    @Inject
-    lateinit var cameraEventListenr: CameraEventListener
+class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrimmingListener, View.OnDragListener {
     private val recordingViewModel: VideoRecordingViewModel by viewModels()
 
     private var isSlided = false
@@ -53,6 +64,8 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
     private var number = 0;
 
     private val SOUNDRECORDCODE = 151
+    private var _xDelta = 0F
+    private var _yDelta = 0F
 
     private val arrayOfVideoPaths = ArrayList<String>()
 
@@ -60,7 +73,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_recoder_new)
 
-        setClickListeners()
+        setListeners()
 
         cameraRecording.setLifecycleOwner(this)
         slideLeft(layoutCameraOptions)
@@ -68,16 +81,16 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
 
         loadFilters()
         observeFilters()
+        observeVideoRecordingEvent()
 
         if (intent.hasExtra("sound_name")) {
             btnAddMusicRecord.text = intent.getStringExtra("sound_name")
             Variables.Selected_sound_id = intent.getStringExtra("sound_id")
             prepareAudio()
         }
-
     }
 
-    private fun setClickListeners() {
+    private fun setListeners() {
         btnRotateCamera.setOnClickListener(this)
         btnFlashCamera.setOnClickListener(this)
         btnTimer.setOnClickListener(this)
@@ -89,6 +102,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
         imvGallery.setOnClickListener(this)
         btnCloseRecordVideo.setOnClickListener(this)
         btnAddMusicRecord.setOnClickListener(this)
+        btnTextEditor.setOnClickListener(this)
     }
 
     private fun loadFilters() {
@@ -129,7 +143,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
             isRecording = true
             val file = File(Variables.app_folder + "myvideo" + number + ".mp4")
             arrayOfVideoPaths.add(Variables.app_folder + "myvideo" + number + ".mp4")
-            cameraRecording.takeVideo(file)
+            cameraRecording.takeVideoSnapshot(file)
             //   cameraRecording.captureVideo(file)
             if (audio != null) audio.start()
             videoProgress.resume()
@@ -137,7 +151,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
             btnAddMusicRecord.isClickable = false
-           // cameraRecording.open()
+            // cameraRecording.open()
         } else if (isRecording) {
             isRecording = false
             videoProgress.pause()
@@ -221,13 +235,72 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
                     finish()
                     overridePendingTransition(R.anim.in_from_top, R.anim.out_from_bottom)
                 }.show()
-
     }
 
     private fun observeFilters() {
         recordingViewModel.motionFilter.observe(this) {
 
         }
+    }
+
+    private fun observeVideoRecordingEvent() {
+        recordingViewModel.videoRecordingLiveEvent.observe(this) {
+            when {
+                it.isInProgress.filterNull() -> {
+                    showProgressDialog()
+                }
+                it.hasCompleted.filterNull() -> {
+                    dismissProgressDialog()
+                    val intent = Intent(this, PreviewVideoActivity::class.java)
+                    intent.putExtra("video_path", Variables.gallery_resize_video)
+                    startActivity(intent)
+                }
+                it.hasFailed.filterNull() -> {
+                    dismissProgressDialog()
+                    Toast.makeText(this, R.string.try_again, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun startWritingOnVideo() {
+        edtTxtVideoMessage.visibility = View.VISIBLE
+        edtTxtVideoMessage.requestFocus()
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(edtTxtVideoMessage, InputMethodManager.SHOW_IMPLICIT)
+        edtTxtVideoMessage.setOnDragListener(this@VideoRecorderActivityNew)
+//        edtTxtVideoMessage.addTextChangedListener(object: TextWatcher {
+//            override fun afterTextChanged(s: Editable?) {
+//
+//            }
+//
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//            }
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//            }
+//        })
+
+        edtTxtVideoMessage.setOnLongClickListener { v ->
+            val item: ClipData.Item = ClipData.Item(v.tag as CharSequence)
+            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+            val dragData = ClipData(v.tag.toString(), mimeTypes, item)
+            val myShadow = DragShadowBuilder(edtTxtVideoMessage)
+            v.startDrag(dragData, myShadow, null, 0)
+            true
+        }
+
+        edtTxtVideoMessage.setOnTouchListener(OnTouchListener { v, event ->
+            if (event.action === MotionEvent.ACTION_DOWN) {
+                val data = ClipData.newPlainText("", "")
+                val shadowBuilder = DragShadowBuilder(edtTxtVideoMessage)
+                edtTxtVideoMessage.startDrag(data, shadowBuilder, edtTxtVideoMessage, 0)
+                edtTxtVideoMessage.visibility = View.INVISIBLE
+                true
+            } else {
+                false
+            }
+        })
     }
 
     private fun slideUp(view: View) {
@@ -285,7 +358,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
                 Intent.ACTION_PICK,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
         intent.type = "video/*"
-        startActivityForResult(intent, Variables.Pick_video_from_gallery)
+        startActivityForResult(intent, Variables.PICKVIDEOFROMGALLERY)
     }
 
     private fun slideCameraOptions() {
@@ -329,7 +402,52 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
                 closeVideoView()
             btnRotateCamera ->
                 cameraRecording.toggleFacing()
+            btnTextEditor ->
+                startWritingOnVideo()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SOUNDRECORDCODE) {
+                if (data != null) {
+                    if (data.getStringExtra("isSelected") == "yes") {
+                        btnAddMusicRecord.text = data.getStringExtra("sound_name")
+                        Variables.Selected_sound_id = data.getStringExtra("sound_id")
+                        prepareAudio()
+                    }
+                }
+            } else if (requestCode == Variables.PICKVIDEOFROMGALLERY) {
+                val uri: Uri = data?.data!!
+                try {
+                    val videoFle = FileUtils.getFileFromUri(this, uri)
+                    if (getFileDuration(uri) < 19500) {
+                        recordingViewModel.changeVideoSize(videoFle.absolutePath, Variables.gallery_resize_video)
+                    } else {
+                        try {
+                            recordingViewModel.trimVideo(this, uri, this)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun getFileDuration(uri: Uri): Long {
+        try {
+            val mmr = MediaMetadataRetriever()
+            mmr.setDataSource(this, uri)
+            val durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            val fileDuration = durationStr.toInt()
+            return fileDuration.toLong()
+        } catch (e: java.lang.Exception) {
+        }
+        return 0
     }
 
     override fun onResume() {
@@ -346,4 +464,46 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener {
         super.onDestroy()
         cameraRecording.destroy()
     }
+
+    override fun onErrorWhileViewingVideo(what: Int, extra: Int) {
+        Toast.makeText(this, getString(R.string.try_again), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onFinishedTrimming(uri: Uri?) {
+        recordingViewModel.changeVideoSize(Variables.gallery_trimed_video, Variables.gallery_resize_video)
+    }
+
+    override fun onTrimStarted() {
+        showProgressDialog()
+    }
+
+    override fun onVideoPrepared() {
+        cameraRecording.overlay
+    }
+
+    override fun onDrag(v: View?, event: DragEvent?): Boolean {
+        when (event!!.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+            }
+            DragEvent.ACTION_DRAG_ENTERED -> {
+            }
+            DragEvent.ACTION_DRAG_EXITED -> {
+            }
+            DragEvent.ACTION_DROP -> {
+                // Dropped, reassign View to ViewGroup
+                val view = event.localState as FunnyVOEditTextView
+                val owner: ViewGroup = view.parent as ViewGroup
+                owner.removeView(view)
+                val container: OverlayLayout = v as OverlayLayout
+                container.addView(view)
+                view.visibility = View.VISIBLE
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+            }
+            else -> {
+            }
+        }
+        return true
+    }
+
 }
