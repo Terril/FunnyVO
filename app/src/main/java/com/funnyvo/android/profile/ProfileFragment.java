@@ -3,7 +3,6 @@ package com.funnyvo.android.profile;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.chat.ChatActivity;
@@ -35,7 +33,6 @@ import com.funnyvo.android.following.FollowingFragment;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
-import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
@@ -47,8 +44,6 @@ import com.google.android.material.tabs.TabLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 
 // This is the profile screen which is show in 5 tab as well as it is also call

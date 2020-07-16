@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.funnyvo.android.apirequest.MultipartRequest;
@@ -50,10 +51,15 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import static com.funnyvo.android.simpleclasses.ApiRequest.getSSLSocketFactory;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 // this the background service which will upload the video into database
@@ -193,7 +199,19 @@ public class UploadService extends Service {
                             }
 
                         }, fileRequest, stringRequest, headers);
-                        RequestQueue request = Volley.newRequestQueue(UploadService.this);
+                        HurlStack hurlStack = new HurlStack() {
+                            @Override
+                            protected HttpURLConnection createConnection(URL url) throws IOException {
+                                HttpsURLConnection httpsURLConnection = (HttpsURLConnection) super.createConnection(url);
+                                try {
+                                    httpsURLConnection.setSSLSocketFactory(getSSLSocketFactory(UploadService.this));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return httpsURLConnection;
+                            }
+                        };
+                        RequestQueue request = Volley.newRequestQueue(UploadService.this, hurlStack);
                         request.getCache().clear();
                         request.add(multipartRequest);
 
@@ -241,7 +259,7 @@ public class UploadService extends Service {
             notificationManager.createNotificationChannel(defaultChannel);
         }
 
-        androidx.core.app.NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setContentTitle(getString(R.string.uploading_video))
                 .setContentText(getString(R.string.please_wait_upload_video))
