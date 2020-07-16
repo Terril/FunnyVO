@@ -432,7 +432,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    public void parseData(String responce) {
+    private  void parseData(String responce) {
 
         try {
             JSONObject jsonObject = new JSONObject(responce);
@@ -479,7 +479,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    public void openEditProfile() {
+    private void openEditProfile() {
         EditProfileFragment edit_profile_fragment = new EditProfileFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -493,7 +493,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
 
-    public void openSetting() {
+    private void openSetting() {
         SettingFragment setting_fragment = new SettingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
@@ -503,7 +503,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
 
     //this method will get the big size of profile image.
-    public void openfullsizeImage(String url) {
+    private void openfullsizeImage(String url) {
         SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -515,7 +515,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
 
-    public void openMenuTab(View anchor_view) {
+    private void openMenuTab(View anchor_view) {
         Context wrapper = new ContextThemeWrapper(context, R.style.AlertDialogCustom);
         PopupMenu popup = new PopupMenu(wrapper, anchor_view);
         popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
@@ -546,7 +546,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    public void openFollowing() {
+    private void openFollowing() {
         FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -564,7 +564,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    public void openFollowers() {
+    private void openFollowers() {
         FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -583,7 +583,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
     // this will erase all the user info store in locally and logout the user
-    public void logout() {
+    private void logout() {
         SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
         editor.putString(Variables.u_id, "");
         editor.putString(Variables.u_name, "");

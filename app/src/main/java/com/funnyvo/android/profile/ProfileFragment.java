@@ -95,7 +95,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        return init(view);
     }
 
     @Override
@@ -138,13 +140,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init(view);
-    }
 
-    private void init(View view) {
+    private View init(View view) {
         username = view.findViewById(R.id.username);
         username2_txt = view.findViewById(R.id.username2_txt);
         imageView = view.findViewById(R.id.user_image);
@@ -217,6 +214,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
         isdataload = true;
         callApiForGetAllvideos();
+
+        return view;
     }
 
 
@@ -383,7 +382,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void parseData(String responce) {
+    private void parseData(String responce) {
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");
@@ -441,7 +440,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void followUnFollowUser() {
+    private void followUnFollowUser() {
         final String status;
         if (follow_status.equals("0")) {
             status = "1";
@@ -497,7 +496,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
 
     //this method will get the big size of profile image.
-    public void openfullsizeImage(String url) {
+    private void openfullsizeImage(String url) {
         SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -515,7 +514,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openChat() {
+    private void openChat() {
         ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
@@ -535,7 +534,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openFollowing() {
+    private void openFollowing() {
 
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -557,7 +556,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openFollowers() {
+    private void openFollowers() {
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
