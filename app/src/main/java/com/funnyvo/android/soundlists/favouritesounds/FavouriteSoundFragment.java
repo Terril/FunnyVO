@@ -1,7 +1,6 @@
 package com.funnyvo.android.soundlists.favouritesounds;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,11 +26,10 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
-import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.Sounds;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -125,7 +123,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
 
                 if (view.getId() == R.id.done) {
                     stopPlaying();
-                    downLoadMp3(item.id, item.sound_name, item.acc_path);
+                    downLoadMp3(item.id, item.sound_name, item.soundUrl);
                 } else if (view.getId() == R.id.fav_btn) {
                     callApiForFavSound(postion, item.id);
                 } else {
@@ -200,6 +198,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
                     item.section = itemdata.optString("section");
                     item.thum = itemdata.optString("thum");
                     item.date_created = itemdata.optString("created");
+                    item.soundUrl = itemdata.optString("sound_url");
 
                     datalist.add(item);
                 }
@@ -223,37 +222,32 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         return super.onBackPressed();
     }
 
-    public void playaudio(View view, final Sounds item) {
+    private void playaudio(View view, final Sounds item) {
         previous_view = view;
 
-        if (previous_url.equals(item.acc_path)) {
+        if (previous_url.equals(item.soundUrl)) {
 
             previous_url = "none";
             running_sound_id = "none";
         } else {
 
-            previous_url = item.acc_path;
+            previous_url = item.soundUrl;
             running_sound_id = item.id;
 
             DefaultTrackSelector trackSelector = new DefaultTrackSelector();
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, "TikTok"));
+                    Util.getUserAgent(context, Variables.APP_NAME));
 
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(item.acc_path));
-
+                    .createMediaSource(Uri.parse(item.soundUrl));
 
             player.prepare(videoSource);
             player.addListener(this);
 
-
             player.setPlayWhenReady(true);
-
-
         }
-
     }
 
 
@@ -265,7 +259,6 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         }
 
         showStopState();
-
     }
 
 
@@ -273,6 +266,12 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
     public void onStart() {
         super.onStart();
         active = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopPlaying();
     }
 
     @Override
@@ -289,7 +288,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         }
 
         showStopState();
-
+        stopPlaying();
     }
 
 
@@ -325,11 +324,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
 
 
     public void downLoadMp3(final String id, final String sound_name, String url) {
-
-        final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.show();
-
+        showProgressDialog();
         prDownloader = PRDownloader.download(url, Variables.app_folder, Variables.SelectedAudio_AAC)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
@@ -360,9 +355,9 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         prDownloader.start(new OnDownloadListener() {
             @Override
             public void onDownloadComplete() {
-                progressDialog.dismiss();
+                dismissProgressDialog();
                 Intent output = new Intent();
-                output.putExtra("isSelected", "yes");
+                output.putExtra("isSelected", getString(R.string.yes));
                 output.putExtra("sound_name", sound_name);
                 output.putExtra("sound_id", id);
                 getActivity().setResult(RESULT_OK, output);
@@ -372,7 +367,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
 
             @Override
             public void onError(Error error) {
-                progressDialog.dismiss();
+                dismissProgressDialog();
             }
         });
 

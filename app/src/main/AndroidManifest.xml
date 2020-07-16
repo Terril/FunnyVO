@@ -61,9 +61,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="bringthings.com"
+                    android:host="funnyvo.com"
                     android:pathPrefix="/API/"
-                    android:scheme="http" />
+                    android:scheme="https" />
             </intent-filter>
 
             <meta-data

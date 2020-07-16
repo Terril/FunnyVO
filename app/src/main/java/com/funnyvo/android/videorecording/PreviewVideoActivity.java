@@ -206,6 +206,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     public void onBackPressed() {
         finish();
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+        super.onBackPressed();
     }
 
     private void applySlowMoVideo() {
@@ -397,8 +398,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 toggleFastMo();
                 break;
             case R.id.btnGoBackPreview:
-                finish();
-                overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+              onBackPressed();
                 break;
             case R.id.btnNext:
                 if (isMotionFilterSelected) {
