@@ -688,17 +688,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        setListener();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (cameraView != null) {
             cameraView.start();
         }
+        setListener();
     }
 
     @Override
