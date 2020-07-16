@@ -1,5 +1,6 @@
 package com.funnyvo.android.videorecording;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,14 +28,14 @@ import java.util.List;
 // this is the class which will add the selected soung to the created video
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
-    Context context;
+    private Activity activity;
 
     private String audio, video, output, draft_file;
-    ActivityIndicator indicator;
+  //  private ActivityIndicator indicator;
 
-    public MergeVideoAudio(Context context) {
-        this.context = context;
-        indicator = new ActivityIndicator(context);
+    public MergeVideoAudio(Activity activity) {
+        this.activity = activity;
+//        indicator = new ActivityIndicator(activity);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     @Override
     public String doInBackground(String... strings) {
         try {
-            indicator.show();
+//            indicator.show();
         } catch (Exception e) {
 
         }
@@ -71,10 +72,10 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
 
     public void goToPreviewActivity() {
-        Intent intent = new Intent(context, PreviewVideoActivity.class);
+        Intent intent = new Intent(activity, PreviewVideoActivity.class);
         intent.putExtra("path", Variables.outputfile2);
         intent.putExtra("draft_file", draft_file);
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 
 
@@ -148,13 +149,13 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
                 FileChannel fc = new FileOutputStream(new File(output)).getChannel();
                 mp4file.writeContainer(fc);
                 fc.close();
-                try {
-                    indicator.hide();
-                } catch (Exception e) {
-                    Log.d(Variables.tag, e.toString());
-                } finally {
+//                try {
+//                    indicator.hide();
+//                } catch (Exception e) {
+//                    Log.d(Variables.tag, e.toString());
+//                } finally {
                     goToPreviewActivity();
-                }
+   //             }
 
             } catch (IOException e) {
                 e.printStackTrace();

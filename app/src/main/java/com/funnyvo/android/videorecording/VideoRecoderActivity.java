@@ -479,7 +479,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         if (resultCode == RESULT_OK) {
             if (requestCode == Sounds_list_Request_code) {
                 if (data != null) {
-                    if (data.getStringExtra("isSelected").equals("yes")) {
+                    if (data.getStringExtra("isSelected").equals(getString(R.string.yes))) {
                         btnAddMusic.setText(data.getStringExtra("sound_name"));
                         Variables.Selected_sound_id = data.getStringExtra("sound_id");
                         preparedAudio();
@@ -678,10 +678,10 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             mmr.setDataSource(this, Uri.fromFile(file));
             String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            final int file_duration = Integer.parseInt(durationStr);
+            final int fileDuration = Integer.parseInt(durationStr);
 
-            if (file_duration < Variables.max_recording_duration) {
-                Variables.recording_duration = file_duration;
+            if (fileDuration < Variables.max_recording_duration) {
+                Variables.recording_duration = fileDuration;
                 initializeVideoProgress();
             }
         }
