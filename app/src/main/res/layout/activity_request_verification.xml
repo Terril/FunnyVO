@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/apply_for_funny_vo_verification"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/darkgray"
                 android:textSize="@dimen/text_size_15" />
 
             <com.funnyvo.android.customview.FunnyVOTextView
@@ -80,7 +80,7 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:justificationMode="inter_word"
                 android:text="@string/upper_body"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/darkgray"
                 android:textSize="@dimen/text_size_13" />
 
             <com.funnyvo.android.customview.FunnyVOTextView
@@ -90,7 +90,7 @@
                 android:layout_marginTop="20dp"
                 android:justificationMode="inter_word"
                 android:text="@string/upper_body_below"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/darkgray"
                 android:textSize="@dimen/text_size_13" />
 
             <LinearLayout
@@ -200,7 +200,7 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:justificationMode="inter_word"
                 android:text="@string/lower_body"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/darkgray"
                 android:textSize="@dimen/text_size_13" />
 
 

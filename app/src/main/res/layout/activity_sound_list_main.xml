@@ -64,7 +64,7 @@
                 app:tabPaddingStart="0dp"
                 app:tabSelectedTextColor="@color/palette_cheddar_dark"
                 app:tabTextAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                app:tabTextColor="@color/dark_gray" />
+                app:tabTextColor="@color/darkgray" />
 
             <com.funnyvo.android.main_menu.CustomViewPager
                 android:id="@+id/viewpager"

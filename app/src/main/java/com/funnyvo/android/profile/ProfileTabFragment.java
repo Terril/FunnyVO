@@ -27,19 +27,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.funnyvo.android.R;
+import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.following.FollowingFragment;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
-import com.funnyvo.android.R;
-import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.settings.SettingFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -48,8 +53,6 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.galleryvideos.GalleryVideosActivity;
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -241,44 +244,37 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     private void userProfilePicture(String picUrl) {
         ContextWrapper cw = new ContextWrapper(context);
         final File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        try {
-            Picasso.with(context).load(picUrl)
-                    .resize(200, 200)
-                    .placeholder(R.drawable.profile_image_placeholder)
-                    .centerCrop()
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            final File myImageFile = new File(directory, getString(R.string.user_profile)); // Create image file
-                            FileOutputStream fos = null;
+        Glide.with(context)
+                .asBitmap()
+                .load(picUrl)
+                .centerCrop()
+                .placeholder(R.drawable.profile_image_placeholder)
+                .into(new CustomTarget<Bitmap>(200, 200) {
+
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        final File myImageFile = new File(directory, getString(R.string.user_profile)); // Create image file
+                        FileOutputStream fos = null;
+                        try {
+                            fos = new FileOutputStream(myImageFile);
+                            resource.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
                             try {
-                                fos = new FileOutputStream(myImageFile);
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                fos.close();
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            } finally {
-                                try {
-                                    fos.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                             }
-                            imageView.setImageBitmap(bitmap);
                         }
+                        imageView.setImageBitmap(resource);
+                    }
 
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-                        }
-                    });
-
-        } catch (Exception e) {
-
-        }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        imageView.setImageDrawable(placeholder);
+                    }
+                });
     }
 
     private void setupTabIcons() {

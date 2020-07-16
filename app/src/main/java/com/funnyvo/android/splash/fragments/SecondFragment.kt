@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.funnyvo.android.R
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_splash_first.*
 
 class SecondFragment : Fragment() {
@@ -19,7 +19,7 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Picasso.with(activity).load(R.drawable.funnyvo_second_pg_min).fit().into(fragmentBackground)
+        activity?.let { Glide.with(it).load(R.drawable.funnyvo_second_pg_min).into(fragmentBackground) }
     }
 
 }

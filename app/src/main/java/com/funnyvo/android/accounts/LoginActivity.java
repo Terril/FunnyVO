@@ -259,7 +259,7 @@ public class LoginActivity extends BaseActivity {
                             request.setParameters(parameters);
                             request.executeAsync();
                         } else {
-                            Functions.cancelLoader();
+                            dismissProgressDialog();
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }

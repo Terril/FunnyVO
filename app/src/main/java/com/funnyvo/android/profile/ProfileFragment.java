@@ -3,6 +3,7 @@ package com.funnyvo.android.profile;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -24,6 +25,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.chat.ChatActivity;
@@ -39,7 +43,6 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -398,10 +401,13 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 username2_txt.setText(user_info.optString("username"));
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
-                Picasso.with(getActivity())
+
+                Glide.with(getActivity())
                         .load(ProfileFragment.pic_url)
-                        .placeholder(getActivity().getResources().getDrawable(R.drawable.profile_image_placeholder))
-                        .resize(200, 200).centerCrop().into(imageView);
+                        .centerCrop()
+                        .apply(new RequestOptions().override(200, 200))
+                        .placeholder(R.drawable.profile_image_placeholder)
+                        .into(imageView);
 
                 follow_count_txt.setText(data.optString("total_following"));
                 fans_count_txt.setText(data.optString("total_fans"));

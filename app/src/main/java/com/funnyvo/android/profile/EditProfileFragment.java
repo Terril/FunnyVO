@@ -29,6 +29,8 @@ import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -45,7 +47,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,13 +111,12 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         firstname_edit.setText(Variables.sharedPreferences.getString(Variables.f_name, ""));
         lastname_edit.setText(Variables.sharedPreferences.getString(Variables.l_name, ""));
 
-        Picasso.with(context)
+        Glide.with(context)
                 .load(Variables.sharedPreferences.getString(Variables.u_pic, ""))
-                .placeholder(R.drawable.profile_image_placeholder)
-                .resize(200, 200)
                 .centerCrop()
+                .apply(new RequestOptions().override(200, 200))
+                .placeholder(R.drawable.profile_image_placeholder)
                 .into(profile_image);
-
 
         male_btn = view.findViewById(R.id.male_btn);
         female_btn = view.findViewById(R.id.female_btn);
@@ -414,13 +414,14 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                         ProfileFragment.pic_url = image_link;
                         Variables.user_pic = image_link;
 
-                        Picasso.with(context)
+                        Glide.with(context)
                                 .load(ProfileFragment.pic_url)
-                                .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
-                                .resize(200, 200).centerCrop().into(profile_image);
+                                .centerCrop()
+                                .apply(new RequestOptions().override(200, 200))
+                                .placeholder(R.drawable.profile_image_placeholder)
+                                .into(profile_image);
 
-
-                        Toast.makeText(context, "Image Update Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.image_update_success, Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (JSONException e) {
@@ -536,7 +537,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
                 String picture = data.optString("profile_pic");
 
-                Picasso.with(context)
+                Glide.with(context)
                         .load(picture)
                         .placeholder(R.drawable.profile_image_placeholder)
                         .into(profile_image);

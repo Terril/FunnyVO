@@ -110,7 +110,6 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.8.3'
     implementation 'com.facebook.android:facebook-android-sdk:4.26.0'
-    implementation 'com.gmail.samehadar:iosdialog:1.0'
     implementation 'net.the4thdimension:audio-wife:1.0.3'
     implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
@@ -118,7 +117,6 @@ dependencies {
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.airbnb.android:lottie:2.7.0'
 
     //Do not Update this library their is a camera issue with new version
@@ -138,8 +136,8 @@ dependencies {
 
     implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.3'
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     implementation('com.giphy.sdk:core:1.0.2@aar') {

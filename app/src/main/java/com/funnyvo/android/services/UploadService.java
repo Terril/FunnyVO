@@ -176,7 +176,7 @@ public class UploadService extends Service {
                                 stopForeground(true);
                                 stopSelf();
 
-                                Callback.showResponse("Their is some kind of problem from Server side Please Try Later");
+                                Callback.showResponse(getString(R.string.server_error_upload_video));
                             }
 
                         }, new Response.Listener<String>() {
@@ -189,7 +189,7 @@ public class UploadService extends Service {
                                 stopForeground(true);
                                 stopSelf();
 
-                                Callback.showResponse("Your Video is uploaded Successfully");
+                                Callback.showResponse(getString(R.string.video_uploaded_successfully));
                             }
 
                         }, fileRequest, stringRequest, headers);
@@ -243,8 +243,8 @@ public class UploadService extends Service {
 
         androidx.core.app.NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
-                .setContentTitle("Uploading Video")
-                .setContentText("Please wait! Video is uploading....")
+                .setContentTitle(getString(R.string.uploading_video))
+                .setContentText(getString(R.string.please_wait_upload_video))
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
                         android.R.drawable.stat_sys_upload))
                 .setContentIntent(pendingIntent);
