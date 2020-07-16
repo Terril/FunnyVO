@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -202,7 +200,7 @@ public class GallerySelectedVideoActivity extends BaseActivity implements View.O
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(GallerySelectedVideoActivity.this, Uri.fromFile(file));
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
-                boolean isVideo = "yes".equals(hasVideo);
+                boolean isVideo = getString(R.string.yes).equals(hasVideo);
 
                 if (isVideo && file.length() > 3000) {
                     video_list.add(path);
