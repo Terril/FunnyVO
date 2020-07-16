@@ -30,7 +30,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     Context context;
 
     private String audio, video, output, draft_file;
-    private ActivityIndicator indicator;
+    ActivityIndicator indicator;
 
     public MergeVideoAudio(Context context) {
         this.context = context;
@@ -159,12 +159,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d(Variables.tag, e.toString());
-
             }
-
         }
-
     };
-
-
 }

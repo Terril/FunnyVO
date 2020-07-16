@@ -51,7 +51,7 @@ android {
             dimension "version"
 //            applicationIdSuffix ".beta"
 //            versionNameSuffix "-beta"
-            buildConfigField 'String', 'hostAPI', '"http://betaapi.funnyvo.com/API/"'
+            buildConfigField 'String', 'hostAPI', '"https://betaapi.funnyvo.com/API/"'
         }
         full {
             dimension "version"

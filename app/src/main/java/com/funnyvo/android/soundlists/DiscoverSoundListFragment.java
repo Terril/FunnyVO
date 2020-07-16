@@ -225,7 +225,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     public void playAudio(View view, final Sounds item) {
         previous_view = view;
 
-        if (previous_url.equals(item.acc_path)) {
+        if (previous_url.equals(item.soundUrl)) {
             previous_url = "none";
             running_sound_id = "none";
         } else {
@@ -248,7 +248,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         }
     }
 
-    public void stopPlaying() {
+    private void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
             player.removeListener(this);
@@ -265,6 +265,11 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         active = true;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopPlaying();
+    }
 
     @Override
     public void onStop() {
@@ -279,7 +284,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         }
 
         showStopState();
-
+        stopPlaying();
     }
 
 
@@ -346,7 +351,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             public void onDownloadComplete() {
                 dismissProgressDialog();
                 Intent output = new Intent();
-                output.putExtra("isSelected", "yes");
+                output.putExtra("isSelected", getString(R.string.yes));
                 output.putExtra("sound_name", sound_name);
                 output.putExtra("sound_id", id);
                 getActivity().setResult(RESULT_OK, output);
