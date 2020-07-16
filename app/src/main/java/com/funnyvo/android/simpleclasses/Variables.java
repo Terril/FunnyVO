@@ -83,7 +83,7 @@ public class Variables {
 
     public static String gif_api_key1 = "giphy_api_key_here";
 
-    public static final String privacy_policy = "https://www.privacypolicygenerator.info/live.php?token=";
+    public static final String privacy_policy = "https://funnyvo.com/privacy_policy.html";
 
     public static String base_url =  BuildConfig.hostAPI ;
     public static String domain = base_url + "index.php?p=";

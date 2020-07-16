@@ -914,7 +914,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     if (Variables.is_secure_info) {
                         Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show();
                     } else {
-                        Functions.showLoader(WatchVideosActivity.this, false, false);
                         Functions.callApiForDeleteVideo(WatchVideosActivity.this, home_.video_id, new ApiCallBack() {
                             @Override
                             public void arrayData(ArrayList arrayList) {
@@ -923,8 +922,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                             @Override
                             public void onSuccess(String responce) {
-
-                                Functions.cancelLoader();
                                 finish();
 
                             }

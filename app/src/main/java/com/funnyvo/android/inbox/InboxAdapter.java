@@ -12,10 +12,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.inbox.datamodel.Inbox;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,10 +105,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.CustomViewHo
         holder.date_created.setText(ChangeDate(item.getDate()));
 
         if (!item.getPic().equals("") && item.getPic() != null)
-            Picasso.with(context).
-                    load(item.getPic())
-                    .resize(100, 100)
-                    .placeholder(R.drawable.profile_image_placeholder).into(holder.user_image);
+            Glide.with(context)
+                    .load(item.getPic())
+                    .apply(new RequestOptions().override(100, 100))
+                    .placeholder(R.drawable.profile_image_placeholder)
+                    .into(holder.user_image);
 
 
         // check the status like if the message is seen by the receiver or not
@@ -117,7 +119,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.CustomViewHo
             holder.last_message.setTextColor(context.getResources().getColor(R.color.black));
         } else {
             holder.last_message.setTypeface(null, Typeface.NORMAL);
-            holder.last_message.setTextColor(context.getResources().getColor(R.color.dark_gray));
+            holder.last_message.setTextColor(context.getResources().getColor(R.color.darkgray));
         }
 
 

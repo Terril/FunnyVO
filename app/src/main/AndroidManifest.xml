@@ -61,7 +61,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="funnyvo.com"
+                    android:host="api.funnyvo.com"
                     android:pathPrefix="/API/"
                     android:scheme="https" />
             </intent-filter>

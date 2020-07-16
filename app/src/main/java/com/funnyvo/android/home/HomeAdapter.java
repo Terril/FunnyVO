@@ -11,11 +11,13 @@ import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.customview.FunnyVOTextView;
 import com.funnyvo.android.home.datamodel.Home;
+import com.funnyvo.android.profile.ProfileFragment;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -70,10 +72,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             holder.sound_name.setSelected(true);
             holder.desc_txt.setText(item.video_description);
 
-            Picasso.with(context).
-                    load(item.profile_pic)
-                    .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
-                    .resize(100, 100).into(holder.user_pic);
+            Glide.with(context)
+                    .load(item.profile_pic)
+                    .centerCrop()
+                    .apply(new RequestOptions().override(100, 100))
+                    .placeholder(R.drawable.profile_image_placeholder)
+                    .into(holder.user_pic);
 
             if ((item.sound_name == null || item.sound_name.equals(""))
                     || item.sound_name.equals("null")) {
@@ -83,12 +87,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             } else if (item.sound_pic.equals(""))
                 item.sound_pic = "Null";
 
-
-            Picasso.with(context).
-                    load(item.sound_pic)
-                    .placeholder(context.getResources().getDrawable(R.drawable.ic_round_music))
-                    .resize(100, 100).into(holder.sound_image);
-
+            Glide.with(context)
+                    .load(item.sound_pic)
+                    .centerCrop()
+                    .apply(new RequestOptions().override(100, 100))
+                    .placeholder(R.drawable.ic_round_music)
+                    .into(holder.sound_image);
 
             if (item.liked.equals("1")) {
                 holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));

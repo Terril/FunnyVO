@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:paddingTop="24dp">
+        android:paddingTop="@dimen/margin_20">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -111,7 +111,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="UserName"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_15"
                         app:customFont="@string/font_bold" />

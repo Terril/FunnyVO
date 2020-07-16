@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.chat.ChatActivity;
@@ -31,7 +33,6 @@ import com.funnyvo.android.following.FollowingFragment;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
-import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
@@ -39,13 +40,10 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 
 // This is the profile screen which is show in 5 tab as well as it is also call
@@ -97,7 +95,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        return init(view);
     }
 
     @Override
@@ -140,13 +140,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init(view);
-    }
 
-    private void init(View view) {
+    private View init(View view) {
         username = view.findViewById(R.id.username);
         username2_txt = view.findViewById(R.id.username2_txt);
         imageView = view.findViewById(R.id.user_image);
@@ -219,6 +214,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
         isdataload = true;
         callApiForGetAllvideos();
+
+        return view;
     }
 
 
@@ -385,7 +382,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void parseData(String responce) {
+    private void parseData(String responce) {
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");
@@ -398,10 +395,13 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 username2_txt.setText(user_info.optString("username"));
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
-                Picasso.with(getActivity())
+
+                Glide.with(this)
                         .load(ProfileFragment.pic_url)
-                        .placeholder(getActivity().getResources().getDrawable(R.drawable.profile_image_placeholder))
-                        .resize(200, 200).centerCrop().into(imageView);
+                        .centerCrop()
+                        .apply(new RequestOptions().override(200, 200))
+                        .placeholder(R.drawable.profile_image_placeholder)
+                        .into(imageView);
 
                 follow_count_txt.setText(data.optString("total_following"));
                 fans_count_txt.setText(data.optString("total_fans"));
@@ -440,7 +440,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void followUnFollowUser() {
+    private void followUnFollowUser() {
         final String status;
         if (follow_status.equals("0")) {
             status = "1";
@@ -496,7 +496,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
 
     //this method will get the big size of profile image.
-    public void openfullsizeImage(String url) {
+    private void openfullsizeImage(String url) {
         SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -514,7 +514,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openChat() {
+    private void openChat() {
         ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
@@ -534,7 +534,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openFollowing() {
+    private void openFollowing() {
 
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -556,7 +556,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openFollowers() {
+    private void openFollowers() {
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);

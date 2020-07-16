@@ -115,7 +115,7 @@ public class ApiRequest {
         requestQueue.add(jsonObjReq);
     }
 
-    static SSLSocketFactory getSSLSocketFactory(Context context)
+   public static SSLSocketFactory getSSLSocketFactory(Context context)
             throws KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException, CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         AssetManager assetManager =  context.getResources().getAssets();

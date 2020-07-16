@@ -622,7 +622,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     Container out = new DefaultMp4Builder().build(movie);
                     MovieHeaderBox mvhd = Path.getPath(out, "moov/mvhd");
-                    mvhd.setMatrix(Matrix.ROTATE_180);
+                   // mvhd.setMatrix(Matrix.ROTATE_0);
                     if (!dst.exists()) {
                         dst.createNewFile();
                     }
