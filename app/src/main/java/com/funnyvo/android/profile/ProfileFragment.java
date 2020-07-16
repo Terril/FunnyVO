@@ -396,7 +396,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
 
-                Glide.with(getActivity())
+                Glide.with(this)
                         .load(ProfileFragment.pic_url)
                         .centerCrop()
                         .apply(new RequestOptions().override(200, 200))
