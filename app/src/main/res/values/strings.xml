@@ -82,4 +82,7 @@
     <string name="uploading_video">Uploading your FunnyVO</string>
     <string name="please_wait_upload_video">Please wait! Video is uploading....</string>
     <string name="image_update_success">Image Update Successfully</string>
+    <string name="comment_not_posted">Some issue in posting your comment, We\'ll fix it shortly</string>
+    <string name="video_not_deleted">Video will be deleted shortly</string>
+    <string name="fetch_user_not_happening">Not able to fetch the user, We are fixing your issue</string>
 </resources>

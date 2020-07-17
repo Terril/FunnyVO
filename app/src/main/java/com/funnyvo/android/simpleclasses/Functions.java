@@ -17,16 +17,13 @@ import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
-import com.funnyvo.android.comments.datamodel.Comments;
 import com.funnyvo.android.R;
+import com.funnyvo.android.comments.datamodel.Comments;
 import com.googlecode.mp4parser.authoring.Track;
 
 import org.json.JSONArray;
@@ -44,6 +41,7 @@ import java.util.Random;
 
 public class Functions {
 
+    private static String API_SUCCESS_CODE = "200";
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
@@ -265,7 +263,7 @@ public class Functions {
     }
 
 
-    public static void callApiToSendComment(final Activity activity, String video_id, String comment, final ApiCallBack api_callBack) {
+    public static void callApiToSendComment(final Activity activity, String video_id, String comment, final ApiCallBack apiCallBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -285,7 +283,7 @@ public class Functions {
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
-                    if (code.equals("200")) {
+                    if (code.equals(API_SUCCESS_CODE)) {
                         JSONArray msgArray = response.getJSONArray("msg");
                         for (int i = 0; i < msgArray.length(); i++) {
                             JSONObject itemdata = msgArray.optJSONObject(i);
@@ -306,14 +304,14 @@ public class Functions {
                             arrayList.add(item);
                         }
 
-                        api_callBack.arrayData(arrayList);
+                        apiCallBack.arrayData(arrayList);
 
                     } else {
-                        Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.comment_not_posted , Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
-                    api_callBack.onFailure(e.toString());
+                    apiCallBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
 
@@ -323,7 +321,7 @@ public class Functions {
 
     }
 
-    public static void callApiForGetComment(final Activity activity, String video_id, final ApiCallBack api_callBack) {
+    public static void callApiForGetComment(final Activity activity, String video_id, final ApiCallBack apiCallBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -339,7 +337,7 @@ public class Functions {
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
-                    if (code.equals("200")) {
+                    if (code.equals(API_SUCCESS_CODE)) {
                         JSONArray msgArray = response.getJSONArray("msg");
                         for (int i = 0; i < msgArray.length(); i++) {
                             JSONObject itemdata = msgArray.optJSONObject(i);
@@ -360,14 +358,14 @@ public class Functions {
                             arrayList.add(item);
                         }
 
-                        api_callBack.arrayData(arrayList);
+                        apiCallBack.arrayData(arrayList);
 
                     } else {
-                        Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
-                    api_callBack.onFailure(e.toString());
+                    apiCallBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
             }
@@ -394,7 +392,7 @@ public class Functions {
     public static void callApiForGetUserData
             (final Activity activity,
              String fb_id,
-             final ApiCallBack api_callBack) {
+             final ApiCallBack apiCallBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -404,23 +402,21 @@ public class Functions {
             e.printStackTrace();
         }
 
-        Log.d("resp", parameters.toString());
-
         ApiRequest.callApi(activity, Variables.get_user_data, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
-                    if (code.equals("200")) {
-                        api_callBack.onSuccess(response.toString());
+                    if (code.equals(API_SUCCESS_CODE)) {
+                        apiCallBack.onSuccess(response.toString());
 
                     } else {
-                        Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.fetch_user_not_happening, Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    api_callBack.onFailure(e.toString());
+                    apiCallBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
             }
@@ -432,7 +428,7 @@ public class Functions {
     public static void callApiForDeleteVideo
             (final Activity activity,
              String video_id,
-             final ApiCallBack api_callBack) {
+             final ApiCallBack apiCallBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -449,17 +445,17 @@ public class Functions {
                 try {
                     JSONObject response = new JSONObject(resp);
                     String code = response.optString("code");
-                    if (code.equals("200")) {
-                        if (api_callBack != null)
-                            api_callBack.onSuccess(response.toString());
+                    if (code.equals(API_SUCCESS_CODE)) {
+                        if (apiCallBack != null)
+                            apiCallBack.onSuccess(response.toString());
 
                     } else {
-                        Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.video_not_deleted, Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    if (api_callBack != null)
-                        api_callBack.onFailure(e.toString());
+                    if (apiCallBack != null)
+                        apiCallBack.onFailure(e.toString());
                     e.printStackTrace();
                 }
 
