@@ -396,12 +396,14 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
 
-                Glide.with(this)
-                        .load(ProfileFragment.pic_url)
-                        .centerCrop()
-                        .apply(new RequestOptions().override(200, 200))
-                        .placeholder(R.drawable.profile_image_placeholder)
-                        .into(imageView);
+                if (this.isAdded()) {
+                    Glide.with(this)
+                            .load(ProfileFragment.pic_url)
+                            .centerCrop()
+                            .apply(new RequestOptions().override(200, 200))
+                            .placeholder(R.drawable.profile_image_placeholder)
+                            .into(imageView);
+                }
 
                 follow_count_txt.setText(data.optString("total_following"));
                 fans_count_txt.setText(data.optString("total_fans"));

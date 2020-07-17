@@ -67,8 +67,6 @@ import java.io.IOException;
  */
 public class ProfileTabFragment extends RootFragment implements View.OnClickListener {
     private View view;
-    private Context context;
-
     private TextView username, username2_txt, video_count_txt;
     private ImageView imageView;
     private TextView follow_count_txt, fans_count_txt, heart_count_txt, draft_count_txt;
@@ -93,7 +91,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile_tab, container, false);
-        context = getContext();
 
         return init();
     }
@@ -242,48 +239,50 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
     private void userProfilePicture(String picUrl) {
-        ContextWrapper cw = new ContextWrapper(context);
+        ContextWrapper cw = new ContextWrapper(getActivity());
         final File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        Glide.with(context)
-                .asBitmap()
-                .load(picUrl)
-                .centerCrop()
-                .placeholder(R.drawable.profile_image_placeholder)
-                .into(new CustomTarget<Bitmap>(200, 200) {
+        if (this.isAdded()) {
+            Glide.with(this)
+                    .asBitmap()
+                    .load(picUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.profile_image_placeholder)
+                    .into(new CustomTarget<Bitmap>(200, 200) {
 
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        final File myImageFile = new File(directory, getString(R.string.user_profile)); // Create image file
-                        FileOutputStream fos = null;
-                        try {
-                            fos = new FileOutputStream(myImageFile);
-                            resource.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } finally {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            final File myImageFile = new File(directory, getString(R.string.user_profile)); // Create image file
+                            FileOutputStream fos = null;
                             try {
-                                fos.close();
+                                fos = new FileOutputStream(myImageFile);
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, fos);
                             } catch (IOException e) {
                                 e.printStackTrace();
+                            } finally {
+                                try {
+                                    fos.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                            imageView.setImageBitmap(resource);
                         }
-                        imageView.setImageBitmap(resource);
-                    }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                        imageView.setImageDrawable(placeholder);
-                    }
-                });
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            imageView.setImageDrawable(placeholder);
+                        }
+                    });
+        }
     }
 
     private void setupTabIcons() {
-        View view1 = LayoutInflater.from(context).inflate(R.layout.item_tabs_profile_menu, null);
+        View view1 = LayoutInflater.from(getActivity()).inflate(R.layout.item_tabs_profile_menu, null);
         ImageView imageView1 = view1.findViewById(R.id.image);
         imageView1.setImageDrawable(getResources().getDrawable(R.drawable.ic_my_video_color));
         tabLayout.getTabAt(0).setCustomView(view1);
 
-        View view2 = LayoutInflater.from(context).inflate(R.layout.item_tabs_profile_menu, null);
+        View view2 = LayoutInflater.from(getActivity()).inflate(R.layout.item_tabs_profile_menu, null);
         ImageView imageView2 = view2.findViewById(R.id.image);
         imageView2.setImageDrawable(getResources().getDrawable(R.drawable.ic_liked_video_gray));
         tabLayout.getTabAt(1).setCustomView(view2);
@@ -303,7 +302,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                             create_popup_layout.setVisibility(View.GONE);
                         } else {
                             create_popup_layout.setVisibility(View.VISIBLE);
-                            Animation aniRotate = AnimationUtils.loadAnimation(context, R.anim.up_and_down_animation);
+                            Animation aniRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down_animation);
                             create_popup_layout.startAnimation(aniRotate);
                         }
 
@@ -422,7 +421,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.showMyAllVideos, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseData(resp);
@@ -432,7 +431,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    private  void parseData(String responce) {
+    private void parseData(String responce) {
 
         try {
             JSONObject jsonObject = new JSONObject(responce);
@@ -460,7 +459,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
                 } else {
                     create_popup_layout.setVisibility(View.VISIBLE);
-                    Animation aniRotate = AnimationUtils.loadAnimation(context, R.anim.up_and_down_animation);
+                    Animation aniRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down_animation);
                     create_popup_layout.startAnimation(aniRotate);
 
                 }
@@ -470,7 +469,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                     view.findViewById(R.id.varified_btn).setVisibility(View.VISIBLE);
                 }
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.unable_to_fetch_user_videos, Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -516,7 +515,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
 
     private void openMenuTab(View anchor_view) {
-        Context wrapper = new ContextThemeWrapper(context, R.style.AlertDialogCustom);
+        Context wrapper = new ContextThemeWrapper(getActivity(), R.style.AlertDialogCustom);
         PopupMenu popup = new PopupMenu(wrapper, anchor_view);
         popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -598,7 +597,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     @Override
     public void onDetach() {
         super.onDetach();
-        Functions.deleteCache(context);
+        Functions.deleteCache(getActivity());
     }
-
 }

@@ -506,7 +506,6 @@ public class Functions {
     // these function are remove the cache memory which is very helpfull in memmory managmet
     public static void deleteCache(Context context) {
         Glide.get(context).clearMemory();
-
         try {
             File dir = context.getCacheDir();
             deleteDir(dir);

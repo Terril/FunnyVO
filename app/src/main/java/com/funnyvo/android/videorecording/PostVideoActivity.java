@@ -1,16 +1,15 @@
 package com.funnyvo.android.videorecording;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.daasuu.gpuv.player.GPUPlayerView;
 import com.funnyvo.android.R;
@@ -20,6 +19,7 @@ import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.services.ServiceCallback;
 import com.funnyvo.android.services.UploadService;
+import com.funnyvo.android.services.UploadWorker;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class PostVideoActivity extends BaseActivity implements ServiceCallback, View.OnClickListener {
+public class PostVideoActivity extends BaseActivity implements View.OnClickListener {
 
     private String video_path;
     private ServiceCallback serviceCallback;
@@ -71,7 +71,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
             @Override
             public void onClick(View v) {
                 btnUploadVideo.setEnabled(false);
-                showProgressDialog();
+                // showProgressDialog();
                 startService();
 
             }
@@ -80,7 +80,6 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         findViewById(R.id.btnSaveLocal).setOnClickListener(this);
         descriptionEdit = findViewById(R.id.edtDescriptionAndHashTags);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -92,29 +91,34 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
     }
 
     // this will start the service for uploading the video into database
-    public void startService() {
-        serviceCallback = this;
+    private void startService() {
+        OneTimeWorkRequest.Builder uploadWork = new OneTimeWorkRequest.Builder(UploadWorker.class);
+        Data.Builder data = new Data.Builder();
+//Add parameter in Data class. just like bundle. You can also add Boolean and Number in parameter.
+        data.putString("uri", "" + Uri.fromFile(new File(video_path)));
+        data.putString("desc", descriptionEdit.getText().toString().trim());
+//Set Input Data
+        uploadWork.setInputData(data.build());
+        WorkRequest uploadWorkRequest = uploadWork.build();
+        WorkManager
+                .getInstance(getApplicationContext())
+                .enqueue(uploadWorkRequest);
 
-        UploadService mService = new UploadService(serviceCallback);
-        if (!Functions.isMyServiceRunning(this, mService.getClass())) {
-            Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
-            mServiceIntent.setAction("startservice");
-            mServiceIntent.putExtra("uri", "" + Uri.fromFile(new File(video_path)));
-            mServiceIntent.putExtra("desc", descriptionEdit.getText().toString().trim());
-            startService(mServiceIntent);
-
-            Intent intent = new Intent(this, UploadService.class);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
-        } else {
-            Toast.makeText(this, "Please wait video already in uploading progress", Toast.LENGTH_LONG).show();
+        Toast.makeText(PostVideoActivity.this, R.string.continue_using_app, Toast.LENGTH_LONG).show();
+        if (player != null) {
+            player.removeListener(eventListener);
+            player.release();
+            player = null;
         }
+
+        deleteDraftFile();
+
+        startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        stopService();
         if (player != null) {
             player.setPlayWhenReady(false);
         }
@@ -154,72 +158,8 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
     }
 
-
     // when the video is uploading successfully it will restart the application
-    @Override
-    public void showResponse(final String response) {
-
-        if (mConnection != null) {
-            unbindService(mConnection);
-        }
-
-        if (response.equalsIgnoreCase("Your Video is uploaded Successfully")) {
-            deleteDraftFile();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
-                    dismissProgressDialog();
-                    if (player != null) {
-                        player.removeListener(eventListener);
-                        player.release();
-                        player = null;
-                    }
-                    startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
-
-                }
-            }, 1000);
-
-        } else {
-            Toast.makeText(PostVideoActivity.this, response, Toast.LENGTH_LONG).show();
-            dismissProgressDialog();
-        }
-    }
-
-
-    // this is importance for binding the service to the activity
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-
-            UploadService.LocalBinder binder = (UploadService.LocalBinder) service;
-            mService = binder.getService();
-            mService.setCallbacks(PostVideoActivity.this);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-
-        }
-    };
-
-    // this function will stop the the ruuning service
-    public void stopService() {
-        serviceCallback = this;
-        UploadService mService = new UploadService(serviceCallback);
-
-        if (Functions.isMyServiceRunning(this, mService.getClass())) {
-            Intent mServiceIntent = new Intent(this.getApplicationContext(), mService.getClass());
-            mServiceIntent.setAction("stopservice");
-            startService(mServiceIntent);
-        }
-    }
-
-
-    public void saveFileInDraft() {
+    private void saveFileInDraft() {
         File source = new File(video_path);
         File destination = new File(Variables.draft_app_folder + Functions.getRandomString() + ".mp4");
         try {
@@ -238,11 +178,11 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
                 in.close();
                 out.close();
 
-                Toast.makeText(PostVideoActivity.this, "File saved in Draft", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostVideoActivity.this, R.string.file_saved_in_draft, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
 
             } else {
-                Toast.makeText(PostVideoActivity.this, "File failed to saved in Draft", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostVideoActivity.this, R.string.save_failed_into_draft, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -252,7 +192,7 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
     }
 
 
-    public void deleteDraftFile() {
+    private void deleteDraftFile() {
         try {
             if (draft_file != null) {
                 File file = new File(draft_file);
@@ -262,5 +202,4 @@ public class PostVideoActivity extends BaseActivity implements ServiceCallback, 
 
         }
     }
-
 }

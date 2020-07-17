@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -116,6 +117,12 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     private String video_id;
     private String link;
 
+    private CharSequence[] options;
+
+    // when we swipe for another video this will relaese the privious player
+    private SimpleExoPlayer privious_player;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +142,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             video_id = bundle.getStringExtra("video_id");
 
             if (video_id != null) {
-                callApiForGetAllvideos(video_id);
+                callApiForGetAllVideos(video_id);
             } else if (appLinkData == null) {
                 data_list = (ArrayList<Home>) bundle.getSerializableExtra("arraylist");
                 position = bundle.getIntExtra("position", 0);
@@ -143,7 +150,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 link = appLinkData.toString();
                 String[] parts = link.split("=");
                 video_id = parts[1];
-                callApiForGetAllvideos(parts[1]);
+                callApiForGetAllVideos(parts[1]);
             }
         }
 
@@ -176,7 +183,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     @Override
     public void onBackPressed() {
-
         if (video_id != null && link != null) {
             startActivity(new Intent(this, MainMenuActivity.class));
             finish();
@@ -187,7 +193,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void callApiForGetAllvideos(String id) {
+    private void callApiForGetAllVideos(String id) {
         if (MainMenuActivity.token == null)
             MainMenuActivity.token = FirebaseInstanceId.getInstance().getToken();
 
@@ -270,7 +276,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    private void callApiForSinglevideos(final int postion) {
+    private void callApiForSingleVideos(final int postion) {
 
         try {
             JSONObject parameters = new JSONObject();
@@ -381,7 +387,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                     case R.id.like_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            Like_Video(postion, item);
+                            likeVideo(postion, item);
                         } else {
                             Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show();
                         }
@@ -437,7 +443,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            if (check_permissions()) {
+                            if (checkPermissions()) {
                                 Intent intent = new Intent(WatchVideosActivity.this, VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
@@ -475,7 +481,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 if (page_no != currentPage) {
                     currentPage = page_no;
 
-                    Privious_Player();
+                    previousPlayer();
                     setPlayer(currentPage);
                 }
 
@@ -497,8 +503,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     @Override
     public void onKeyboardHeightChanged(int height, int orientation) {
 
-        Log.d("resp", "" + height);
-
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(write_layout.getWidth(), write_layout.getHeight());
         params.bottomMargin = height;
         write_layout.setLayoutParams(params);
@@ -516,8 +520,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     if (!TextUtils.isEmpty(comment_txt)) {
                         sendComments(data_list.get(currentPage).fb_id, data_list.get(currentPage).video_id, comment_txt);
                     }
-
-
                 } else {
                     Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
                 }
@@ -536,7 +538,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    public void setPlayer(final int currentPage) {
+    private void setPlayer(final int currentPage) {
 
         final Home item = data_list.get(currentPage);
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
@@ -602,7 +604,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 @Override
                 public void onLongPress(MotionEvent e) {
                     super.onLongPress(e);
-                    Show_video_option(item);
+                    showVideoOption(item);
 
                 }
 
@@ -615,8 +617,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
 
-                        Show_heart_on_DoubleTap(item, mainlayout, e);
-                        Like_Video(currentPage, item);
+                        showHeartOnDoubleTap(item, mainlayout, e);
+                        likeVideo(currentPage, item);
 
                     } else {
                         Toast.makeText(context, "Please Login into ", Toast.LENGTH_SHORT).show();
@@ -651,15 +653,10 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
             Functions.callApiForUpdateView(WatchVideosActivity.this, item.video_id);
 
-
-        callApiForSinglevideos(currentPage);
+        callApiForSingleVideos(currentPage);
     }
 
-
-    // when we swipe for another video this will relaese the privious player
-    SimpleExoPlayer privious_player;
-
-    public void Privious_Player() {
+    private void previousPlayer() {
         if (privious_player != null) {
             privious_player.removeListener(this);
             privious_player.release();
@@ -667,7 +664,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    public void Show_heart_on_DoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
+    private void showHeartOnDoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
 
         int x = (int) e.getX() - 100;
         int y = (int) e.getY() - 100;
@@ -709,7 +706,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
 
     // this function will call for like the video and Call an Api for like the video
-    public void Like_Video(final int position, final Home home_) {
+    private void likeVideo(final int position, final Home home_) {
 
         String action = home_.liked;
 
@@ -721,12 +718,10 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             home_.like_count = "" + (Integer.parseInt(home_.like_count) + 1);
         }
 
-
         data_list.remove(position);
         home_.liked = action;
         data_list.add(position, home_);
         adapter.notifyDataSetChanged();
-
 
         Functions.callApiForLikeVideo(this, home_.video_id, action, new ApiCallBack() {
 
@@ -748,8 +743,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    public boolean check_permissions() {
-
+    public boolean checkPermissions() {
         String[] PERMISSIONS = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -802,18 +796,15 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     private void openProfile(Home item, boolean from_right_to_left) {
 
         if (Variables.sharedPreferences.getString(Variables.u_id, "0").equals(item.fb_id)) {
-
-            TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);
-            profile.select();
-
+            if (MainMenuFragment.tabLayout != null) {
+                TabLayout.Tab profile = MainMenuFragment.tabLayout.getTabAt(4);
+                profile.select();
+            }
         } else {
-
             ProfileFragment profile_fragment = new ProfileFragment(new FragmentCallback() {
                 @Override
                 public void responseCallBackFromFragment(Bundle bundle) {
-
-                    callApiForSinglevideos(currentPage);
-
+                    callApiForSingleVideos(currentPage);
                 }
             });
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -832,12 +823,9 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             transaction.replace(R.id.WatchVideo_F, profile_fragment).commit();
 
         }
-
-
     }
 
-
-    public void sendComments(final String user_id, String video_id, final String comment) {
+    private void sendComments(final String user_id, String video_id, final String comment) {
 
         send_progress.setVisibility(View.VISIBLE);
         send_btn.setVisibility(View.GONE);
@@ -853,8 +841,6 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 int comment_count = Integer.parseInt(data_list.get(currentPage).video_comment_count);
                 comment_count++;
                 onDataSent("" + comment_count);
-
-
             }
 
             @Override
@@ -868,7 +854,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             }
         });
 
-        SendPushNotification(user_id, comment);
+        sendPushNotification(user_id, comment);
     }
 
 
@@ -886,20 +872,14 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     }
 
-
-    CharSequence[] options;
-
-    private void Show_video_option(final Home home_) {
-
+    private void showVideoOption(final Home home) {
         options = new CharSequence[]{"Save Video", "Cancel"};
 
-        if (home_.fb_id.equals(Variables.sharedPreferences.getString(Variables.u_id, "")))
+        if (home.fb_id.equals(Variables.sharedPreferences.getString(Variables.u_id, "")))
             options = new CharSequence[]{"Save Video", "Delete Video", "Cancel"};
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context, R.style.AlertDialogCustom);
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogCustom);
         builder.setTitle(null);
-
         builder.setItems(options, new DialogInterface.OnClickListener() {
 
             @Override
@@ -908,36 +888,30 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
                 if (options[item].equals("Save Video")) {
                     if (Functions.checkstoragepermision(WatchVideosActivity.this))
-                        saveVideo(home_);
+                        saveVideo(home);
 
                 } else if (options[item].equals("Delete Video")) {
                     if (Variables.is_secure_info) {
                         Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show();
                     } else {
-                        Functions.callApiForDeleteVideo(WatchVideosActivity.this, home_.video_id, new ApiCallBack() {
+                        Functions.callApiForDeleteVideo(WatchVideosActivity.this, home.video_id, new ApiCallBack() {
                             @Override
                             public void arrayData(ArrayList arrayList) {
-
                             }
 
                             @Override
                             public void onSuccess(String responce) {
                                 finish();
-
                             }
 
                             @Override
                             public void onFailure(String responce) {
-
                             }
                         });
                     }
                 } else if (options[item].equals("Cancel")) {
-
                     dialog.dismiss();
-
                 }
-
             }
 
         });
@@ -946,7 +920,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     }
 
-    public void saveVideo(final Home item) {
+    private void saveVideo(final Home item) {
         showProgressDialog();
         PRDownloader.initialize(getApplicationContext());
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
@@ -985,18 +959,14 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
             @Override
             public void onError(Error error) {
-                Delete_file_no_watermark(item);
+                deleteFileNoWatermark(item);
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                 dismissProgressDialog();
             }
-
-
         });
-
-
     }
 
-    public void applyWatermark(final Home item) {
+    private void applyWatermark(final Home item) {
         Bitmap logo = ((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher_watermark)).getBitmap();
         GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
         new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
@@ -1007,23 +977,18 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                     @Override
                     public void onProgress(double progress) {
                         showProgressDialog();
-
                     }
 
                     @Override
                     public void onCompleted() {
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 dismissProgressDialog();
-                                Delete_file_no_watermark(item);
-                                Scan_file(item);
-
+                                deleteFileNoWatermark(item);
+                                scanFile(item);
                             }
                         });
-
-
                     }
 
                     @Override
@@ -1041,7 +1006,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                             public void run() {
                                 try {
 
-                                    Delete_file_no_watermark(item);
+                                    deleteFileNoWatermark(item);
                                     dismissProgressDialog();
                                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show();
 
@@ -1056,15 +1021,14 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
                 .start();
     }
 
-
-    public void Delete_file_no_watermark(Home item) {
+    private void deleteFileNoWatermark(Home item) {
         File file = new File(Variables.app_folder + item.video_id + "no_watermark" + ".mp4");
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public void Scan_file(Home item) {
+    private void scanFile(Home item) {
         MediaScannerConnection.scanFile(WatchVideosActivity.this,
                 new String[]{Variables.app_folder + item.video_id + ".mp4"},
                 null,
@@ -1079,8 +1043,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
 
-    public void SendPushNotification(String user_id, String comment) {
-
+    private void sendPushNotification(String user_id, String comment) {
         JSONObject notimap = new JSONObject();
         try {
             notimap.put("title", Variables.sharedPreferences.getString(Variables.u_name, "") + " Comment on your video");
@@ -1180,12 +1143,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     }
 
-
     @Override
     public void onSeekProcessed() {
 
-
     }
-
-
 }

@@ -3,6 +3,7 @@
 buildscript {
     ext.kotlin_version = '1.3.72'
     ext.hilt_version = '2.28-alpha'
+    ext.work_version = "2.3.4"
 
     repositories {
         google()

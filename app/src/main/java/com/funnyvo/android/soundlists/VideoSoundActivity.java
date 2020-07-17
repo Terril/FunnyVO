@@ -22,10 +22,9 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.home.datamodel.Home;
-import com.funnyvo.android.R;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -88,7 +87,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         findViewById(R.id.play_btn).setOnClickListener(this);
         findViewById(R.id.pause_btn).setOnClickListener(this);
 
-        if (video_file.exists()) {
+        if (video_file != null && video_file.exists()) {
             Glide.with(this)
                     .load(Uri.fromFile(video_file))
                     .into(sound_image);
@@ -127,9 +126,9 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                 break;
 
             case R.id.play_btn:
-                if (audio_file.exists())
+                if (audio_file != null && audio_file.exists())
                     playAudio();
-                else if (video_file.exists())
+                else if (audio_file != null && video_file.exists())
                     loadFFmpeg();
                 else
                     saveVideo();
@@ -160,6 +159,12 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         showPlayingState();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopPlaying();
+    }
 
     public void stopPlaying() {
         if (player != null) {

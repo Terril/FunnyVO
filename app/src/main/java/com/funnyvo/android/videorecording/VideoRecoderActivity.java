@@ -44,7 +44,6 @@ import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
-import com.googlecode.mp4parser.util.Matrix;
 import com.googlecode.mp4parser.util.Path;
 import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraKitError;
@@ -61,7 +60,6 @@ import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
 
 public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener {
 
@@ -123,7 +121,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         });
 
         record_image = findViewById(R.id.record_image);
-        imvGallery =  findViewById(R.id.imvGallery);
+        imvGallery = findViewById(R.id.imvGallery);
 
         done_btn = findViewById(R.id.btnDone);
         done_btn.setEnabled(false);
@@ -252,8 +250,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             video_progress.pause();
             video_progress.addDivider();
 
-            if (audio != null)
-                audio.pause();
+            try {
+                if (audio != null)
+                    audio.pause();
+            } catch (IllegalStateException ignored) {
+
+            }
 
             if (sec_passed > ((Variables.recording_duration / 1000) / 3)) {
                 done_btn.setVisibility(View.VISIBLE);
@@ -530,7 +532,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         showProgressDialog();
         new GPUMp4Composer(src_path, destination_path)
                 .size(720, 1280)
-                .videoBitrate((int) (0.25 * 16 * 540 * 960))
+                .videoBitrate((int) (0.25 * 16 * 720 * 1280))
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
@@ -622,7 +624,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
                     Container out = new DefaultMp4Builder().build(movie);
                     MovieHeaderBox mvhd = Path.getPath(out, "moov/mvhd");
-                   // mvhd.setMatrix(Matrix.ROTATE_0);
+                    // mvhd.setMatrix(Matrix.ROTATE_0);
                     if (!dst.exists()) {
                         dst.createNewFile();
                     }

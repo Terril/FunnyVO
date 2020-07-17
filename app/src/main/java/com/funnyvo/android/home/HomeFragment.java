@@ -307,7 +307,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                                 startActivity(intent);
                             }
                         } else {
-                            Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.please_login, Toast.LENGTH_SHORT).show();
                         }
 
                         break;
