@@ -1,21 +1,22 @@
 package com.funnyvo.android.search;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.funnyvo.android.home.datamodel.Home;
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
+import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.simpleclasses.AdapterClickListener;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VideosListAdapter extends RecyclerView.Adapter<VideosListAdapter.CustomViewHolder> {
     public Context context;
@@ -43,7 +44,7 @@ public class VideosListAdapter extends RecyclerView.Adapter<VideosListAdapter.Cu
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
-        ImageView user_image;
+        CircleImageView user_image;
         TextView username, message;
         ImageButton watch_btn;
 
@@ -83,8 +84,11 @@ public class VideosListAdapter extends RecyclerView.Adapter<VideosListAdapter.Cu
         holder.message.setText(item.video_description);
 
         if (item.thum != null && !item.thum.equals("")) {
-            Uri uri = Uri.parse(item.thum);
-            holder.user_image.setImageURI(uri);
+            Glide.with(context)
+                    .load(item.thum)
+                    .centerCrop()
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(holder.user_image);
         }
         holder.bind(i, item, adapter_click_listener);
     }

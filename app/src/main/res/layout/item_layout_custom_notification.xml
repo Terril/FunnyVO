@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainlayout"
     android:gravity="bottom"
     android:paddingTop="24dp"
@@ -35,28 +36,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <TextView
+                <com.funnyvo.android.customview.FunnyVOTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Username"
-                    android:textSize="15dp"
+                    android:textSize="@dimen/text_size_15"
                     android:id="@+id/username"
-                    android:textStyle="bold"
+                    app:customFont="@string/font_bold"
                     android:textColor="@color/white"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="@dimen/margin_10" />
 
             </RelativeLayout>
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/message"
                 android:text="Your Message"
-                android:textSize="13dp"
+                android:textSize="@dimen/text_size_13"
                 android:maxLines="2"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/margin_5"
                 android:textColor="@color/white"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/margin_10"
 
                 />
         </LinearLayout>

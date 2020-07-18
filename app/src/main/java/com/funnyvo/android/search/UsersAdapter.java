@@ -1,7 +1,6 @@
 package com.funnyvo.android.search;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,14 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
-import com.funnyvo.android.simpleclasses.AdapterClickListener;
 import com.funnyvo.android.search.datamodel.Users;
+import com.funnyvo.android.simpleclasses.AdapterClickListener;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.CustomViewHolder> {
     public Context context;
@@ -48,8 +49,11 @@ class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.CustomViewHolder> {
         Users item = (Users) datalist.get(i);
 
         if (item.profile_pic != null && !item.profile_pic.equals("")) {
-            Uri uri = Uri.parse(item.profile_pic);
-            holder.image.setImageURI(uri);
+            Glide.with(context)
+                    .load(item.profile_pic)
+                    .centerCrop()
+                    .placeholder(R.drawable.profile_image_placeholder)
+                    .into(holder.image);
         }
 
         holder.username_txt.setText(item.first_name + " " + item.last_name);
@@ -61,7 +65,7 @@ class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.CustomViewHolder> {
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        SimpleDraweeView image;
+        CircleImageView image;
         TextView username_txt, description_txt, video_count;
 
         public CustomViewHolder(View view) {

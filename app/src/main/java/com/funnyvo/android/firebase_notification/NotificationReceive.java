@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -75,7 +76,7 @@ public class NotificationReceive extends FirebaseMessagingService {
 
             if (!ChatActivity.senderid_for_check_notification.equals(senderid)) {
 
-                sendNotification sendNotification = new sendNotification(this);
+                SendNotification sendNotification = new SendNotification(this);
                 sendNotification.execute(pic);
             }
         }
@@ -100,10 +101,10 @@ public class NotificationReceive extends FirebaseMessagingService {
         }
     }
 
-    private class sendNotification extends AsyncTask<String, Void, Bitmap> {
+    private class SendNotification extends AsyncTask<String, Void, Bitmap> {
         Context ctx;
 
-        public sendNotification(Context context) {
+        public SendNotification(Context context) {
             super();
             this.ctx = context;
         }
@@ -140,7 +141,7 @@ public class NotificationReceive extends FirebaseMessagingService {
 
             super.onPostExecute(result);
 
-            ShowNotification(ctx, title, message, result);
+            showNotification(ctx, title, message, result);
 
             if (MainMenuActivity.mainMenuActivity != null) {
                 if (snackbar != null) {
@@ -222,7 +223,7 @@ public class NotificationReceive extends FirebaseMessagingService {
     }
 
 
-    public void ShowNotification(Context context, String title, String message, Bitmap bitmap) {
+    private void showNotification(Context context, String title, String message, Bitmap bitmap) {
 
         // The id of the channel.
         final String CHANNEL_ID = "default";
@@ -242,7 +243,7 @@ public class NotificationReceive extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel defaultChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(defaultChannel);
         }
@@ -265,8 +266,7 @@ public class NotificationReceive extends FirebaseMessagingService {
     }
 
 
-    public void chatFragment(String receiverid, String name, String picture) {
-
+    private void chatFragment(String receiverid, String name, String picture) {
         if (sharedPreferences.getBoolean(Variables.islogin, false)) {
 
             if (MainMenuFragment.tabLayout != null) {
@@ -288,9 +288,6 @@ public class NotificationReceive extends FirebaseMessagingService {
             transaction.replace(R.id.MainMenuFragment, chat_activity).commit();
 
         }
-
-
     }
-
 
 }

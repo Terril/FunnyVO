@@ -2,11 +2,11 @@ package com.funnyvo.android.soundlists;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 
@@ -156,9 +156,11 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
 
 
             if (item.thum != null && !item.thum.equals("")) {
-                Log.d(Variables.tag, item.thum);
-                Uri uri = Uri.parse(item.thum);
-                holder.sound_image.setImageURI(uri);
+                Glide.with(context)
+                        .load(item.thum)
+                        .centerCrop()
+                        .placeholder(R.color.colorAccent)
+                        .into(holder.sound_image);
             }
 
 
@@ -172,7 +174,7 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
 
         ImageButton done, fav_btn;
         TextView sound_name, description_txt;
-        SimpleDraweeView sound_image;
+        ImageView sound_image;
 
         public CustomViewHolder(View view) {
             super(view);

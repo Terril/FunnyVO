@@ -1,18 +1,16 @@
 package com.funnyvo.android.soundlists.favouritesounds;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.Sounds;
@@ -29,7 +27,6 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
     }
 
     public FavouriteSoundAdapter.OnItemClickListener listener;
-
 
     public FavouriteSoundAdapter(Context context, ArrayList<Sounds> arrayList, FavouriteSoundAdapter.OnItemClickListener listener) {
         this.context = context;
@@ -63,7 +60,6 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
             holder.description_txt.setText(item.description);
 
             if (item.thum != null && !item.thum.equals("")) {
-                Log.d(Variables.tag, item.thum);
                 Uri uri = Uri.parse(item.thum);
                 holder.sound_image.setImageURI(uri);
             }
@@ -81,7 +77,7 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
 
         ImageButton done, fav_btn;
         TextView sound_name, description_txt;
-        SimpleDraweeView sound_image;
+        ImageView sound_image;
 
         public CustomViewHolder(View view) {
             super(view);
