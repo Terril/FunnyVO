@@ -1,7 +1,6 @@
 package com.funnyvo.android.soundlists.favouritesounds;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.Sounds;
@@ -60,8 +60,11 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
             holder.description_txt.setText(item.description);
 
             if (item.thum != null && !item.thum.equals("")) {
-                Uri uri = Uri.parse(item.thum);
-                holder.sound_image.setImageURI(uri);
+                Glide.with(context)
+                        .load(item.thum)
+                        .centerCrop()
+                        .placeholder(R.color.colorAccent)
+                        .into(holder.sound_image);
             }
             holder.fav_btn.setImageDrawable(context.getDrawable(R.drawable.ic_my_favourite));
             holder.bind(i, datalist.get(i), listener);
