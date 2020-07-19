@@ -68,12 +68,9 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
             }
             holder.fav_btn.setImageDrawable(context.getDrawable(R.drawable.ic_my_favourite));
             holder.bind(i, datalist.get(i), listener);
-
-
         } catch (Exception e) {
 
         }
-
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {

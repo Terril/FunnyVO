@@ -129,14 +129,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service
-            android:name=".services.UploadService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="startservice" />
-            </intent-filter>
-        </service>
         <service android:name=".firebase_notification.NotificationReceive">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
