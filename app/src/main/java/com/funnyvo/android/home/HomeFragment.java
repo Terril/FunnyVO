@@ -41,6 +41,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.downloader.Error;
 import com.downloader.OnCancelListener;
 import com.downloader.OnDownloadListener;
@@ -50,6 +51,7 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.FunnyVOApplication;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
@@ -68,10 +70,13 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
 import com.funnyvo.android.taged.TaggedVideosFragment;
 import com.funnyvo.android.videoAction.VideoActionFragment;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -94,7 +99,6 @@ import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
-import static com.funnyvo.android.simpleclasses.Variables.is_secure_info;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,23 +107,23 @@ import static com.funnyvo.android.simpleclasses.Variables.is_secure_info;
 // this is the main view which is show all  the video in list
 public class HomeFragment extends RootFragment implements Player.EventListener, FragmentDataSend {
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    RecyclerView recyclerView;
-    private ArrayList<Home> data_list;
+    private RecyclerView recyclerView;
+    private ArrayList<Home> dataList;
     private int currentPage = -1;
-    LinearLayoutManager layoutManager;
-    ProgressBar p_bar;
-    SwipeRefreshLayout swiperefresh;
+    private LinearLayoutManager layoutManager;
+    private ProgressBar pBar;
+    private SwipeRefreshLayout swiperefresh;
 
     boolean is_user_stop_video = false;
 
     boolean is_add_show = false;
-    HomeAdapter adapter;
+    private HomeAdapter adapter;
 
     // when we swipe for another video this will relaese the privious player
-    SimpleExoPlayer previousPlayer;
+    private SimpleExoPlayer previousPlayer;
     int swipe_count = 0;
 
     BaseActivity mActivity;
@@ -143,7 +147,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         view = inflater.inflate(R.layout.fragment_home, container, false);
         context = getContext();
 
-        p_bar = view.findViewById(R.id.p_bar);
+        pBar = view.findViewById(R.id.p_bar);
 
         recyclerView = view.findViewById(R.id.recylerviewHome);
         layoutManager = new LinearLayoutManager(context);
@@ -153,7 +157,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-        data_list = new ArrayList<>();
+        dataList = new ArrayList<>();
         setAdapter();
         // this is the scroll listener of recycler view which will tell the current item number
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -230,7 +234,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     public void setAdapter() {
-        adapter = new HomeAdapter(context, data_list, new HomeAdapter.OnItemClickListener() {
+        adapter = new HomeAdapter(context, dataList, new HomeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, final Home item, View view) {
                 switch (view.getId()) {
@@ -275,7 +279,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                                         @Override
                                         public void onSuccess(String responce) {
-                                            data_list.remove(currentPage);
+                                            dataList.remove(currentPage);
                                             adapter.notifyDataSetChanged();
                                             dismissProgressDialog();
 
@@ -325,6 +329,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
     private void callApiForGetAllVideos() {
+        if (dataList != null && !dataList.isEmpty()) {
+            dataList.clear();
+        }
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -368,6 +375,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     item.sound_id = sound_data.optString("id");
                     item.sound_name = sound_data.optString("sound_name");
                     item.sound_pic = sound_data.optString("thum");
+                    item.soundUrl = sound_data.optString("sound_url");
 
 
                     JSONObject count = itemdata.optJSONObject("count");
@@ -394,7 +402,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     }
 
                     item.isMute = isMuted;
-                    data_list.add(item);
+                    dataList.add(item);
                 }
 
             } else {
@@ -410,13 +418,22 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this will call when swipe for another video and
     // this function will set the player to the current video
     private void setPlayer(final int currentPage) {
-        final Home item = data_list.get(currentPage);
+        final Home item = dataList.get(currentPage);
+
+        setUpVideoCache();
+
+        HttpProxyCacheServer proxy = FunnyVOApplication.getProxy(context);
+        String proxyUrl = proxy.getProxyUrl(item.video_url);
+
+        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl();
+
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
-        previousPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+        RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+        previousPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, APP_NAME));
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(item.video_url));
+                .createMediaSource(Uri.parse(proxyUrl));
         previousPlayer.prepare(videoSource);
 
         previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
@@ -516,7 +533,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             swipe_count = 0;
         }
 
-        if (currentPage == data_list.size() - 1) {
+        if (currentPage == dataList.size() - 1) {
             pageNumber = pageNumber + 1;
             callApiForGetAllVideos();
         } else {
@@ -530,6 +547,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         }
     }
 
+    private void setUpVideoCache() {
+        if (currentPage + 1 < dataList.size()) {
+            HttpProxyCacheServer proxy = FunnyVOApplication.getProxy(context);
+            proxy.getProxyUrl(dataList.get(currentPage + 1).video_url);
+        }
+    }
 
     public void showHeartOnDoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
 
@@ -580,10 +603,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onDataSent(String yourData) {
         int comment_count = Integer.parseInt(yourData);
-        Home item = data_list.get(currentPage);
+        Home item = dataList.get(currentPage);
         item.video_comment_count = "" + comment_count;
-        data_list.remove(currentPage);
-        data_list.add(currentPage, item);
+        dataList.remove(currentPage);
+        dataList.add(currentPage, item);
         adapter.notifyDataSetChanged();
     }
 
@@ -625,9 +648,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             home_.like_count = "" + (Integer.parseInt(home_.like_count) + 1);
         }
 
-        data_list.remove(position);
+        dataList.remove(position);
         home_.liked = action;
-        data_list.add(position, home_);
+        dataList.add(position, home_);
         adapter.notifyDataSetChanged();
 
         Functions.callApiForLikeVideo(getActivity(), home_.video_id, action, new ApiCallBack() {
@@ -869,9 +892,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         }
 
         if (item != null) {
-            data_list.remove(position);
+            dataList.remove(position);
             item.isMute = isMuted;
-            data_list.add(position, item);
+            dataList.add(position, item);
             adapter.notifyDataSetChanged();
         }
     }
@@ -977,9 +1000,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
         if (playbackState == Player.STATE_BUFFERING) {
-            p_bar.setVisibility(View.VISIBLE);
+            pBar.setVisibility(View.VISIBLE);
         } else if (playbackState == Player.STATE_READY) {
-            p_bar.setVisibility(View.GONE);
+            pBar.setVisibility(View.GONE);
         }
 
 

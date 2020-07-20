@@ -24,10 +24,6 @@
             android:theme="@style/white_status"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".videorecording.galleryselectedvideo.GallerySelectedVideoActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
             android:name=".accounts.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Transparent"

@@ -86,11 +86,10 @@
 
                     <ImageButton
                         android:id="@+id/send_btn"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="@dimen/margin_32"
+                        android:layout_height="@dimen/margin_32"
                         android:background="@color/transparent"
-                        android:padding="5dp"
-                        android:rotation="-45"
+                        android:padding="@dimen/margin_5"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_send"
                         android:tint="@color/palette_cheddar_dark" />

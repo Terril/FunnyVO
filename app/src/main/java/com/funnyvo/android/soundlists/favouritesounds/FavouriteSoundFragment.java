@@ -155,7 +155,8 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+            if (Variables.sharedPreferences != null)
+                parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
 
         } catch (JSONException e) {
             e.printStackTrace();

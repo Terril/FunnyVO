@@ -108,7 +108,10 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             btnAddMusic.setText(getString(R.string.preview));
             btnAddMusic.setEnabled(false);
         } else {
+            videoUrl = path;
+            Variables.Selected_sound_id = "null";
             btnAddMusic.setEnabled(true);
+            append(false); //galleryAppend();
         }
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
@@ -145,6 +148,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         if (player != null) {
             player.setPlayWhenReady(false);
         }
+        try {
+            if (audio != null) {
+                audio.stop();
+                audio.reset();
+                audio.release();
+            }
+        } catch (Exception e) {
+
+        }
 
     }
 
@@ -153,6 +165,20 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         super.onStart();
         if (player != null) {
             player.setPlayWhenReady(true);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            if (audio != null) {
+                audio.stop();
+                audio.reset();
+                audio.release();
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -171,6 +197,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             player.removeListener(eventListener);
             player.release();
             player = null;
+        }
+        try {
+            if (audio != null) {
+                audio.stop();
+                audio.reset();
+                audio.release();
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -233,6 +268,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     private void gotoPostScreen() {
         Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
+        intent.putExtra("path", Variables.outputfile2);
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -251,7 +287,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 player.seekTo(0);
                 player.setPlayWhenReady(true);
                 audio.start();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -464,7 +499,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     if (audio != null) {
                         audio.pause();
                     }
-                    append();
+                    append(true);
                 } else {
                     finalTouchesToVideo();
                 }
@@ -524,7 +559,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     }
 
     // this will append all the videos parts in one  fullvideo
-    private boolean append() {
+    private boolean append(final boolean isPostNeeded) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -590,7 +625,93 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                             if (audio != null)
                                 mergeWithAudio();
                             else {
-                                finalTouchesToVideo();
+                                if (isPostNeeded) {
+                                    saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
+                                } else {
+                                    dismissProgressDialog();
+                                }
+                            }
+                        }
+                    });
+
+                } catch (Exception e) {
+
+                }
+            }
+        }).start();
+
+        return true;
+    }
+
+
+    private boolean galleryAppend() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        showProgressDialog();
+                    }
+                });
+
+                ArrayList<String> video_list = new ArrayList<>();
+                File file = new File(path);
+
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(PreviewVideoActivity.this, Uri.fromFile(file));
+                String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
+                boolean isVideo = getString(R.string.yes).equals(hasVideo);
+
+                if (isVideo && file.length() > 3000) {
+                    video_list.add(path);
+                }
+
+                try {
+                    Movie[] inMovies = new Movie[video_list.size()];
+                    for (int i = 0; i < video_list.size(); i++) {
+                        inMovies[i] = MovieCreator.build(video_list.get(i));
+                    }
+
+                    List<Track> videoTracks = new LinkedList<Track>();
+                    List<Track> audioTracks = new LinkedList<Track>();
+                    for (Movie m : inMovies) {
+                        for (Track t : m.getTracks()) {
+                            if (t.getHandler().equals("soun")) {
+                                audioTracks.add(t);
+                            }
+                            if (t.getHandler().equals("vide")) {
+                                videoTracks.add(t);
+                            }
+                        }
+                    }
+                    Movie result = new Movie();
+                    if (audioTracks.size() > 0) {
+                        result.addTrack(new AppendTrack(audioTracks.toArray(new Track[audioTracks.size()])));
+                    }
+                    if (videoTracks.size() > 0) {
+                        result.addTrack(new AppendTrack(videoTracks.toArray(new Track[videoTracks.size()])));
+                    }
+
+                    Container out = new DefaultMp4Builder().build(result);
+
+                    String outputFilePath = null;
+                    if (audio != null) {
+                        outputFilePath = Variables.outputfile;
+                    } else {
+                        outputFilePath = Variables.outputfile2;
+                    }
+
+                    FileOutputStream fos = new FileOutputStream(new File(outputFilePath));
+                    out.writeContainer(fos.getChannel());
+                    fos.close();
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            dismissProgressDialog();
+                            if (audio != null)
+                                mergeWithAudio();
+                            else {
+
                             }
                         }
                     });
@@ -618,4 +739,5 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         draft_file = draftFile;
         finalTouchesToVideo();
     }
+
 }

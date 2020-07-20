@@ -833,7 +833,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onCompletion(boolean state, String draftFile) {
         Intent intent = new Intent(this, PreviewVideoActivity.class);
-        intent.putExtra("path", Variables.outputfile2);
+        intent.putExtra("video_path", Variables.outputfile2);
         intent.putExtra("draft_file", draftFile);
         startActivity(intent);
     }

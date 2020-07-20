@@ -168,6 +168,7 @@ dependencies {
     implementation "org.apache.httpcomponents:httpmime:4.3.1"
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'com.github.AndroidDeveloperLB:VideoTrimmer:6'
+    implementation 'com.danikula:videocache:2.7.0'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
