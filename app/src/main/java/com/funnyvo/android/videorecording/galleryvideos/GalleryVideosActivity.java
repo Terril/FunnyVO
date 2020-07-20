@@ -22,7 +22,7 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.videorecording.galleryselectedvideo.GallerySelectedVideoActivity;
+import com.funnyvo.android.videorecording.PreviewVideoActivity;
 import com.funnyvo.android.videorecording.galleryvideos.datamodel.GalleryVideo;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -289,8 +289,9 @@ public class GalleryVideosActivity extends BaseActivity {
                 in.close();
                 out.close();
 
-                Intent intent = new Intent(GalleryVideosActivity.this, GallerySelectedVideoActivity.class);
+                Intent intent = new Intent(GalleryVideosActivity.this, PreviewVideoActivity.class);
                 intent.putExtra("video_path", Variables.gallery_resize_video);
+                intent.putExtra("isFromGallery", true);
                 intent.putExtra("draft_file", src_path);
                 startActivity(intent);
 

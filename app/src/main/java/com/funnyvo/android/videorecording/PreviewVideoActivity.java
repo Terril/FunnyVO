@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +16,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -21,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
+import com.coremedia.iso.boxes.Container;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
@@ -31,16 +36,29 @@ import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.soundlists.SoundListMainActivity;
+import com.googlecode.mp4parser.authoring.Movie;
+import com.googlecode.mp4parser.authoring.Track;
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
+import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_list_Request_code;
 
-public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener {
+public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
 
     public static final int CROP_RESULT = 101;
     private GPUPlayerView gpuPlayerView;
+    private MediaPlayer audio;
     public static int select_postion = 0;
     private final List<FilterType> filterTypes = FilterType.createFilterList();
     private FilterAdapter adapter;
@@ -48,11 +66,14 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private LinearLayout layoutViewInputText;
     private PlayerEventListener eventListener;
     private FunnyVOEditTextView edtVideoMessage;
+    private Button btnAddMusic;
     private String draft_file;
+    private String path;
     private boolean isMotionFilterSelected = false, isTextFilterSelected = false;
     private boolean isUp = false;
     private boolean isSlowMoEnabled = true;
     private boolean isFastMoEnabled = true;
+    private boolean isFromGallery = false;
     // this function will set the player to the current video
 
     @Override
@@ -63,12 +84,17 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
         Intent intent = getIntent();
         if (intent != null) {
+            path = intent.getStringExtra("video_path");
             draft_file = intent.getStringExtra("draft_file");
+            isFromGallery = intent.getBooleanExtra("isFromGallery", false);
         }
+
         eventListener = new PlayerEventListener();
         select_postion = 0;
         String videoUrl = Variables.outputfile2;
 
+        btnAddMusic = findViewById(R.id.btnAddMusic);
+        btnAddMusic.setOnClickListener(this);
         findViewById(R.id.btnGoBackPreview).setOnClickListener(this);
         findViewById(R.id.btnSlowMotion).setOnClickListener(this);
         findViewById(R.id.btnNext).setOnClickListener(this);
@@ -77,6 +103,13 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.btnFilter).setOnClickListener(this);
         findViewById(R.id.btnTextEditor).setOnClickListener(this);
         findViewById(R.id.btnTextAdded).setOnClickListener(this);
+
+        if (!isFromGallery) {
+            btnAddMusic.setText(getString(R.string.preview));
+            btnAddMusic.setEnabled(false);
+        } else {
+            btnAddMusic.setEnabled(true);
+        }
 
         gpuPlayerView = setPlayer(videoUrl, eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
@@ -143,7 +176,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     // this function will add the filter to video and save that same video for post the video in post video screen
     private void saveVideo(String srcMp4Path, final String destMp4Path) {
-        showProgressDialog();
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
                 //.videoBitrate((int) (0.25 * 16 * 540 * 960))
@@ -159,8 +191,12 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                dismissProgressDialog();
-                                gotopostScreen();
+                                try {
+                                    dismissProgressDialog();
+                                    gotoPostScreen();
+                                } catch (Exception e) {
+
+                                }
                             }
                         });
                     }
@@ -195,11 +231,31 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         return BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_watermark, options);
     }
 
-    public void gotopostScreen() {
+    private void gotoPostScreen() {
         Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
         intent.putExtra("draft_file", draft_file);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    private void prepareAudio() {
+        player.setVolume(0);
+        File file = new File(Variables.app_folder + Variables.SelectedAudio_AAC);
+        if (file.exists()) {
+            audio = new MediaPlayer();
+            try {
+                audio.setDataSource(Variables.app_folder + Variables.SelectedAudio_AAC);
+                audio.prepare();
+                audio.setLooping(true);
+
+                player.seekTo(0);
+                player.setPlayWhenReady(true);
+                audio.start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -398,15 +454,20 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 toggleFastMo();
                 break;
             case R.id.btnGoBackPreview:
-              onBackPressed();
+                onBackPressed();
                 break;
             case R.id.btnNext:
-                if (isMotionFilterSelected) {
-                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
-                } else if (isTextFilterSelected) {
-                    Variables.outputfile2 = Variables.OUTPUT_FILE_MESSAGE;
+                if (isFromGallery) {
+                    if (player != null) {
+                        player.setPlayWhenReady(false);
+                    }
+                    if (audio != null) {
+                        audio.pause();
+                    }
+                    append();
+                } else {
+                    finalTouchesToVideo();
                 }
-                saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
                 break;
             case R.id.btnFilter:
                 slideFilterView();
@@ -419,6 +480,11 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btnTextAdded:
                 applyMessageOnVideo();
+                break;
+            case R.id.btnAddMusic:
+                Intent intent = new Intent(this, SoundListMainActivity.class);
+                startActivityForResult(intent, Sounds_list_Request_code);
+                overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
         }
     }
@@ -436,5 +502,120 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 //Write your code if there's no result
             }
         }
+        if (requestCode == Sounds_list_Request_code) {
+            if (data != null) {
+                if (data.getStringExtra("isSelected").equals("yes")) {
+                    btnAddMusic.setText(data.getStringExtra("sound_name"));
+                    Variables.Selected_sound_id = data.getStringExtra("sound_id");
+                    prepareAudio();
+                }
+
+            }
+        }
+    }
+
+    private void finalTouchesToVideo() {
+        if (isMotionFilterSelected) {
+            Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
+        } else if (isTextFilterSelected) {
+            Variables.outputfile2 = Variables.OUTPUT_FILE_MESSAGE;
+        }
+        saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
+    }
+
+    // this will append all the videos parts in one  fullvideo
+    private boolean append() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        showProgressDialog();
+                    }
+                });
+
+                ArrayList<String> video_list = new ArrayList<>();
+                File file = new File(path);
+
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(PreviewVideoActivity.this, Uri.fromFile(file));
+                String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
+                boolean isVideo = getString(R.string.yes).equals(hasVideo);
+
+                if (isVideo && file.length() > 3000) {
+                    video_list.add(path);
+                }
+
+                try {
+                    Movie[] inMovies = new Movie[video_list.size()];
+                    for (int i = 0; i < video_list.size(); i++) {
+                        inMovies[i] = MovieCreator.build(video_list.get(i));
+                    }
+
+                    List<Track> videoTracks = new LinkedList<Track>();
+                    List<Track> audioTracks = new LinkedList<Track>();
+                    for (Movie m : inMovies) {
+                        for (Track t : m.getTracks()) {
+                            if (t.getHandler().equals("soun")) {
+                                audioTracks.add(t);
+                            }
+                            if (t.getHandler().equals("vide")) {
+                                videoTracks.add(t);
+                            }
+                        }
+                    }
+                    Movie result = new Movie();
+                    if (audioTracks.size() > 0) {
+                        result.addTrack(new AppendTrack(audioTracks.toArray(new Track[audioTracks.size()])));
+                    }
+                    if (videoTracks.size() > 0) {
+                        result.addTrack(new AppendTrack(videoTracks.toArray(new Track[videoTracks.size()])));
+                    }
+
+                    Container out = new DefaultMp4Builder().build(result);
+
+                    String outputFilePath = null;
+                    if (audio != null) {
+                        outputFilePath = Variables.outputfile;
+                    } else {
+                        outputFilePath = Variables.outputfile2;
+                    }
+
+                    FileOutputStream fos = new FileOutputStream(new File(outputFilePath));
+                    out.writeContainer(fos.getChannel());
+                    fos.close();
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            if (audio != null)
+                                mergeWithAudio();
+                            else {
+                                finalTouchesToVideo();
+                            }
+                        }
+                    });
+
+                } catch (Exception e) {
+
+                }
+            }
+        }).start();
+
+        return true;
+    }
+
+    // this will add the select audio with the video
+    private void mergeWithAudio() {
+        String audio_file;
+        audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
+
+        MergeVideoAudio merge_video_audio = new MergeVideoAudio(PreviewVideoActivity.this, this);
+        merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2, draft_file);
+    }
+
+    @Override
+    public void onCompletion(boolean state, String draftFile) {
+        draft_file = draftFile;
+        finalTouchesToVideo();
     }
 }

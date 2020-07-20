@@ -36,7 +36,6 @@ import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
-import com.funnyvo.android.videorecording.galleryselectedvideo.GallerySelectedVideoActivity;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -61,7 +60,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener {
+public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
 
     private CameraView cameraView;
     private int number = 0;
@@ -371,7 +370,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
-        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(VideoRecoderActivity.this);
+        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(VideoRecoderActivity.this, this);
         mergeVideoAudio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
     }
 
@@ -544,8 +543,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void run() {
                                 dismissProgressDialog();
-                                Intent intent = new Intent(VideoRecoderActivity.this, GallerySelectedVideoActivity.class);
+                                Intent intent = new Intent(VideoRecoderActivity.this, PreviewVideoActivity.class);
                                 intent.putExtra("video_path", Variables.gallery_resize_video);
+                                intent.putExtra("isFromGallery", true);
                                 startActivity(intent);
 
                             }
@@ -828,5 +828,13 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    @Override
+    public void onCompletion(boolean state, String draftFile) {
+        Intent intent = new Intent(this, PreviewVideoActivity.class);
+        intent.putExtra("path", Variables.outputfile2);
+        intent.putExtra("draft_file", draftFile);
+        startActivity(intent);
     }
 }

@@ -1,14 +1,11 @@
 package com.funnyvo.android.videorecording;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
-import com.funnyvo.android.customview.ActivityIndicator;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -29,12 +26,13 @@ import java.util.List;
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     private Activity activity;
-
+    private MergeVideoAudioCallBack callBack;
     private String audio, video, output, draft_file;
-  //  private ActivityIndicator indicator;
+    //  private ActivityIndicator indicator;
 
-    public MergeVideoAudio(Activity activity) {
+    public MergeVideoAudio(Activity activity, MergeVideoAudioCallBack callBack) {
         this.activity = activity;
+        this.callBack = callBack;
 //        indicator = new ActivityIndicator(activity);
     }
 
@@ -71,15 +69,15 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     }
 
 
-    public void goToPreviewActivity() {
-        Intent intent = new Intent(activity, PreviewVideoActivity.class);
-        intent.putExtra("path", Variables.outputfile2);
-        intent.putExtra("draft_file", draft_file);
-        activity.startActivity(intent);
-    }
+//    public void goToPreviewActivity() {
+//        Intent intent = new Intent(activity, PreviewVideoActivity.class);
+//        intent.putExtra("path", Variables.outputfile2);
+//        intent.putExtra("draft_file", draft_file);
+//        activity.startActivity(intent);
+//    }
 
 
-    public Track CropAudio(String videopath, Track fullAudio) {
+    private Track cropAudio(String videopath, Track fullAudio) {
         try {
 
             IsoFile isoFile = new IsoFile(videopath);
@@ -142,7 +140,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
                 }
 
                 Track nuAudio = new AACTrackImpl(new FileDataSourceImpl(audio));
-                Track crop_track = CropAudio(video, nuAudio);
+                Track crop_track = cropAudio(video, nuAudio);
                 nuTracks.add(crop_track);
                 m.setTracks(nuTracks);
                 Container mp4file = new DefaultMp4Builder().build(m);
@@ -154,8 +152,8 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 //                } catch (Exception e) {
 //                    Log.d(Variables.tag, e.toString());
 //                } finally {
-                    goToPreviewActivity();
-   //             }
+                callBack.onCompletion(true, draft_file);
+                //             }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -163,4 +161,8 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
             }
         }
     };
+}
+
+interface  MergeVideoAudioCallBack {
+    void onCompletion(boolean state, String draftFile);
 }
