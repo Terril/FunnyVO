@@ -86,7 +86,7 @@
     <string name="video_not_deleted">Video will be deleted shortly</string>
     <string name="fetch_user_not_happening">Not able to fetch the user, We are fixing your issue</string>
     <string name="please_login">Please Login</string>
-    <string name="continue_using_app">\"Video will be uploaded, You continue enjoy using the app \"</string>
+    <string name="continue_using_app">Video will be uploaded, You continue enjoy using the app </string>
     <string name="file_saved_in_draft">File saved in Draft</string>
     <string name="save_failed_into_draft">Sorry, save to draft failed.</string>
     <string name="unable_to_fetch_user_videos">Unable to fetch your videos at the moment</string>
