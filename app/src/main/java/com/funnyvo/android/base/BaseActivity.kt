@@ -42,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
             activityIndicator.hide()
     }
 
-    //     This will hide the bottom mobile navigation control
+    //     This will hide the bottom mobile navigation control 
     open fun hideNavigation() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)

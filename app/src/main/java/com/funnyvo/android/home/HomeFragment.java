@@ -193,6 +193,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onRefresh() {
                 currentPage = -1;
                 pageNumber = 1;
+                if (dataList != null && !dataList.isEmpty()) {
+                    dataList.clear();
+                }
                 callApiForGetAllVideos();
             }
         });
@@ -329,9 +332,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
     private void callApiForGetAllVideos() {
-        if (dataList != null && !dataList.isEmpty()) {
-            dataList.clear();
-        }
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -420,8 +420,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private void setPlayer(final int currentPage) {
         final Home item = dataList.get(currentPage);
 
-        setUpVideoCache();
-
         HttpProxyCacheServer proxy = FunnyVOApplication.getProxy(context);
         String proxyUrl = proxy.getProxyUrl(item.video_url);
 
@@ -435,6 +433,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(proxyUrl));
         previousPlayer.prepare(videoSource);
+
+        setUpVideoCache();
 
         previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
         previousPlayer.addListener(this);
