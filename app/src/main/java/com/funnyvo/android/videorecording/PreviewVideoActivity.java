@@ -493,11 +493,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btnNext:
                 if (isFromGallery) {
-                    if (player != null) {
-                        player.setPlayWhenReady(false);
-                    }
-                    if (audio != null) {
-                        audio.pause();
+                    try {
+                        if (player != null) {
+                            player.setPlayWhenReady(false);
+                        }
+                        if (audio != null) {
+                            audio.release();
+                        }
+                    } catch (IllegalStateException ile) {
+                        Log.e(Variables.APP_NAME, "Internal audio system crashed");
                     }
                     append(true);
                 } else {
