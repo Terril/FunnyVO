@@ -253,7 +253,7 @@ public class NotificationReceive extends FirebaseMessagingService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(title))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setLargeIcon(bitmap)
-                .setSmallIcon(R.drawable.ic_tic)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle(title)
                 .setContentText(message)
