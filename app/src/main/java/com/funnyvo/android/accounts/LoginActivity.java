@@ -372,6 +372,7 @@ public class LoginActivity extends BaseActivity {
             parameters.put("version", appversion);
             parameters.put("signup_type", singnup_type);
             parameters.put("device", Variables.device);
+            parameters.put("device_id", Variables.sharedPreferences.getString(Variables.device_token, ""));
 
 
         } catch (JSONException e) {
