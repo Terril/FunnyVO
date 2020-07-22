@@ -103,7 +103,6 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.back_btn:
                 finish();
                 break;
@@ -141,7 +140,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    public void playAudio() {
+    private void playAudio() {
 
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
@@ -166,9 +165,10 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         stopPlaying();
     }
 
-    public void stopPlaying() {
+    private void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
+            player.release();
         }
         showPauseState();
     }
@@ -179,18 +179,18 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         stopPlaying();
     }
 
-    public void showPlayingState() {
+    private void showPlayingState() {
         findViewById(R.id.play_btn).setVisibility(View.GONE);
         findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
     }
 
-    public void showPauseState() {
+    private void showPauseState() {
         findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
         findViewById(R.id.pause_btn).setVisibility(View.GONE);
     }
 
 
-    public void saveVideo() {
+    private void saveVideo() {
         PRDownloader.initialize(this);
         DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + ".mp4")
                 .build()
@@ -241,7 +241,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    public void loadFFmpeg() {
+    private void loadFFmpeg() {
         showAudioLoading();
         final String[] complexCommand = {"-y", "-i", Variables.app_folder + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
                 Variables.app_folder + Variables.SelectedAudio_MP3};
