@@ -226,7 +226,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
             public void onDownloadComplete() {
                 dismissProgressDialog();
                 audio_file = new File(Variables.app_folder + item.video_id + ".mp4");
-                Glide.with(VideoSoundActivity.this)
+                Glide.with(getApplicationContext())
                         .load(Uri.fromFile(video_file))
                         .into(sound_image);
                 loadFFmpeg();
