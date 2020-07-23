@@ -52,7 +52,7 @@ import org.json.JSONObject;
 public class ProfileFragment extends RootFragment implements View.OnClickListener {
 
     private MaterialButton follow_unfollow_btn;
-    private TextView username, username2_txt, video_count_txt;
+    private TextView username, username2_txt, video_count_txt, txtUserBioProfile;
     private ImageView imageView;
     private TextView follow_count_txt, fans_count_txt, heart_count_txt;
 
@@ -144,6 +144,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     private View init(View view) {
         username = view.findViewById(R.id.username);
         username2_txt = view.findViewById(R.id.username2_txt);
+        txtUserBioProfile = view.findViewById(R.id.txtUserBioProfile);
         imageView = view.findViewById(R.id.user_image);
         imageView.setOnClickListener(this);
 
@@ -184,11 +185,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
             @Override
             public void onGlobalLayout() {
-
                 final int height = top_layout.getMeasuredHeight();
-
-                top_layout.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
+                top_layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 ViewTreeObserver observer = tabs_main_layout.getViewTreeObserver();
                 observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -382,9 +380,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    private void parseData(String responce) {
+    private void parseData(String response) {
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
@@ -393,6 +391,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 JSONObject user_info = data.optJSONObject("user_info");
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
                 username2_txt.setText(user_info.optString("username"));
+                txtUserBioProfile.setText(user_info.optString("bio"));
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
 

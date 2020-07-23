@@ -69,7 +69,7 @@ import static com.funnyvo.android.simpleclasses.Variables.API_SUCCESS_CODE;
  */
 public class ProfileTabFragment extends RootFragment implements View.OnClickListener {
     private View view;
-    private TextView username, username2_txt, video_count_txt;
+    private TextView username, txtUserBio, username2_txt, video_count_txt;
     private ImageView imageView;
     private TextView follow_count_txt, fans_count_txt, heart_count_txt, draft_count_txt;
 
@@ -151,6 +151,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         fans_count_txt = view.findViewById(R.id.fan_count_txt);
         heart_count_txt = view.findViewById(R.id.heart_count_txt);
         draft_count_txt = view.findViewById(R.id.draft_count_txt);
+        txtUserBio = view.findViewById(R.id.txtUserBio);
 
         showDraftCount();
 
@@ -423,10 +424,10 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         });
     }
 
-    private void parseData(String responce) {
+    private void parseData(String response) {
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals(API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
@@ -434,6 +435,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 JSONObject data = msgArray.getJSONObject(0);
                 JSONObject user_info = data.optJSONObject("user_info");
                 username2_txt.setText(user_info.optString("username"));
+                txtUserBio.setText(user_info.optString("bio"));
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
@@ -442,7 +444,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 follow_count_txt.setText(data.optString("total_following"));
                 fans_count_txt.setText(data.optString("total_fans"));
                 heart_count_txt.setText(data.optString("total_heart"));
-
 
                 JSONArray user_videos = data.getJSONArray("user_videos");
                 if (!user_videos.toString().equals("[" + "0" + "]")) {

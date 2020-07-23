@@ -1,7 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Profile_F"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -86,7 +84,7 @@
                     <RelativeLayout
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginTop="25dp">
+                        android:layout_marginTop="@dimen/margin_20">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/user_image"
@@ -111,15 +109,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_5"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_15"
                         app:customFont="@string/font_bold" />
+
+                    <com.funnyvo.android.customview.FunnyVOTextView
+                        android:id="@+id/txtUserBioProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_5"
+                        android:textColor="@color/palette_cheddar_dark"
+                        android:textSize="@dimen/text_size_13" />
 
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/margin_10"
                         app:cardBackgroundColor="@color/lightgraycolor"
                         app:cardCornerRadius="15dp"
                         app:cardElevation="0dp">
@@ -129,9 +137,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="20dp"
-                            android:paddingTop="5dp"
+                            android:paddingTop="@dimen/margin_5"
                             android:paddingRight="20dp"
-                            android:paddingBottom="5dp"
+                            android:paddingBottom="@dimen/margin_5"
                             android:text="@string/_0_video"
                             android:textColor="@color/dimgray"
                             android:textSize="@dimen/text_size_15"
@@ -142,7 +150,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp"
+                        android:layout_marginTop="@dimen/margin_20"
                         android:gravity="center_horizontal"
                         android:orientation="horizontal">
 
