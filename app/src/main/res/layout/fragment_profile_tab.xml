@@ -109,6 +109,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
                         android:layout_marginTop="@dimen/margin_5"
                         android:textColor="@color/palette_cheddar_dark"
                         android:textSize="@dimen/text_size_13" />

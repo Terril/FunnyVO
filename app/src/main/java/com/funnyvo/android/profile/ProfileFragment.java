@@ -63,7 +63,6 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     protected TabLayout tabLayout;
     protected ViewPager pager;
     private ViewPagerAdapter adapter;
-    private boolean isdataload = false;
     private RelativeLayout tabs_main_layout;
     private LinearLayout top_layout;
     public static String pic_url;
@@ -210,20 +209,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         view.findViewById(R.id.following_layout).setOnClickListener(this);
         view.findViewById(R.id.fans_layout).setOnClickListener(this);
 
-        isdataload = true;
         callApiForGetAllvideos();
 
         return view;
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (is_run_first_time) {
-            callApiForGetAllvideos();
-        }
-
     }
 
     private void setupTabIcons() {

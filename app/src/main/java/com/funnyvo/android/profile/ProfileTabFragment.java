@@ -210,9 +210,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         isdataload = true;
 
         updateProfile();
-
-        callApiForGetAllVideos();
-
         return view;
     }
 
@@ -242,9 +239,9 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
     private void userProfilePicture(String picUrl) {
-        ContextWrapper cw = new ContextWrapper(getActivity());
-        final File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         if (this.isAdded()) {
+            ContextWrapper cw = new ContextWrapper(getActivity());
+            final File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
             Glide.with(this)
                     .asBitmap()
                     .load(picUrl)

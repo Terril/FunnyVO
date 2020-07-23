@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.android.volley.Response
@@ -15,6 +16,7 @@ import com.funnyvo.android.apirequest.MultipartRequest
 import com.funnyvo.android.simpleclasses.ApiRequest
 import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
+import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.simpleclasses.Variables.sharedPreferences
 import dagger.hilt.android.scopes.ServiceScoped
 import java.io.File
@@ -39,14 +41,12 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         val uriData = Uri.parse(uri)
         val uriGifData = Uri.parse(uriGif)
 
-        lateinit var result: Result
-        uploadFunnyVOVideo(uriData, uriGifData, desc) { it -> result = it }
+        uploadFunnyVOVideo(uriData, uriGifData, desc)
 
-        // Indicate whether the work finished successfully with the Result
-        return result
+        return Result.success()
     }
 
-    private fun uploadFunnyVOVideo(uri: Uri, uriGif: Uri, desc: String, response: (Result) -> Unit) {
+    private fun uploadFunnyVOVideo(uri: Uri, uriGif: Uri, desc: String) {
         val bmThumbnail: Bitmap = ThumbnailUtils.createVideoThumbnail(uri.path,
                 MediaStore.Video.Thumbnails.FULL_SCREEN_KIND)
         val bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (bmThumbnail.width * 0.4).toInt(), (bmThumbnail.height * 0.4).toInt(), true)
@@ -64,18 +64,26 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
 
         val stringRequest = mutableMapOf<String, String>()
         stringRequest["fb_id"] = sharedPreferences.getString(Variables.u_id, "").orEmpty()
-        stringRequest["sound_id"] = Variables.Selected_sound_id
+        stringRequest["sound_id"] = Variables.Selected_sound_id.orEmpty()
         stringRequest["description"] = desc
+        stringRequest["upload_video"] = "public"
 
         val fileRequest = HashMap<String, File>()
         fileRequest["video"] = videoFile
         fileRequest["thum"] = thumbNail
         fileRequest["gif"] = gifFile
         val multipartRequest = MultipartRequest(Variables.uploadVideo, Response.ErrorListener { error ->
-            response(Result.failure())
+            Log.e(APP_NAME, "Video Upload Error : " + error.message)
+            videoFile.deleteOnExit()
+            gifFile.deleteOnExit()
+            thumbNail.deleteOnExit()
+
             return@ErrorListener
         }, Response.Listener<String> { response ->
-            response(Result.success())
+            Log.e(APP_NAME, "Video Upload Success : $response")
+            videoFile.deleteOnExit()
+            gifFile.deleteOnExit()
+            thumbNail.deleteOnExit()
             return@Listener
         }, fileRequest, stringRequest, headers)
         val hurlStack: HurlStack = object : HurlStack() {
@@ -106,5 +114,9 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
             e.printStackTrace()
         }
         return fileName
+    }
+
+    private fun deleteFiles() {
+
     }
 }

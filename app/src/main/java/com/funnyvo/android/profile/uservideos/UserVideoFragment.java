@@ -177,6 +177,9 @@ public class UserVideoFragment extends Fragment {
                         if (item.thum.contains(Variables.base_url)) {
                             item.thum = item.thum.replace(Variables.base_url + "/", "");
                         }
+                        if (item.gif.contains(Variables.base_url)) {
+                            item.gif = item.gif.replace(Variables.base_url + "/", "");
+                        }
 
                         data_list.add(i, item);
                     }
