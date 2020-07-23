@@ -90,4 +90,7 @@
     <string name="file_saved_in_draft">File saved in Draft</string>
     <string name="save_failed_into_draft">Sorry, save to draft failed.</string>
     <string name="unable_to_fetch_user_videos">Unable to fetch your videos at the moment</string>
+    <string name="no_network">No Network Available</string>
+    <string name="mind_checking_network">Would you mind checking your network ?</string>
+    <string name="ok">OK</string>
 </resources>
