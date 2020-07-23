@@ -51,7 +51,7 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="don_t_want_to_disclose_it">Don\'t want to disclose it</string>
+    <string name="don_t_want_to_disclose_it">Leave it to me</string>
     <string name="bio">Bio</string>
     <string name="your_bio">Your Bio</string>
     <string name="full_name">Full name</string>

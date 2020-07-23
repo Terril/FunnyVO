@@ -39,9 +39,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import static com.funnyvo.android.simpleclasses.Variables.API_SUCCESS_CODE;
+
 public class Functions {
 
-    private static String API_SUCCESS_CODE = "200";
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.

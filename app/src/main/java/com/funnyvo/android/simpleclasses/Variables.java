@@ -85,32 +85,35 @@ public class Variables {
 
     public static final String privacy_policy = "https://funnyvo.com/privacy_policy.html";
 
-    public static String base_url =  BuildConfig.hostAPI ;
-    public static String domain = base_url + "index.php?p=";
+    public static String API_SUCCESS_CODE = "200";
 
-    public static final String SignUp = domain + "signup";
-    public static final String uploadVideo = domain + "uploadVideo";
-    public static final String showAllVideos = domain + "showAllVideos";
-    public static final String showMyAllVideos = domain + "showMyAllVideos";
-    public static final String likeDislikeVideo = domain + "likeDislikeVideo";
-    public static final String updateVideoView = domain + "updateVideoView";
-    public static final String allSounds = domain + "allSounds";
-    public static final String fav_sound = domain + "fav_sound";
-    public static final String my_FavSound = domain + "my_FavSound";
-    public static final String my_liked_video = domain + "my_liked_video";
-    public static final String follow_users = domain + "follow_users";
-    public static final String discover = domain + "discover";
-    public static final String showVideoComments = domain + "showVideoComments";
-    public static final String postComment = domain + "postComment";
-    public static final String edit_profile = domain + "edit_profile";
-    public static final String get_user_data = domain + "get_user_data";
-    public static final String get_followers = domain + "get_followers";
-    public static final String get_followings = domain + "get_followings";
-    public static final String SearchByHashTag = domain + "SearchByHashTag";
-    public static final String sendPushNotification = domain + "sendPushNotification";
-    public static final String uploadImage = domain + "uploadImage";
-    public static final String DeleteVideo = domain + "DeleteVideo";
-    public static final String search = domain + "search";
-    public static final String getNotifications = domain + "getNotifications";
-    public static final String getVerified = domain + "getVerified";
+    public static String base_url =  BuildConfig.hostAPI ;
+    public static String DOMAIN = base_url + "index.php?p=";
+
+    public static final String SignUp = DOMAIN + "signup";
+    public static final String uploadVideo = DOMAIN + "uploadVideo";
+    public static final String showAllVideos = DOMAIN + "showAllVideos";
+    public static final String showMyAllVideos = DOMAIN + "showMyAllVideos";
+    public static final String likeDislikeVideo = DOMAIN + "likeDislikeVideo";
+    public static final String updateVideoView = DOMAIN + "updateVideoView";
+    public static final String allSounds = DOMAIN + "allSounds";
+    public static final String fav_sound = DOMAIN + "fav_sound";
+    public static final String my_FavSound = DOMAIN + "my_FavSound";
+    public static final String my_liked_video = DOMAIN + "my_liked_video";
+    public static final String follow_users = DOMAIN + "follow_users";
+    public static final String discover = DOMAIN + "discover";
+    public static final String showVideoComments = DOMAIN + "showVideoComments";
+    public static final String postComment = DOMAIN + "postComment";
+    public static final String edit_profile = DOMAIN + "edit_profile";
+    public static final String get_user_data = DOMAIN + "get_user_data";
+    public static final String get_followers = DOMAIN + "get_followers";
+    public static final String get_followings = DOMAIN + "get_followings";
+    public static final String SearchByHashTag = DOMAIN + "SearchByHashTag";
+    public static final String sendPushNotification = DOMAIN + "sendPushNotification";
+    public static final String uploadImage = DOMAIN + "uploadImage";
+    public static final String DeleteVideo = DOMAIN + "DeleteVideo";
+    public static final String search = DOMAIN + "search";
+    public static final String getNotifications = DOMAIN + "getNotifications";
+    public static final String getVerified = DOMAIN + "getVerified";
+    public static final String Logout = DOMAIN + "logout";
 }

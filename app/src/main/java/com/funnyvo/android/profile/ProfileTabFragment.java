@@ -62,6 +62,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.funnyvo.android.simpleclasses.Variables.API_SUCCESS_CODE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -213,7 +215,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         return view;
     }
 
-    public void showDraftCount() {
+    private void showDraftCount() {
         try {
 
             String path = Variables.draft_app_folder;
@@ -231,7 +233,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         }
     }
 
-    public void updateProfile() {
+    private void updateProfile() {
         username2_txt.setText(Variables.sharedPreferences.getString(Variables.u_name, ""));
         username.setText(Variables.sharedPreferences.getString(Variables.f_name, "") + " " + Variables.sharedPreferences.getString(Variables.l_name, ""));
         ProfileTabFragment.pic_url = Variables.sharedPreferences.getString(Variables.u_pic, "null");
@@ -355,21 +357,13 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
         @Override
         public Fragment getItem(int position) {
-            final Fragment result;
             switch (position) {
                 case 0:
-                    result = new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
-                    break;
+                    return new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
                 case 1:
-                    result = new LikedVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
-                    break;
-
-                default:
-                    result = null;
-                    break;
+                    return new LikedVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
             }
-
-            return result;
+            return new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
         }
 
         @Override
@@ -427,8 +421,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 parseData(resp);
             }
         });
-
-
     }
 
     private void parseData(String responce) {
@@ -436,7 +428,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
 
                 JSONObject data = msgArray.getJSONObject(0);
@@ -583,14 +575,34 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     // this will erase all the user info store in locally and logout the user
     private void logout() {
-        SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
-        editor.putString(Variables.u_id, "");
-        editor.putString(Variables.u_name, "");
-        editor.putString(Variables.u_pic, "");
-        editor.putBoolean(Variables.islogin, false);
-        editor.commit();
-        getActivity().finish();
-        startActivity(new Intent(getActivity(), MainMenuActivity.class));
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(getActivity(), Variables.Logout, parameters, new Callback() {
+            @Override
+            public void response(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String code = jsonObject.optString("code");
+                    if (code.equals(API_SUCCESS_CODE)) {
+                        SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
+                        editor.putString(Variables.u_id, "");
+                        editor.putString(Variables.u_name, "");
+                        editor.putString(Variables.u_pic, "");
+                        editor.putBoolean(Variables.islogin, false);
+                        editor.apply();
+                        getActivity().finish();
+                        startActivity(new Intent(getActivity(), MainMenuActivity.class));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 

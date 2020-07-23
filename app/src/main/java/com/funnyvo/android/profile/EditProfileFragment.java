@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
@@ -73,20 +74,20 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     private View view;
     private Context context;
-    FragmentCallback fragment_callback;
-
-    public EditProfileFragment() {
-    }
-
-    public EditProfileFragment(FragmentCallback fragment_callback) {
-        this.fragment_callback = fragment_callback;
-    }
-
+    private FragmentCallback fragment_callback;
     private ImageView profile_image;
     private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit;
 
     private RadioButton male_btn, female_btn, btnNone;
     private String imageFilePath;
+
+    public EditProfileFragment() {
+    }
+
+    public EditProfileFragment(FragmentCallback fragment_callback) {
+        super();
+        this.fragment_callback = fragment_callback;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +95,12 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         context = getContext();
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.Goback).setOnClickListener(this);
         view.findViewById(R.id.save_btn).setOnClickListener(this);
         view.findViewById(R.id.upload_pic_btn).setOnClickListener(this);
@@ -111,7 +117,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         firstname_edit.setText(Variables.sharedPreferences.getString(Variables.f_name, ""));
         lastname_edit.setText(Variables.sharedPreferences.getString(Variables.l_name, ""));
 
-        Glide.with(context)
+        Glide.with(this)
                 .load(Variables.sharedPreferences.getString(Variables.u_pic, ""))
                 .centerCrop()
                 .apply(new RequestOptions().override(200, 200))
@@ -124,7 +130,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
         callApiForUserDetails();
 
-        return view;
     }
 
     @Override
