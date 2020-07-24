@@ -85,11 +85,18 @@
         <activity
             android:name=".videorecording.VideoRecoderActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+
+            </intent-filter>
+        </activity>
         <activity
             android:name=".videorecording.PreviewVideoActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity"></activity>
         <activity
             android:name=".videorecording.VideoCropActivity"
             android:screenOrientation="portrait"

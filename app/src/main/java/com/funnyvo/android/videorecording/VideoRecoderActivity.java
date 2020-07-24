@@ -29,9 +29,9 @@ import com.coremedia.iso.boxes.MovieHeaderBox;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
+import com.funnyvo.android.helper.FileUtils;
 import com.funnyvo.android.segmentprogress.ProgressBarListener;
 import com.funnyvo.android.segmentprogress.SegmentedProgressBar;
-import com.funnyvo.android.simpleclasses.FileUtils;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
@@ -178,8 +178,51 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
         countdown_timer_txt = findViewById(R.id.countdown_timer_txt);
         initializeVideoProgress();
+
+        openSharedVideo();
     }
 
+    private void openSharedVideo() {
+        Uri uri = onSharedIntent();
+        if (uri != null) {
+            try {
+                String path = new FileUtils(this).getPath(uri);
+                if(path != null) {
+                    File videoFile = new File(path);
+                    if (getFileDuration(uri) < 19500) {
+                        changeVideoSize(path, Variables.gallery_resize_video);
+                    } else {
+                        try {
+                            startTrim(videoFile, new File(Variables.gallery_trimed_video), 1000, 18000);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Uri onSharedIntent() {
+        Intent receivedIntent = getIntent();
+        String receivedAction = receivedIntent.getAction();
+        String receivedType = receivedIntent.getType();
+
+        if (receivedAction != null && receivedAction.equals(Intent.ACTION_SEND)) {
+            // check mime type
+            if (receivedType.startsWith("video/")) {
+
+                Uri receiveUri = (Uri) receivedIntent
+                        .getParcelableExtra(Intent.EXTRA_STREAM);
+                //do your stuff
+                return receiveUri;// save to your own Uri object
+            }
+        }
+
+        return null;
+    }
 
     private void setListener() {
         record_image.setOnClickListener(this);
@@ -491,9 +534,11 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             } else if (requestCode == Variables.Pick_video_from_gallery) {
                 Uri uri = data.getData();
                 try {
-                    File video_file = FileUtils.getFileFromUri(this, uri);
+                    String path = new FileUtils(this).getPath(uri);
+                    assert path != null;
+                    File video_file = new File(path);
                     if (getFileDuration(uri) < 19500) {
-                        changeVideoSize(video_file.getAbsolutePath(), Variables.gallery_resize_video);
+                        changeVideoSize(path, Variables.gallery_resize_video);
                     } else {
                         try {
                             startTrim(video_file, new File(Variables.gallery_trimed_video), 1000, 18000);
@@ -504,8 +549,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         }
 
@@ -527,9 +570,9 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void changeVideoSize(String src_path, String destination_path) {
+    private void changeVideoSize(String srcPath, String destinationPath) {
         showProgressDialog();
-        new GPUMp4Composer(src_path, destination_path)
+        new GPUMp4Composer(srcPath, destinationPath)
                 .size(720, 1280)
                 .videoBitrate((int) (0.25 * 16 * 720 * 1280))
                 .listener(new GPUMp4Composer.Listener() {

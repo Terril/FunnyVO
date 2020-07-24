@@ -34,6 +34,7 @@ import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.FunnyVOEditTextView;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
+import com.funnyvo.android.helper.FileUtils;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
@@ -52,6 +53,7 @@ import java.util.List;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.funnyvo.android.simpleclasses.Variables.ROOT;
 import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_list_Request_code;
 
 public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
@@ -114,7 +116,8 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             append(false); //galleryAppend();
         }
 
-        gpuPlayerView = setPlayer(videoUrl, eventListener);
+
+        gpuPlayerView = setPlayer(Uri.parse(videoUrl), eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerviewPreview);

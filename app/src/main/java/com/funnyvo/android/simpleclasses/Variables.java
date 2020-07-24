@@ -18,8 +18,8 @@ public class Variables {
     public static final String SelectedAudio_MP3 = "SelectedAudio.mp3";
     public static final String SelectedAudio_AAC = "SelectedAudio.aac";
 
-    public static final String root = Environment.getExternalStorageDirectory().toString();
-    public static final String app_folder = root + "/FunnyVO/";
+    public static final String ROOT = Environment.getExternalStorageDirectory().toString();
+    public static final String app_folder = ROOT + "/FunnyVO/";
     public static final String draft_app_folder = app_folder + "Draft/";
 
     public static int max_recording_duration = 18000;

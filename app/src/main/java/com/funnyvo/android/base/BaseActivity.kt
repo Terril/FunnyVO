@@ -70,13 +70,13 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun setPlayer(path: String?, listener: Player.EventListener): GPUPlayerView {
+    open fun setPlayer(path: Uri?, listener: Player.EventListener): GPUPlayerView {
         val trackSelector = DefaultTrackSelector()
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
         val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, APP_NAME))
         val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(path))
+                .createMediaSource(path)
         player.prepare(videoSource)
         player.repeatMode = Player.REPEAT_MODE_ALL
         player.addListener(listener)
