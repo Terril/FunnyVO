@@ -34,7 +34,6 @@ import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.FunnyVOEditTextView;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
-import com.funnyvo.android.helper.FileUtils;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
@@ -53,8 +52,7 @@ import java.util.List;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
-import static com.funnyvo.android.simpleclasses.Variables.ROOT;
-import static com.funnyvo.android.videorecording.VideoRecoderActivity.Sounds_list_Request_code;
+import static com.funnyvo.android.videorecording.VideoRecoderActivity.SOUNDS_LIST_REQUEST_CODE;
 
 public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
 
@@ -525,7 +523,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btnAddMusic:
                 Intent intent = new Intent(this, SoundListMainActivity.class);
-                startActivityForResult(intent, Sounds_list_Request_code);
+                startActivityForResult(intent, SOUNDS_LIST_REQUEST_CODE);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
         }
@@ -544,7 +542,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 //Write your code if there's no result
             }
         }
-        if (requestCode == Sounds_list_Request_code) {
+        if (requestCode == SOUNDS_LIST_REQUEST_CODE) {
             if (data != null) {
                 if (data.getStringExtra("isSelected").equals("yes")) {
                     btnAddMusic.setText(data.getStringExtra("sound_name"));

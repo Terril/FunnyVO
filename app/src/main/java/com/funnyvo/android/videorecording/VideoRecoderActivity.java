@@ -76,7 +76,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     private ImageButton rotate_camera;
     private ImageView imvGallery;
 
-    public static int Sounds_list_Request_code = 1;
+    public static int SOUNDS_LIST_REQUEST_CODE = 1;
     private Button btnAddMusic;
 
     private int sec_passed = 0;
@@ -461,7 +461,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btnAddMusicRecord:
                 Intent intent = new Intent(this, SoundListMainActivity.class);
-                startActivityForResult(intent, Sounds_list_Request_code);
+                startActivityForResult(intent, SOUNDS_LIST_REQUEST_CODE);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
             case R.id.time_btn:
@@ -524,7 +524,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == Sounds_list_Request_code) {
+            if (requestCode == SOUNDS_LIST_REQUEST_CODE) {
                 if (data != null) {
                     if (data.getStringExtra("isSelected").equals(getString(R.string.yes))) {
                         btnAddMusic.setText(data.getStringExtra("sound_name"));
