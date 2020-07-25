@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -65,7 +66,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
-import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -163,11 +163,11 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
-                    if (checkPermissions())
+                    if (PermissionUtils.INSTANCE.checkPermissions(Objects.requireNonNull(getActivity())))
                         openCameraIntent();
 
                 } else if (options[item].equals("Choose from Gallery")) {
-                    if (checkPermissions()) {
+                    if (PermissionUtils.INSTANCE.checkPermissions(Objects.requireNonNull(getActivity()))) {
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, 2);
                     }
@@ -182,25 +182,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         builder.show();
 
     }
-
-
-    public boolean checkPermissions() {
-
-        String[] PERMISSIONS = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-        };
-
-        if (!hasPermissions(context, PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, 2);
-        } else {
-
-            return true;
-        }
-        return false;
-    }
-
 
     // below three method is related with taking the picture from camera
     private void openCameraIntent() {

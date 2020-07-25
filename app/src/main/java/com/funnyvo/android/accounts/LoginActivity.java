@@ -415,9 +415,7 @@ public class LoginActivity extends BaseActivity {
 
                 top_view.setVisibility(View.GONE);
                 finish();
-                startActivity(new Intent(this, MainMenuActivity.class));
-
-
+             //   startActivity(new Intent(this, MainMenuActivity.class));
             } else {
                 Toast.makeText(this, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }

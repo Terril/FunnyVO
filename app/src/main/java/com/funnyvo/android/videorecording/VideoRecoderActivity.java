@@ -28,8 +28,10 @@ import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.funnyvo.android.R;
+import com.funnyvo.android.accounts.LoginActivity;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.helper.FileUtils;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.segmentprogress.ProgressBarListener;
 import com.funnyvo.android.segmentprogress.SegmentedProgressBar;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
@@ -45,11 +47,6 @@ import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import com.googlecode.mp4parser.util.Path;
 import com.wonderkiln.camerakit.CameraKit;
-import com.wonderkiln.camerakit.CameraKitError;
-import com.wonderkiln.camerakit.CameraKitEvent;
-import com.wonderkiln.camerakit.CameraKitEventListener;
-import com.wonderkiln.camerakit.CameraKitImage;
-import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
 import java.io.File;
@@ -59,6 +56,8 @@ import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
 
@@ -99,25 +98,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
         cameraView = findViewById(R.id.camera);
         camera_options = findViewById(R.id.camera_options);
-
-        cameraView.addCameraKitListener(new CameraKitEventListener() {
-            @Override
-            public void onEvent(CameraKitEvent cameraKitEvent) {
-            }
-
-            @Override
-            public void onError(CameraKitError cameraKitError) {
-            }
-
-            @Override
-            public void onImage(CameraKitImage cameraKitImage) {
-            }
-
-            @Override
-            public void onVideo(CameraKitVideo cameraKitVideo) {
-
-            }
-        });
 
         record_image = findViewById(R.id.record_image);
         imvGallery = findViewById(R.id.imvGallery);
@@ -178,8 +158,13 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
 
         countdown_timer_txt = findViewById(R.id.countdown_timer_txt);
         initializeVideoProgress();
-
-        openSharedVideo();
+        if (PermissionUtils.INSTANCE.checkPermissions(this)) {
+            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                openSharedVideo();
+            } else {
+                openLoginScreen();
+            }
+        }
     }
 
     private void openSharedVideo() {
@@ -187,7 +172,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         if (uri != null) {
             try {
                 String path = new FileUtils(this).getPath(uri);
-                if(path != null) {
+                if (path != null) {
                     File videoFile = new File(path);
                     if (getFileDuration(uri) < 19500) {
                         changeVideoSize(path, Variables.gallery_resize_video);
@@ -222,6 +207,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         }
 
         return null;
+    }
+
+    private void openLoginScreen() {
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
+        overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
     }
 
     private void setListener() {
@@ -425,13 +416,25 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.record_image:
-                startOrStopRecording();
+                if (PermissionUtils.INSTANCE.checkPermissions(this)) {
+                    if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                        startOrStopRecording();
+                    } else {
+                        openLoginScreen();
+                    }
+                }
                 break;
             case R.id.rotate_camera:
                 rotateCamera();
                 break;
             case R.id.imvGallery:
-                pickVideoFromGallery();
+                if (PermissionUtils.INSTANCE.checkPermissions(this)) {
+                    if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                        pickVideoFromGallery();
+                    } else {
+                        openLoginScreen();
+                    }
+                }
                 /*
                 Intent upload_intent=new Intent(this, GalleryVideos_A.class);
                 startActivity(upload_intent);
@@ -735,8 +738,12 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        if (cameraView != null) {
-            cameraView.start();
+        try {
+            if (cameraView != null) {
+                cameraView.start();
+            }
+        } catch (NullPointerException npe) {
+            Log.e(APP_NAME, "Camera threw exception while starting");
         }
         setListener();
     }

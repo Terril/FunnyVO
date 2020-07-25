@@ -28,6 +28,7 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.accounts.LoginActivity;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.discover.DiscoverFragment;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.home.HomeFragment;
 import com.funnyvo.android.main_menu.relatetofragment_onback.OnBackPressListener;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
@@ -44,7 +45,8 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
     private ViewPagerAdapter adapter;
     private Context context;
 
-    public MainMenuFragment() { }
+    public MainMenuFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -54,7 +56,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         context = getContext();
         tabLayout = view.findViewById(R.id.tabs);
         pager = view.findViewById(R.id.viewpager);
-      //  pager.setOffscreenPageLimit(5);
+        //  pager.setOffscreenPageLimit(5);
         pager.setPagingEnabled(false);
         view.setOnClickListener(this);
 
@@ -219,15 +221,13 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         view3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (checkPermissions()) {
+                if (PermissionUtils.INSTANCE.checkPermissions(getActivity())) {
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-
                         Intent intent = new Intent(getActivity(), VideoRecoderActivity.class);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                     } else {
-                        Toast.makeText(context, "You have to login First", Toast.LENGTH_SHORT).show();
+                        openLoginScreen();
                     }
                 }
 
@@ -239,17 +239,11 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         view4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-
                     TabLayout.Tab tab = tabLayout.getTabAt(3);
                     tab.select();
-
                 } else {
-
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
+                    openLoginScreen();
                 }
 
             }
@@ -259,17 +253,11 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         view5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-
                     TabLayout.Tab tab = tabLayout.getTabAt(4);
                     tab.select();
-
                 } else {
-
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
+                    openLoginScreen();
                 }
 
             }
@@ -300,13 +288,16 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
                     }
                 }
-
             }
-
         }
 
     }
 
+    private void openLoginScreen() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
+    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
@@ -463,40 +454,6 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         pager.setLayoutParams(params);
         tabLayout.setBackgroundColor(getResources().getColor(R.color.white));
 
-    }
-
-
-    // we need 4 permission during creating an video so we will get that permission
-    // before start the video recording
-    public boolean checkPermissions() {
-
-        String[] PERMISSIONS = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.CAMERA
-        };
-
-        if (!hasPermissions(context, PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, 2);
-        } else {
-
-            return true;
-        }
-
-        return false;
-    }
-
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
 

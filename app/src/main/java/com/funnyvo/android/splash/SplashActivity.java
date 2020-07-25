@@ -1,6 +1,5 @@
 package com.funnyvo.android.splash;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.funnyvo.android.R;
-import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.SplashScreenCubeTransformation;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.Variables;

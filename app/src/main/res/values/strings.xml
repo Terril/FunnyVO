@@ -93,4 +93,5 @@
     <string name="no_network">No Network Available</string>
     <string name="mind_checking_network">Would you mind checking your network ?</string>
     <string name="ok">OK</string>
+    <string name="you_must_login_first">You have to login First</string>
 </resources>

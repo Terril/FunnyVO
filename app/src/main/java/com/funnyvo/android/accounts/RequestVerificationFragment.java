@@ -26,6 +26,7 @@ import androidx.exifinterface.media.ExifInterface;
 
 import com.funnyvo.android.R;
 import com.funnyvo.android.helper.FileUtils;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -45,7 +46,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
-import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
 public class RequestVerificationFragment extends RootFragment implements View.OnClickListener {
 
@@ -145,7 +145,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
                 Manifest.permission.CAMERA
         };
 
-        if (!hasPermissions(context, PERMISSIONS)) {
+        if (!PermissionUtils.INSTANCE.hasPermissions(context, PERMISSIONS)) {
             requestPermissions(PERMISSIONS, 2);
         } else {
 

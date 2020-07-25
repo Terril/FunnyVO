@@ -122,7 +122,10 @@ public class PostVideoActivity extends BaseActivity implements View.OnClickListe
 
         deleteDraftFile();
 
-        startActivity(new Intent(PostVideoActivity.this, MainMenuActivity.class));
+        Intent intent = new Intent(PostVideoActivity.this, MainMenuActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        this.finish();
     }
 
     private File createGifFile() {

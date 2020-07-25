@@ -120,7 +120,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:2.7.0'
 
     //Do not Update this library their is a camera issue with new version
-    implementation 'com.wonderkiln:camerakit:0.13.5'
+    implementation 'com.wonderkiln:camerakit:0.13.0'
 
     //You will change the versions at your own risk.
     //Do not Change below 7 libraries versions

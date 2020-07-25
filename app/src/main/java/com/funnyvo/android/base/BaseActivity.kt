@@ -1,7 +1,9 @@
 package com.funnyvo.android.base;
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.daasuu.gpuv.player.GPUPlayerView
 import com.daasuu.gpuv.player.PlayerScaleType
 import com.funnyvo.android.customview.ActivityIndicator
+import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -18,7 +21,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -40,6 +42,11 @@ abstract class BaseActivity : AppCompatActivity() {
     fun dismissProgressDialog() {
         if (activityIndicator != null)
             activityIndicator.hide()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, Context.MODE_PRIVATE)
     }
 
     //     This will hide the bottom mobile navigation control 

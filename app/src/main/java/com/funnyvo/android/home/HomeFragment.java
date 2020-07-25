@@ -55,6 +55,7 @@ import com.funnyvo.android.FunnyVOApplication;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
@@ -308,7 +309,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         break;
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            if (checkPermissions()) {
+                            if (PermissionUtils.INSTANCE.checkPermissions(getActivity())) {
                                 Intent intent = new Intent(getActivity(), VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
@@ -944,38 +945,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             previousPlayer.release();
         }
     }
-
-
-    public boolean checkPermissions() {
-        String[] PERMISSIONS = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.CAMERA
-        };
-
-        if (!hasPermissions(context, PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, 2);
-        } else {
-
-            return true;
-        }
-
-        return false;
-    }
-
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 
     // Bottom all the function and the Call back listener of the Expo player
     @Override
