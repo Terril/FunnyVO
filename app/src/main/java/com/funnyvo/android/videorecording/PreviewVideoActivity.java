@@ -112,7 +112,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             videoUrl = path;
             Variables.Selected_sound_id = "null";
             btnAddMusic.setEnabled(true);
-            append(false); //galleryAppend();
+            append(false, path); //galleryAppend();
         }
 
 
@@ -213,6 +213,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     // this function will add the filter to video and save that same video for post the video in post video screen
     private void saveVideo(String srcMp4Path, final String destMp4Path) {
+        showProgressDialog();
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
                 //.videoBitrate((int) (0.25 * 16 * 540 * 960))
@@ -220,7 +221,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-                        showProgressDialog();
                     }
 
                     @Override
@@ -511,7 +511,10 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     } catch (IllegalStateException ile) {
                         Log.e(Variables.APP_NAME, "Internal audio system crashed");
                     }
-                    append(true);
+                    // append(true, path);
+                }
+                if (isFromGallery && audio != null) {
+                    append(true, Variables.outputfile2);
                 } else {
                     finalTouchesToVideo();
                 }
@@ -571,7 +574,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     }
 
     // this will append all the videos parts in one  fullvideo
-    private boolean append(final boolean isPostNeeded) {
+    private boolean append(final boolean isPostNeeded, final String videoPath) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -582,15 +585,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 });
 
                 ArrayList<String> video_list = new ArrayList<>();
-                File file = new File(path);
+                File file = new File(videoPath);
 
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(PreviewVideoActivity.this, Uri.fromFile(file));
+                retriever.setDataSource(PreviewVideoActivity.this, Uri.parse(videoPath));
                 String hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO);
                 boolean isVideo = getString(R.string.yes).equals(hasVideo);
 
                 if (isVideo && file.length() > 3000) {
-                    video_list.add(path);
+                    video_list.add(videoPath);
                 }
 
                 try {
@@ -657,11 +660,10 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     // this will add the select audio with the video
     private void mergeWithAudio() {
-        String audio_file;
-        audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
+        String audioFile = Variables.app_folder + Variables.SelectedAudio_AAC;
 
-        MergeVideoAudio merge_video_audio = new MergeVideoAudio(PreviewVideoActivity.this, this);
-        merge_video_audio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2, draft_file);
+        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(PreviewVideoActivity.this, this);
+        mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2, draft_file);
     }
 
     @Override
