@@ -111,7 +111,7 @@ public class SettingFragment extends RootFragment implements View.OnClickListene
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(getActivity(), Variables.Logout, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.LOGOUT, parameters, new Callback() {
             @Override
             public void response(String response) {
                 try {

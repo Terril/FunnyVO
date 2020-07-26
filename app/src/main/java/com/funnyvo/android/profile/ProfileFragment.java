@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -357,7 +356,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         }
 
 
-        ApiRequest.callApi(getActivity(), Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.SHOW_MY_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 is_run_first_time = true;
@@ -452,7 +451,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(getActivity(), Variables.follow_users, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.FOLLOW_USERS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

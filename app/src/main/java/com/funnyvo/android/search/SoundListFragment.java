@@ -142,7 +142,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.search, params, new Callback() {
+        ApiRequest.callApi(context, Variables.SEARCH, params, new Callback() {
             @Override
             public void response(String resp) {
                 shimmerFrameLayout.stopShimmer();
@@ -217,7 +217,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
         }
 
         showProgressDialog();
-        ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

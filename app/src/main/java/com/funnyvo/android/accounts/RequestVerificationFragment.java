@@ -346,7 +346,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
             e.printStackTrace();
         }
         showProgressDialog();
-        ApiRequest.callApi(context, Variables.getVerified, params, new Callback() {
+        ApiRequest.callApi(context, Variables.GET_VERIFIED, params, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

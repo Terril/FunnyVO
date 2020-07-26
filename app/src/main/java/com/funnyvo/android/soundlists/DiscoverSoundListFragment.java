@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +27,6 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -153,7 +150,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.allSounds, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.ALL_SOUNDS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
@@ -384,7 +381,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

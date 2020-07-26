@@ -1,7 +1,6 @@
 package com.funnyvo.android.profile;
 
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -387,7 +386,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.uploadImage, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.UPLOAD_IMAGE, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();
@@ -444,7 +443,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.edit_profile, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.EDIT_PROFILE, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

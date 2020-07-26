@@ -208,7 +208,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
         }
 
 
-        ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseData(resp);
@@ -286,7 +286,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             parameters.put("video_id", data_list.get(postion).video_id);
 
 
-            ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
+            ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS, parameters, new Callback() {
                 @Override
                 public void response(String resp) {
                     singalVideoParseData(postion, resp);
@@ -1056,7 +1056,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.sendPushNotification, notimap, null);
+        ApiRequest.callApi(context, Variables.SEND_PUSH_NOTIFICATION, notimap, null);
 
     }
 

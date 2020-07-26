@@ -235,7 +235,7 @@ public class CommentFragment extends RootFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        ApiRequest.callApi(context, Variables.sendPushNotification, notimap, null);
+        ApiRequest.callApi(context, Variables.SEND_PUSH_NOTIFICATION, notimap, null);
 
     }
 

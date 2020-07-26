@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -101,7 +100,7 @@ public class LikedVideoFragment extends Fragment {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.my_liked_video, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.MY_LIKED_VIDEO, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseData(resp);

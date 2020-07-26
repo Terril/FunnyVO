@@ -18,7 +18,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +39,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -1721,7 +1719,7 @@ public class ChatActivity extends RootFragment {
         }
 
 
-        ApiRequest.callApi(context, Variables.sendPushNotification, notimap, null);
+        ApiRequest.callApi(context, Variables.SEND_PUSH_NOTIFICATION, notimap, null);
 
     }
 

@@ -74,6 +74,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private boolean isSlowMoEnabled = true;
     private boolean isFastMoEnabled = true;
     private boolean isFromGallery = false;
+    private String tempOutputSource = Variables.outputfile2;
     // this function will set the player to the current video
 
     @Override
@@ -322,6 +323,8 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     dismissProgressDialog();
                     updateMediaSource(Variables.OUTPUT_FILE_MOTION);
                     isMotionFilterSelected = true;
+                    tempOutputSource = Variables.outputfile2;
+                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
                 } else if (rc == RETURN_CODE_CANCEL) {
                     dismissProgressDialog();
                 } else {
@@ -352,6 +355,8 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     dismissProgressDialog();
                     updateMediaSource(Variables.OUTPUT_FILE_MOTION);
                     isMotionFilterSelected = true;
+                    tempOutputSource = Variables.outputfile2;
+                    Variables.outputfile2 = Variables.OUTPUT_FILE_MOTION;
                 } else if (rc == RETURN_CODE_CANCEL) {
                     dismissProgressDialog();
                 } else {
@@ -437,6 +442,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             applySlowMoVideo();
         } else {
             isMotionFilterSelected = false;
+            Variables.outputfile2 = tempOutputSource;
             updateMediaSource(Variables.outputfile2);
         }
         isSlowMoEnabled = !isSlowMoEnabled;
@@ -447,6 +453,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             applyFastMoVideo();
         } else {
             isMotionFilterSelected = false;
+            Variables.outputfile2 = tempOutputSource;
             updateMediaSource(Variables.outputfile2);
         }
         isFastMoEnabled = !isFastMoEnabled;

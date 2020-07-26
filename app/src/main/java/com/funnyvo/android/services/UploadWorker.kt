@@ -72,7 +72,7 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         fileRequest["video"] = videoFile
         fileRequest["thum"] = thumbNail
         fileRequest["gif"] = gifFile
-        val multipartRequest = MultipartRequest(Variables.uploadVideo, Response.ErrorListener { error ->
+        val multipartRequest = MultipartRequest(Variables.UPLOAD_VIDEO, Response.ErrorListener { error ->
             Log.e(APP_NAME, "Video Upload Error : " + error.message)
             videoFile.deleteOnExit()
             gifFile.deleteOnExit()

@@ -39,10 +39,8 @@ import com.facebook.login.LoginResult;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.ActivityIndicator;
-import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -380,7 +378,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         showProgressDialog();
-        ApiRequest.callApi(this, Variables.SignUp, parameters, new Callback() {
+        ApiRequest.callApi(this, Variables.SIGN_UP, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

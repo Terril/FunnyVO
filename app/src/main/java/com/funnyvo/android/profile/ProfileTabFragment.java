@@ -413,7 +413,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(getActivity(), Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.SHOW_MY_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseData(resp);
@@ -580,7 +580,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(getActivity(), Variables.Logout, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.LOGOUT, parameters, new Callback() {
             @Override
             public void response(String response) {
                 try {

@@ -162,7 +162,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.my_FavSound, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.MY_FAV_SOUND, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
@@ -386,7 +386,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

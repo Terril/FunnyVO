@@ -186,7 +186,7 @@ public class TaggedVideosFragment extends RootFragment {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.SearchByHashTag, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.SEARCH_BY_HASH_TAG, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();

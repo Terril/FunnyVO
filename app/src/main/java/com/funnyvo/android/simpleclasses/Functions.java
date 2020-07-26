@@ -255,7 +255,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(activity, Variables.likeDislikeVideo, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.LIKE_DISLIKE_VIDEO, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 api_callBack.onSuccess(resp);
@@ -276,7 +276,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(activity, Variables.postComment, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.POST_COMMENT, parameters, new Callback() {
             @Override
             public void response(String resp) {
 
@@ -331,7 +331,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(activity, Variables.showVideoComments, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.SHOW_VIDEO_COMMENTS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 ArrayList<Comments> arrayList = new ArrayList<>();
@@ -386,7 +386,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.updateVideoView, parameters, null);
+        ApiRequest.callApi(context, Variables.UPDATE_VIDEO_VIEW, parameters, null);
     }
 
 
@@ -403,7 +403,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(activity, Variables.get_user_data, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.GET_USER_DATA, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 try {
@@ -440,7 +440,7 @@ public class Functions {
         }
 
 
-        ApiRequest.callApi(activity, Variables.DeleteVideo, parameters, new Callback() {
+        ApiRequest.callApi(activity, Variables.DELETE_VIDEO, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 try {

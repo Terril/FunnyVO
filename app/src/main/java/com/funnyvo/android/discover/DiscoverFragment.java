@@ -126,7 +126,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        ApiRequest.callApi(context, Variables.discover, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.DISCOVER, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseData(resp);
