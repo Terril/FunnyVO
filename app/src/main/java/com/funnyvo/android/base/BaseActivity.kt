@@ -85,11 +85,11 @@ abstract class BaseActivity : AppCompatActivity() {
         val trackSelector = DefaultTrackSelector(context)
         val renderersFactory: RenderersFactory = DefaultRenderersFactory(context)
         val bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
-        val looper = Looper.myLooper()
+        val looper = Looper.getMainLooper()
         val clock = SystemClock.DEFAULT
         val analyticsCollector = AnalyticsCollector(clock)
         player = SimpleExoPlayer.Builder(context, renderersFactory, trackSelector, loadControl,
-                bandwidthMeter, looper!!, analyticsCollector, true, clock).build()
+                bandwidthMeter, looper, analyticsCollector, true, clock).build()
         val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, APP_NAME))
         val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)

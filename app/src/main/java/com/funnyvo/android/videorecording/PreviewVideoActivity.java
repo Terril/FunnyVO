@@ -52,6 +52,7 @@ import java.util.List;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.videorecording.VideoRecoderActivity.SOUNDS_LIST_REQUEST_CODE;
 
 public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
@@ -59,7 +60,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     public static final int CROP_RESULT = 101;
     private GPUPlayerView gpuPlayerView;
     private MediaPlayer audio;
-    public static int select_postion = 0;
+    public static int selectPostion = 0;
     private final List<FilterType> filterTypes = FilterType.createFilterList();
     private FilterAdapter adapter;
     private RecyclerView recylerview;
@@ -67,7 +68,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private PlayerEventListener eventListener;
     private FunnyVOEditTextView edtVideoMessage;
     private Button btnAddMusic;
-    private String draft_file;
+    private String draftFile;
     private String path;
     private boolean isMotionFilterSelected = false, isTextFilterSelected = false;
     private boolean isUp = false;
@@ -86,12 +87,12 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         Intent intent = getIntent();
         if (intent != null) {
             path = intent.getStringExtra("video_path");
-            draft_file = intent.getStringExtra("draft_file");
+            draftFile = intent.getStringExtra("draft_file");
             isFromGallery = intent.getBooleanExtra("isFromGallery", false);
         }
 
         eventListener = new PlayerEventListener();
-        select_postion = 0;
+        selectPostion = 0;
         String videoUrl = Variables.outputfile2;
 
         btnAddMusic = findViewById(R.id.btnAddMusic);
@@ -131,7 +132,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         adapter = new FilterAdapter(this, filterTypes, bmThumbnailResized, new FilterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, FilterType item) {
-                select_postion = postion;
+                selectPostion = postion;
                 gpuPlayerView.setElevation(3.0F);
 
                 gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext(), null)));
@@ -217,7 +218,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         new GPUMp4Composer(srcMp4Path, destMp4Path)
                 //.size(540, 960)
                 //.videoBitrate((int) (0.25 * 16 * 540 * 960))
-                .filter(new GlFilterGroup(FilterType.createGlFilterWithOverlay(filterTypes.get(select_postion), getApplicationContext(), getBitmapForLogo())))
+                .filter(new GlFilterGroup(FilterType.createGlFilterWithOverlay(filterTypes.get(selectPostion), getApplicationContext(), getBitmapForLogo())))
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
@@ -245,6 +246,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onFailed(Exception exception) {
+                        Log.e(APP_NAME, "Exception occured on SaveVideo : " + exception.getMessage());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -271,7 +273,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private void gotoPostScreen() {
         Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
         intent.putExtra("path", Variables.outputfile2);
-        intent.putExtra("draft_file", draft_file);
+        intent.putExtra("draft_file", draftFile);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
@@ -509,7 +511,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                             audio.release();
                         }
                     } catch (IllegalStateException ile) {
-                        Log.e(Variables.APP_NAME, "Internal audio system crashed");
+                        Log.e(APP_NAME, "Internal audio system crashed");
                     }
                     // append(true, path);
                 }
@@ -570,7 +572,12 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         } else if (isTextFilterSelected) {
             Variables.outputfile2 = Variables.OUTPUT_FILE_MESSAGE;
         }
-        saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
+
+        if (selectPostion > 0) {
+            saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
+        } else {
+            gotoPostScreen();
+        }
     }
 
     // this will append all the videos parts in one  fullvideo
@@ -584,7 +591,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     }
                 });
 
-                ArrayList<String> video_list = new ArrayList<>();
+                ArrayList<String> videoList = new ArrayList<>();
                 File file = new File(videoPath);
 
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -593,13 +600,13 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 boolean isVideo = getString(R.string.yes).equals(hasVideo);
 
                 if (isVideo && file.length() > 3000) {
-                    video_list.add(videoPath);
+                    videoList.add(videoPath);
                 }
 
                 try {
-                    Movie[] inMovies = new Movie[video_list.size()];
-                    for (int i = 0; i < video_list.size(); i++) {
-                        inMovies[i] = MovieCreator.build(video_list.get(i));
+                    Movie[] inMovies = new Movie[videoList.size()];
+                    for (int i = 0; i < videoList.size(); i++) {
+                        inMovies[i] = MovieCreator.build(videoList.get(i));
                     }
 
                     List<Track> videoTracks = new LinkedList<Track>();
@@ -660,15 +667,16 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     // this will add the select audio with the video
     private void mergeWithAudio() {
-        String audioFile = Variables.app_folder + Variables.SelectedAudio_AAC;
+        final String audioFile = Variables.app_folder + Variables.SelectedAudio_AAC;
 
         MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(this);
-        mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2, draft_file);
+        mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2, draftFile);
     }
 
     @Override
     public void onCompletion(boolean state, String draftFile) {
-        draft_file = draftFile;
+        Variables.OUTPUT_FILTER_FILE = Variables.outputfile2;
+        this.draftFile = draftFile;
         finalTouchesToVideo();
     }
 

@@ -113,7 +113,6 @@ dependencies {
     implementation 'net.the4thdimension:audio-wife:1.0.3'
     implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-    implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     implementation 'com.android.volley:volley:1.1.1'

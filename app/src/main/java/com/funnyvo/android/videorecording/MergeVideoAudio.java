@@ -35,11 +35,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     @Override
     public String doInBackground(String... strings) {
-        try {
-//            indicator.show();
-        } catch (Exception e) {
 
-        }
         audio = strings[0];
         video = strings[1];
         output = strings[2];
@@ -101,13 +97,11 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         return fullAudio;
     }
 
-
     public Runnable runnable = new Runnable() {
         @Override
         public void run() {
             try {
                 Movie movieCreator = MovieCreator.build(video);
-
                 List newCreatedTrack = new ArrayList<>();
 
                 for (Track t : movieCreator.getTracks()) {
@@ -129,7 +123,9 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 //                } catch (Exception e) {
 //                    Log.d(Variables.tag, e.toString());
 //                } finally {
-                callBack.onCompletion(true, draft_file);
+                if (callBack != null) {
+                    callBack.onCompletion(true, draft_file);
+                }
                 //             }
 
             } catch (IOException e) {
@@ -140,6 +136,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     };
 }
 
-interface  MergeVideoAudioCallBack {
+interface MergeVideoAudioCallBack {
     void onCompletion(boolean state, String draftFile);
 }
