@@ -1,6 +1,5 @@
 package com.funnyvo.android.videorecording;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,22 +24,14 @@ import java.util.List;
 // this is the class which will add the selected soung to the created video
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
-    private Activity activity;
     private MergeVideoAudioCallBack callBack;
     private String audio, video, output, draft_file;
     //  private ActivityIndicator indicator;
 
-    public MergeVideoAudio(Activity activity, MergeVideoAudioCallBack callBack) {
-        this.activity = activity;
+    public MergeVideoAudio(MergeVideoAudioCallBack callBack) {
         this.callBack = callBack;
 //        indicator = new ActivityIndicator(activity);
     }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
 
     @Override
     public String doInBackground(String... strings) {
@@ -61,20 +52,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
         return null;
     }
-
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-    }
-
-
-//    public void goToPreviewActivity() {
-//        Intent intent = new Intent(activity, PreviewVideoActivity.class);
-//        intent.putExtra("path", Variables.outputfile2);
-//        intent.putExtra("draft_file", draft_file);
-//        activity.startActivity(intent);
-//    }
 
 
     private Track cropAudio(String videopath, Track fullAudio) {
@@ -129,21 +106,21 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         @Override
         public void run() {
             try {
-                Movie m = MovieCreator.build(video);
+                Movie movieCreator = MovieCreator.build(video);
 
-                List nuTracks = new ArrayList<>();
+                List newCreatedTrack = new ArrayList<>();
 
-                for (Track t : m.getTracks()) {
+                for (Track t : movieCreator.getTracks()) {
                     if (!"soun".equals(t.getHandler())) {
-                        nuTracks.add(t);
+                        newCreatedTrack.add(t);
                     }
                 }
 
-                Track nuAudio = new AACTrackImpl(new FileDataSourceImpl(audio));
-                Track crop_track = cropAudio(video, nuAudio);
-                nuTracks.add(crop_track);
-                m.setTracks(nuTracks);
-                Container mp4file = new DefaultMp4Builder().build(m);
+                Track newAudio = new AACTrackImpl(new FileDataSourceImpl(audio));
+                Track cropTrack = cropAudio(video, newAudio);
+                newCreatedTrack.add(cropTrack);
+                movieCreator.setTracks(newCreatedTrack);
+                Container mp4file = new DefaultMp4Builder().build(movieCreator);
                 FileChannel fc = new FileOutputStream(new File(output)).getChannel();
                 mp4file.writeContainer(fc);
                 fc.close();

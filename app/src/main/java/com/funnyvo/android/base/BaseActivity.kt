@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -14,15 +15,16 @@ import com.daasuu.gpuv.player.PlayerScaleType
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.analytics.AnalyticsCollector
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.SystemClock
 import com.google.android.exoplayer2.util.Util
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -77,12 +79,20 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun setPlayer(path: Uri?, listener: Player.EventListener): GPUPlayerView {
-        val trackSelector = DefaultTrackSelector()
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+    open fun setPlayer(context: Context, path: Uri?, listener: Player.EventListener): GPUPlayerView {
+        val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl()
+
+        val trackSelector = DefaultTrackSelector(context)
+        val renderersFactory: RenderersFactory = DefaultRenderersFactory(context)
+        val bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
+        val looper = Looper.myLooper()
+        val clock = SystemClock.DEFAULT
+        val analyticsCollector = AnalyticsCollector(clock)
+        player = SimpleExoPlayer.Builder(context, renderersFactory, trackSelector, loadControl,
+                bandwidthMeter, looper!!, analyticsCollector, true, clock).build()
         val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, APP_NAME))
-        val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
+        val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(path)
         player.prepare(videoSource)
         player.repeatMode = Player.REPEAT_MODE_ALL

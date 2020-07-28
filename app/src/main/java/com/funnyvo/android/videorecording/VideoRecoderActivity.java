@@ -404,7 +404,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
         String audio_file;
         audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
 
-        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(VideoRecoderActivity.this, this);
+        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(this);
         mergeVideoAudio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
     }
 

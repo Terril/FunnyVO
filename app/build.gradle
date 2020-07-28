@@ -12,8 +12,8 @@ android {
         applicationId "com.funnyvo"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 6
-        versionName "0.4"
+        versionCode 7
+        versionName "0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -105,10 +105,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     testImplementation 'junit:junit:4.12'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
+    implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.3'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.7'
     implementation 'com.facebook.android:facebook-android-sdk:5.0.1'
     implementation 'net.the4thdimension:audio-wife:1.0.3'
     implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
@@ -125,16 +125,15 @@ dependencies {
     //You will change the versions at your own risk.
     //Do not Change below 7 libraries versions
     //if you want to update these libraries first you have to convert the project to androidX
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.firebase:firebase-database:19.3.1'
-    implementation 'com.google.firebase:firebase-messaging:20.2.1'
-    implementation 'com.google.firebase:firebase-core:17.4.3'
+    implementation 'com.google.firebase:firebase-messaging:20.2.3'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
-    implementation 'com.google.firebase:firebase-auth:19.3.1'
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
-    implementation 'com.google.android.gms:play-services-ads:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
 
-    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.3'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'

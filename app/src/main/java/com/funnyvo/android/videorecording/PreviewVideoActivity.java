@@ -116,7 +116,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         }
 
 
-        gpuPlayerView = setPlayer(Uri.parse(videoUrl), eventListener);
+        gpuPlayerView = setPlayer(this, Uri.parse(videoUrl), eventListener);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerviewPreview);
@@ -662,7 +662,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private void mergeWithAudio() {
         String audioFile = Variables.app_folder + Variables.SelectedAudio_AAC;
 
-        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(PreviewVideoActivity.this, this);
+        MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(this);
         mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2, draft_file);
     }
 
