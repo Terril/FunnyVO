@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -84,6 +85,8 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     private LinearLayout top_layout;
     private static String pic_url;
     private LinearLayout create_popup_layout;
+    private Button btnYoutube, btnInstagram, btnTwitter;
+    private String twitterUrl, youtubeUrl, instagramUrl;
 
     public ProfileTabFragment() {
     }
@@ -122,7 +125,15 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 startActivity(upload_intent);
                 getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
-
+            case R.id.btnYoutube:
+                openBrowser(youtubeUrl);
+                break;
+            case R.id.btnTwitter:
+                openBrowser(twitterUrl);
+                break;
+            case R.id.btnInstagram:
+                openBrowser(instagramUrl);
+                break;
         }
     }
 
@@ -152,6 +163,14 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         heart_count_txt = view.findViewById(R.id.heart_count_txt);
         draft_count_txt = view.findViewById(R.id.draft_count_txt);
         txtUserBio = view.findViewById(R.id.txtUserBio);
+
+        btnYoutube = view.findViewById(R.id.btnYoutube);
+        btnInstagram = view.findViewById(R.id.btnInstagram);
+        btnTwitter = view.findViewById(R.id.btnTwitter);
+
+        btnYoutube.setOnClickListener(this);
+        btnInstagram.setOnClickListener(this);
+        btnTwitter.setOnClickListener(this);
 
         showDraftCount();
 
@@ -436,9 +455,19 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
 
 
-                String twitterUrl = user_info.optString("twitter_id");
-                String instagramUrl = user_info.optString("instagram_id");
-                String youtubeUrl = user_info.optString("youtube_id");
+                twitterUrl = user_info.optString("twitter_id");
+                instagramUrl = user_info.optString("instagram_id");
+                youtubeUrl = user_info.optString("youtube_id");
+
+                if (!twitterUrl.equals("null") && !twitterUrl.isEmpty()) {
+                    btnTwitter.setVisibility(View.VISIBLE);
+                }
+                if (!instagramUrl.equals("null") && !instagramUrl.isEmpty()) {
+                    btnInstagram.setVisibility(View.VISIBLE);
+                }
+                if (!youtubeUrl.equals("null") && !youtubeUrl.isEmpty()) {
+                    btnYoutube.setVisibility(View.VISIBLE);
+                }
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
                 userProfilePicture(ProfileFragment.pic_url);

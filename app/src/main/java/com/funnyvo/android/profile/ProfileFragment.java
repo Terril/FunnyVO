@@ -2,7 +2,9 @@ package com.funnyvo.android.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -68,7 +71,10 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     private boolean is_run_first_time = false;
     private String follow_status = "0";
 
+    private Button btnYoutube, btnInstagram, btnTwitter;
+
     FragmentCallback fragment_callback;
+    private String youtubeUrl, twitterUrl, instagramUrl;
 
     public ProfileFragment() {
     }
@@ -135,9 +141,17 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             case R.id.back_btn:
                 getActivity().onBackPressed();
                 break;
+            case R.id.btnYoutubeProfile:
+                openBrowser(youtubeUrl);
+                break;
+            case R.id.btnTwitterProfile:
+                openBrowser(twitterUrl);
+                break;
+            case R.id.btnInstagramProfile:
+                openBrowser(instagramUrl);
+                break;
         }
     }
-
 
     private View init(View view) {
         username = view.findViewById(R.id.username);
@@ -152,6 +166,13 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         fans_count_txt = view.findViewById(R.id.fan_count_txt);
         heart_count_txt = view.findViewById(R.id.heart_count_txt);
 
+        btnYoutube = view.findViewById(R.id.btnYoutubeProfile);
+        btnInstagram = view.findViewById(R.id.btnInstagramProfile);
+        btnTwitter = view.findViewById(R.id.btnTwitterProfile);
+
+        btnYoutube.setOnClickListener(this);
+        btnInstagram.setOnClickListener(this);
+        btnTwitter.setOnClickListener(this);
 
         setting_btn = view.findViewById(R.id.setting_btn);
         setting_btn.setOnClickListener(this);
@@ -207,8 +228,6 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
         view.findViewById(R.id.following_layout).setOnClickListener(this);
         view.findViewById(R.id.fans_layout).setOnClickListener(this);
-
-        callApiForGetAllvideos();
 
         return view;
     }
@@ -380,9 +399,19 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 username2_txt.setText(user_info.optString("username"));
                 txtUserBioProfile.setText(user_info.optString("bio"));
 
-                String twitterUrl = user_info.optString("twitter_id");
-                String instagramUrl = user_info.optString("instagram_id");
-                String youtubeUrl = user_info.optString("youtube_id");
+                twitterUrl = user_info.optString("twitter_id");
+                instagramUrl = user_info.optString("instagram_id");
+                youtubeUrl = user_info.optString("youtube_id");
+
+                if (!twitterUrl.equals("null") && !twitterUrl.isEmpty()) {
+                    btnTwitter.setVisibility(View.VISIBLE);
+                }
+                if (!instagramUrl.equals("null") && !instagramUrl.isEmpty()) {
+                    btnInstagram.setVisibility(View.VISIBLE);
+                }
+                if (!youtubeUrl.equals("null") && !youtubeUrl.isEmpty()) {
+                    btnYoutube.setVisibility(View.VISIBLE);
+                }
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
 
