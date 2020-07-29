@@ -380,6 +380,10 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 username2_txt.setText(user_info.optString("username"));
                 txtUserBioProfile.setText(user_info.optString("bio"));
 
+                String twitterUrl = user_info.optString("twitter_id");
+                String instagramUrl = user_info.optString("instagram_id");
+                String youtubeUrl = user_info.optString("youtube_id");
+
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
 
                 if (this.isAdded()) {

@@ -119,11 +119,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:ellipsize="marquee"
                         android:layout_marginTop="@dimen/margin_5"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
                         android:textColor="@color/palette_cheddar_dark"
-                        android:textSize="@dimen/text_size_13"
-                        android:singleLine="true" />
+                        android:textSize="@dimen/text_size_13" />
 
 
                     <androidx.cardview.widget.CardView
@@ -148,6 +148,40 @@
                             app:customFont="latobold.ttf" />
                     </androidx.cardview.widget.CardView>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnInstagramProfile"
+                            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_instagram"
+                            app:iconTint="@null"
+                            app:iconGravity="textStart"></com.google.android.material.button.MaterialButton>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnYoutubeProfile"
+                            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_youtube"
+                            app:iconTint="@null"
+                            app:iconGravity="textStart"></com.google.android.material.button.MaterialButton>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTwitterProfile"
+                            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_twitter"
+                            app:iconTint="@null"
+                            app:iconGravity="textStart" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -174,7 +208,7 @@
                                 android:text="0"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_18"
-                                app:customFont="@string/font_bold"/>
+                                app:customFont="@string/font_bold" />
 
                             <com.funnyvo.android.customview.FunnyVOTextView
                                 android:layout_width="wrap_content"
@@ -194,7 +228,6 @@
                             android:id="@+id/fans_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:gravity="center_horizontal"
                             android:orientation="vertical">
 
@@ -209,7 +242,7 @@
                                 android:text="0"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_18"
-                                app:customFont="@string/font_bold"/>
+                                app:customFont="@string/font_bold" />
 
                             <com.funnyvo.android.customview.FunnyVOTextView
                                 android:layout_width="wrap_content"
@@ -228,7 +261,6 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:gravity="center_horizontal"
                             android:orientation="vertical">
 

@@ -75,7 +75,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
     private Context context;
     private FragmentCallback fragment_callback;
     private ImageView profile_image;
-    private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit;
+    private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit, txtInstagram, txtTwitter, txtYoutube;
 
     private RadioButton male_btn, female_btn, btnNone;
     private String imageFilePath;
@@ -110,6 +110,10 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         firstname_edit = view.findViewById(R.id.firstname_edit);
         lastname_edit = view.findViewById(R.id.lastname_edit);
         user_bio_edit = view.findViewById(R.id.user_bio_edit);
+
+        txtInstagram = view.findViewById(R.id.edtTextInstagram);
+        txtTwitter = view.findViewById(R.id.edtTextTwitter);
+        txtYoutube = view.findViewById(R.id.edtTextYoutube);
 
 
         username_edit.setText(Variables.sharedPreferences.getString(Variables.u_name, ""));
@@ -427,6 +431,9 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
             parameters.put("first_name", firstname_edit.getText().toString());
             parameters.put("last_name", lastname_edit.getText().toString());
+            parameters.put("instagram_id", txtInstagram.getText().toString());
+            parameters.put("twitter_id", txtTwitter.getText().toString());
+            parameters.put("youtube_id", txtYoutube.getText().toString());
 
             if (male_btn.isChecked()) {
                 parameters.put("gender", "Male");
@@ -519,6 +526,10 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
                 firstname_edit.setText(data.optString("first_name"));
                 lastname_edit.setText(data.optString("last_name"));
+
+                txtYoutube.setText(data.optString("youtube_id"));
+                txtTwitter.setText(data.optString("twitter_id"));
+                txtInstagram.setText(data.optString("instagram_id"));
 
                 String picture = data.optString("profile_pic");
 

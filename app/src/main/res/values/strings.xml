@@ -94,4 +94,8 @@
     <string name="mind_checking_network">Would you mind checking your network ?</string>
     <string name="ok">OK</string>
     <string name="you_must_login_first">You have to login First</string>
+    <string name="social_networking_handler">Social Networking Handler</string>
+    <string name="intagram">Add you Instagram handle</string>
+    <string name="twitter">Add your Twitter handle</string>
+    <string name="youtube">Add your Youtube channel name</string>
 </resources>

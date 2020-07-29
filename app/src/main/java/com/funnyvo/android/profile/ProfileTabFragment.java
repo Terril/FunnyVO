@@ -435,6 +435,11 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 txtUserBio.setText(user_info.optString("bio"));
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
 
+
+                String twitterUrl = user_info.optString("twitter_id");
+                String instagramUrl = user_info.optString("instagram_id");
+                String youtubeUrl = user_info.optString("youtube_id");
+
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
                 userProfilePicture(ProfileFragment.pic_url);
 
