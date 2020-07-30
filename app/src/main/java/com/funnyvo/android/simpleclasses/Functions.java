@@ -264,7 +264,7 @@ public class Functions {
     }
 
 
-    public static void callApiToSendComment(final Activity activity, String video_id, String comment, final ApiCallBack apiCallBack) {
+    public static void callApiToSendComment(final Activity activity, String video_id, String comment, final ApiCallBack sendCommentCallBack) {
 
         JSONObject parameters = new JSONObject();
         try {
@@ -304,15 +304,17 @@ public class Functions {
 
                             arrayList.add(item);
                         }
-
-                        apiCallBack.arrayData(arrayList);
+                        if (sendCommentCallBack != null)
+                            sendCommentCallBack.arrayData(arrayList);
 
                     } else {
-                        Toast.makeText(activity, R.string.comment_not_posted , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.comment_not_posted, Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
-                    apiCallBack.onFailure(e.toString());
+                    if (sendCommentCallBack != null)
+                        sendCommentCallBack.onFailure(e.toString());
+
                     e.printStackTrace();
                 }
 
@@ -362,7 +364,7 @@ public class Functions {
                         apiCallBack.arrayData(arrayList);
 
                     } else {
-                       // Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(activity, "" + response.optString("msg"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
