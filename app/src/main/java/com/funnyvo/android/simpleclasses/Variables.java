@@ -38,6 +38,7 @@ public class Variables {
     public static final String api_token = "api_token";
     public static final String device_id = "device_id";
     public static final String isFirstTIme = "is_first_time";
+    public static final String USER_PREF_VIDEO_VISIBILITY = "user_video_visibility";
 
     public static String outputfile = app_folder + "output.mp4";
     public static String outputfile2 = app_folder + "output2.mp4";
@@ -115,5 +116,6 @@ public class Variables {
     public static final String SEARCH = DOMAIN + "search";
     public static final String GET_NOTIFICATIONS = DOMAIN + "getNotifications";
     public static final String GET_VERIFIED = DOMAIN + "getVerified";
+    public static final String UPDATE_APP_VERSION = DOMAIN + "update_version";
     public static final String LOGOUT = DOMAIN + "logout";
 }

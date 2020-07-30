@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.funnyvo.android.BuildConfig;
 import com.funnyvo.android.R;
 
 import org.json.JSONObject;
@@ -94,7 +95,7 @@ public class ApiRequest {
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> headers = new HashMap<String, String>();
                     headers.put("fb-id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-                    headers.put("version", context.getResources().getString(R.string.version));
+                    headers.put("version", BuildConfig.VERSION_NAME);
                     headers.put("device", context.getResources().getString(R.string.device));
                     headers.put("tokon", Variables.sharedPreferences.getString(Variables.api_token, ""));
                     headers.put("deviceid", Variables.sharedPreferences.getString(Variables.device_id, ""));

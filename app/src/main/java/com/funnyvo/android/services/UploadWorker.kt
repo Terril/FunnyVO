@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters
 import com.android.volley.Response
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.Volley
+import com.funnyvo.android.BuildConfig
 import com.funnyvo.android.R
 import com.funnyvo.android.apirequest.MultipartRequest
 import com.funnyvo.android.simpleclasses.ApiRequest
@@ -57,7 +58,7 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
 
         val headers = mutableMapOf<String, String>()
         headers["fb_id"] = sharedPreferences.getString(Variables.u_id, "0").orEmpty()
-        headers["version"] = applicationContext.resources.getString(R.string.version)
+        headers["version"] = BuildConfig.VERSION_NAME
         headers["device"] = applicationContext.resources.getString(R.string.device)
         headers["tokon"] = sharedPreferences.getString(Variables.api_token, "").orEmpty()
         headers["deviceid"] = sharedPreferences.getString(Variables.device_id, "").orEmpty()
@@ -66,7 +67,7 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         stringRequest["fb_id"] = sharedPreferences.getString(Variables.u_id, "").orEmpty()
         stringRequest["sound_id"] = Variables.Selected_sound_id.orEmpty()
         stringRequest["description"] = desc
-        stringRequest["upload_video"] = "public"
+        stringRequest["visible_for"] = sharedPreferences.getString(Variables.USER_PREF_VIDEO_VISIBILITY, "everyone").orEmpty().toLowerCase()
 
         val fileRequest = HashMap<String, File>()
         fileRequest["video"] = videoFile

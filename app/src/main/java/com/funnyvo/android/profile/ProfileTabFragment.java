@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -39,6 +41,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.funnyvo.android.BuildConfig;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.following.FollowingFragment;
@@ -495,11 +498,26 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
             } else {
                 Toast.makeText(getActivity(), R.string.unable_to_fetch_user_videos, Toast.LENGTH_SHORT).show();
             }
+            getUserAppVersion();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void getUserAppVersion() {
+        String versionName = BuildConfig.VERSION_NAME;
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("version", versionName);
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        ApiRequest.callApi(getActivity(), Variables.UPDATE_APP_VERSION, parameters, null);
     }
 
     private void openEditProfile() {

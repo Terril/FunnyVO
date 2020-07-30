@@ -22,6 +22,7 @@
     <dimen name="margin_18">18dp</dimen>
     <dimen name="margin_50">50dp</dimen>
     <dimen name="margin_100">100dp</dimen>
+    <dimen name="margin_2">2dp</dimen>
 
 
     <!--    <dimen name="progress_video_line_height">2dp</dimen>-->
