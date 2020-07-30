@@ -99,7 +99,6 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Video Visible To"
                     android:inputType="none"
                     android:paddingEnd="@dimen/margin_5"
                     android:paddingBottom="@dimen/margin_5"
@@ -122,6 +121,16 @@
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.funnyvo.android.customview.FunnyVOTextView
+                android:id="@+id/txtRateApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/d_bottom_gray_line"
+                android:padding="@dimen/margin_15"
+                android:text="@string/rate_the_app"
+                android:textColor="@color/palette_cheddar_dark"
+                android:textSize="@dimen/text_size_18" />
 
             <com.funnyvo.android.customview.FunnyVOTextView
                 android:id="@+id/logout_txt"
