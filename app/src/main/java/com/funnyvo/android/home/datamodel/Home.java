@@ -9,4 +9,5 @@ public class Home implements Serializable {
     public String sound_id, sound_name, sound_pic, soundUrl;
     public String liked, like_count, video_comment_count, views;
     public boolean isMute;
+    public boolean loadAds;
 }

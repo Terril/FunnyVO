@@ -89,6 +89,14 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.SystemClock;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.material.tabs.TabLayout;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
@@ -204,39 +212,54 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         callApiForGetAllVideos();
 
-//        if (!Variables.is_remove_ads)
-//            loadAdd();
+        if (!Variables.is_remove_ads)
+            loadAdd();
 
         return view;
     }
 
+    private void showNativeAd() {
+        AdLoader adLoader = new AdLoader.Builder(context, getString(R.string.native_ad))
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        // Show the ad.
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        // Handle the failure by logging, altering the UI, and so on.
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
+        adLoader.loadAd(new AdRequest.Builder().build());
+    }
 
-//    InterstitialAd mInterstitialAd;
-//
-//    public void loadAdd() {
-//
-//        // this is test app id you will get the actual id when you add app in your
-//        //add mob account
-//        MobileAds.initialize(context,
-//                getResources().getString(R.string.ad_app_id));
-//
-//
-//        //code for intertial add
-//        mInterstitialAd = new InterstitialAd(context);
-//
-//        //here we will get the add id keep in mind above id is app id and below Id is add Id
-//        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.my_Interstitial_Add));
-//        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-//        mInterstitialAd.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdClosed() {
-//                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-//            }
-//        });
-//
-//
-//    }
+    private void loadAdd() {
+        // this is test app id you will get the actual id when you add app in your
+        //add mob account
+        MobileAds.initialize(context,
+                getResources().getString(R.string.ad_app_id));
 
+        final InterstitialAd mInterstitialAd;
+        //code for intertial add
+        mInterstitialAd = new InterstitialAd(context);
+
+        //here we will get the add id keep in mind above id is app id and below Id is add Id
+        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitial_add));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
+    }
 
     public void setAdapter() {
         adapter = new HomeAdapter(context, dataList, new HomeAdapter.OnItemClickListener() {
@@ -360,7 +383,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
-                for (int i = 0; i < msgArray.length(); i++) {
+                int arrayItems = msgArray.length();
+                int adsItem = arrayItems / 2;
+                int extraDataset = arrayItems + adsItem;
+                for (int i = 0; i < extraDataset; i++) {
                     JSONObject itemdata = msgArray.optJSONObject(i);
                     Home item = new Home();
                     item.fb_id = itemdata.optString("fb_id");
