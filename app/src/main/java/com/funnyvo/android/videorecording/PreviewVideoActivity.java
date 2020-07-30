@@ -576,8 +576,43 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         if (selectPostion > 0) {
             saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
         } else {
-            gotoPostScreen();
+            copyVideoUsingFfmpeg();
         }
+    }
+
+    private void copyVideoUsingFfmpeg() {
+        final String[] complexCommand = new String[]{
+                "-y", "-i", Variables.outputfile2, "-vcodec", "copy", Variables.OUTPUT_FILTER_FILE
+        };
+        new AsyncTask<Object, Object, Object>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showProgressDialog();
+            }
+
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                int rc = FFmpeg.execute(complexCommand);
+                return rc;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                int rc = (int) o;
+                if (rc == RETURN_CODE_SUCCESS) {
+                    dismissProgressDialog();
+                    gotoPostScreen();
+                } else if (rc == RETURN_CODE_CANCEL) {
+                    dismissProgressDialog();
+                } else {
+                    Config.printLastCommandOutput(Log.INFO);
+                    dismissProgressDialog();
+                }
+
+            }
+        }.execute();
     }
 
     // this will append all the videos parts in one  fullvideo

@@ -111,7 +111,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.11.7'
     implementation 'com.facebook.android:facebook-android-sdk:5.0.1'
     implementation 'net.the4thdimension:audio-wife:1.0.3'
-    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
+    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.1'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
