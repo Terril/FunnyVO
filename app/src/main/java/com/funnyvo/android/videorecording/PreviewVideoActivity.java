@@ -710,7 +710,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onCompletion(boolean state, String draftFile) {
-        Variables.OUTPUT_FILTER_FILE = Variables.outputfile2;
         this.draftFile = draftFile;
         finalTouchesToVideo();
     }
