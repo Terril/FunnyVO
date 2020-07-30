@@ -52,6 +52,7 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
                 MediaStore.Video.Thumbnails.FULL_SCREEN_KIND)
         val bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (bmThumbnail.width * 0.4).toInt(), (bmThumbnail.height * 0.4).toInt(), true)
 
+        Log.d(APP_NAME, "Video path :" + uri.path)
         val videoFile = File(uri.path)
         val gifFile = File(uriGif.path)
         val thumbNail: File = saveBitmapInFile(bmThumbnailResized)
@@ -106,7 +107,7 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
 
     private fun saveBitmapInFile(bmp: Bitmap): File {
         // + Functions.getRandomString()
-        val fileName = File(Variables.app_folder, "thumbnail" + Functions.getRandomString() + ".jpg")
+        val fileName = File(Variables.APP_FOLDER, "thumbnail" + Functions.getRandomString() + ".jpg")
         try {
             FileOutputStream(fileName).use { out ->
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, out) // bmp is your Bitmap instance

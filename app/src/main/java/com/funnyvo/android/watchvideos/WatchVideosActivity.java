@@ -923,7 +923,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     private void saveVideo(final Home item) {
         showProgressDialog();
         PRDownloader.initialize(getApplicationContext());
-        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
+        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.APP_FOLDER, item.video_id + "no_watermark" + ".mp4")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -969,8 +969,8 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     private void applyWatermark(final Home item) {
         Bitmap logo = ((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_launcher_watermark)).getBitmap();
         GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
-        new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
-                Variables.app_folder + item.video_id + ".mp4")
+        new GPUMp4Composer(Variables.APP_FOLDER + item.video_id + "no_watermark" + ".mp4",
+                Variables.APP_FOLDER + item.video_id + ".mp4")
                 .filter(filter)
 
                 .listener(new GPUMp4Composer.Listener() {
@@ -1022,7 +1022,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
     }
 
     private void deleteFileNoWatermark(Home item) {
-        File file = new File(Variables.app_folder + item.video_id + "no_watermark" + ".mp4");
+        File file = new File(Variables.APP_FOLDER + item.video_id + "no_watermark" + ".mp4");
         if (file.exists()) {
             file.delete();
         }
@@ -1030,7 +1030,7 @@ public class WatchVideosActivity extends BaseActivity implements Player.EventLis
 
     private void scanFile(Home item) {
         MediaScannerConnection.scanFile(WatchVideosActivity.this,
-                new String[]{Variables.app_folder + item.video_id + ".mp4"},
+                new String[]{Variables.APP_FOLDER + item.video_id + ".mp4"},
                 null,
                 new MediaScannerConnection.OnScanCompletedListener() {
 

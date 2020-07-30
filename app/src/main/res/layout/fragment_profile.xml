@@ -40,7 +40,7 @@
                     android:tint="@color/palette_cheddar" />
 
                 <com.funnyvo.android.customview.FunnyVOTextView
-                    android:id="@+id/username"
+                    android:id="@+id/nameProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -89,7 +89,7 @@
                         android:layout_marginTop="@dimen/margin_20">
 
                         <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/user_image"
+                            android:id="@+id/imvProfileImage"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:src="@drawable/profile_image_placeholder" />
@@ -107,7 +107,7 @@
                     </RelativeLayout>
 
                     <com.funnyvo.android.customview.FunnyVOTextView
-                        android:id="@+id/username2_txt"
+                        android:id="@+id/txtUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"

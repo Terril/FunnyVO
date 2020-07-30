@@ -100,6 +100,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.funnyvo.android.FunnyVOApplication.getProxy;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 /**
@@ -422,7 +423,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private void setPlayer(final int currentPage) {
         final Home item = dataList.get(currentPage);
 
-        HttpProxyCacheServer proxy = FunnyVOApplication.getProxy(context);
+        HttpProxyCacheServer proxy = getProxy(context);
         String proxyUrl = proxy.getProxyUrl(item.video_url);
 
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl();
@@ -556,7 +557,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     private void setUpVideoCache() {
         if (currentPage + 1 < dataList.size()) {
-            HttpProxyCacheServer proxy = FunnyVOApplication.getProxy(context);
+            HttpProxyCacheServer proxy = getProxy(context);
             proxy.getProxyUrl(dataList.get(currentPage + 1).video_url);
         }
     }
@@ -773,7 +774,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private void saveVideo(final Home item) {
         mActivity.showProgressDialog();
         PRDownloader.initialize(getActivity().getApplicationContext());
-        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
+        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.APP_FOLDER, item.video_id + "no_watermark" + ".mp4")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -821,8 +822,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         options.inScaled = false;
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_watermark, options);
         GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
-        new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
-                Variables.app_folder + item.video_id + ".mp4")
+        new GPUMp4Composer(Variables.APP_FOLDER + item.video_id + "no_watermark" + ".mp4",
+                Variables.APP_FOLDER + item.video_id + ".mp4")
                 .filter(filter)
 
                 .listener(new GPUMp4Composer.Listener() {
@@ -871,7 +872,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     public void deleteFileNoWatermark(Home item) {
-        File file = new File(Variables.app_folder + item.video_id + "no_watermark" + ".mp4");
+        File file = new File(Variables.APP_FOLDER + item.video_id + "no_watermark" + ".mp4");
         if (file.exists()) {
             file.delete();
         }
@@ -879,7 +880,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     public void scanFile(Home item) {
         MediaScannerConnection.scanFile(getActivity(),
-                new String[]{Variables.app_folder + item.video_id + ".mp4"},
+                new String[]{Variables.APP_FOLDER + item.video_id + ".mp4"},
                 null,
                 new MediaScannerConnection.OnScanCompletedListener() {
 
@@ -950,6 +951,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         if (previousPlayer != null) {
             previousPlayer.release();
         }
+
+        getProxy(context).shutdown();
     }
 
     // Bottom all the function and the Call back listener of the Expo player

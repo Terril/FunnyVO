@@ -332,7 +332,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
 
     public void downLoadMp3(final String id, final String sound_name, String url) {
         showProgressDialog();
-        prDownloader = PRDownloader.download(url, Variables.app_folder, sound_name + id)
+        prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, sound_name + id)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override

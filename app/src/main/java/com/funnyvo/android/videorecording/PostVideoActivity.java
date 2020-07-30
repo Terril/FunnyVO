@@ -160,7 +160,7 @@ public class PostVideoActivity extends BaseActivity implements View.OnClickListe
 
         encoder.finish();
 
-       File gifFilePath = new File(Variables.app_folder, "upload" + Functions.getRandomString() + ".gif");
+       File gifFilePath = new File(Variables.APP_FOLDER, "upload" + Functions.getRandomString() + ".gif");
         FileOutputStream outputStream;
         try {
             outputStream = new FileOutputStream(gifFilePath);

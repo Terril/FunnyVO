@@ -19,8 +19,8 @@ public class Variables {
     public static final String SelectedAudio_AAC = "SelectedAudio.aac";
 
     public static final String ROOT = Environment.getExternalStorageDirectory().toString();
-    public static final String app_folder = ROOT + "/FunnyVO/";
-    public static final String draft_app_folder = app_folder + "Draft/";
+    public static final String APP_FOLDER = ROOT + "/FunnyVO/";
+    public static final String draft_app_folder = APP_FOLDER + "Draft/";
 
     public static int max_recording_duration = 18000;
     public static int recording_duration = 18000;
@@ -40,15 +40,15 @@ public class Variables {
     public static final String isFirstTIme = "is_first_time";
     public static final String USER_PREF_VIDEO_VISIBILITY = "user_video_visibility";
 
-    public static String outputfile = app_folder + "output.mp4";
-    public static String outputfile2 = app_folder + "output2.mp4";
-    public static String OUTPUT_FILE_MOTION = app_folder + "output_file_motions.mp4";
-    public static String OUTPUT_FILE_MESSAGE = app_folder + "output_file_message.mp4";
-    public static String OUTPUT_FILTER_FILE = app_folder + "output-filtered" + Functions.getRandomString() + ".mp4";
-    public static String OUTPUT_FILE_TRIMMED = app_folder + "output_trimmed.mp4";
+    public static String outputfile = APP_FOLDER + "output.mp4";
+    public static String outputfile2 = APP_FOLDER + "output2.mp4";
+    public static String OUTPUT_FILE_MOTION = APP_FOLDER + "output_file_motions.mp4";
+    public static String OUTPUT_FILE_MESSAGE = APP_FOLDER + "output_file_message.mp4";
+    public static String OUTPUT_FILTER_FILE = APP_FOLDER + "output-filtered" + Functions.getRandomString() + ".mp4";
+    public static String OUTPUT_FILE_TRIMMED = APP_FOLDER + "output_trimmed.mp4";
 
-    public static String gallery_trimed_video = app_folder + "gallery_trimed_video.mp4";
-    public static String gallery_resize_video = app_folder + "gallery_resize_video.mp4";
+    public static String gallery_trimed_video = APP_FOLDER + "gallery_trimed_video.mp4";
+    public static String gallery_resize_video = APP_FOLDER + "gallery_resize_video.mp4";
 
     public static String user_id;
     public static String user_name;

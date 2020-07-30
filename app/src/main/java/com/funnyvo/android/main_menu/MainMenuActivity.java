@@ -7,7 +7,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -56,7 +55,7 @@ public class MainMenuActivity extends BaseActivity {
             mainMenuFragment = (MainMenuFragment) getSupportFragmentManager().getFragments().get(0);
         }
 
-        Functions.makeDirectory(Variables.app_folder);
+        Functions.makeDirectory(Variables.APP_FOLDER);
         Functions.makeDirectory(Variables.draft_app_folder);
 
     }

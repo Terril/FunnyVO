@@ -326,7 +326,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
 
     public void downLoadMp3(final String id, final String sound_name, String url) {
         showProgressDialog();
-        prDownloader = PRDownloader.download(url, Variables.app_folder, Variables.SelectedAudio_AAC)
+        prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, Variables.SelectedAudio_AAC)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
