@@ -59,7 +59,7 @@ public class WatchVideosActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         WatchVideosFragment fragment = WatchVideosFragment.Companion.getInstance();
         fragment.setArguments(bundle);
-        ft.add(R.id.frameLayoutWatchVideo, fragment);
+        ft.replace(R.id.frameLayoutWatchVideo, fragment);
         ft.commit();
     }
 
@@ -72,14 +72,5 @@ public class WatchVideosActivity extends BaseActivity {
             super.onBackPressed();
         }
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        WatchVideosFragment fragment = WatchVideosFragment.Companion.getInstance();
-        ft.remove(fragment);
-        ft.commitAllowingStateLoss();
     }
 }

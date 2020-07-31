@@ -39,8 +39,6 @@ import com.funnyvo.android.keyboard.KeyboardHeightObserver
 import com.funnyvo.android.keyboard.KeyboardHeightProvider
 import com.funnyvo.android.main_menu.MainMenuActivity
 import com.funnyvo.android.main_menu.MainMenuFragment
-import com.funnyvo.android.main_menu.relatetofragment_onback.BackPressImplementation
-import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment
 import com.funnyvo.android.profile.ProfileFragment
 import com.funnyvo.android.simpleclasses.*
 import com.funnyvo.android.soundlists.VideoSoundActivity
@@ -58,14 +56,11 @@ import com.google.android.exoplayer2.util.SystemClock
 import com.google.android.exoplayer2.util.Util
 import com.google.firebase.iid.FirebaseInstanceId
 import com.volokh.danylo.hashtaghelper.HashTagHelper
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.android.synthetic.main.fragment_watchvideo.*
 import kotlinx.android.synthetic.main.item_watch_layout.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
-import javax.inject.Inject
 import kotlin.math.abs
 
 class WatchVideosFragment : Fragment(), Player.EventListener,
