@@ -50,6 +50,7 @@ import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
+import com.funnyvo.android.VideoDownloadedListener;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.helper.PermissionUtils;
@@ -131,9 +132,20 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     BaseActivity mActivity;
     private boolean isMuted = false;
     private int pageNumber = 1;
+    private VideoDownloadedListener videoDownloadedListener;
 
-    public HomeFragment() {
+    private static HomeFragment fragment;
+
+    private HomeFragment() {
         // Required empty public constructor
+    }
+
+    public static HomeFragment newInstance() {
+        if (fragment == null) {
+            fragment = new HomeFragment();
+        }
+
+        return fragment;
     }
 
     @Override
@@ -618,6 +630,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
 
+    public void setDownloadListener(VideoDownloadedListener downloadListener) {
+        videoDownloadedListener = downloadListener;
+    }
+
     // this will call when go to the home tab From other tab.
     // this is very importent when for video play and pause when the focus is changes
     boolean is_visible_to_user;
@@ -817,6 +833,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     public void applyWatermark(final Home item) {
+        mActivity.showProgressDialog();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_watermark, options);
@@ -828,7 +845,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-                        mActivity.showProgressDialog();
+
                     }
 
                     @Override
@@ -877,15 +894,18 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         }
     }
 
-    public void scanFile(Home item) {
+    private void scanFile(Home item) {
         MediaScannerConnection.scanFile(getActivity(),
                 new String[]{Variables.APP_FOLDER + item.video_id + ".mp4"},
                 null,
                 new MediaScannerConnection.OnScanCompletedListener() {
 
                     public void onScanCompleted(String path, Uri uri) {
-                        Log.i("ExternalStorage", "Scanned " + path + ":");
-                        Log.i("ExternalStorage", "-> uri=" + uri);
+//                        Log.i("ExternalStorage", "Scanned " + path + ":");
+//                        Log.i("ExternalStorage", "-> uri=" + uri);
+                        if (videoDownloadedListener != null) {
+                            videoDownloadedListener.onDownloadCompleted(uri);
+                        }
                     }
                 });
     }

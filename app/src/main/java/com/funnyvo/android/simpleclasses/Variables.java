@@ -73,7 +73,7 @@ public class Variables {
             new SimpleDateFormat("dd-MM-yyyy HH:mmZZ", Locale.ENGLISH);
 
 
-    public static final boolean is_secure_info = false;
+    public static final boolean is_secure_info = BuildConfig.logsEnabled;
     public static final boolean is_remove_ads = false;
 
     public final static int permission_camera_code = 786;

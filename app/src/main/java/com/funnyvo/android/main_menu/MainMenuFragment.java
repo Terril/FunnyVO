@@ -311,7 +311,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
             final Fragment result;
             switch (position) {
                 case 0:
-                    result = new HomeFragment();
+                    result =  HomeFragment.newInstance();
                     break;
 
                 case 1:
