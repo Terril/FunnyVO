@@ -1,15 +1,19 @@
 package com.funnyvo.android.soundlists;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,8 +27,8 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
-import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
@@ -43,6 +47,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +57,7 @@ import java.util.ArrayList;
 import static android.app.Activity.RESULT_OK;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
-public class DiscoverSoundListFragment extends RootFragment implements Player.EventListener {
+public class DiscoverSoundListFragment extends RootFragment implements Player.EventListener, SearchView.OnQueryTextListener {
 
     private RecyclerView recylerView;
     private SoundAdapter adapter;
@@ -109,9 +114,26 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         });
 
         callApiForGetAllSound();
+        setHasOptionsMenu(true);
     }
 
-    public void setAdapter() {
+    private void searchSound(Menu menu) {
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.searchSound).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.sound_search_option_menu, menu);
+        searchSound(menu);
+    }
+
+    private void setAdapter() {
 
         adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
@@ -470,4 +492,31 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
 
+    /**
+     * Called when the user submits the query. This could be due to a key press on the
+     * keyboard or due to pressing a submit button.
+     * The listener can override the standard behavior by returning true
+     * to indicate that it has handled the submit request. Otherwise return false to
+     * let the SearchView handle the submission by launching any associated intent.
+     *
+     * @param query the query text that is to be submitted
+     * @return true if the query has been handled by the listener, false to let the
+     * SearchView perform the default action.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    /**
+     * Called when the query text is changed by the user.
+     *
+     * @param newText the new content of the query text field.
+     * @return false if the SearchView should perform the default action of showing any
+     * suggestions if available, true if the action was handled by the listener.
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 }

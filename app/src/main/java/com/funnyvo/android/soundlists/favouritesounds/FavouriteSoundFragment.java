@@ -1,17 +1,24 @@
 package com.funnyvo.android.soundlists.favouritesounds;
 
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,11 +54,13 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -62,7 +71,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
 
     private Context context;
     private View view;
-    private ArrayList<Sounds> datalist;
+    private ArrayList<Sounds> audioList;
     private FavouriteSoundAdapter adapter;
     static boolean active = false;
     private RecyclerView recyclerView;
@@ -109,15 +118,34 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                callApiForGetAllSound();
+                // callApiForGetAllSound();
+                getAllAudioFromDevice(context);
             }
         });
 
-        callApiForGetAllSound();
+        //   callApiForGetAllSound();
+        getAllAudioFromDevice(context);
+        setHasOptionsMenu(true);
     }
 
-    public void setAdapter() {
-        adapter = new FavouriteSoundAdapter(context, datalist, new FavouriteSoundAdapter.OnItemClickListener() {
+    private void searchSound(Menu menu) {
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.searchSound).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.sound_search_option_menu, menu);
+        searchSound(menu);
+    }
+
+    private void setAdapter() {
+        adapter = new FavouriteSoundAdapter(context, audioList, new FavouriteSoundAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {
 
@@ -125,7 +153,7 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
                     stopPlaying();
                     downLoadMp3(item.id, item.sound_name, item.soundUrl);
                 } else if (view.getId() == R.id.fav_btn) {
-                    callApiForFavSound(postion, item.id);
+                  //  callApiForFavSound(postion, item.id);
                 } else {
                     if (thread != null && !thread.isAlive()) {
                         stopPlaying();
@@ -142,80 +170,111 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (view != null && isVisibleToUser) {
-            callApiForGetAllSound();
-        }
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (view != null && isVisibleToUser) {
+//            callApiForGetAllSound();
+//        }
+//    }
 
 
-    private void callApiForGetAllSound() {
-        showProgressDialog();
-        JSONObject parameters = new JSONObject();
-        try {
-            if (Variables.sharedPreferences != null)
-                parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+//    private void callApiForGetAllSound() {
+//        showProgressDialog();
+//        JSONObject parameters = new JSONObject();
+//        try {
+//            if (Variables.sharedPreferences != null)
+//                parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ApiRequest.callApi(context, Variables.MY_FAV_SOUND, parameters, new Callback() {
+//            @Override
+//            public void response(String resp) {
+//                swiperefresh.setRefreshing(false);
+//                dismissProgressDialog();
+//                parseData(resp);
+//            }
+//        });
+//    }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//    private void parseData(String response) {
+//        datalist = new ArrayList<>();
+//
+//        try {
+//            JSONObject jsonObject = new JSONObject(response);
+//            String code = jsonObject.optString("code");
+//            if (code.equals("200")) {
+//
+//                JSONArray msgArray = jsonObject.getJSONArray("msg");
+//
+//                for (int i = 0; i < msgArray.length(); i++) {
+//                    JSONObject itemdata = msgArray.optJSONObject(i);
+//
+//                    Sounds item = new Sounds();
+//
+//                    item.id = itemdata.optString("id");
+//
+//                    JSONObject audio_path = itemdata.optJSONObject("audio_path");
+//
+//                    item.acc_path = audio_path.optString("acc");
+//                    item.sound_name = itemdata.optString("sound_name");
+//                    item.description = itemdata.optString("description");
+//                    item.section = itemdata.optString("section");
+//                    item.thum = itemdata.optString("thum");
+//                    item.date_created = itemdata.optString("created");
+//                    item.soundUrl = itemdata.optString("sound_url");
+//
+//                    datalist.add(item);
+//                }
+//
+//                setAdapter();
+//            } else {
+//                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+//            }
+//
+//        } catch (JSONException e) {
+//
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-        ApiRequest.callApi(context, Variables.MY_FAV_SOUND, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                swiperefresh.setRefreshing(false);
-                dismissProgressDialog();
-                parseData(resp);
+    private void getAllAudioFromDevice(final Context context) {
+        audioList = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
+        Cursor c = context.getContentResolver().query(uri,
+                projection,
+                null,
+                null,
+                null);
+
+        if (c != null) {
+            while (c.moveToNext()) {
+
+                Sounds audioModel = new Sounds();
+                String path = c.getString(0);
+                String album = c.getString(1);
+                String artist = c.getString(2);
+
+                String name = path.substring(path.lastIndexOf("/") + 1);
+
+                audioModel.sound_name = name;
+                audioModel.description = album;
+               // audioModel.setaArtist(artist);
+                audioModel.acc_path = path;
+
+                Log.e("Name :" + name, " Album :" + album);
+                Log.e("Path :" + path, " Artist :" + artist);
+
+                audioList.add(audioModel);
             }
-        });
-
-
-    }
-
-    public void parseData(String response) {
-        datalist = new ArrayList<>();
-
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            String code = jsonObject.optString("code");
-            if (code.equals("200")) {
-
-                JSONArray msgArray = jsonObject.getJSONArray("msg");
-
-                for (int i = 0; i < msgArray.length(); i++) {
-                    JSONObject itemdata = msgArray.optJSONObject(i);
-
-                    Sounds item = new Sounds();
-
-                    item.id = itemdata.optString("id");
-
-                    JSONObject audio_path = itemdata.optJSONObject("audio_path");
-
-                    item.acc_path = audio_path.optString("acc");
-                    item.sound_name = itemdata.optString("sound_name");
-                    item.description = itemdata.optString("description");
-                    item.section = itemdata.optString("section");
-                    item.thum = itemdata.optString("thum");
-                    item.date_created = itemdata.optString("created");
-                    item.soundUrl = itemdata.optString("sound_url");
-
-                    datalist.add(item);
-                }
-
-                setAdapter();
-            } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
+            c.close();
         }
-
     }
-
 
     @Override
     public boolean onBackPressed() {
@@ -374,30 +433,28 @@ public class FavouriteSoundFragment extends RootFragment implements Player.Event
 
     }
 
-
-    private void callApiForFavSound(final int pos, String video_id) {
-        showProgressDialog();
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-            parameters.put("sound_id", video_id);
-            parameters.put("fav", "0");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                dismissProgressDialog();
-                datalist.remove(pos);
-                adapter.notifyItemRemoved(pos);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-
-    }
+//
+//    private void callApiForFavSound(final int pos, String video_id) {
+//        showProgressDialog();
+//        JSONObject parameters = new JSONObject();
+//        try {
+//            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+//            parameters.put("sound_id", video_id);
+//            parameters.put("fav", "0");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
+//            @Override
+//            public void response(String resp) {
+//                dismissProgressDialog();
+//                datalist.remove(pos);
+//                adapter.notifyItemRemoved(pos);
+//                adapter.notifyDataSetChanged();
+//            }
+//        });
+//    }
 
 
     @Override
