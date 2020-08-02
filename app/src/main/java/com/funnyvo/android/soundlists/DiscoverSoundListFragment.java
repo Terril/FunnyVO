@@ -32,14 +32,17 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -137,12 +140,10 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
         adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Sounds item) {
-                if (view.getId() == R.id.done) {
+            public void onItemClick(View view, int position, Sounds item) {
+                if (view.getId() == R.id.btnSoundSelected) {
                     stopPlaying();
                     downLoadMp3(item.id, item.sound_name, item.soundUrl);
-                } else if (view.getId() == R.id.fav_btn) {
-                    callApiForFavSound(postion, item);
                 } else {
                     if (thread != null && !thread.isAlive()) {
                         stopPlaying();
@@ -252,13 +253,13 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             previous_url = item.soundUrl;
             running_sound_id = item.id;
 
-            DefaultTrackSelector trackSelector = new DefaultTrackSelector();
-            player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+            RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+            player = new SimpleExoPlayer.Builder(context, renderersFactory).build();
 
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
                     Util.getUserAgent(context, APP_NAME));
 
-            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(item.soundUrl));
 
             player.prepare(videoSource);
@@ -312,7 +313,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         if (previous_view != null) {
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
-            previous_view.findViewById(R.id.done).setVisibility(View.VISIBLE);
+            previous_view.findViewById(R.id.btnSoundSelected).setVisibility(View.VISIBLE);
         }
     }
 
@@ -329,7 +330,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             previous_view.findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.GONE);
-            previous_view.findViewById(R.id.done).setVisibility(View.GONE);
+            previous_view.findViewById(R.id.btnSoundSelected).setVisibility(View.GONE);
         }
 
         running_sound_id = "none";
@@ -388,46 +389,46 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
 
-    private void callApiForFavSound(int pos, final Sounds item) {
-        showProgressDialog();
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-            parameters.put("sound_id", item.id);
-            if (item.fav.equals("1"))
-                parameters.put("fav", "0");
-            else
-                parameters.put("fav", "1");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                dismissProgressDialog();
-                if (item.fav.equals("1"))
-                    item.fav = "0";
-                else
-                    item.fav = "1";
-
-                for (int i = 0; i < datalist.size(); i++) {
-                    SoundCategory catagory_get_set = datalist.get(i);
-                    if (catagory_get_set.sound_list.contains(item)) {
-                        int index = catagory_get_set.sound_list.indexOf(item);
-                        catagory_get_set.sound_list.remove(item);
-                        catagory_get_set.sound_list.add(index, item);
-                        break;
-                    }
-                }
-
-                adapter.notifyDataSetChanged();
-
-            }
-        });
-
-    }
+//    private void callApiForFavSound(int pos, final Sounds item) {
+//        showProgressDialog();
+//        JSONObject parameters = new JSONObject();
+//        try {
+//            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+//            parameters.put("sound_id", item.id);
+//            if (item.fav.equals("1"))
+//                parameters.put("fav", "0");
+//            else
+//                parameters.put("fav", "1");
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
+//            @Override
+//            public void response(String resp) {
+//                dismissProgressDialog();
+//                if (item.fav.equals("1"))
+//                    item.fav = "0";
+//                else
+//                    item.fav = "1";
+//
+//                for (int i = 0; i < datalist.size(); i++) {
+//                    SoundCategory catagory_get_set = datalist.get(i);
+//                    if (catagory_get_set.sound_list.contains(item)) {
+//                        int index = catagory_get_set.sound_list.indexOf(item);
+//                        catagory_get_set.sound_list.remove(item);
+//                        catagory_get_set.sound_list.add(index, item);
+//                        break;
+//                    }
+//                }
+//
+//                adapter.notifyDataSetChanged();
+//
+//            }
+//        });
+//
+//    }
 
 
     @Override

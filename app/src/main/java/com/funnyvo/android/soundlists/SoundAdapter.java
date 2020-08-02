@@ -179,8 +179,7 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
         public CustomViewHolder(View view) {
             super(view);
 
-            done = view.findViewById(R.id.done);
-            fav_btn = view.findViewById(R.id.fav_btn);
+            done = view.findViewById(R.id.btnSoundSelected);
 
             sound_name = view.findViewById(R.id.sound_name);
             description_txt = view.findViewById(R.id.description_txt);
@@ -198,13 +197,6 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
             });
 
             done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(v, pos, item);
-                }
-            });
-
-            fav_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v, pos, item);
