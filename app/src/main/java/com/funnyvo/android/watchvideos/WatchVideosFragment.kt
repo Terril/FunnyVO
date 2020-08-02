@@ -545,51 +545,51 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         }
     }
 
-    private fun singleVideoParseData(pos: Int, response: String?) {
-        try {
-            val jsonObject = JSONObject(response)
-            val code = jsonObject.optString("code")
-            if (code == "200") {
-                val msgArray = jsonObject.getJSONArray("msg")
-                for (i in 0 until msgArray.length()) {
-                    val itemdata = msgArray.optJSONObject(i)
-                    val item = Home()
-                    item.fb_id = itemdata.optString("fb_id")
-                    val userInfo = itemdata.optJSONObject("user_info")
-                    item.username = userInfo.optString("username")
-                    item.first_name = userInfo.optString("first_name", context!!.resources.getString(R.string.app_name))
-                    item.last_name = userInfo.optString("last_name", "User")
-                    item.profile_pic = userInfo.optString("profile_pic", "null")
-                    item.verified = userInfo.optString("verified")
-                    val soundData = itemdata.optJSONObject("sound")
-                    item.sound_id = soundData.optString("id")
-                    item.sound_name = soundData.optString("sound_name")
-                    item.sound_pic = soundData.optString("thum")
-                    val count = itemdata.optJSONObject("count")
-                    item.like_count = count.optString("like_count")
-                    item.video_comment_count = count.optString("video_comment_count")
-                    item.video_id = itemdata.optString("id")
-                    item.liked = itemdata.optString("liked")
-                    item.video_url = itemdata.optString("video")
-                    item.video_description = itemdata.optString("description")
-                    item.thum = itemdata.optString("thum")
-                    item.created_date = itemdata.optString("created")
-                    if (item.video_url.contains(Variables.base_url)) {
-                        item.video_url = item.video_url.replace(Variables.base_url + "/", "")
-                    }
-                    if (item.thum.contains(Variables.base_url)) {
-                        item.thum = item.thum.replace(Variables.base_url + "/", "")
-                    }
-                    dataList.removeAt(pos)
-                    dataList.add(pos, item)
-                    adapter.notifyDataSetChanged()
+    private fun singleVideoParseData(pos: Int, response: String) = try {
+        val jsonObject = JSONObject(response)
+        val code = jsonObject.optString("code")
+        if (code == Variables.API_SUCCESS_CODE) {
+            val msgArray = jsonObject.getJSONArray("msg")
+            for (i in 0 until msgArray.length()) {
+                val itemdata = msgArray.optJSONObject(i)
+                val item = Home()
+                item.fb_id = itemdata.optString("fb_id")
+                val userInfo = itemdata.optJSONObject("user_info")
+                item.username = userInfo.optString("username")
+                item.first_name = userInfo.optString("first_name", context!!.resources.getString(R.string.app_name))
+                item.last_name = userInfo.optString("last_name", "User")
+                item.profile_pic = userInfo.optString("profile_pic", "null")
+                item.verified = userInfo.optString("verified")
+                val soundData = itemdata.optJSONObject("sound")
+                item.sound_id = soundData.optString("id")
+                item.sound_name = soundData.optString("sound_name")
+                item.sound_pic = soundData.optString("thum")
+                val count = itemdata.optJSONObject("count")
+                item.like_count = count.optString("like_count")
+                item.video_comment_count = count.optString("video_comment_count")
+                item.video_id = itemdata.optString("id")
+                item.liked = itemdata.optString("liked")
+                item.video_url = itemdata.optString("video")
+                item.video_description = itemdata.optString("description")
+                item.thum = itemdata.optString("thum")
+                item.created_date = itemdata.optString("created")
+                if (item.video_url.contains(Variables.base_url)) {
+                    item.video_url = item.video_url.replace(Variables.base_url + "/", "")
                 }
-            } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show()
+                if (item.thum.contains(Variables.base_url)) {
+                    item.thum = item.thum.replace(Variables.base_url + "/", "")
+                }
+                dataList.removeAt(pos)
+                dataList.add(pos, item)
+                adapter.notifyDataSetChanged()
             }
-        } catch (e: JSONException) {
-            e.printStackTrace()
+        } else {
+            Toast.makeText(context, getString(R.string.video_not_available), Toast.LENGTH_SHORT).show()
         }
+    } catch (e: JSONException) {
+        e.printStackTrace()
+    } catch (e : Exception) {
+        e.printStackTrace()
     }
 
     private fun callApiForGetAllVideos(id: String) {
@@ -609,7 +609,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         try {
             val jsonObject = JSONObject(response)
             val code = jsonObject.optString("code")
-            if (code == "200") {
+            if (code == Variables.API_SUCCESS_CODE) {
                 val msgArray = jsonObject.getJSONArray("msg")
                 for (i in 0 until msgArray.length()) {
                     val itemdata = msgArray.optJSONObject(i)

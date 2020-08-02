@@ -432,137 +432,139 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this will call when swipe for another video and
     // this function will set the player to the current video
     private void setPlayer(final int currentPage) {
-        final Home item = dataList.get(currentPage);
+        if(!dataList.isEmpty() && currentPage >= 0) {
+            final Home item = dataList.get(currentPage);
 
-        HttpProxyCacheServer proxy = getProxy(context);
-        String proxyUrl = proxy.getProxyUrl(item.video_url);
+            HttpProxyCacheServer proxy = getProxy(context);
+            String proxyUrl = proxy.getProxyUrl(item.video_url);
 
-        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl();
+            DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl();
 
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector(context);
-        RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
-        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(context).build();
-        Looper looper = Looper.myLooper();
-        Clock clock = SystemClock.DEFAULT;
-        AnalyticsCollector analyticsCollector = new AnalyticsCollector(clock);
-        previousPlayer = new SimpleExoPlayer.Builder(context, renderersFactory, trackSelector, loadControl,
-                bandwidthMeter, looper, analyticsCollector, true, clock).build();
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, APP_NAME));
-        MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(proxyUrl));
-        previousPlayer.prepare(videoSource);
+            DefaultTrackSelector trackSelector = new DefaultTrackSelector(context);
+            RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(context).build();
+            Looper looper = Looper.myLooper();
+            Clock clock = SystemClock.DEFAULT;
+            AnalyticsCollector analyticsCollector = new AnalyticsCollector(clock);
+            previousPlayer = new SimpleExoPlayer.Builder(context, renderersFactory, trackSelector, loadControl,
+                    bandwidthMeter, looper, analyticsCollector, true, clock).build();
+            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
+                    Util.getUserAgent(context, APP_NAME));
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(proxyUrl));
+            previousPlayer.prepare(videoSource);
 
-        setUpVideoCache();
+            setUpVideoCache();
 
-        previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
-        previousPlayer.addListener(this);
+            previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
+            previousPlayer.addListener(this);
 
-        View layout = layoutManager.findViewByPosition(currentPage);
-        final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
-        playerView.setPlayer(previousPlayer);
+            View layout = layoutManager.findViewByPosition(currentPage);
+            final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
+            playerView.setPlayer(previousPlayer);
 
-        previousPlayer.setPlayWhenReady(is_visible_to_user);
+            previousPlayer.setPlayWhenReady(is_visible_to_user);
 
 
-        final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
-        playerView.setOnTouchListener(new View.OnTouchListener() {
-            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
+            playerView.setOnTouchListener(new View.OnTouchListener() {
+                private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 
-                @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    super.onFling(e1, e2, velocityX, velocityY);
-                    float deltaX = e1.getX() - e2.getX();
-                    float deltaXAbs = Math.abs(deltaX);
-                    // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
-                    if ((deltaXAbs > 100) && (deltaXAbs < 1000)) {
-                        if (deltaX > 0) {
-                            openProfile(item, true);
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                        super.onFling(e1, e2, velocityX, velocityY);
+                        float deltaX = e1.getX() - e2.getX();
+                        float deltaXAbs = Math.abs(deltaX);
+                        // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
+                        if ((deltaXAbs > 100) && (deltaXAbs < 1000)) {
+                            if (deltaX > 0) {
+                                openProfile(item, true);
+                            }
                         }
+
+
+                        return true;
                     }
 
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        super.onSingleTapUp(e);
+                        if (!previousPlayer.getPlayWhenReady()) {
+                            is_user_stop_video = false;
+                            previousPlayer.setPlayWhenReady(true);
+                        } else {
+                            is_user_stop_video = true;
+                            previousPlayer.setPlayWhenReady(false);
+                        }
 
+
+                        return true;
+                    }
+
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        super.onLongPress(e);
+                        showVideoOption(item);
+                    }
+
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        if (!previousPlayer.getPlayWhenReady()) {
+                            is_user_stop_video = false;
+                            previousPlayer.setPlayWhenReady(true);
+                        }
+                        if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                            showHeartOnDoubleTap(item, mainlayout, e);
+                            likeVideo(currentPage, item);
+                        } else {
+                            Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
+                        }
+                        return super.onDoubleTap(e);
+
+                    }
+                });
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gestureDetector.onTouchEvent(event);
                     return true;
-                }
-
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    super.onSingleTapUp(e);
-                    if (!previousPlayer.getPlayWhenReady()) {
-                        is_user_stop_video = false;
-                        previousPlayer.setPlayWhenReady(true);
-                    } else {
-                        is_user_stop_video = true;
-                        previousPlayer.setPlayWhenReady(false);
-                    }
-
-
-                    return true;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    super.onLongPress(e);
-                    showVideoOption(item);
-                }
-
-                @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    if (!previousPlayer.getPlayWhenReady()) {
-                        is_user_stop_video = false;
-                        previousPlayer.setPlayWhenReady(true);
-                    }
-                    if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                        showHeartOnDoubleTap(item, mainlayout, e);
-                        likeVideo(currentPage, item);
-                    } else {
-                        Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
-                    }
-                    return super.onDoubleTap(e);
-
                 }
             });
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return true;
-            }
-        });
-
-        TextView desc_txt = layout.findViewById(R.id.desc_txt);
-        HashTagHelper.Creator.create(context.getResources().getColor(R.color.maincolor), new HashTagHelper.OnHashTagClickListener() {
-            @Override
-            public void onHashTagClicked(String hashTag) {
-                onPause();
-                openHashtag(hashTag);
-            }
-        }).handle(desc_txt);
-
-        LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
-        Animation sound_animation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
-        soundimage.startAnimation(sound_animation);
-
-        if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-            Functions.callApiForUpdateView(getActivity(), item.video_id);
-
-        swipe_count++;
-        if (swipe_count > 4) {
-            // showAdd();
-            swipe_count = 0;
-        }
-
-        if (currentPage == dataList.size() - 1) {
-            pageNumber = pageNumber + 1;
-            callApiForGetAllVideos();
-        } else {
-            recyclerView.post(new Runnable() {
-                public void run() {
-                    // There is no need to use notifyDataSetChanged()
-                    adapter.notifyDataSetChanged();
+            TextView desc_txt = layout.findViewById(R.id.desc_txt);
+            HashTagHelper.Creator.create(context.getResources().getColor(R.color.maincolor), new HashTagHelper.OnHashTagClickListener() {
+                @Override
+                public void onHashTagClicked(String hashTag) {
+                    onPause();
+                    openHashtag(hashTag);
                 }
-            });
+            }).handle(desc_txt);
 
+            LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
+            Animation sound_animation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
+            soundimage.startAnimation(sound_animation);
+
+            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
+                Functions.callApiForUpdateView(getActivity(), item.video_id);
+
+            swipe_count++;
+            if (swipe_count > 4) {
+                // showAdd();
+                swipe_count = 0;
+            }
+
+            if (currentPage == dataList.size() - 1) {
+                pageNumber = pageNumber + 1;
+                callApiForGetAllVideos();
+            } else {
+                recyclerView.post(new Runnable() {
+                    public void run() {
+                        // There is no need to use notifyDataSetChanged()
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
         }
     }
 
