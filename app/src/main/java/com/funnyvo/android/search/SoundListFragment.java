@@ -132,7 +132,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
         }
     }
 
-    public void callApi() {
+    private void callApi() {
 
         JSONObject params = new JSONObject();
         try {
@@ -155,11 +155,11 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
 
     }
 
-    public void parseSounds(String responce) {
+    private void parseSounds(String response) {
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
 
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
 
@@ -272,7 +272,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             player.removeListener(this);
             player.release();
         }
-        show_Stop_state();
+        showStopState();
     }
 
     @Override
@@ -294,29 +294,25 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
             player.release();
         }
 
-        show_Stop_state();
+        showStopState();
 
     }
 
-
-    public void Show_Run_State() {
-
+    private void showRunState() {
         if (previous_view != null) {
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
             previous_view.findViewById(R.id.done).setVisibility(View.VISIBLE);
         }
-
     }
 
-
-    public void Show_loading_state() {
+    private void showLoadingState() {
         previous_view.findViewById(R.id.play_btn).setVisibility(View.GONE);
         previous_view.findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
     }
 
 
-    public void show_Stop_state() {
+    private void showStopState() {
 
         if (previous_view != null) {
             previous_view.findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
@@ -330,7 +326,7 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
     }
 
 
-    public void downLoadMp3(final String id, final String sound_name, String url) {
+    private void downLoadMp3(final String id, final String sound_name, String url) {
         showProgressDialog();
         prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, sound_name + id)
                 .build()
@@ -394,11 +390,11 @@ public class SoundListFragment extends RootFragment implements Player.EventListe
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
         if (playbackState == Player.STATE_BUFFERING) {
-            Show_loading_state();
+            showLoadingState();
         } else if (playbackState == Player.STATE_READY) {
-            Show_Run_State();
+            showRunState();
         } else if (playbackState == Player.STATE_ENDED) {
-            show_Stop_state();
+            showStopState();
         }
 
     }

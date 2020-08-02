@@ -1,12 +1,18 @@
 package com.funnyvo.android.soundlists;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -23,6 +29,7 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
     protected TabLayout tablayout;
     protected CustomViewPager pager;
     private ViewPagerAdapter adapter;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,8 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
         tablayout.setupWithViewPager(pager);
 
         findViewById(R.id.btnMusicClose).setOnClickListener(this);
+        findViewById(R.id.btnSearchSound).setOnClickListener(this);
+
     }
 
 
@@ -49,12 +58,36 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
             case R.id.btnMusicClose:
                 onBackPressed();
                 break;
+            case R.id.btnSearchSound:
+                searchSound();
+                break;
         }
     }
+
+    private void searchSound() {
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.searchSound).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+    }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.sound_search_option_menu, menu);
+//
+//        this.menu = menu;
+//
+//        return false;
+//    }
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
         public ViewPagerAdapter(final Resources resources, FragmentManager fm) {
             super(fm);
         }

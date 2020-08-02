@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/margin_20">
+
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbarSound"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
@@ -41,10 +43,22 @@
                     android:layout_marginBottom="@dimen/margin_5"
                     android:text="@string/add_sound"
                     android:textColor="@color/palette_cheddar"
-                    android:textSize="@dimen/text_size_18"
-                     />
+                    android:textSize="@dimen/text_size_18" />
+
+                <ImageButton
+                    android:id="@+id/btnSearchSound"
+                    android:layout_width="@dimen/margin_32"
+                    android:layout_height="@dimen/margin_32"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/margin_15"
+                    android:background="@color/transparent"
+                    android:scaleType="fitCenter"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_baseline_search"
+                    android:tint="@color/palette_cheddar" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

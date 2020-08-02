@@ -167,7 +167,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         try {
             JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
 
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
 
@@ -175,7 +175,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                     JSONObject object = msgArray.getJSONObject(i);
                     JSONArray section_array = object.optJSONArray("sections_sounds");
 
-                    ArrayList<Sounds> sound_list = new ArrayList<>();
+                    ArrayList<Sounds> soundList = new ArrayList<>();
 
                     for (int j = 0; j < section_array.length(); j++) {
                         JSONObject itemdata = section_array.optJSONObject(j);
@@ -194,13 +194,13 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                         item.fav = itemdata.optString("fav");
                         item.soundUrl = itemdata.optString("sound_url");
 
-                        sound_list.add(item);
+                        soundList.add(item);
                     }
 
-                    SoundCategory sound_category = new SoundCategory();
-                    sound_category.catagory = object.optString("section_name");
-                    sound_category.sound_list = sound_list;
-                    datalist.add(sound_category);
+                    SoundCategory soundCategory = new SoundCategory();
+                    soundCategory.catagory = object.optString("section_name");
+                    soundCategory.sound_list = soundList;
+                    datalist.add(soundCategory);
                 }
 
                 setAdapter();
