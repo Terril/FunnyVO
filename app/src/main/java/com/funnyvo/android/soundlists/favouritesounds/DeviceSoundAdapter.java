@@ -26,6 +26,11 @@ class DeviceSoundAdapter extends RecyclerView.Adapter<DeviceSoundAdapter.CustomV
         void onItemClick(View view, int postion, Sounds item);
     }
 
+    public void updateList(ArrayList<Sounds> searchedSounds) {
+        datalist = searchedSounds;
+        notifyDataSetChanged();
+    }
+
     public DeviceSoundAdapter.OnItemClickListener listener;
 
     public DeviceSoundAdapter(Context context, ArrayList<Sounds> arrayList, DeviceSoundAdapter.OnItemClickListener listener) {
@@ -81,7 +86,6 @@ class DeviceSoundAdapter extends RecyclerView.Adapter<DeviceSoundAdapter.CustomV
         public CustomViewHolder(View view) {
             super(view);
             btnSoundSelected = view.findViewById(R.id.btnSoundSelected);
-
             sound_name = view.findViewById(R.id.sound_name);
             description_txt = view.findViewById(R.id.description_txt);
             sound_image = view.findViewById(R.id.sound_image);
@@ -89,7 +93,6 @@ class DeviceSoundAdapter extends RecyclerView.Adapter<DeviceSoundAdapter.CustomV
         }
 
         public void bind(final int pos, final Sounds item, final DeviceSoundAdapter.OnItemClickListener listener) {
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,10 +107,6 @@ class DeviceSoundAdapter extends RecyclerView.Adapter<DeviceSoundAdapter.CustomV
                 }
             });
         }
-
-
     }
-
-
 }
 

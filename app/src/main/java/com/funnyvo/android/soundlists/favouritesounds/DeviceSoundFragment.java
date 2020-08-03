@@ -26,14 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
-import com.downloader.Error;
-import com.downloader.OnCancelListener;
-import com.downloader.OnDownloadListener;
-import com.downloader.OnPauseListener;
-import com.downloader.OnProgressListener;
-import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
-import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
 import com.funnyvo.android.helper.PermissionUtils;
@@ -66,7 +59,7 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DeviceSoundFragment extends RootFragment implements Player.EventListener {
+public class DeviceSoundFragment extends RootFragment implements Player.EventListener, SearchView.OnQueryTextListener {
 
     private Context context;
     private View view;
@@ -135,6 +128,7 @@ public class DeviceSoundFragment extends RootFragment implements Player.EventLis
                 (SearchView) menu.findItem(R.id.searchSound).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -408,4 +402,48 @@ public class DeviceSoundFragment extends RootFragment implements Player.EventLis
     }
 
 
+    /**
+     * Called when the user submits the query. This could be due to a key press on the
+     * keyboard or due to pressing a submit button.
+     * The listener can override the standard behavior by returning true
+     * to indicate that it has handled the submit request. Otherwise return false to
+     * let the SearchView handle the submission by launching any associated intent.
+     *
+     * @param query the query text that is to be submitted
+     * @return true if the query has been handled by the listener, false to let the
+     * SearchView perform the default action.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filter(query.trim());
+        return false;
+    }
+
+    /**
+     * Called when the query text is changed by the user.
+     *
+     * @param newText the new content of the query text field.
+     * @return false if the SearchView should perform the default action of showing any
+     * suggestions if available, true if the action was handled by the listener.
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filter(newText.trim());
+        return false;
+    }
+
+    private void filter(String text) {
+        if (!text.isEmpty()) {
+            ArrayList tempSounds = new ArrayList<Sounds>();
+            for (Sounds sounds : audioList) {
+                if (sounds.sound_name.toLowerCase().contains(text.toLowerCase())) {
+                    tempSounds.add(sounds);
+                }
+            }
+            adapter.updateList(tempSounds);
+        } else {
+            setAdapter();
+            stopPlaying();
+        }
+    }
 }
