@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,6 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import com.downloader.Error;
 import com.downloader.OnCancelListener;
 import com.downloader.OnDownloadListener;
@@ -57,6 +60,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -186,9 +191,9 @@ public class DeviceSoundFragment extends RootFragment implements Player.EventLis
                 audioModel.description = album;
                 // audioModel.setaArtist(artist);
                 audioModel.acc_path = path;
-
-                Log.e("Name :" + name, " Album :" + album);
-                Log.e("Path :" + path, " Artist :" + artist);
+//
+//                Log.e("Name :" + name, " Album :" + album);
+//                Log.e("Path :" + path, " Artist :" + artist);
 
                 audioList.add(audioModel);
             }
@@ -304,54 +309,44 @@ public class DeviceSoundFragment extends RootFragment implements Player.EventLis
     }
 
 
-    public void downLoadMp3(final String id, final String sound_name, String url) {
+    private void downLoadMp3(final String id, final String soundName, String url) {
+        copyAudio(soundName, url);
+    }
+
+    private void copyAudio(final String soundName, String sourcePath) {
         showProgressDialog();
-        prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, Variables.SelectedAudio_AAC)
-                .build()
-                .setOnStartOrResumeListener(new OnStartOrResumeListener() {
-                    @Override
-                    public void onStartOrResume() {
+        final String[] complexCommand = {"-y", "-i", sourcePath, Variables.APP_FOLDER + Variables.SelectedAudio_AAC};
 
-                    }
-                })
-                .setOnPauseListener(new OnPauseListener() {
-                    @Override
-                    public void onPause() {
-
-                    }
-                })
-                .setOnCancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel() {
-
-                    }
-                })
-                .setOnProgressListener(new OnProgressListener() {
-                    @Override
-                    public void onProgress(Progress progress) {
-
-                    }
-                });
-
-        prDownloader.start(new OnDownloadListener() {
+        new AsyncTask<Object, Object, Object>() {
             @Override
-            public void onDownloadComplete() {
-                dismissProgressDialog();
-                Intent output = new Intent();
-                output.putExtra("isSelected", getString(R.string.yes));
-                output.putExtra("sound_name", sound_name);
-                output.putExtra("sound_id", id);
-                getActivity().setResult(RESULT_OK, output);
-                getActivity().finish();
-                getActivity().overridePendingTransition(R.anim.in_from_top, R.anim.out_from_bottom);
+            protected Object doInBackground(Object[] objects) {
+                int rc = FFmpeg.execute(complexCommand);
+                return rc;
             }
 
             @Override
-            public void onError(Error error) {
-                dismissProgressDialog();
-            }
-        });
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                int rc = (int) o;
 
+                if (rc == RETURN_CODE_SUCCESS) {
+                    Log.d(Variables.tag, "Command execution completed successfully.");
+                    dismissProgressDialog();
+                    Intent output = new Intent();
+                    output.putExtra("isSelected", getString(R.string.yes));
+                    output.putExtra("sound_name", soundName);
+                    output.putExtra("sound_id", "null");
+                    getActivity().setResult(RESULT_OK, output);
+                    getActivity().finish();
+                    getActivity().overridePendingTransition(R.anim.in_from_top, R.anim.out_from_bottom);
+                } else if (rc == RETURN_CODE_CANCEL) {
+                    dismissProgressDialog();
+                } else {
+                    Config.printLastCommandOutput(Log.INFO);
+                    dismissProgressDialog();
+                }
+            }
+        }.execute();
     }
 
     @Override
