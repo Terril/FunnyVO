@@ -1,6 +1,7 @@
 package com.funnyvo.android.discover;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.discover.datamodel.Discover;
 
 import java.util.ArrayList;
+
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.CustomViewHolder> implements Filterable {
     public Context context;
@@ -184,6 +187,7 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
                                     .placeholder(context.getResources().getDrawable(R.drawable.image_placeholder)).centerCrop())
                             .into(holder.video_thumbnail);
 
+                    Log.e(APP_NAME, "Discovery : "+item.profile_pic);
                     Glide.with(context)
                             .load(item.profile_pic)
                             .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder)).centerCrop()
