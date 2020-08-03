@@ -111,9 +111,10 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun updateMediaSource(path: String?) {
         val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, APP_NAME))
-        val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
+        val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(Uri.parse(path))
-        player.prepare(videoSource)
+        if (player != null)
+            player.prepare(videoSource)
     }
 
 }
