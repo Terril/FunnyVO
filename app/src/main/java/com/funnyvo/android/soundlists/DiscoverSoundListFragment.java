@@ -56,6 +56,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
@@ -112,6 +113,9 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             public void onRefresh() {
                 previous_url = "none";
                 stopPlaying();
+                if (!datalist.isEmpty()) {
+                    datalist.clear();
+                }
                 callApiForGetAllSound();
             }
         });
@@ -128,6 +132,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                 (SearchView) menu.findItem(R.id.searchSound).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -137,7 +142,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
     private void setAdapter() {
-
         adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Sounds item) {
@@ -186,7 +190,6 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
 
     public void parseData(String response) {
-        datalist = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
@@ -221,7 +224,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                     }
 
                     SoundCategory soundCategory = new SoundCategory();
-                    soundCategory.catagory = object.optString("section_name");
+                    soundCategory.catagoryName = object.optString("section_name");
                     soundCategory.sound_list = soundList;
                     datalist.add(soundCategory);
                 }
@@ -506,6 +509,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
+        filter(query.trim());
         return false;
     }
 
@@ -518,6 +522,31 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
      */
     @Override
     public boolean onQueryTextChange(String newText) {
+        filter(newText.trim());
         return false;
     }
+
+    private void filter(String text) {
+        if (!text.isEmpty()) {
+            ArrayList tempSounds = new ArrayList<Sounds>();
+            ArrayList tempSoundCategory = new ArrayList<SoundCategory>();
+            for (SoundCategory category : datalist) {
+                SoundCategory soundCategory = new SoundCategory();
+                for (Sounds sounds : category.sound_list) {
+                    if (sounds.sound_name.toLowerCase().contains(text.toLowerCase())) {
+                        tempSounds.add(sounds);
+                        soundCategory.catagoryName = category.catagoryName;
+                        soundCategory.sound_list = tempSounds;
+                    }
+                }
+                tempSoundCategory.add(soundCategory);
+            }
+            //update recyclerview
+            adapter.updateList(tempSoundCategory);
+        } else {
+            setAdapter();
+            stopPlaying();
+        }
+    }
+
 }

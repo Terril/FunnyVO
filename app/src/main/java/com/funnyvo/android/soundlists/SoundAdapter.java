@@ -26,6 +26,11 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
 
     ArrayList<SoundCategory> datalist;
 
+    public void updateList(ArrayList<SoundCategory> searchedSoundCategory) {
+        datalist = searchedSoundCategory;
+        notifyDataSetChanged();
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int postion, Sounds item);
     }
@@ -56,7 +61,7 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
     public void onBindViewHolder(final SoundAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
         SoundCategory item = datalist.get(i);
-        holder.title.setText(item.catagory);
+        holder.title.setText(item.catagoryName);
         SoundItemsAdapter adapter = new SoundItemsAdapter(context, item.sound_list, new SoundItemsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {

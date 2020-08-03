@@ -10,6 +10,6 @@ public class Sounds {
 }
 
 class SoundCategory {
-    public String catagory;
-    ArrayList<Sounds> sound_list = new ArrayList<>();
+    public String catagoryName;
+    public ArrayList<Sounds> sound_list = new ArrayList<>();
 }
