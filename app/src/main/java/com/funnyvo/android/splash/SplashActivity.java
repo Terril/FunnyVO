@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,11 +20,16 @@ import androidx.viewpager.widget.ViewPager;
 import com.funnyvo.android.R;
 import com.funnyvo.android.customview.SplashScreenCubeTransformation;
 import com.funnyvo.android.main_menu.MainMenuActivity;
+import com.funnyvo.android.simpleclasses.ApiRequest;
+import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.splash.fragments.FirstFragment;
 import com.funnyvo.android.splash.fragments.SecondFragment;
 import com.funnyvo.android.splash.fragments.ThirdFragment;
 import com.google.android.material.button.MaterialButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -41,16 +47,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, MODE_PRIVATE);
 
-        if (Variables.sharedPreferences.getBoolean(Variables.isFirstTIme, false)) {
-            Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
-
-            if (getIntent().getExtras() != null) {
-                intent.putExtras(getIntent().getExtras());
-                setIntent(null);
-            }
-
-            startActivity(intent);
-            finish();
+        if (Variables.sharedPreferences.getBoolean(Variables.IS_FIRST_TIME, false)) {
+            ImageView imvLogoImage = findViewById(R.id.imvLogoImage);
+            imvLogoImage.setVisibility(View.VISIBLE);
+            callApiForSettings();
         }
 
         viewPager = findViewById(R.id.viewPager);
@@ -60,10 +60,10 @@ public class SplashActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
 
-        final String android_id = Settings.Secure.getString(getContentResolver(),
+        final String androidId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         SharedPreferences.Editor editor2 = Variables.sharedPreferences.edit();
-        editor2.putString(Variables.device_id, android_id).commit();
+        editor2.putString(Variables.device_id, androidId).apply();
 
         MaterialButton btnSkip = findViewById(R.id.btnSkip);
         btnSkip.setOnClickListener(new View.OnClickListener() {
@@ -89,9 +89,41 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
+    private void callApiForSettings() {
+        ApiRequest.callApi(this, Variables.FETCH_SETTINGS, null, new Callback() {
+            @Override
+            public void response(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String code = jsonObject.optString("code");
+                    if (code.equals(Variables.API_SUCCESS_CODE)) {
+                        JSONObject msgJson = jsonObject.getJSONObject("msg");
+                        String advertisement = msgJson.optString("advertisement");
+                        if (advertisement.equals("1")) {
+                            SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
+                            editor.putBoolean(Variables.SHOW_ADS, true);
+                            editor.apply();
+                        }
+                    }
+                } catch (JSONException je) {
+                    je.printStackTrace();
+                }
+                Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+
+                if (getIntent().getExtras() != null) {
+                    intent.putExtras(getIntent().getExtras());
+                    setIntent(null);
+                }
+
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
     private void callNextActivity() {
         SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
-        editor.putBoolean(Variables.isFirstTIme, true);
+        editor.putBoolean(Variables.IS_FIRST_TIME, true);
         editor.apply();
         Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
 
@@ -116,7 +148,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public class SplashPagerAdapter extends FragmentPagerAdapter {
-
         ArrayList<Fragment> fragmentList = new ArrayList<>();
 
         public SplashPagerAdapter(FragmentManager fm) {

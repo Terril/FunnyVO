@@ -40,6 +40,7 @@ import java.security.cert.CertificateFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -47,7 +48,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class ApiRequest {
 
-    public static void callApi(final Context context, final String url, JSONObject jsonObject,
+    public static void callApi(final Context context, final String url, @Nullable JSONObject jsonObject,
                                final Callback callback) {
 
         if (Variables.is_secure_info) {

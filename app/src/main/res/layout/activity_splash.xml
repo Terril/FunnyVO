@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/imvLogoImage"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_70"
+        android:src="@mipmap/ic_launcher_watermark" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
@@ -12,25 +19,25 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSkip"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/margin_20"
-        android:textColor="@color/palette_milk"
-        style="?attr/materialButtonOutlinedStyle"
         android:layout_marginBottom="@dimen/margin_15"
-        android:text="@string/skip"></com.google.android.material.button.MaterialButton>
+        android:text="@string/skip"
+        android:textColor="@color/palette_milk"></com.google.android.material.button.MaterialButton>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNext"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/margin_20"
-        android:textColor="@color/palette_milk"
         android:layout_marginBottom="@dimen/margin_15"
-        style="?attr/materialButtonOutlinedStyle"
-        android:text="@string/next"></com.google.android.material.button.MaterialButton>
+        android:text="@string/next"
+        android:textColor="@color/palette_milk"></com.google.android.material.button.MaterialButton>
 </RelativeLayout>

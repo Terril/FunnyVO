@@ -366,6 +366,25 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
+    private void callApiForGetAllVideosWithAds() {
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+            parameters.put("token", MainMenuActivity.token);
+            parameters.put("page_number", pageNumber);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS_WITH_ADS, parameters, new Callback() {
+            @Override
+            public void response(String resp) {
+                swiperefresh.setRefreshing(false);
+                parseData(resp);
+            }
+        });
+    }
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
     private void callApiForGetAllVideos() {
@@ -393,7 +412,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         try {
             JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
                 int arrayItems = msgArray.length();
                 int adsItem = arrayItems / 2;

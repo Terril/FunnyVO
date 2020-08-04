@@ -37,8 +37,9 @@ public class Variables {
     public static final String device_token = "device_token";
     public static final String api_token = "api_token";
     public static final String device_id = "device_id";
-    public static final String isFirstTIme = "is_first_time";
+    public static final String IS_FIRST_TIME = "is_first_time";
     public static final String USER_PREF_VIDEO_VISIBILITY = "user_video_visibility";
+    public static final String SHOW_ADS = "show_ads";
 
     public static String outputfile = APP_FOLDER + "output.mp4";
     public static String outputfile2 = APP_FOLDER + "output2.mp4";
@@ -91,9 +92,11 @@ public class Variables {
     public static String base_url =  BuildConfig.hostAPI ;
     public static String DOMAIN = base_url + "index.php?p=";
 
+    public static final String FETCH_SETTINGS = DOMAIN + "getSetting";
     public static final String SIGN_UP = DOMAIN + "signup";
     public static final String UPLOAD_VIDEO = DOMAIN + "uploadVideo";
     public static final String SHOW_ALL_VIDEOS = DOMAIN + "showAllVideos";
+    public static final String SHOW_ALL_VIDEOS_WITH_ADS = DOMAIN + "showAllVideosWithAD";
     public static final String SHOW_MY_ALL_VIDEOS = DOMAIN + "showMyAllVideos";
     public static final String LIKE_DISLIKE_VIDEO = DOMAIN + "likeDislikeVideo";
     public static final String UPDATE_VIDEO_VIEW = DOMAIN + "updateVideoView";
