@@ -90,31 +90,15 @@
         app:layout_constraintTop_toBottomOf="@+id/sound_name" />
 
     <ImageButton
-        android:id="@+id/done"
+        android:id="@+id/btnSoundSelected"
         android:layout_width="@dimen/margin_32"
         android:layout_height="@dimen/margin_32"
         android:visibility="invisible"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_5"
-        android:layout_marginStart="@dimen/margin_5"
-        android:layout_toLeftOf="@+id/fav_btn"
+        android:layout_marginStart="@dimen/margin_10"
         android:background="@color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_baseline_done"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/fav_btn"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/fav_btn"
-        android:layout_width="@dimen/margin_32"
-        android:layout_height="@dimen/margin_32"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:background="@color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_my_un_favourite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

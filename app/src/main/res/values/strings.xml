@@ -26,7 +26,7 @@
     <string name="post">Post</string>
     <string name="add_sound">Add Music</string>
     <string name="discover">Discover</string>
-    <string name="user_fav">My Favorites</string>
+    <string name="user_local">My Local</string>
     <string name="user_profile">userprofile.jpg</string>
     <string name="tap_to_create_n_your_first_short_video">Tap + to create\n your first short video</string>
     <string name="profile">Profile</string>
@@ -99,4 +99,6 @@
     <string name="twitter">Add your Twitter handle</string>
     <string name="youtube">Add your Youtube channel name</string>
     <string name="video_visible_to">Video Visible To</string>
+    <string name="rate_the_app">Rate the app</string>
+    <string name="video_not_available">Video not available at the moment</string>
 </resources>

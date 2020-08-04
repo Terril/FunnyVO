@@ -6,15 +6,15 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.main_menu.CustomViewPager;
-import com.funnyvo.android.R;
-import com.funnyvo.android.soundlists.favouritesounds.FavouriteSoundFragment;
+import com.funnyvo.android.soundlists.favouritesounds.DeviceSoundFragment;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -40,6 +40,8 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
         tablayout.setupWithViewPager(pager);
 
         findViewById(R.id.btnMusicClose).setOnClickListener(this);
+        Toolbar toolbar = findViewById(R.id.toolbarSound);
+        setSupportActionBar(toolbar);
     }
 
 
@@ -55,6 +57,7 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
         public ViewPagerAdapter(final Resources resources, FragmentManager fm) {
             super(fm);
         }
@@ -67,7 +70,7 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
                     result = new DiscoverSoundListFragment();
                     break;
                 case 1:
-                    result = new FavouriteSoundFragment();
+                    result = new DeviceSoundFragment();
                     break;
                 default:
                     result = null;
@@ -88,7 +91,7 @@ public class SoundListMainActivity extends BaseActivity implements View.OnClickL
                 case 0:
                     return getString(R.string.discover);
                 case 1:
-                    return getString(R.string.user_fav);
+                    return getString(R.string.user_local);
                 default:
                     return null;
             }

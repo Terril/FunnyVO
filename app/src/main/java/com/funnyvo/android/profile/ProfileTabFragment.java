@@ -556,9 +556,9 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
 
-    private void openMenuTab(View anchor_view) {
+    private void openMenuTab(View anchorView) {
         Context wrapper = new ContextThemeWrapper(getActivity(), R.style.AlertDialogCustom);
-        PopupMenu popup = new PopupMenu(wrapper, anchor_view);
+        PopupMenu popup = new PopupMenu(wrapper, anchorView);
         popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             popup.setGravity(Gravity.TOP | Gravity.RIGHT);

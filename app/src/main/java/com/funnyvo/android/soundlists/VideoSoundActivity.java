@@ -65,7 +65,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
             item = (Home) intent.getSerializableExtra("data");
         }
 
-        video_file = new File(Variables.app_folder + item.video_id + ".mp4");
+        video_file = new File(Variables.APP_FOLDER + item.video_id + ".mp4");
 
         sound_name = findViewById(R.id.sound_name);
         description_txt = findViewById(R.id.description_txt);
@@ -108,8 +108,8 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.btnSaveSound:
                 try {
-                    copyFile(new File(Variables.app_folder + Variables.SelectedAudio_MP3),
-                            new File(Variables.app_folder + item.video_id + ".mp3"));
+                    copyFile(new File(Variables.APP_FOLDER + Variables.SelectedAudio_MP3),
+                            new File(Variables.APP_FOLDER + item.video_id + ".mp3"));
                     Toast.makeText(this, "Audio Saved", Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -192,7 +192,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
     private void saveVideo() {
         PRDownloader.initialize(this);
-        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + ".mp4")
+        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.APP_FOLDER, item.video_id + ".mp4")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -225,7 +225,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onDownloadComplete() {
                 dismissProgressDialog();
-                audio_file = new File(Variables.app_folder + item.video_id + ".mp4");
+                audio_file = new File(Variables.APP_FOLDER + item.video_id + ".mp4");
                 Glide.with(getApplicationContext())
                         .load(Uri.fromFile(video_file))
                         .into(sound_image);
@@ -243,8 +243,8 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
     private void loadFFmpeg() {
         showAudioLoading();
-        final String[] complexCommand = {"-y", "-i", Variables.app_folder + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
-                Variables.app_folder + Variables.SelectedAudio_MP3};
+        final String[] complexCommand = {"-y", "-i", Variables.APP_FOLDER + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
+                Variables.APP_FOLDER + Variables.SelectedAudio_MP3};
 
 
         new AsyncTask<Object, Object, Object>() {
@@ -263,7 +263,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                 if (rc == RETURN_CODE_SUCCESS) {
                     Log.d(Variables.tag, "Command execution completed successfully.");
                     hideAudioLoading();
-                    audio_file = new File(Variables.app_folder + Variables.SelectedAudio_MP3);
+                    audio_file = new File(Variables.APP_FOLDER + Variables.SelectedAudio_MP3);
                     if (audio_file.exists())
                         playAudio();
 
@@ -371,7 +371,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
     private void convertMp3ToAcc() {
         showProgressDialog();
-        final String[] complexCommand = new String[]{"-y", "-i", Variables.app_folder + Variables.SelectedAudio_MP3, Variables.app_folder + Variables.SelectedAudio_AAC};
+        final String[] complexCommand = new String[]{"-y", "-i", Variables.APP_FOLDER + Variables.SelectedAudio_MP3, Variables.APP_FOLDER + Variables.SelectedAudio_AAC};
 
         new AsyncTask<Object, Object, Object>() {
             @Override

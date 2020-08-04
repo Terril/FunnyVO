@@ -261,8 +261,8 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             number = number + 1;
             is_recording = true;
 
-            File file = new File(Variables.app_folder + "myvideo" + (number) + ".mp4");
-            videopaths.add(Variables.app_folder + "myvideo" + (number) + ".mp4");
+            File file = new File(Variables.APP_FOLDER + "myvideo" + (number) + ".mp4");
+            videopaths.add(Variables.APP_FOLDER + "myvideo" + (number) + ".mp4");
             cameraView.captureVideo(file);
 
             if (audio != null)
@@ -402,7 +402,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     // this will add the select audio with the video
     private void mergeWithAudio() {
         String audio_file;
-        audio_file = Variables.app_folder + Variables.SelectedAudio_AAC;
+        audio_file = Variables.APP_FOLDER + Variables.SelectedAudio_AAC;
 
         MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(this);
         mergeVideoAudio.doInBackground(audio_file, Variables.outputfile, Variables.outputfile2);
@@ -713,11 +713,11 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void preparedAudio() {
-        File file = new File(Variables.app_folder + Variables.SelectedAudio_AAC);
+        File file = new File(Variables.APP_FOLDER + Variables.SelectedAudio_AAC);
         if (file.exists()) {
             audio = new MediaPlayer();
             try {
-                audio.setDataSource(Variables.app_folder + Variables.SelectedAudio_AAC);
+                audio.setDataSource(Variables.APP_FOLDER + Variables.SelectedAudio_AAC);
                 audio.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -857,7 +857,7 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
             outputFilterMessageFile.delete();
         }
 
-        File file = new File(Variables.app_folder + "myvideo" + (delete_count) + ".mp4");
+        File file = new File(Variables.APP_FOLDER + "myvideo" + (delete_count) + ".mp4");
         if (file.exists()) {
             file.delete();
             deleteFile();

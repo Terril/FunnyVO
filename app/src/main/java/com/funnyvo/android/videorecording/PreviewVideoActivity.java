@@ -35,6 +35,7 @@ import com.funnyvo.android.customview.FunnyVOEditTextView;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.helper.PlayerEventListener;
+import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -52,6 +53,7 @@ import java.util.List;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.funnyvo.android.simpleclasses.Variables.APP_FOLDER;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.videorecording.VideoRecoderActivity.SOUNDS_LIST_REQUEST_CODE;
 
@@ -280,11 +282,11 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     private void prepareAudio() {
         player.setVolume(0);
-        File file = new File(Variables.app_folder + Variables.SelectedAudio_AAC);
+        File file = new File(APP_FOLDER + Variables.SelectedAudio_AAC);
         if (file.exists()) {
             audio = new MediaPlayer();
             try {
-                audio.setDataSource(Variables.app_folder + Variables.SelectedAudio_AAC);
+                audio.setDataSource(APP_FOLDER + Variables.SelectedAudio_AAC);
                 audio.prepare();
                 audio.setLooping(true);
 
@@ -576,8 +578,44 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         if (selectPostion > 0) {
             saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
         } else {
-            gotoPostScreen();
+            copyVideoUsingFfmpeg();
         }
+    }
+
+    private void copyVideoUsingFfmpeg() {
+        Variables.OUTPUT_FILTER_FILE = APP_FOLDER + Functions.getRandomString() + ".mp4";
+        final String[] complexCommand = new String[]{
+                "-y", "-i", Variables.outputfile2, "-vcodec", "copy", Variables.OUTPUT_FILTER_FILE
+        };
+        new AsyncTask<Object, Object, Object>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showProgressDialog();
+            }
+
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                int rc = FFmpeg.execute(complexCommand);
+                return rc;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                int rc = (int) o;
+                if (rc == RETURN_CODE_SUCCESS) {
+                    dismissProgressDialog();
+                    gotoPostScreen();
+                } else if (rc == RETURN_CODE_CANCEL) {
+                    dismissProgressDialog();
+                } else {
+                    Config.printLastCommandOutput(Log.INFO);
+                    dismissProgressDialog();
+                }
+
+            }
+        }.execute();
     }
 
     // this will append all the videos parts in one  fullvideo
@@ -667,7 +705,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     // this will add the select audio with the video
     private void mergeWithAudio() {
-        final String audioFile = Variables.app_folder + Variables.SelectedAudio_AAC;
+        final String audioFile = APP_FOLDER + Variables.SelectedAudio_AAC;
 
         MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(this);
         mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2, draftFile);
@@ -675,7 +713,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onCompletion(boolean state, String draftFile) {
-        Variables.OUTPUT_FILTER_FILE = Variables.outputfile2;
         this.draftFile = draftFile;
         finalTouchesToVideo();
     }

@@ -36,6 +36,7 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.funnyvo.android.BuildConfig;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.ActivityIndicator;
@@ -224,38 +225,41 @@ public class LoginActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             showProgressDialog();
-                            final String id = Profile.getCurrentProfile().getId();
-                            GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                            if (Profile.getCurrentProfile() != null) {
+                                final String id = Profile.getCurrentProfile().getId();
+                                GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject user, GraphResponse graphResponse) {
 
-                                    dismissProgressDialog();
-                                    Log.d("resp", user.toString());
-                                    //after get the info of user we will pass to function which will store the info in our server
+                                        dismissProgressDialog();
+                                        Log.d("resp", user.toString());
+                                        //after get the info of user we will pass to function which will store the info in our server
 
-                                    String fname = "" + user.optString("first_name");
-                                    String lname = "" + user.optString("last_name");
+                                        String fname = "" + user.optString("first_name");
+                                        String lname = "" + user.optString("last_name");
 
 
-                                    if (fname.equals("") || fname.equals("null"))
-                                        fname = getResources().getString(R.string.app_name);
+                                        if (fname.equals("") || fname.equals("null"))
+                                            fname = getResources().getString(R.string.app_name);
 
-                                    if (lname.equals("") || lname.equals("null"))
-                                        lname = "";
+                                        if (lname.equals("") || lname.equals("null"))
+                                            lname = "";
 
-                                    callApiForSignup("" + id, fname
-                                            , lname,
-                                            "https://graph.facebook.com/" + id + "/picture?width=500&width=500",
-                                            "facebook");
+                                        callApiForSignup("" + id, fname
+                                                , lname,
+                                                "https://graph.facebook.com/" + id + "/picture?width=500&width=500",
+                                                "facebook");
 
-                                }
-                            });
 
-                            // here is the request to facebook sdk for which type of info we have required
-                            Bundle parameters = new Bundle();
-                            parameters.putString("fields", "last_name,first_name,email");
-                            request.setParameters(parameters);
-                            request.executeAsync();
+                                    }
+                                });
+
+                                // here is the request to facebook sdk for which type of info we have required
+                                Bundle parameters = new Bundle();
+                                parameters.putString("fields", "last_name,first_name,email");
+                                request.setParameters(parameters);
+                                request.executeAsync();
+                            }
                         } else {
                             dismissProgressDialog();
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -352,14 +356,6 @@ public class LoginActivity extends BaseActivity {
                                   String picture,
                                   String singnup_type) {
 
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        String appversion = packageInfo.versionName;
-
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", id);
@@ -367,7 +363,7 @@ public class LoginActivity extends BaseActivity {
             parameters.put("last_name", "" + l_name);
             parameters.put("profile_pic", picture);
             parameters.put("gender", "m");
-            parameters.put("version", appversion);
+            parameters.put("version", BuildConfig.VERSION_NAME);
             parameters.put("signup_type", singnup_type);
             parameters.put("device", Variables.device);
             parameters.put("device_id", Variables.sharedPreferences.getString(Variables.device_token, ""));
@@ -413,7 +409,7 @@ public class LoginActivity extends BaseActivity {
 
                 top_view.setVisibility(View.GONE);
                 finish();
-             //   startActivity(new Intent(this, MainMenuActivity.class));
+                //   startActivity(new Intent(this, MainMenuActivity.class));
             } else {
                 Toast.makeText(this, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }

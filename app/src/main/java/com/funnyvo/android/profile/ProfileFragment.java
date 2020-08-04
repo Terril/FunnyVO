@@ -154,10 +154,10 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     }
 
     private View init(View view) {
-        username = view.findViewById(R.id.username);
-        username2_txt = view.findViewById(R.id.username2_txt);
+        username = view.findViewById(R.id.nameProfile);
+        username2_txt = view.findViewById(R.id.txtUserName);
         txtUserBioProfile = view.findViewById(R.id.txtUserBioProfile);
-        imageView = view.findViewById(R.id.user_image);
+        imageView = view.findViewById(R.id.imvProfileImage);
         imageView.setOnClickListener(this);
 
         video_count_txt = view.findViewById(R.id.video_count_txt);
@@ -229,6 +229,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         view.findViewById(R.id.following_layout).setOnClickListener(this);
         view.findViewById(R.id.fans_layout).setOnClickListener(this);
 
+        callApiForGetAllvideos();
         return view;
     }
 

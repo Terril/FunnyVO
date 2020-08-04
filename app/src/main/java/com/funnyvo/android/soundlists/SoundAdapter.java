@@ -26,6 +26,11 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
 
     ArrayList<SoundCategory> datalist;
 
+    public void updateList(ArrayList<SoundCategory> searchedSoundCategory) {
+        datalist = searchedSoundCategory;
+        notifyDataSetChanged();
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int postion, Sounds item);
     }
@@ -56,7 +61,7 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
     public void onBindViewHolder(final SoundAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
         SoundCategory item = datalist.get(i);
-        holder.title.setText(item.catagory);
+        holder.title.setText(item.catagoryName);
         SoundItemsAdapter adapter = new SoundItemsAdapter(context, item.sound_list, new SoundItemsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {
@@ -179,8 +184,7 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
         public CustomViewHolder(View view) {
             super(view);
 
-            done = view.findViewById(R.id.done);
-            fav_btn = view.findViewById(R.id.fav_btn);
+            done = view.findViewById(R.id.btnSoundSelected);
 
             sound_name = view.findViewById(R.id.sound_name);
             description_txt = view.findViewById(R.id.description_txt);
@@ -198,13 +202,6 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
             });
 
             done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(v, pos, item);
-                }
-            });
-
-            fav_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v, pos, item);

@@ -1,11 +1,13 @@
 package com.funnyvo.android.settings
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import com.funnyvo.android.BuildConfig
 import com.funnyvo.android.R
 import com.funnyvo.android.accounts.RequestVerificationFragment
 import com.funnyvo.android.main_menu.MainMenuActivity
@@ -35,6 +37,7 @@ class SettingFragment : RootFragment(), View.OnClickListener {
         request_verification_txt.setOnClickListener(this)
         privacy_policy_txt.setOnClickListener(this)
         logout_txt.setOnClickListener(this)
+        txtRateApp.setOnClickListener(this)
         val items = listOf("Everyone", "Followers", "Private")
         val adapter = ArrayAdapter(requireContext(), R.layout.view_selection_dropdown, items)
         txtVideoVisibleDropdown.setAdapter(adapter)
@@ -58,7 +61,13 @@ class SettingFragment : RootFragment(), View.OnClickListener {
             R.id.request_verification_txt -> openRequestVerification()
             R.id.privacy_policy_txt -> openPrivacyUrl()
             R.id.logout_txt -> logout()
+            R.id.txtRateApp -> openAppPlayStore()
         }
+    }
+
+    private fun openAppPlayStore() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID))
+        startActivity(intent)
     }
 
     private fun openRequestVerification() {

@@ -50,7 +50,7 @@ public class ApiRequest {
     public static void callApi(final Context context, final String url, JSONObject jsonObject,
                                final Callback callback) {
 
-        if (!Variables.is_secure_info) {
+        if (Variables.is_secure_info) {
             final String[] urlsplit = url.split("/");
             Log.d(Variables.tag, url);
 
@@ -65,7 +65,7 @@ public class ApiRequest {
 
                         @Override
                         public void onResponse(JSONObject response) {
-                            if (!Variables.is_secure_info) {
+                            if (Variables.is_secure_info) {
                                 final String[] urlsplit = url.split("/");
                                 Log.d(Variables.tag + urlsplit[urlsplit.length - 1], response.toString());
                             }
@@ -76,7 +76,7 @@ public class ApiRequest {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (!Variables.is_secure_info) {
+                    if (Variables.is_secure_info) {
                         final String[] urlsplit = url.split("/");
                         Log.d(Variables.tag + urlsplit[urlsplit.length - 1], error.toString());
                     }
