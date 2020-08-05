@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "559467353609",
+    "firebase_url": "https://funnyvo-9c134.firebaseio.com",
+    "project_id": "funnyvo-9c134",
+    "storage_bucket": "funnyvo-9c134.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559467353609:android:6c7c63e800245688864ad8",
+        "android_client_info": {
+          "package_name": "com.funnyvo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559467353609-eqtfes09eac71mv67c93ufsk11jf0d6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp7lw7fjH007K2JSVhP-1LWn05_UmM0Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559467353609-eqtfes09eac71mv67c93ufsk11jf0d6c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

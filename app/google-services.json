@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "559467353609-r7g9frq1mcbc12tp2cg56o0h4kiv95b2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funnyvo",
+            "certificate_hash": "74695f15b725dd2f651e755b5c89a141ce7b7209"
+          }
+        },
+        {
           "client_id": "559467353609-eqtfes09eac71mv67c93ufsk11jf0d6c.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +36,36 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "559467353609-eqtfes09eac71mv67c93ufsk11jf0d6c.apps.googleusercontent.com",
+              "client_id": "559467353609-309u3d2pevug6ure803jhrdcreqhobr4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559467353609:android:a46cf33194f5e538864ad8",
+        "android_client_info": {
+          "package_name": "com.funnyvo.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559467353609-eqtfes09eac71mv67c93ufsk11jf0d6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp7lw7fjH007K2JSVhP-1LWn05_UmM0Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559467353609-309u3d2pevug6ure803jhrdcreqhobr4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

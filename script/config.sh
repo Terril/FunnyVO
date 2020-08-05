@@ -25,4 +25,4 @@ else
 	fi
 fi
 
-cp -rf "config/"$ENV_CONFIG"/google-services.json" "android/app/google-services.json"
+cp -rf "config/"$ENV_CONFIG"/google-services.json" "app/google-services.json"

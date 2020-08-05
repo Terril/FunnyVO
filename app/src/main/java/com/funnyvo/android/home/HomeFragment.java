@@ -94,9 +94,12 @@ import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.VideoOptions;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.material.tabs.TabLayout;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
@@ -222,8 +225,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             }
         });
 
-        callApiForGetAllVideos();
-
+        // callApiForGetAllVideos();
+        callApiForGetAllVideosWithAds();
+        showNativeAd();
         if (!Variables.is_remove_ads)
             loadAdd();
 
@@ -231,11 +235,16 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     private void showNativeAd() {
-        AdLoader adLoader = new AdLoader.Builder(context, getString(R.string.native_ad))
+        AdLoader adLoader = new AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110") //getString(R.string.native_ad)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        NativeAd.AdChoicesInfo choicesInfo = unifiedNativeAd.getAdChoicesInfo();
+                        Log.d(APP_NAME, " Ads data" + unifiedNativeAd.getExtras());
                         // Show the ad.
+                        UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater()
+                                .inflate(R.layout.view_ads, null);
+                        //   adView.setMediaView(previousPlayer);
                     }
                 })
                 .withAdListener(new AdListener() {
@@ -415,32 +424,34 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             if (code.equals(Variables.API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
                 int arrayItems = msgArray.length();
-                int adsItem = arrayItems / 2;
-                int extraDataset = arrayItems + adsItem;
-                for (int i = 0; i < extraDataset; i++) {
+                for (int i = 0; i < arrayItems; i++) {
                     JSONObject itemdata = msgArray.optJSONObject(i);
                     Home item = new Home();
                     item.fb_id = itemdata.optString("fb_id");
 
-                    JSONObject user_info = itemdata.optJSONObject("user_info");
+                    JSONObject userInfo = itemdata.optJSONObject("user_info");
 
-                    item.username = user_info.optString("username");
-                    item.first_name = user_info.optString("first_name", context.getResources().getString(R.string.app_name));
-                    item.last_name = user_info.optString("last_name", "User");
-                    item.profile_pic = user_info.optString("profile_pic", "null");
-                    item.verified = user_info.optString("verified");
+                    if (userInfo != null) {
+                        item.username = userInfo.optString("username");
+                        item.first_name = userInfo.optString("first_name", context.getResources().getString(R.string.app_name));
+                        item.last_name = userInfo.optString("last_name", "User");
+                        item.profile_pic = userInfo.optString("profile_pic", "null");
+                        item.verified = userInfo.optString("verified");
+                    }
 
-                    JSONObject sound_data = itemdata.optJSONObject("sound");
-                    item.sound_id = sound_data.optString("id");
-                    item.sound_name = sound_data.optString("sound_name");
-                    item.sound_pic = sound_data.optString("thum");
-                    item.soundUrl = sound_data.optString("sound_url");
-
+                    JSONObject soundData = itemdata.optJSONObject("sound");
+                    if (soundData != null) {
+                        item.sound_id = soundData.optString("id");
+                        item.sound_name = soundData.optString("sound_name");
+                        item.sound_pic = soundData.optString("thum");
+                        item.soundUrl = soundData.optString("sound_url");
+                    }
 
                     JSONObject count = itemdata.optJSONObject("count");
-                    item.like_count = count.optString("like_count");
-                    item.video_comment_count = count.optString("video_comment_count");
-
+                    if(count != null) {
+                        item.like_count = count.optString("like_count");
+                        item.video_comment_count = count.optString("video_comment_count");
+                    }
 
                     item.video_id = itemdata.optString("id");
                     item.liked = itemdata.optString("liked");
@@ -477,7 +488,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this will call when swipe for another video and
     // this function will set the player to the current video
     private void setPlayer(final int currentPage) {
-        if(!dataList.isEmpty() && currentPage >= 0) {
+        if (!dataList.isEmpty() && currentPage >= 0) {
             final Home item = dataList.get(currentPage);
 
             HttpProxyCacheServer proxy = getProxy(context);
