@@ -49,15 +49,17 @@ android {
     productFlavors {
         dev {
             dimension "version"
-//            applicationIdSuffix ".beta"
+            applicationIdSuffix ".beta"
 //            versionNameSuffix "-beta"
             buildConfigField 'String', 'hostAPI', '"https://betaapi.funnyvo.com/API/"'
             buildConfigField 'boolean', 'logsEnabled', 'true'
+            resValue "string", "app_name", "FunnyVO Dev"
         }
         full {
             dimension "version"
             buildConfigField 'String', 'hostAPI', '"https://api.funnyvo.com/API/"'
             buildConfigField 'boolean', 'logsEnabled', 'false'
+            resValue "string", "app_name", "FunnyVO"
         }
     }
     splits {
