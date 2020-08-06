@@ -1,13 +1,10 @@
 package com.funnyvo.android.videorecording;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
-import com.funnyvo.android.customview.ActivityIndicator;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -27,28 +24,18 @@ import java.util.List;
 // this is the class which will add the selected soung to the created video
 public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
-    Context context;
-
+    private MergeVideoAudioCallBack callBack;
     private String audio, video, output, draft_file;
-    private ActivityIndicator indicator;
+    //  private ActivityIndicator indicator;
 
-    public MergeVideoAudio(Context context) {
-        this.context = context;
-        indicator = new ActivityIndicator(context);
+    public MergeVideoAudio(MergeVideoAudioCallBack callBack) {
+        this.callBack = callBack;
+//        indicator = new ActivityIndicator(activity);
     }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        if (indicator != null) {
-            indicator.show();
-        }
-
-    }
-
 
     @Override
     public String doInBackground(String... strings) {
+
         audio = strings[0];
         video = strings[1];
         output = strings[2];
@@ -62,22 +49,7 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         return null;
     }
 
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-    }
-
-
-    public void goToPreviewActivity() {
-        Intent intent = new Intent(context, PreviewVideoActivity.class);
-        intent.putExtra("path", Variables.outputfile2);
-        intent.putExtra("draft_file", draft_file);
-        context.startActivity(intent);
-    }
-
-
-    public Track cropAudio(String videopath, Track fullAudio) {
+    private Track cropAudio(String videopath, Track fullAudio) {
         try {
 
             IsoFile isoFile = new IsoFile(videopath);
@@ -124,48 +96,45 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         return fullAudio;
     }
 
-
     public Runnable runnable = new Runnable() {
         @Override
         public void run() {
             try {
-                Movie m = MovieCreator.build(video);
+                Movie movieCreator = MovieCreator.build(video);
+                List newCreatedTrack = new ArrayList<>();
 
-                List nuTracks = new ArrayList<>();
-
-                for (Track t : m.getTracks()) {
+                for (Track t : movieCreator.getTracks()) {
                     if (!"soun".equals(t.getHandler())) {
-                        nuTracks.add(t);
+                        newCreatedTrack.add(t);
                     }
                 }
 
-                Track nuAudio = new AACTrackImpl(new FileDataSourceImpl(audio));
-                Track crop_track = cropAudio(video, nuAudio);
-                nuTracks.add(crop_track);
-                m.setTracks(nuTracks);
-                Container mp4file = new DefaultMp4Builder().build(m);
+                Track newAudio = new AACTrackImpl(new FileDataSourceImpl(audio));
+                Track cropTrack = cropAudio(video, newAudio);
+                newCreatedTrack.add(cropTrack);
+                movieCreator.setTracks(newCreatedTrack);
+                Container mp4file = new DefaultMp4Builder().build(movieCreator);
                 FileChannel fc = new FileOutputStream(new File(output)).getChannel();
                 mp4file.writeContainer(fc);
                 fc.close();
-                try {
-                    if (indicator != null) {
-                        indicator.hide();
-                    }
-                } catch (Exception e) {
-                    Log.d(Variables.tag, e.toString());
-                } finally {
-                    goToPreviewActivity();
+//                try {
+//                    indicator.hide();
+//                } catch (Exception e) {
+//                    Log.d(Variables.tag, e.toString());
+//                } finally {
+                if (callBack != null) {
+                    callBack.onCompletion(true, draft_file);
                 }
+                //             }
 
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d(Variables.tag, e.toString());
-
             }
-
         }
-
     };
+}
 
-
+interface MergeVideoAudioCallBack {
+    void onCompletion(boolean state, String draftFile);
 }

@@ -1,7 +1,6 @@
 package com.funnyvo.android.notifications;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,13 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
 import com.funnyvo.android.notifications.datamodel.Notification;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.CustomViewHolder> {
@@ -48,9 +49,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
-        SimpleDraweeView user_image;
+        CircleImageView user_image;
         TextView username, message;
         ImageButton btnWatch;
+
         public CustomViewHolder(View view) {
             super(view);
             user_image = view.findViewById(R.id.user_image);
@@ -74,10 +76,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     listener.onItemClick(v, pos, item);
                 }
             });
-
         }
-
-
     }
 
     @Override
@@ -88,8 +87,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.username.setText(item.username);
 
         if (item.profile_pic != null && !item.profile_pic.equals("")) {
-            Uri uri = Uri.parse(item.profile_pic);
-            holder.user_image.setImageURI(uri);
+            Glide.with(context)
+                    .load(item.profile_pic)
+                    .centerCrop()
+                    .placeholder(R.drawable.profile_image_placeholder)
+                    .into(holder.user_image);
         }
 
         if (item.type.equalsIgnoreCase("comment_video")) {

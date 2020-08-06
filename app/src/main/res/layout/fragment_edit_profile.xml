@@ -57,8 +57,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:gravity="center|end"
                     android:layout_marginEnd="@dimen/margin_15"
+                    android:gravity="center|end"
                     android:text="@string/save"
                     android:textColor="@color/palette_cheddar_dark"
                     android:textSize="@dimen/text_size_15"
@@ -86,7 +86,7 @@
                 <RelativeLayout
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="@dimen/margin_10">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_image"
@@ -109,7 +109,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/margin_10"
                     android:minHeight="50dp">
 
                     <ImageView
@@ -150,7 +150,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/margin_10"
                         android:layout_weight="1"
                         android:minHeight="50dp">
 
@@ -191,7 +191,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/margin_10"
                         android:layout_weight="1"
                         android:minHeight="50dp">
 
@@ -210,10 +210,10 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="@dimen/margin_10"
-                            android:inputType="textCapSentences"
                             android:layout_toRightOf="@+id/profile_icon_lastname"
                             android:backgroundTint="@color/transparent"
                             android:hint="Last name"
+                            android:inputType="textCapSentences"
                             android:textColor="@color/black"
                             android:textColorHint="@color/graycolor"
                             android:textSize="@dimen/text_size_15" />
@@ -230,7 +230,6 @@
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -242,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/lightgraycolor"
                         android:elevation="0.5dp"
-                        android:padding="@dimen/margin_10"
+                        android:padding="@dimen/margin_5"
                         android:text="@string/gender"
                         android:textColor="@color/palette_cheddar_dark"
                         android:textSize="@dimen/text_size_15"
@@ -253,7 +252,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_10"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:paddingLeft="@dimen/margin_10">
 
                         <RadioButton
@@ -273,6 +272,7 @@
                             android:textColor="@color/palette_cheddar"
                             android:textSize="@dimen/text_size_15"
                             android:theme="@style/RadioButton" />
+
                         <RadioButton
                             android:id="@+id/btnNone"
                             android:layout_width="wrap_content"
@@ -282,6 +282,52 @@
                             android:textSize="@dimen/text_size_15"
                             android:theme="@style/RadioButton" />
                     </RadioGroup>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <com.funnyvo.android.customview.FunnyVOTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/lightgraycolor"
+                        android:elevation="0.5dp"
+                        android:padding="@dimen/margin_5"
+                        android:text="@string/social_networking_handler"
+                        android:textColor="@color/palette_cheddar_dark"
+                        android:textSize="@dimen/text_size_15"
+                        android:textStyle="italic" />
+
+                    <com.funnyvo.android.customview.FunnyVOEditTextView
+                        android:id="@+id/edtTextInstagram"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/intagram"
+                        android:inputType="text"
+                        android:textColor="@color/palette_cheddar"
+                        android:textSize="@dimen/text_size_13" />
+
+                    <com.funnyvo.android.customview.FunnyVOEditTextView
+                        android:id="@+id/edtTextTwitter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/twitter"
+                        android:inputType="text"
+                        android:textColor="@color/palette_cheddar"
+                        android:textSize="@dimen/text_size_13" />
+
+                    <com.funnyvo.android.customview.FunnyVOEditTextView
+                        android:id="@+id/edtTextYoutube"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/youtube"
+                        android:inputType="text"
+                        android:textColor="@color/palette_cheddar"
+                        android:textSize="@dimen/text_size_13" />
 
                 </LinearLayout>
 
@@ -297,7 +343,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/lightgraycolor"
                         android:elevation="0.5dp"
-                        android:padding="@dimen/margin_10"
+                        android:padding="@dimen/margin_5"
                         android:text="@string/bio"
                         android:textColor="@color/palette_cheddar_dark"
                         android:textSize="16dp"
@@ -309,8 +355,8 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/transparent"
                         android:hint="@string/your_bio"
-                        android:inputType="textCapSentences"
                         android:imeOptions="flagNavigateNext"
+                        android:inputType="textCapSentences"
                         android:minLines="2"
                         android:nextFocusForward="@+id/jobtitle_edit"
                         android:paddingLeft="@dimen/margin_15"

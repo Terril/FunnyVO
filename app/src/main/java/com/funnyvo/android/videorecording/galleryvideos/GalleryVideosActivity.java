@@ -11,10 +11,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +22,7 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.videorecording.galleryselectedvideo.GallerySelectedVideoActivity;
+import com.funnyvo.android.videorecording.PreviewVideoActivity;
 import com.funnyvo.android.videorecording.galleryvideos.datamodel.GalleryVideo;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -52,14 +50,10 @@ public class GalleryVideosActivity extends BaseActivity {
     public RecyclerView recyclerView;
     GalleryVideosAdapter adapter;
 
-    ProgressBar pbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_videos);
-
-        pbar = findViewById(R.id.pbar);
 
         data_list = new ArrayList();
 
@@ -67,7 +61,6 @@ public class GalleryVideosActivity extends BaseActivity {
         final GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-
 
         data_list = new ArrayList<>();
         adapter = new GalleryVideosAdapter(this, data_list, new GalleryVideosAdapter.OnItemClickListener() {
@@ -104,7 +97,6 @@ public class GalleryVideosActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
         getAllVideoPathDraft();
 
-
         findViewById(R.id.Goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,7 +118,7 @@ public class GalleryVideosActivity extends BaseActivity {
             File file = files[i];
             GalleryVideo item = new GalleryVideo();
             item.video_path = file.getAbsolutePath();
-            item.video_duration_ms = getfileduration(Uri.parse(file.getAbsolutePath()));
+            item.video_duration_ms = getFileDuration(Uri.parse(file.getAbsolutePath()));
 
             Log.d("resp", "" + item.video_duration_ms);
 
@@ -160,7 +152,7 @@ public class GalleryVideosActivity extends BaseActivity {
                             while (cursor.moveToNext()) {
                                 GalleryVideo item = new GalleryVideo();
                                 item.video_path = cursor.getString(0);
-                                item.video_duration_ms = getfileduration(Uri.parse(cursor.getString(0)));
+                                item.video_duration_ms = getFileDuration(Uri.parse(cursor.getString(0)));
 
                                 Log.d("resp", "" + item.video_duration_ms);
 
@@ -182,7 +174,6 @@ public class GalleryVideosActivity extends BaseActivity {
             @Override
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
-                pbar.setVisibility(View.GONE);
                 adapter.notifyDataSetChanged();
             }
         }.execute();
@@ -192,7 +183,7 @@ public class GalleryVideosActivity extends BaseActivity {
 
 
     // get the audio file duration that is store in our directory
-    public long getfileduration(Uri uri) {
+    public long getFileDuration(Uri uri) {
         try {
 
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -298,8 +289,9 @@ public class GalleryVideosActivity extends BaseActivity {
                 in.close();
                 out.close();
 
-                Intent intent = new Intent(GalleryVideosActivity.this, GallerySelectedVideoActivity.class);
+                Intent intent = new Intent(GalleryVideosActivity.this, PreviewVideoActivity.class);
                 intent.putExtra("video_path", Variables.gallery_resize_video);
+                intent.putExtra("isFromGallery", true);
                 intent.putExtra("draft_file", src_path);
                 startActivity(intent);
 
@@ -409,16 +401,16 @@ public class GalleryVideosActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        DeleteFile();
+        deleteFile();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        DeleteFile();
+        deleteFile();
     }
 
-    public void DeleteFile() {
+    public void deleteFile() {
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
         File outputFilterFile = new File(Variables.OUTPUT_FILTER_FILE);

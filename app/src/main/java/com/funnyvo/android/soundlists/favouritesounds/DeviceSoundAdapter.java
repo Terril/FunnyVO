@@ -1,25 +1,23 @@
 package com.funnyvo.android.soundlists.favouritesounds;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.Sounds;
 
 import java.util.ArrayList;
 
-class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.CustomViewHolder> {
+class DeviceSoundAdapter extends RecyclerView.Adapter<DeviceSoundAdapter.CustomViewHolder> {
     public Context context;
 
     ArrayList<Sounds> datalist;
@@ -28,20 +26,24 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
         void onItemClick(View view, int postion, Sounds item);
     }
 
-    public FavouriteSoundAdapter.OnItemClickListener listener;
+    public void updateList(ArrayList<Sounds> searchedSounds) {
+        datalist = searchedSounds;
+        notifyDataSetChanged();
+    }
 
+    public DeviceSoundAdapter.OnItemClickListener listener;
 
-    public FavouriteSoundAdapter(Context context, ArrayList<Sounds> arrayList, FavouriteSoundAdapter.OnItemClickListener listener) {
+    public DeviceSoundAdapter(Context context, ArrayList<Sounds> arrayList, DeviceSoundAdapter.OnItemClickListener listener) {
         this.context = context;
         datalist = arrayList;
         this.listener = listener;
     }
 
     @Override
-    public FavouriteSoundAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
+    public DeviceSoundAdapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewtype) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_sound_layout, viewGroup, false);
         view.setLayoutParams(new RecyclerView.LayoutParams(Variables.screen_width - 50, RecyclerView.LayoutParams.WRAP_CONTENT));
-        FavouriteSoundAdapter.CustomViewHolder viewHolder = new FavouriteSoundAdapter.CustomViewHolder(view);
+        DeviceSoundAdapter.CustomViewHolder viewHolder = new DeviceSoundAdapter.CustomViewHolder(view);
         return viewHolder;
     }
 
@@ -53,7 +55,7 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
 
 
     @Override
-    public void onBindViewHolder(final FavouriteSoundAdapter.CustomViewHolder holder, final int i) {
+    public void onBindViewHolder(final DeviceSoundAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
 
         Sounds item = datalist.get(i);
@@ -63,40 +65,34 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
             holder.description_txt.setText(item.description);
 
             if (item.thum != null && !item.thum.equals("")) {
-                Log.d(Variables.tag, item.thum);
-                Uri uri = Uri.parse(item.thum);
-                holder.sound_image.setImageURI(uri);
+                Glide.with(context)
+                        .load(item.thum)
+                        .centerCrop()
+                        .placeholder(R.color.colorAccent)
+                        .into(holder.sound_image);
             }
-            holder.fav_btn.setImageDrawable(context.getDrawable(R.drawable.ic_my_favourite));
             holder.bind(i, datalist.get(i), listener);
-
-
         } catch (Exception e) {
 
         }
-
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        ImageButton done, fav_btn;
+        ImageButton btnSoundSelected;
         TextView sound_name, description_txt;
-        SimpleDraweeView sound_image;
+        ImageView sound_image;
 
         public CustomViewHolder(View view) {
             super(view);
-            done = view.findViewById(R.id.done);
-            fav_btn = view.findViewById(R.id.fav_btn);
-
-
+            btnSoundSelected = view.findViewById(R.id.btnSoundSelected);
             sound_name = view.findViewById(R.id.sound_name);
             description_txt = view.findViewById(R.id.description_txt);
             sound_image = view.findViewById(R.id.sound_image);
 
         }
 
-        public void bind(final int pos, final Sounds item, final FavouriteSoundAdapter.OnItemClickListener listener) {
-
+        public void bind(final int pos, final Sounds item, final DeviceSoundAdapter.OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,25 +100,13 @@ class FavouriteSoundAdapter extends RecyclerView.Adapter<FavouriteSoundAdapter.C
                 }
             });
 
-            done.setOnClickListener(new View.OnClickListener() {
+            btnSoundSelected.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v, pos, item);
                 }
             });
-
-            fav_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(v, pos, item);
-                }
-            });
-
         }
-
-
     }
-
-
 }
 

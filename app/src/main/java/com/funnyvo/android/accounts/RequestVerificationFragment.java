@@ -25,10 +25,11 @@ import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.helper.FileUtils;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
-import com.funnyvo.android.simpleclasses.FileUtils;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 
@@ -45,7 +46,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
-import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
 public class RequestVerificationFragment extends RootFragment implements View.OnClickListener {
 
@@ -54,7 +54,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
     private EditText username_edit, fullname_edit;
     private TextView file_name_txt;
     private String base_64;
-    private File image_file;
+    private File imageFile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,7 +145,7 @@ public class RequestVerificationFragment extends RootFragment implements View.On
                 Manifest.permission.CAMERA
         };
 
-        if (!hasPermissions(context, PERMISSIONS)) {
+        if (!PermissionUtils.INSTANCE.hasPermissions(context, PERMISSIONS)) {
             requestPermissions(PERMISSIONS, 2);
         } else {
 
@@ -241,8 +241,8 @@ public class RequestVerificationFragment extends RootFragment implements View.On
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                image_file = new File(imageFilePath);
-                Uri selectedImage = (Uri.fromFile(image_file));
+                imageFile = new File(imageFilePath);
+                Uri selectedImage = (Uri.fromFile(imageFile));
 
                 InputStream imageStream = null;
                 try {
@@ -259,12 +259,13 @@ public class RequestVerificationFragment extends RootFragment implements View.On
 
                 base_64 = Functions.bitmapToBase64(getActivity(), resized);
 
-                if (image_file != null)
-                    file_name_txt.setText(image_file.getName());
+                if (imageFile != null)
+                    file_name_txt.setText(imageFile.getName());
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
                 try {
-                    image_file = FileUtils.getFileFromUri(context, selectedImage);
+                    String imagePath = new FileUtils(context).getPath(selectedImage);
+                    imageFile = new File(imagePath);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -308,8 +309,8 @@ public class RequestVerificationFragment extends RootFragment implements View.On
 
                 base_64 = Functions.bitmapToBase64(getActivity(), resized);
 
-                if (image_file != null)
-                    file_name_txt.setText(image_file.getName());
+                if (imageFile != null)
+                    file_name_txt.setText(imageFile.getName());
             }
         }
     }
@@ -345,8 +346,8 @@ public class RequestVerificationFragment extends RootFragment implements View.On
             e.printStackTrace();
         }
 
-       showProgressDialog();
-        ApiRequest.callApi(context, Variables.getVerified, params, new Callback() {
+        showProgressDialog();
+        ApiRequest.callApi(context, Variables.GET_VERIFIED, params, new Callback() {
             @Override
             public void response(String resp) {
               dismissProgressDialog();

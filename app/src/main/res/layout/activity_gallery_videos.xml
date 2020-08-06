@@ -22,14 +22,13 @@
                 android:layout_width="@dimen/margin_32"
                 android:layout_height="@dimen/margin_32"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="@dimen/margin_15"
                 android:background="@color/transparent"
-                android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_close"
                 android:tint="@color/palette_cheddar" />
 
-            <TextView
+            <com.funnyvo.android.customview.FunnyVOTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -46,12 +45,6 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar" />
 
-        <ProgressBar
-            android:id="@+id/pbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
     </RelativeLayout>
 
 </FrameLayout>

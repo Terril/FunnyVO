@@ -24,7 +24,7 @@ class VideoCropActivity : BaseActivity(), VideoTrimmingListener {
             finish()
             return
         }
-        videoTrimmerView.setMaxDurationInMs(15 * 1000)
+        videoTrimmerView.setMaxDurationInMs(18 * 1000)
         videoTrimmerView.setOnK4LVideoListener(this)
         val trimmedVideoFile = File(OUTPUT_FILE_TRIMMED)
         videoTrimmerView.setDestinationFile(trimmedVideoFile)

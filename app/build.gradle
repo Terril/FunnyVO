@@ -11,8 +11,8 @@ android {
         applicationId "com.funnyvo"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 4
-        versionName "0.2"
+        versionCode 9
+        versionName "0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -49,13 +49,17 @@ android {
     productFlavors {
         dev {
             dimension "version"
-//            applicationIdSuffix ".beta"
+            applicationIdSuffix ".beta"
 //            versionNameSuffix "-beta"
             buildConfigField 'String', 'hostAPI', '"https://betaapi.funnyvo.com/API/"'
+            buildConfigField 'boolean', 'logsEnabled', 'true'
+            resValue "string", "app_name", "FunnyVO Dev"
         }
         full {
             dimension "version"
             buildConfigField 'String', 'hostAPI', '"https://api.funnyvo.com/API/"'
+            buildConfigField 'boolean', 'logsEnabled', 'false'
+            resValue "string", "app_name", "FunnyVO"
         }
     }
     splits {
@@ -101,38 +105,35 @@ dependencies {
     implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.3'
-    implementation 'com.facebook.android:facebook-android-sdk:4.26.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.7'
+    implementation 'com.facebook.android:facebook-android-sdk:5.0.1'
     implementation 'net.the4thdimension:audio-wife:1.0.3'
-    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
+    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.1'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-    implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.airbnb.android:lottie:2.7.0'
+    implementation 'com.airbnb.android:lottie:3.3.1'
 
     //Do not Update this library their is a camera issue with new version
-   implementation 'com.wonderkiln:camerakit:0.13.5'
+   implementation 'com.wonderkiln:camerakit:0.13.0'
     api 'com.otaliastudios:cameraview:2.6.2'
 
     //You will change the versions at your own risk.
     //Do not Change below 7 libraries versions
     //if you want to update these libraries first you have to convert the project to androidX
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.firebase:firebase-database:19.3.1'
-    implementation 'com.google.firebase:firebase-messaging:20.2.1'
-    implementation 'com.google.firebase:firebase-core:17.4.3'
+    implementation 'com.google.firebase:firebase-messaging:20.2.3'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
-    implementation 'com.google.firebase:firebase-auth:19.3.1'
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
-    implementation 'com.google.android.gms:play-services-ads:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
 
-    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.3'
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     implementation('com.giphy.sdk:core:1.0.2@aar') {
@@ -145,8 +146,6 @@ dependencies {
     implementation 'com.mindorks.android:prdownloader:0.6.0'
 
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
-
-    implementation 'com.facebook.fresco:fresco:2.1.0'
 
     implementation 'com.appyvet:materialrangebar:1.4.6'
 
@@ -179,8 +178,13 @@ dependencies {
 
     implementation 'org.apache.httpcomponents:httpmime:4.5.12'
 
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    //   implementation "com.writingminds:FFmpegAndroid:0.3.2"
+    implementation "org.apache.httpcomponents:httpmime:4.3.1"
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'com.github.AndroidDeveloperLB:VideoTrimmer:6'
+    implementation 'com.danikula:videocache:2.7.0'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'

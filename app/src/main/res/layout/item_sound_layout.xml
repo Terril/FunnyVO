@@ -6,14 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/sound_image"
         android:layout_width="@dimen/margin_70"
         android:layout_height="@dimen/margin_70"
         android:layout_marginStart="@dimen/margin_10"
         android:layout_marginTop="@dimen/margin_10"
         android:layout_marginBottom="@dimen/margin_15"
-        app:placeholderImage="@color/colorAccent"
+        android:src="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -90,31 +90,15 @@
         app:layout_constraintTop_toBottomOf="@+id/sound_name" />
 
     <ImageButton
-        android:id="@+id/done"
+        android:id="@+id/btnSoundSelected"
         android:layout_width="@dimen/margin_32"
         android:layout_height="@dimen/margin_32"
         android:visibility="invisible"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_5"
-        android:layout_marginStart="@dimen/margin_5"
-        android:layout_toLeftOf="@+id/fav_btn"
+        android:layout_marginStart="@dimen/margin_10"
         android:background="@color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_baseline_done"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/fav_btn"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/fav_btn"
-        android:layout_width="@dimen/margin_32"
-        android:layout_height="@dimen/margin_32"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:background="@color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_my_un_favourite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -1,24 +1,22 @@
 <resources>
-    <string name="app_name">FunnyVO</string>
 
     <string name="facebook_app_id">610201622954883</string>
     <string name="fb_login_protocol_scheme">fb610201622954883</string>
 
     <string name="ad_app_id">ca-app-pub-2753248478514790~9432014842</string>
-    <string name="my_Interstitial_Add">ca-app-pub-2753248478514790/4918054763</string>
+    <string name="interstitial_add">ca-app-pub-2753248478514790/4918054763</string>
     <string name="banner_ad">ca-app-pub-2753248478514790/1361953130</string>
-
+    <string name="native_ad">ca-app-pub-2753248478514790/8059969259</string>
 
     <string name="request_verification">Request Verification</string>
     <string name="apply_for_funny_vo_verification">Apply for FunnyVO Verification</string>
-    <string name="upper_body">A verified badge is check that which appears next to an \nfunnyvo accounts name to indicate that the \naccount is the authentic. Presence of notable \npublic figure, celebrity, global brand or entity it \nrepresents.</string>
-    <string name="upper_body_below">Submitting a request for verification \ndoes not guarantee that your account will be verified</string>
-    <string name="lower_body">We require a government-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license,passport or national identification card) or an official \nbusiness document(tax filing, recent utility bill, article of \nincorporation) in order to review your request.</string>
+    <string name="upper_body">A verified badge is check that which appears next to an FunnyVO accounts name to indicate that the account is authentic. Presence of notable public figure, celebrity, global brand or entity it represents.</string>
+    <string name="upper_body_below">Submitting a request for verification does not \nguarantee that your account will be verified</string>
+    <string name="lower_body">We require a government-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license, passport or national identification card) or an official business document(tax filing, recent utility bill, article of incorporation) in order to review your request.</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="short_seconds">sec</string>
 
-    <string name="version">1.0</string>
     <string name="device">android</string>
     <string name="delete_function_not_available_in_demo">Delete Function not available in demo</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -26,7 +24,7 @@
     <string name="post">Post</string>
     <string name="add_sound">Add Music</string>
     <string name="discover">Discover</string>
-    <string name="user_fav">My Favorites</string>
+    <string name="user_local">My Local</string>
     <string name="user_profile">userprofile.jpg</string>
     <string name="tap_to_create_n_your_first_short_video">Tap + to create\n your first short video</string>
     <string name="profile">Profile</string>
@@ -51,7 +49,7 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="don_t_want_to_disclose_it">Don\'t want to disclose it</string>
+    <string name="don_t_want_to_disclose_it">Leave it to me</string>
     <string name="bio">Bio</string>
     <string name="your_bio">Your Bio</string>
     <string name="full_name">Full name</string>
@@ -84,4 +82,29 @@
     <string name="to">To</string>
     <string name="request_sent">Request Sent Successfully</string>
 
+    <string name="yes">yes</string>
+    <string name="server_error_upload_video">Their is some server side issue.\n Please Try again Later</string>
+    <string name="video_uploaded_successfully">Your Video is uploaded Successfully</string>
+    <string name="uploading_video">Uploading your FunnyVO</string>
+    <string name="please_wait_upload_video">Please wait! Video is uploading....</string>
+    <string name="image_update_success">Image Update Successfully</string>
+    <string name="comment_not_posted">Some issue in posting your comment, We\'ll fix it shortly</string>
+    <string name="video_not_deleted">Video will be deleted shortly</string>
+    <string name="fetch_user_not_happening">Not able to fetch the user, We are fixing your issue</string>
+    <string name="please_login">Please Login</string>
+    <string name="continue_using_app">Video will be uploaded, You continue enjoy using the app </string>
+    <string name="file_saved_in_draft">File saved in Draft</string>
+    <string name="save_failed_into_draft">Sorry, save to draft failed.</string>
+    <string name="unable_to_fetch_user_videos">Unable to fetch your videos at the moment</string>
+    <string name="no_network">No Network Available</string>
+    <string name="mind_checking_network">Would you mind checking your network ?</string>
+    <string name="ok">OK</string>
+    <string name="you_must_login_first">You have to login First</string>
+    <string name="social_networking_handler">Social Networking Handler</string>
+    <string name="intagram">Add you Instagram handle</string>
+    <string name="twitter">Add your Twitter handle</string>
+    <string name="youtube">Add your Youtube channel name</string>
+    <string name="video_visible_to">Video Visible To</string>
+    <string name="rate_the_app">Rate the app</string>
+    <string name="video_not_available">Video not available at the moment</string>
 </resources>

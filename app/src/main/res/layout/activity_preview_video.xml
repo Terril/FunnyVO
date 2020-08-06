@@ -83,15 +83,24 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.funnyvo.android.customview.FunnyVOTextView
+            <Button
+                android:id="@+id/btnAddMusic"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/margin_10"
-                android:text="@string/preview"
+                android:text="@string/add_sound"
+                android:layout_marginStart="@dimen/margin_5"
+                android:layout_marginEnd="@dimen/margin_5"
                 android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_18" />
+                android:tint="@color/palette_cheddar"
+                android:gravity="center"
+                android:layout_toEndOf="@+id/btnGoBackPreview"
+                android:layout_toStartOf="@+id/btnNext"
+                app:icon="@drawable/ic_music"
+                app:iconGravity="textStart"
+                app:iconTint="@color/palette_cheddar" />
 
             <ImageButton
                 android:id="@+id/btnGoBackPreview"

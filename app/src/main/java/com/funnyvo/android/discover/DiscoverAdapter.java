@@ -1,6 +1,7 @@
 package com.funnyvo.android.discover;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.discover.datamodel.Discover;
 
 import java.util.ArrayList;
+
+import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.CustomViewHolder> implements Filterable {
     public Context context;
@@ -147,11 +150,12 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
 
         class CustomViewHolder extends RecyclerView.ViewHolder {
             ImageView video_thumbnail;
+            ImageView userThumbnail;
 
             public CustomViewHolder(View view) {
                 super(view);
                 video_thumbnail = view.findViewById(R.id.video_thumbnail);
-
+                userThumbnail = view.findViewById(R.id.userImageInDiscovery);
             }
 
             public void bind(final int pos, final ArrayList<Home> datalist) {
@@ -171,8 +175,6 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
             try {
                 Home item = datalist.get(i);
                 holder.bind(i, datalist);
-
-
                 try {
                     Glide.with(context)
                             .asGif()
@@ -184,6 +186,12 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Custom
                             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)
                                     .placeholder(context.getResources().getDrawable(R.drawable.image_placeholder)).centerCrop())
                             .into(holder.video_thumbnail);
+
+                    Log.e(APP_NAME, "Discovery : "+item.profile_pic);
+                    Glide.with(context)
+                            .load(item.profile_pic)
+                            .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder)).centerCrop()
+                            .into(holder.userThumbnail);
 
                 } catch (Exception e) {
 

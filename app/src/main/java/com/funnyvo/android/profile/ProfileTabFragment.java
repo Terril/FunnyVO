@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -27,19 +30,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.funnyvo.android.BuildConfig;
+import com.funnyvo.android.R;
+import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.following.FollowingFragment;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
-import com.funnyvo.android.R;
-import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.settings.SettingFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -48,8 +57,6 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.galleryvideos.GalleryVideosActivity;
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,14 +66,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.funnyvo.android.simpleclasses.Variables.API_SUCCESS_CODE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileTabFragment extends RootFragment implements View.OnClickListener {
     private View view;
-    private Context context;
-
-    private TextView username, username2_txt, video_count_txt;
+    private TextView username, txtUserBio, username2_txt, video_count_txt;
     private ImageView imageView;
     private TextView follow_count_txt, fans_count_txt, heart_count_txt, draft_count_txt;
 
@@ -81,6 +88,8 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     private LinearLayout top_layout;
     private static String pic_url;
     private LinearLayout create_popup_layout;
+    private Button btnYoutube, btnInstagram, btnTwitter;
+    private String twitterUrl, youtubeUrl, instagramUrl;
 
     public ProfileTabFragment() {
     }
@@ -90,7 +99,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile_tab, container, false);
-        context = getContext();
 
         return init();
     }
@@ -120,7 +128,15 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 startActivity(upload_intent);
                 getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
-
+            case R.id.btnYoutube:
+                openBrowser(youtubeUrl);
+                break;
+            case R.id.btnTwitter:
+                openBrowser(twitterUrl);
+                break;
+            case R.id.btnInstagram:
+                openBrowser(instagramUrl);
+                break;
         }
     }
 
@@ -149,6 +165,15 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         fans_count_txt = view.findViewById(R.id.fan_count_txt);
         heart_count_txt = view.findViewById(R.id.heart_count_txt);
         draft_count_txt = view.findViewById(R.id.draft_count_txt);
+        txtUserBio = view.findViewById(R.id.txtUserBio);
+
+        btnYoutube = view.findViewById(R.id.btnYoutube);
+        btnInstagram = view.findViewById(R.id.btnInstagram);
+        btnTwitter = view.findViewById(R.id.btnTwitter);
+
+        btnYoutube.setOnClickListener(this);
+        btnInstagram.setOnClickListener(this);
+        btnTwitter.setOnClickListener(this);
 
         showDraftCount();
 
@@ -207,13 +232,10 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         isdataload = true;
 
         updateProfile();
-
-        callApiForGetAllVideos();
-
         return view;
     }
 
-    public void showDraftCount() {
+    private void showDraftCount() {
         try {
 
             String path = Variables.draft_app_folder;
@@ -231,7 +253,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         }
     }
 
-    public void updateProfile() {
+    private void updateProfile() {
         username2_txt.setText(Variables.sharedPreferences.getString(Variables.u_name, ""));
         username.setText(Variables.sharedPreferences.getString(Variables.f_name, "") + " " + Variables.sharedPreferences.getString(Variables.l_name, ""));
         ProfileTabFragment.pic_url = Variables.sharedPreferences.getString(Variables.u_pic, "null");
@@ -239,21 +261,23 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
     private void userProfilePicture(String picUrl) {
-        ContextWrapper cw = new ContextWrapper(context);
-        final File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        try {
-            Picasso.with(context).load(picUrl)
-                    .resize(200, 200)
-                    .placeholder(R.drawable.profile_image_placeholder)
+        if (this.isAdded()) {
+            ContextWrapper cw = new ContextWrapper(getActivity());
+            final File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+            Glide.with(this)
+                    .asBitmap()
+                    .load(picUrl)
                     .centerCrop()
-                    .into(new Target() {
+                    .placeholder(R.drawable.profile_image_placeholder)
+                    .into(new CustomTarget<Bitmap>(200, 200) {
+
                         @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             final File myImageFile = new File(directory, getString(R.string.user_profile)); // Create image file
                             FileOutputStream fos = null;
                             try {
                                 fos = new FileOutputStream(myImageFile);
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, fos);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } finally {
@@ -263,31 +287,24 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                                     e.printStackTrace();
                                 }
                             }
-                            imageView.setImageBitmap(bitmap);
+                            imageView.setImageBitmap(resource);
                         }
 
                         @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            imageView.setImageDrawable(placeholder);
                         }
                     });
-
-        } catch (Exception e) {
-
         }
     }
 
     private void setupTabIcons() {
-        View view1 = LayoutInflater.from(context).inflate(R.layout.item_tabs_profile_menu, null);
+        View view1 = LayoutInflater.from(getActivity()).inflate(R.layout.item_tabs_profile_menu, null);
         ImageView imageView1 = view1.findViewById(R.id.image);
         imageView1.setImageDrawable(getResources().getDrawable(R.drawable.ic_my_video_color));
         tabLayout.getTabAt(0).setCustomView(view1);
 
-        View view2 = LayoutInflater.from(context).inflate(R.layout.item_tabs_profile_menu, null);
+        View view2 = LayoutInflater.from(getActivity()).inflate(R.layout.item_tabs_profile_menu, null);
         ImageView imageView2 = view2.findViewById(R.id.image);
         imageView2.setImageDrawable(getResources().getDrawable(R.drawable.ic_liked_video_gray));
         tabLayout.getTabAt(1).setCustomView(view2);
@@ -307,7 +324,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                             create_popup_layout.setVisibility(View.GONE);
                         } else {
                             create_popup_layout.setVisibility(View.VISIBLE);
-                            Animation aniRotate = AnimationUtils.loadAnimation(context, R.anim.up_and_down_animation);
+                            Animation aniRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down_animation);
                             create_popup_layout.startAnimation(aniRotate);
                         }
 
@@ -360,21 +377,13 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
         @Override
         public Fragment getItem(int position) {
-            final Fragment result;
             switch (position) {
                 case 0:
-                    result = new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
-                    break;
+                    return new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
                 case 1:
-                    result = new LikedVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
-                    break;
-
-                default:
-                    result = null;
-                    break;
+                    return new LikedVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
             }
-
-            return result;
+            return new UserVideoFragment(Variables.sharedPreferences.getString(Variables.u_id, ""));
         }
 
         @Override
@@ -426,28 +435,42 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.SHOW_MY_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseData(resp);
             }
         });
-
-
     }
 
-    public void parseData(String responce) {
+    private void parseData(String response) {
 
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
 
                 JSONObject data = msgArray.getJSONObject(0);
                 JSONObject user_info = data.optJSONObject("user_info");
                 username2_txt.setText(user_info.optString("username"));
+                txtUserBio.setText(user_info.optString("bio"));
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
+
+
+                twitterUrl = user_info.optString("twitter_id");
+                instagramUrl = user_info.optString("instagram_id");
+                youtubeUrl = user_info.optString("youtube_id");
+
+                if (!twitterUrl.equals("null") && !twitterUrl.isEmpty()) {
+                    btnTwitter.setVisibility(View.VISIBLE);
+                }
+                if (!instagramUrl.equals("null") && !instagramUrl.isEmpty()) {
+                    btnInstagram.setVisibility(View.VISIBLE);
+                }
+                if (!youtubeUrl.equals("null") && !youtubeUrl.isEmpty()) {
+                    btnYoutube.setVisibility(View.VISIBLE);
+                }
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
                 userProfilePicture(ProfileFragment.pic_url);
@@ -456,7 +479,6 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                 fans_count_txt.setText(data.optString("total_fans"));
                 heart_count_txt.setText(data.optString("total_heart"));
 
-
                 JSONArray user_videos = data.getJSONArray("user_videos");
                 if (!user_videos.toString().equals("[" + "0" + "]")) {
                     video_count_txt.setText(user_videos.length() + " Videos");
@@ -464,7 +486,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
                 } else {
                     create_popup_layout.setVisibility(View.VISIBLE);
-                    Animation aniRotate = AnimationUtils.loadAnimation(context, R.anim.up_and_down_animation);
+                    Animation aniRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.up_and_down_animation);
                     create_popup_layout.startAnimation(aniRotate);
 
                 }
@@ -474,16 +496,31 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                     view.findViewById(R.id.varified_btn).setVisibility(View.VISIBLE);
                 }
             } else {
-                Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.unable_to_fetch_user_videos, Toast.LENGTH_SHORT).show();
             }
-
+            getUserAppVersion();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void openEditProfile() {
+
+    private void getUserAppVersion() {
+        String versionName = BuildConfig.VERSION_NAME;
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("version", versionName);
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(getActivity(), Variables.UPDATE_APP_VERSION, parameters, null);
+    }
+
+    private void openEditProfile() {
         EditProfileFragment edit_profile_fragment = new EditProfileFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -497,7 +534,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
 
-    public void openSetting() {
+    private void openSetting() {
         SettingFragment setting_fragment = new SettingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
@@ -507,7 +544,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
 
     //this method will get the big size of profile image.
-    public void openfullsizeImage(String url) {
+    private void openfullsizeImage(String url) {
         SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -519,9 +556,9 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
 
-    public void openMenuTab(View anchor_view) {
-        Context wrapper = new ContextThemeWrapper(context, R.style.AlertDialogCustom);
-        PopupMenu popup = new PopupMenu(wrapper, anchor_view);
+    private void openMenuTab(View anchorView) {
+        Context wrapper = new ContextThemeWrapper(getActivity(), R.style.AlertDialogCustom);
+        PopupMenu popup = new PopupMenu(wrapper, anchorView);
         popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             popup.setGravity(Gravity.TOP | Gravity.RIGHT);
@@ -550,7 +587,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    public void openFollowing() {
+    private void openFollowing() {
         FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -568,7 +605,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
 
     }
 
-    public void openFollowers() {
+    private void openFollowers() {
         FollowingFragment following_fragment = new FollowingFragment(new FragmentCallback() {
             @Override
             public void responseCallBackFromFragment(Bundle bundle) {
@@ -587,22 +624,41 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
     }
 
     // this will erase all the user info store in locally and logout the user
-    public void logout() {
-        SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
-        editor.putString(Variables.u_id, "");
-        editor.putString(Variables.u_name, "");
-        editor.putString(Variables.u_pic, "");
-        editor.putBoolean(Variables.islogin, false);
-        editor.commit();
-        getActivity().finish();
-        startActivity(new Intent(getActivity(), MainMenuActivity.class));
+    private void logout() {
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(getActivity(), Variables.LOGOUT, parameters, new Callback() {
+            @Override
+            public void response(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String code = jsonObject.optString("code");
+                    if (code.equals(API_SUCCESS_CODE)) {
+                        SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
+                        editor.putString(Variables.u_id, "");
+                        editor.putString(Variables.u_name, "");
+                        editor.putString(Variables.u_pic, "");
+                        editor.putBoolean(Variables.islogin, false);
+                        editor.apply();
+                        getActivity().finish();
+                        startActivity(new Intent(getActivity(), MainMenuActivity.class));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Functions.deleteCache(context);
+        Functions.deleteCache(getActivity());
     }
-
 }

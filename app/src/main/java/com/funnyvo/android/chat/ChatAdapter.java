@@ -21,7 +21,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.chat.datamodel.Chat;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.ParseException;
@@ -210,14 +209,18 @@ class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     chatimageholder.datetxt.setVisibility(View.VISIBLE);
                     chatimageholder.datetxt.setText(ChangeDate(chat.getTimestamp()));
                 }
-                Picasso.with(context).load(chat.getPic_url()).placeholder(R.drawable.image_placeholder).resize(400, 400).centerCrop().into(chatimageholder.chatimage);
+
             } else {
                 chatimageholder.datetxt.setVisibility(View.VISIBLE);
                 chatimageholder.datetxt.setText(ChangeDate(chat.getTimestamp()));
-                Picasso.with(context).load(chat.getPic_url()).placeholder(R.drawable.image_placeholder).resize(400, 400).centerCrop().into(chatimageholder.chatimage);
-
-
             }
+
+            Glide.with(context)
+                    .load(chat.getPic_url())
+                    .centerCrop()
+                    .apply(new RequestOptions().override(400, 400))
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(chatimageholder.chatimage);
 
             chatimageholder.bind(mDataSet.get(position), listener, long_listener);
         } else if (chat.getType().equals("audio")) {

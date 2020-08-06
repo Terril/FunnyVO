@@ -1,17 +1,19 @@
 package com.funnyvo.android.soundlists;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -25,20 +27,22 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
-import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
+import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -46,16 +50,18 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
-public class DiscoverSoundListFragment extends RootFragment implements Player.EventListener {
+public class DiscoverSoundListFragment extends RootFragment implements Player.EventListener, SearchView.OnQueryTextListener {
 
     private RecyclerView recylerView;
     private SoundAdapter adapter;
@@ -107,23 +113,41 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             public void onRefresh() {
                 previous_url = "none";
                 stopPlaying();
+                if (!datalist.isEmpty()) {
+                    datalist.clear();
+                }
                 callApiForGetAllSound();
             }
         });
 
         callApiForGetAllSound();
+        setHasOptionsMenu(true);
     }
 
-    public void setAdapter() {
+    private void searchSound(Menu menu) {
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.searchSound).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(this);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.sound_search_option_menu, menu);
+        searchSound(menu);
+    }
+
+    private void setAdapter() {
         adapter = new SoundAdapter(context, datalist, new SoundAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion, Sounds item) {
-                if (view.getId() == R.id.done) {
+            public void onItemClick(View view, int position, Sounds item) {
+                if (view.getId() == R.id.btnSoundSelected) {
                     stopPlaying();
                     downLoadMp3(item.id, item.sound_name, item.soundUrl);
-                } else if (view.getId() == R.id.fav_btn) {
-                    callApiForFavSound(postion, item);
                 } else {
                     if (thread != null && !thread.isAlive()) {
                         stopPlaying();
@@ -146,13 +170,14 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         showProgressDialog();
         JSONObject parameters = new JSONObject();
         try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+            if (Variables.sharedPreferences != null)
+                parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.allSounds, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.ALL_SOUNDS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
@@ -165,11 +190,10 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
 
     public void parseData(String response) {
-        datalist = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
 
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
 
@@ -177,7 +201,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                     JSONObject object = msgArray.getJSONObject(i);
                     JSONArray section_array = object.optJSONArray("sections_sounds");
 
-                    ArrayList<Sounds> sound_list = new ArrayList<>();
+                    ArrayList<Sounds> soundList = new ArrayList<>();
 
                     for (int j = 0; j < section_array.length(); j++) {
                         JSONObject itemdata = section_array.optJSONObject(j);
@@ -196,13 +220,13 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
                         item.fav = itemdata.optString("fav");
                         item.soundUrl = itemdata.optString("sound_url");
 
-                        sound_list.add(item);
+                        soundList.add(item);
                     }
 
-                    SoundCategory sound_category = new SoundCategory();
-                    sound_category.catagory = object.optString("section_name");
-                    sound_category.sound_list = sound_list;
-                    datalist.add(sound_category);
+                    SoundCategory soundCategory = new SoundCategory();
+                    soundCategory.catagoryName = object.optString("section_name");
+                    soundCategory.sound_list = soundList;
+                    datalist.add(soundCategory);
                 }
 
                 setAdapter();
@@ -225,20 +249,20 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     public void playAudio(View view, final Sounds item) {
         previous_view = view;
 
-        if (previous_url.equals(item.acc_path)) {
+        if (previous_url.equals(item.soundUrl)) {
             previous_url = "none";
             running_sound_id = "none";
         } else {
             previous_url = item.soundUrl;
             running_sound_id = item.id;
 
-            DefaultTrackSelector trackSelector = new DefaultTrackSelector();
-            player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+            RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+            player = new SimpleExoPlayer.Builder(context, renderersFactory).build();
 
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
                     Util.getUserAgent(context, APP_NAME));
 
-            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(item.soundUrl));
 
             player.prepare(videoSource);
@@ -248,7 +272,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         }
     }
 
-    public void stopPlaying() {
+    private void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
             player.removeListener(this);
@@ -265,6 +289,11 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         active = true;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopPlaying();
+    }
 
     @Override
     public void onStop() {
@@ -279,7 +308,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         }
 
         showStopState();
-
+        stopPlaying();
     }
 
 
@@ -287,7 +316,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
         if (previous_view != null) {
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
-            previous_view.findViewById(R.id.done).setVisibility(View.VISIBLE);
+            previous_view.findViewById(R.id.btnSoundSelected).setVisibility(View.VISIBLE);
         }
     }
 
@@ -304,7 +333,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             previous_view.findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
             previous_view.findViewById(R.id.loading_progress).setVisibility(View.GONE);
             previous_view.findViewById(R.id.pause_btn).setVisibility(View.GONE);
-            previous_view.findViewById(R.id.done).setVisibility(View.GONE);
+            previous_view.findViewById(R.id.btnSoundSelected).setVisibility(View.GONE);
         }
 
         running_sound_id = "none";
@@ -314,7 +343,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
     public void downLoadMp3(final String id, final String sound_name, String url) {
         showProgressDialog();
-        prDownloader = PRDownloader.download(url, Variables.app_folder, Variables.SelectedAudio_AAC)
+        prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, Variables.SelectedAudio_AAC)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -346,7 +375,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
             public void onDownloadComplete() {
                 dismissProgressDialog();
                 Intent output = new Intent();
-                output.putExtra("isSelected", "yes");
+                output.putExtra("isSelected", getString(R.string.yes));
                 output.putExtra("sound_name", sound_name);
                 output.putExtra("sound_id", id);
                 getActivity().setResult(RESULT_OK, output);
@@ -363,46 +392,46 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
     }
 
 
-    private void callApiForFavSound(int pos, final Sounds item) {
-        showProgressDialog();
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-            parameters.put("sound_id", item.id);
-            if (item.fav.equals("1"))
-                parameters.put("fav", "0");
-            else
-                parameters.put("fav", "1");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ApiRequest.callApi(context, Variables.fav_sound, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                dismissProgressDialog();
-                if (item.fav.equals("1"))
-                    item.fav = "0";
-                else
-                    item.fav = "1";
-
-                for (int i = 0; i < datalist.size(); i++) {
-                    SoundCategory catagory_get_set = datalist.get(i);
-                    if (catagory_get_set.sound_list.contains(item)) {
-                        int index = catagory_get_set.sound_list.indexOf(item);
-                        catagory_get_set.sound_list.remove(item);
-                        catagory_get_set.sound_list.add(index, item);
-                        break;
-                    }
-                }
-
-                adapter.notifyDataSetChanged();
-
-            }
-        });
-
-    }
+//    private void callApiForFavSound(int pos, final Sounds item) {
+//        showProgressDialog();
+//        JSONObject parameters = new JSONObject();
+//        try {
+//            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+//            parameters.put("sound_id", item.id);
+//            if (item.fav.equals("1"))
+//                parameters.put("fav", "0");
+//            else
+//                parameters.put("fav", "1");
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ApiRequest.callApi(context, Variables.FAV_SOUND, parameters, new Callback() {
+//            @Override
+//            public void response(String resp) {
+//                dismissProgressDialog();
+//                if (item.fav.equals("1"))
+//                    item.fav = "0";
+//                else
+//                    item.fav = "1";
+//
+//                for (int i = 0; i < datalist.size(); i++) {
+//                    SoundCategory catagory_get_set = datalist.get(i);
+//                    if (catagory_get_set.sound_list.contains(item)) {
+//                        int index = catagory_get_set.sound_list.indexOf(item);
+//                        catagory_get_set.sound_list.remove(item);
+//                        catagory_get_set.sound_list.add(index, item);
+//                        break;
+//                    }
+//                }
+//
+//                adapter.notifyDataSetChanged();
+//
+//            }
+//        });
+//
+//    }
 
 
     @Override
@@ -466,5 +495,58 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
     }
 
+
+    /**
+     * Called when the user submits the query. This could be due to a key press on the
+     * keyboard or due to pressing a submit button.
+     * The listener can override the standard behavior by returning true
+     * to indicate that it has handled the submit request. Otherwise return false to
+     * let the SearchView handle the submission by launching any associated intent.
+     *
+     * @param query the query text that is to be submitted
+     * @return true if the query has been handled by the listener, false to let the
+     * SearchView perform the default action.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filter(query.trim());
+        return false;
+    }
+
+    /**
+     * Called when the query text is changed by the user.
+     *
+     * @param newText the new content of the query text field.
+     * @return false if the SearchView should perform the default action of showing any
+     * suggestions if available, true if the action was handled by the listener.
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filter(newText.trim());
+        return false;
+    }
+
+    private void filter(String text) {
+        if (!text.isEmpty()) {
+            ArrayList tempSounds = new ArrayList<Sounds>();
+            ArrayList tempSoundCategory = new ArrayList<SoundCategory>();
+            for (SoundCategory category : datalist) {
+                SoundCategory soundCategory = new SoundCategory();
+                for (Sounds sounds : category.sound_list) {
+                    if (sounds.sound_name.toLowerCase().contains(text.toLowerCase())) {
+                        tempSounds.add(sounds);
+                        soundCategory.catagoryName = category.catagoryName;
+                        soundCategory.sound_list = tempSounds;
+                    }
+                }
+                tempSoundCategory.add(soundCategory);
+            }
+            //update recyclerview
+            adapter.updateList(tempSoundCategory);
+        } else {
+            setAdapter();
+            stopPlaying();
+        }
+    }
 
 }

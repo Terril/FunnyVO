@@ -1,27 +1,21 @@
 package com.funnyvo.android.search;
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.AdapterClickListener;
-import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.Sounds;
 
 import java.util.ArrayList;
-
-/**
- * Created by AQEEL on 3/19/2019.
- */
 
 class SoundListAdapter extends RecyclerView.Adapter<SoundListAdapter.CustomViewHolder> {
     public Context context;
@@ -60,9 +54,11 @@ class SoundListAdapter extends RecyclerView.Adapter<SoundListAdapter.CustomViewH
             holder.description_txt.setText(item.description);
 
             if (item.thum != null && !item.thum.equals("")) {
-                Log.d(Variables.tag, item.thum);
-                Uri uri = Uri.parse(item.thum);
-                holder.sound_image.setImageURI(uri);
+                Glide.with(context)
+                        .load(item.thum)
+                        .centerCrop()
+                        .placeholder(R.color.colorAccent)
+                        .into(holder.sound_image);
             }
 
 
@@ -84,7 +80,7 @@ class SoundListAdapter extends RecyclerView.Adapter<SoundListAdapter.CustomViewH
 
         ImageButton done, fav_btn;
         TextView sound_name, description_txt;
-        SimpleDraweeView sound_image;
+        ImageView sound_image;
 
         public CustomViewHolder(View view) {
             super(view);

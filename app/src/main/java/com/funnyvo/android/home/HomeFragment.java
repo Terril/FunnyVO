@@ -1,16 +1,15 @@
 package com.funnyvo.android.home;
 
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,7 +29,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,6 +40,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.downloader.Error;
 import com.downloader.OnCancelListener;
 import com.downloader.OnDownloadListener;
@@ -51,8 +51,11 @@ import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
+import com.funnyvo.android.VideoDownloadedListener;
+import com.funnyvo.android.ads.ShowAdvertisement;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
@@ -68,20 +71,27 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
 import com.funnyvo.android.taged.TaggedVideosFragment;
 import com.funnyvo.android.videoAction.VideoActionFragment;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.analytics.AnalyticsCollector;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Clock;
+import com.google.android.exoplayer2.util.SystemClock;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.material.tabs.TabLayout;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
@@ -93,8 +103,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.funnyvo.android.FunnyVOApplication.getProxy;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
-import static com.funnyvo.android.simpleclasses.Variables.is_secure_info;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,31 +113,43 @@ import static com.funnyvo.android.simpleclasses.Variables.is_secure_info;
 // this is the main view which is show all  the video in list
 public class HomeFragment extends RootFragment implements Player.EventListener, FragmentDataSend {
 
-    View view;
-    Context context;
+    private View view;
+    private Context context;
 
-    RecyclerView recyclerView;
-    private ArrayList<Home> data_list;
+    private RecyclerView recyclerView;
+    private ArrayList<Home> dataList;
     private int currentPage = -1;
-    LinearLayoutManager layoutManager;
-    ProgressBar p_bar;
-    SwipeRefreshLayout swiperefresh;
+    private LinearLayoutManager layoutManager;
+    private ProgressBar pBar;
+    private SwipeRefreshLayout swiperefresh;
 
     boolean is_user_stop_video = false;
 
     boolean is_add_show = false;
-    HomeAdapter adapter;
+    private HomeAdapter adapter;
 
     // when we swipe for another video this will relaese the privious player
-    SimpleExoPlayer previousPlayer;
+    private SimpleExoPlayer previousPlayer;
     int swipe_count = 0;
 
     BaseActivity mActivity;
     private boolean isMuted = false;
     private int pageNumber = 1;
+    private VideoDownloadedListener videoDownloadedListener;
 
-    public HomeFragment() {
+    private static HomeFragment fragment;
+    private UnifiedNativeAdView adView;
+
+    private HomeFragment() {
         // Required empty public constructor
+    }
+
+    public static HomeFragment newInstance() {
+        if (fragment == null) {
+            fragment = new HomeFragment();
+        }
+
+        return fragment;
     }
 
     @Override
@@ -143,7 +165,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         view = inflater.inflate(R.layout.fragment_home, container, false);
         context = getContext();
 
-        p_bar = view.findViewById(R.id.p_bar);
+        pBar = view.findViewById(R.id.p_bar);
 
         recyclerView = view.findViewById(R.id.recylerviewHome);
         layoutManager = new LinearLayoutManager(context);
@@ -153,8 +175,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-        data_list = new ArrayList<>();
+        dataList = new ArrayList<>();
         setAdapter();
+        final ShowAdvertisement advertisement = ShowAdvertisement.Companion.getInstance();
         // this is the scroll listener of recycler view which will tell the current item number
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -172,6 +195,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 int page_no = scrollOffset / height;
 
                 if (page_no != currentPage) {
+                    adView = advertisement.showNativeAd(context);
                     currentPage = page_no;
                     releasePreviousPlayer();
                     setPlayer(currentPage);
@@ -189,11 +213,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             public void onRefresh() {
                 currentPage = -1;
                 pageNumber = 1;
-                callApiForGetAllVideos();
+                if (dataList != null && !dataList.isEmpty()) {
+                    dataList.clear();
+                }
+                handleApiCallRequest();
             }
         });
 
-        callApiForGetAllVideos();
+        handleApiCallRequest();
 
 //        if (!Variables.is_remove_ads)
 //            loadAdd();
@@ -201,22 +228,26 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         return view;
     }
 
+    private void handleApiCallRequest() {
+        if (Variables.sharedPreferences.getBoolean(Variables.SHOW_ADS, false)) {
+            callApiForGetAllVideosWithAds();
+        } else {
+            callApiForGetAllVideos();
+        }
+    }
 
-//    InterstitialAd mInterstitialAd;
-//
-//    public void loadAdd() {
-//
+//    private void loadAdd() {
 //        // this is test app id you will get the actual id when you add app in your
 //        //add mob account
 //        MobileAds.initialize(context,
 //                getResources().getString(R.string.ad_app_id));
 //
-//
+//        final InterstitialAd mInterstitialAd;
 //        //code for intertial add
 //        mInterstitialAd = new InterstitialAd(context);
 //
 //        //here we will get the add id keep in mind above id is app id and below Id is add Id
-//        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.my_Interstitial_Add));
+//        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitial_add));
 //        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 //        mInterstitialAd.setAdListener(new AdListener() {
 //            @Override
@@ -224,13 +255,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 //                mInterstitialAd.loadAd(new AdRequest.Builder().build());
 //            }
 //        });
-//
-//
 //    }
 
-
     public void setAdapter() {
-        adapter = new HomeAdapter(context, data_list, new HomeAdapter.OnItemClickListener() {
+        adapter = new HomeAdapter(context, dataList, new HomeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, final Home item, View view) {
                 switch (view.getId()) {
@@ -275,7 +303,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
                                         @Override
                                         public void onSuccess(String responce) {
-                                            data_list.remove(currentPage);
+                                            dataList.remove(currentPage);
                                             adapter.notifyDataSetChanged();
                                             dismissProgressDialog();
 
@@ -301,13 +329,13 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         break;
                     case R.id.sound_image_layout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            if (checkPermissions()) {
+                            if (PermissionUtils.INSTANCE.checkPermissions(getActivity())) {
                                 Intent intent = new Intent(getActivity(), VideoSoundActivity.class);
                                 intent.putExtra("data", item);
                                 startActivity(intent);
                             }
                         } else {
-                            Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.please_login, Toast.LENGTH_SHORT).show();
                         }
 
                         break;
@@ -322,6 +350,25 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
+    private void callApiForGetAllVideosWithAds() {
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+            parameters.put("token", MainMenuActivity.token);
+            parameters.put("page_number", pageNumber);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS_WITH_ADS, parameters, new Callback() {
+            @Override
+            public void response(String resp) {
+                swiperefresh.setRefreshing(false);
+                parseData(resp);
+            }
+        });
+    }
 
     // Bottom two function will call the api and get all the videos form api and parse the json data
     private void callApiForGetAllVideos() {
@@ -335,7 +382,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.showAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
@@ -349,31 +396,37 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         try {
             JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
-                for (int i = 0; i < msgArray.length(); i++) {
+                int arrayItems = msgArray.length();
+                for (int i = 0; i < arrayItems; i++) {
                     JSONObject itemdata = msgArray.optJSONObject(i);
                     Home item = new Home();
                     item.fb_id = itemdata.optString("fb_id");
 
-                    JSONObject user_info = itemdata.optJSONObject("user_info");
+                    JSONObject userInfo = itemdata.optJSONObject("user_info");
 
-                    item.username = user_info.optString("username");
-                    item.first_name = user_info.optString("first_name", context.getResources().getString(R.string.app_name));
-                    item.last_name = user_info.optString("last_name", "User");
-                    item.profile_pic = user_info.optString("profile_pic", "null");
-                    item.verified = user_info.optString("verified");
+                    if (userInfo != null) {
+                        item.username = userInfo.optString("username");
+                        item.first_name = userInfo.optString("first_name", context.getResources().getString(R.string.app_name));
+                        item.last_name = userInfo.optString("last_name", "User");
+                        item.profile_pic = userInfo.optString("profile_pic", "null");
+                        item.verified = userInfo.optString("verified");
+                    }
 
-                    JSONObject sound_data = itemdata.optJSONObject("sound");
-                    item.sound_id = sound_data.optString("id");
-                    item.sound_name = sound_data.optString("sound_name");
-                    item.sound_pic = sound_data.optString("thum");
-
+                    JSONObject soundData = itemdata.optJSONObject("sound");
+                    if (soundData != null) {
+                        item.sound_id = soundData.optString("id");
+                        item.sound_name = soundData.optString("sound_name");
+                        item.sound_pic = soundData.optString("thum");
+                        item.soundUrl = soundData.optString("sound_url");
+                    }
 
                     JSONObject count = itemdata.optJSONObject("count");
-                    item.like_count = count.optString("like_count");
-                    item.video_comment_count = count.optString("video_comment_count");
-
+                    if (count != null) {
+                        item.like_count = count.optString("like_count");
+                        item.video_comment_count = count.optString("video_comment_count");
+                    }
 
                     item.video_id = itemdata.optString("id");
                     item.liked = itemdata.optString("liked");
@@ -394,7 +447,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     }
 
                     item.isMute = isMuted;
-                    data_list.add(item);
+                    dataList.add(item);
                 }
 
             } else {
@@ -410,126 +463,167 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this will call when swipe for another video and
     // this function will set the player to the current video
     private void setPlayer(final int currentPage) {
-        final Home item = data_list.get(currentPage);
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector();
-        previousPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, APP_NAME));
-        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(item.video_url));
-        previousPlayer.prepare(videoSource);
+        if (!dataList.isEmpty() && currentPage >= 0) {
+            View layout = layoutManager.findViewByPosition(currentPage);
+            final RelativeLayout mainLayout = layout.findViewById(R.id.mainLayoutHome);
+            final FrameLayout loadAdsLayout = layout.findViewById(R.id.frameLoadAdsHome);
+            final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
 
-        previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
-        previousPlayer.addListener(this);
+            final Home item = dataList.get(currentPage);
 
-        View layout = layoutManager.findViewByPosition(currentPage);
-        final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
-        playerView.setPlayer(previousPlayer);
+            DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(32 * 1024, 64 * 1024, 1024, 1024).createDefaultLoadControl();
 
-        previousPlayer.setPlayWhenReady(is_visible_to_user);
+            DefaultTrackSelector trackSelector = new DefaultTrackSelector(context);
+            RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(context).build();
+            Looper looper = Looper.myLooper();
+            Clock clock = SystemClock.DEFAULT;
+            AnalyticsCollector analyticsCollector = new AnalyticsCollector(clock);
+            previousPlayer = new SimpleExoPlayer.Builder(context, renderersFactory, trackSelector, loadControl,
+                    bandwidthMeter, looper, analyticsCollector, true, clock).build();
+            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
+                    Util.getUserAgent(context, APP_NAME));
+            if (item.video_url.isEmpty()) {
+                loadAdsLayout.setVisibility(View.VISIBLE);
+                if (adView != null) {
+                    if (adView.getParent() != null) {
+                        ((ViewGroup) adView.getParent()).removeView(adView);
+                    }
+                    loadAdsLayout.addView(adView);
+                }
+            } else {
+                loadAdsLayout.setVisibility(View.INVISIBLE);
+                if (adView != null) {
+                    if (adView.getParent() != null) {
+                        ((ViewGroup) adView.getParent()).removeView(adView);
+                    }
+                }
 
+                HttpProxyCacheServer proxy = getProxy(context);
+                String proxyUrl = proxy.getProxyUrl(item.video_url);
+                MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(Uri.parse(proxyUrl));
+                playerView.setPlayer(previousPlayer);
+                previousPlayer.prepare(videoSource);
+            }
 
-        final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
-        playerView.setOnTouchListener(new View.OnTouchListener() {
-            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            setUpVideoCache();
 
-                @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    super.onFling(e1, e2, velocityX, velocityY);
-                    float deltaX = e1.getX() - e2.getX();
-                    float deltaXAbs = Math.abs(deltaX);
-                    // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
-                    if ((deltaXAbs > 100) && (deltaXAbs < 1000)) {
-                        if (deltaX > 0) {
-                            openProfile(item, true);
+            previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
+            previousPlayer.addListener(this);
+            previousPlayer.setPlayWhenReady(is_visible_to_user);
+
+            playerView.setOnTouchListener(new View.OnTouchListener() {
+                private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                        super.onFling(e1, e2, velocityX, velocityY);
+                        float deltaX = e1.getX() - e2.getX();
+                        float deltaXAbs = Math.abs(deltaX);
+                        // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
+                        if ((deltaXAbs > 100) && (deltaXAbs < 1000)) {
+                            if (deltaX > 0) {
+                                openProfile(item, true);
+                            }
                         }
+
+                        return true;
                     }
 
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        super.onSingleTapUp(e);
+                        if (!previousPlayer.getPlayWhenReady()) {
+                            is_user_stop_video = false;
+                            previousPlayer.setPlayWhenReady(true);
+                        } else {
+                            is_user_stop_video = true;
+                            previousPlayer.setPlayWhenReady(false);
+                        }
 
+                        return true;
+                    }
+
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        super.onLongPress(e);
+                        showVideoOption(item);
+                    }
+
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        if (!previousPlayer.getPlayWhenReady()) {
+                            is_user_stop_video = false;
+                            previousPlayer.setPlayWhenReady(true);
+                        }
+                        if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                            showHeartOnDoubleTap(item, mainLayout, e);
+                            likeVideo(currentPage, item);
+                        } else {
+                            Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
+                        }
+                        return super.onDoubleTap(e);
+
+                    }
+                });
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    gestureDetector.onTouchEvent(event);
                     return true;
-                }
-
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    super.onSingleTapUp(e);
-                    if (!previousPlayer.getPlayWhenReady()) {
-                        is_user_stop_video = false;
-                        previousPlayer.setPlayWhenReady(true);
-                    } else {
-                        is_user_stop_video = true;
-                        previousPlayer.setPlayWhenReady(false);
-                    }
-
-
-                    return true;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    super.onLongPress(e);
-                    showVideoOption(item);
-                }
-
-                @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    if (!previousPlayer.getPlayWhenReady()) {
-                        is_user_stop_video = false;
-                        previousPlayer.setPlayWhenReady(true);
-                    }
-                    if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                        showHeartOnDoubleTap(item, mainlayout, e);
-                        likeVideo(currentPage, item);
-                    } else {
-                        Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
-                    }
-                    return super.onDoubleTap(e);
-
                 }
             });
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return true;
-            }
-        });
-
-        TextView desc_txt = layout.findViewById(R.id.desc_txt);
-        HashTagHelper.Creator.create(context.getResources().getColor(R.color.maincolor), new HashTagHelper.OnHashTagClickListener() {
-            @Override
-            public void onHashTagClicked(String hashTag) {
-                onPause();
-                openHashtag(hashTag);
-            }
-        }).handle(desc_txt);
-
-        LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
-        Animation sound_animation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
-        soundimage.startAnimation(sound_animation);
-
-        if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
-            Functions.callApiForUpdateView(getActivity(), item.video_id);
-
-        swipe_count++;
-        if (swipe_count > 4) {
-            // showAdd();
-            swipe_count = 0;
-        }
-
-        if (currentPage == data_list.size() - 1) {
-            pageNumber = pageNumber + 1;
-            callApiForGetAllVideos();
-        } else {
-            recyclerView.post(new Runnable() {
-                public void run() {
-                    // There is no need to use notifyDataSetChanged()
-                    adapter.notifyDataSetChanged();
+            TextView desc_txt = layout.findViewById(R.id.desc_txt);
+            HashTagHelper.Creator.create(context.getResources().getColor(R.color.maincolor), new HashTagHelper.OnHashTagClickListener() {
+                @Override
+                public void onHashTagClicked(String hashTag) {
+                    onPause();
+                    openHashtag(hashTag);
                 }
-            });
+            }).handle(desc_txt);
 
+            LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
+            Animation soundAnimation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
+            soundimage.startAnimation(soundAnimation);
+
+            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
+                Functions.callApiForUpdateView(getActivity(), item.video_id);
+
+            swipe_count++;
+            if (swipe_count > 4) {
+                // showAdd();
+                swipe_count = 0;
+            }
+
+            if (currentPage == dataList.size() - 1) {
+                pageNumber = pageNumber + 1;
+                callApiForGetAllVideos();
+            } else {
+                recyclerView.post(new Runnable() {
+                    public void run() {
+                        // There is no need to use notifyDataSetChanged()
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
         }
     }
 
+    private void setUpVideoCache() {
+        if (currentPage + 1 < dataList.size()) {
+            HttpProxyCacheServer proxy = getProxy(context);
+            String url = "";
+            if (dataList.get(currentPage + 1).video_url.isEmpty()) {
+
+            } else {
+                url = dataList.get(currentPage + 1).video_url;
+            }
+            proxy.getProxyUrl(url);
+        }
+    }
 
     public void showHeartOnDoubleTap(Home item, final RelativeLayout mainlayout, MotionEvent e) {
 
@@ -580,13 +674,17 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onDataSent(String yourData) {
         int comment_count = Integer.parseInt(yourData);
-        Home item = data_list.get(currentPage);
+        Home item = dataList.get(currentPage);
         item.video_comment_count = "" + comment_count;
-        data_list.remove(currentPage);
-        data_list.add(currentPage, item);
+        dataList.remove(currentPage);
+        dataList.add(currentPage, item);
         adapter.notifyDataSetChanged();
     }
 
+
+    public void setDownloadListener(VideoDownloadedListener downloadListener) {
+        videoDownloadedListener = downloadListener;
+    }
 
     // this will call when go to the home tab From other tab.
     // this is very importent when for video play and pause when the focus is changes
@@ -625,9 +723,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             home_.like_count = "" + (Integer.parseInt(home_.like_count) + 1);
         }
 
-        data_list.remove(position);
+        dataList.remove(position);
         home_.liked = action;
-        data_list.add(position, home_);
+        dataList.add(position, home_);
         adapter.notifyDataSetChanged();
 
         Functions.callApiForLikeVideo(getActivity(), home_.video_id, action, new ApiCallBack() {
@@ -743,7 +841,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private void saveVideo(final Home item) {
         mActivity.showProgressDialog();
         PRDownloader.initialize(getActivity().getApplicationContext());
-        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + "no_watermark" + ".mp4")
+        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.APP_FOLDER, item.video_id + "no_watermark" + ".mp4")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -787,18 +885,19 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     public void applyWatermark(final Home item) {
+        mActivity.showProgressDialog();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_watermark, options);
         GlWatermarkFilter filter = new GlWatermarkFilter(logo, GlWatermarkFilter.Position.LEFT_TOP);
-        new GPUMp4Composer(Variables.app_folder + item.video_id + "no_watermark" + ".mp4",
-                Variables.app_folder + item.video_id + ".mp4")
+        new GPUMp4Composer(Variables.APP_FOLDER + item.video_id + "no_watermark" + ".mp4",
+                Variables.APP_FOLDER + item.video_id + ".mp4")
                 .filter(filter)
 
                 .listener(new GPUMp4Composer.Listener() {
                     @Override
                     public void onProgress(double progress) {
-                        mActivity.showProgressDialog();
+
                     }
 
                     @Override
@@ -841,21 +940,24 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 
     public void deleteFileNoWatermark(Home item) {
-        File file = new File(Variables.app_folder + item.video_id + "no_watermark" + ".mp4");
+        File file = new File(Variables.APP_FOLDER + item.video_id + "no_watermark" + ".mp4");
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public void scanFile(Home item) {
+    private void scanFile(Home item) {
         MediaScannerConnection.scanFile(getActivity(),
-                new String[]{Variables.app_folder + item.video_id + ".mp4"},
+                new String[]{Variables.APP_FOLDER + item.video_id + ".mp4"},
                 null,
                 new MediaScannerConnection.OnScanCompletedListener() {
 
                     public void onScanCompleted(String path, Uri uri) {
-                        Log.i("ExternalStorage", "Scanned " + path + ":");
-                        Log.i("ExternalStorage", "-> uri=" + uri);
+//                        Log.i("ExternalStorage", "Scanned " + path + ":");
+//                        Log.i("ExternalStorage", "-> uri=" + uri);
+                        if (videoDownloadedListener != null) {
+                            videoDownloadedListener.onDownloadCompleted(uri);
+                        }
                     }
                 });
     }
@@ -869,9 +971,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         }
 
         if (item != null) {
-            data_list.remove(position);
+            dataList.remove(position);
             item.isMute = isMuted;
-            data_list.add(position, item);
+            dataList.add(position, item);
             adapter.notifyDataSetChanged();
         }
     }
@@ -920,39 +1022,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         if (previousPlayer != null) {
             previousPlayer.release();
         }
+        getProxy(context).shutdown();
     }
-
-
-    public boolean checkPermissions() {
-        String[] PERMISSIONS = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.CAMERA
-        };
-
-        if (!hasPermissions(context, PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, 2);
-        } else {
-
-            return true;
-        }
-
-        return false;
-    }
-
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 
     // Bottom all the function and the Call back listener of the Expo player
     @Override
@@ -977,9 +1048,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
         if (playbackState == Player.STATE_BUFFERING) {
-            p_bar.setVisibility(View.VISIBLE);
+            pBar.setVisibility(View.VISIBLE);
         } else if (playbackState == Player.STATE_READY) {
-            p_bar.setVisibility(View.GONE);
+            pBar.setVisibility(View.GONE);
         }
 
 

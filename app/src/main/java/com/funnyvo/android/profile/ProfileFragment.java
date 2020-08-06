@@ -2,7 +2,9 @@ package com.funnyvo.android.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -10,13 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,6 +26,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.chat.ChatActivity;
@@ -31,7 +35,6 @@ import com.funnyvo.android.following.FollowingFragment;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
-import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
@@ -39,13 +42,10 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 
 // This is the profile screen which is show in 5 tab as well as it is also call
@@ -54,7 +54,7 @@ import java.util.ArrayList;
 public class ProfileFragment extends RootFragment implements View.OnClickListener {
 
     private MaterialButton follow_unfollow_btn;
-    private TextView username, username2_txt, video_count_txt;
+    private TextView username, username2_txt, video_count_txt, txtUserBioProfile;
     private ImageView imageView;
     private TextView follow_count_txt, fans_count_txt, heart_count_txt;
 
@@ -65,14 +65,16 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     protected TabLayout tabLayout;
     protected ViewPager pager;
     private ViewPagerAdapter adapter;
-    private boolean isdataload = false;
     private RelativeLayout tabs_main_layout;
     private LinearLayout top_layout;
     public static String pic_url;
     private boolean is_run_first_time = false;
     private String follow_status = "0";
 
+    private Button btnYoutube, btnInstagram, btnTwitter;
+
     FragmentCallback fragment_callback;
+    private String youtubeUrl, twitterUrl, instagramUrl;
 
     public ProfileFragment() {
     }
@@ -97,7 +99,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        return init(view);
     }
 
     @Override
@@ -137,19 +141,23 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             case R.id.back_btn:
                 getActivity().onBackPressed();
                 break;
+            case R.id.btnYoutubeProfile:
+                openBrowser(youtubeUrl);
+                break;
+            case R.id.btnTwitterProfile:
+                openBrowser(twitterUrl);
+                break;
+            case R.id.btnInstagramProfile:
+                openBrowser(instagramUrl);
+                break;
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init(view);
-    }
-
-    private void init(View view) {
-        username = view.findViewById(R.id.username);
-        username2_txt = view.findViewById(R.id.username2_txt);
-        imageView = view.findViewById(R.id.user_image);
+    private View init(View view) {
+        username = view.findViewById(R.id.nameProfile);
+        username2_txt = view.findViewById(R.id.txtUserName);
+        txtUserBioProfile = view.findViewById(R.id.txtUserBioProfile);
+        imageView = view.findViewById(R.id.imvProfileImage);
         imageView.setOnClickListener(this);
 
         video_count_txt = view.findViewById(R.id.video_count_txt);
@@ -158,6 +166,13 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         fans_count_txt = view.findViewById(R.id.fan_count_txt);
         heart_count_txt = view.findViewById(R.id.heart_count_txt);
 
+        btnYoutube = view.findViewById(R.id.btnYoutubeProfile);
+        btnInstagram = view.findViewById(R.id.btnInstagramProfile);
+        btnTwitter = view.findViewById(R.id.btnTwitterProfile);
+
+        btnYoutube.setOnClickListener(this);
+        btnInstagram.setOnClickListener(this);
+        btnTwitter.setOnClickListener(this);
 
         setting_btn = view.findViewById(R.id.setting_btn);
         setting_btn.setOnClickListener(this);
@@ -189,11 +204,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
             @Override
             public void onGlobalLayout() {
-
                 final int height = top_layout.getMeasuredHeight();
-
-                top_layout.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
+                top_layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 ViewTreeObserver observer = tabs_main_layout.getViewTreeObserver();
                 observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -217,18 +229,8 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         view.findViewById(R.id.following_layout).setOnClickListener(this);
         view.findViewById(R.id.fans_layout).setOnClickListener(this);
 
-        isdataload = true;
         callApiForGetAllvideos();
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (is_run_first_time) {
-            callApiForGetAllvideos();
-        }
-
+        return view;
     }
 
     private void setupTabIcons() {
@@ -374,7 +376,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         }
 
 
-        ApiRequest.callApi(getActivity(), Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.SHOW_MY_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 is_run_first_time = true;
@@ -385,9 +387,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void parseData(String responce) {
+    private void parseData(String response) {
         try {
-            JSONObject jsonObject = new JSONObject(responce);
+            JSONObject jsonObject = new JSONObject(response);
             String code = jsonObject.optString("code");
             if (code.equals("200")) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
@@ -396,12 +398,32 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
                 JSONObject user_info = data.optJSONObject("user_info");
                 username.setText(user_info.optString("first_name") + " " + user_info.optString("last_name"));
                 username2_txt.setText(user_info.optString("username"));
+                txtUserBioProfile.setText(user_info.optString("bio"));
+
+                twitterUrl = user_info.optString("twitter_id");
+                instagramUrl = user_info.optString("instagram_id");
+                youtubeUrl = user_info.optString("youtube_id");
+
+                if (!twitterUrl.equals("null") && !twitterUrl.isEmpty()) {
+                    btnTwitter.setVisibility(View.VISIBLE);
+                }
+                if (!instagramUrl.equals("null") && !instagramUrl.isEmpty()) {
+                    btnInstagram.setVisibility(View.VISIBLE);
+                }
+                if (!youtubeUrl.equals("null") && !youtubeUrl.isEmpty()) {
+                    btnYoutube.setVisibility(View.VISIBLE);
+                }
 
                 ProfileFragment.pic_url = user_info.optString("profile_pic");
-                Picasso.with(getActivity())
-                        .load(ProfileFragment.pic_url)
-                        .placeholder(getActivity().getResources().getDrawable(R.drawable.profile_image_placeholder))
-                        .resize(200, 200).centerCrop().into(imageView);
+
+                if (this.isAdded()) {
+                    Glide.with(this)
+                            .load(ProfileFragment.pic_url)
+                            .centerCrop()
+                            .apply(new RequestOptions().override(200, 200))
+                            .placeholder(R.drawable.profile_image_placeholder)
+                            .into(imageView);
+                }
 
                 follow_count_txt.setText(data.optString("total_following"));
                 fans_count_txt.setText(data.optString("total_fans"));
@@ -440,7 +462,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void followUnFollowUser() {
+    private void followUnFollowUser() {
         final String status;
         if (follow_status.equals("0")) {
             status = "1";
@@ -463,7 +485,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(getActivity(), Variables.follow_users, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.FOLLOW_USERS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();
@@ -496,7 +518,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
 
     //this method will get the big size of profile image.
-    public void openfullsizeImage(String url) {
+    private void openfullsizeImage(String url) {
         SeeFullImageFragment see_image_f = new SeeFullImageFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
@@ -514,7 +536,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openChat() {
+    private void openChat() {
         ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
@@ -534,7 +556,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openFollowing() {
+    private void openFollowing() {
 
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -556,7 +578,7 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
 
     }
 
-    public void openFollowers() {
+    private void openFollowers() {
         FollowingFragment following_fragment = new FollowingFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);

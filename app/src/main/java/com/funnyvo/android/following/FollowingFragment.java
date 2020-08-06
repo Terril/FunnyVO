@@ -1,7 +1,6 @@
 package com.funnyvo.android.following;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,11 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.R;
-import com.funnyvo.android.simpleclasses.ApiCallBack;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.following.datamodel.Following;
 
@@ -141,7 +138,7 @@ public class FollowingFragment extends RootFragment {
         }
 
 
-        ApiRequest.callApi(context, Variables.get_followings, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.GET_FOLLOWINGS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseFollowingData(resp);
@@ -213,7 +210,7 @@ public class FollowingFragment extends RootFragment {
         }
 
 
-        ApiRequest.callApi(context, Variables.get_followers, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.GET_FOLLOWERS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 parseFansData(resp);
@@ -310,7 +307,7 @@ public class FollowingFragment extends RootFragment {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(getActivity(), Variables.follow_users, parameters, new Callback() {
+        ApiRequest.callApi(getActivity(), Variables.FOLLOW_USERS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 try {

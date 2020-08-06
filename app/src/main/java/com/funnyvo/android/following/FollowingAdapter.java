@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.following.datamodel.Following;
+import com.funnyvo.android.profile.ProfileFragment;
 import com.google.android.material.button.MaterialButton;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -91,12 +93,10 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Cust
     @Override
     public void onBindViewHolder(final FollowingAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
-
         Following item = datalist.get(i);
-
         holder.user_name.setText(item.first_name + " " + item.last_name);
 
-        Picasso.with(context)
+        Glide.with(context)
                 .load(item.profile_pic)
                 .placeholder(R.drawable.profile_image_placeholder)
                 .into(holder.user_image);

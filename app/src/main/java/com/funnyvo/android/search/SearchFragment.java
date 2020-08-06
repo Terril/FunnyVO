@@ -87,7 +87,7 @@ public class SearchFragment extends RootFragment {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.search, params, new Callback() {
+        ApiRequest.callApi(context, Variables.SEARCH, params, new Callback() {
             @Override
             public void response(String resp) {
                 shimmerFrameLayout.stopShimmer();

@@ -13,8 +13,7 @@ import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +25,6 @@ public class SeeFullImageFragment extends Fragment {
     ImageView single_image;
 
     String image_url;
-    ProgressBar p_bar;
     int width, height;
 
     public SeeFullImageFragment() {
@@ -55,24 +53,13 @@ public class SeeFullImageFragment extends Fragment {
             }
         });
 
-
-        p_bar = view.findViewById(R.id.p_bar);
-
         single_image = view.findViewById(R.id.single_image);
 
-        p_bar.setVisibility(View.VISIBLE);
-        Picasso.with(context).load(image_url).placeholder(R.drawable.image_placeholder)
-                .into(single_image, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        p_bar.setVisibility(View.GONE);
-                    }
+        Glide.with(context)
+                .load(image_url)
+                .placeholder(R.drawable.image_placeholder)
+                .into(single_image);
 
-                    @Override
-                    public void onError() {
-                        p_bar.setVisibility(View.GONE);
-                    }
-                });
 
         return view;
     }

@@ -110,7 +110,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
         holder.setIsRecyclable(false);
         String filterName = datalist.get(i).name();
         holder.fiter_txt.setText(filterName.replace("_", " "));
-        if (PreviewVideoActivity.select_postion == i) {
+        if (PreviewVideoActivity.selectPostion == i) {
             holder.ivPhoto.setBackgroundColor(context.getResources().getColor(R.color.redcolor));
         }
         holder.ivPhoto.setImage(image);

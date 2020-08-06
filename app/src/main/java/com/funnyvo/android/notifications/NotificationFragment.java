@@ -122,7 +122,7 @@ public class NotificationFragment extends RootFragment implements View.OnClickLi
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.getNotifications, jsonObject, new Callback() {
+        ApiRequest.callApi(context, Variables.GET_NOTIFICATIONS, jsonObject, new Callback() {
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);

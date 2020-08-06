@@ -30,7 +30,7 @@ class MultipartRequest @Inject constructor(url: String?, errorListener: Response
         }
         if (stringPart != null) {
             for ((key, value) in stringPart) {
-                entity.addTextBody(key, value)
+                entity.addTextBody(key, value, ContentType.APPLICATION_JSON)
             }
         }
     }

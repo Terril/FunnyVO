@@ -4,35 +4,35 @@
     android:layout_height="150dp">
 
     <ImageView
+        android:id="@+id/thumb_image"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:id="@+id/thumb_image"
         android:layout_margin="1dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="5dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_height="@dimen/margin_30"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/black_gradient"
-        android:layout_alignParentBottom="true">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_10"
+        android:paddingBottom="5dp">
 
 
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/view_txt"
-        android:layout_marginRight="5dp"
-        android:shadowColor="@color/darkgray"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="3"
-          android:layout_alignParentRight="true"
-        android:textColor="@color/white"/>
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:id="@+id/view_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_5"
+            android:shadowColor="@color/darkgray"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

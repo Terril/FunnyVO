@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -110,7 +109,7 @@ public class UserVideoFragment extends Fragment {
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.showMyAllVideos, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.SHOW_MY_ALL_VIDEOS, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 is_api_run = false;
@@ -176,6 +175,9 @@ public class UserVideoFragment extends Fragment {
                         }
                         if (item.thum.contains(Variables.base_url)) {
                             item.thum = item.thum.replace(Variables.base_url + "/", "");
+                        }
+                        if (item.gif.contains(Variables.base_url)) {
+                            item.gif = item.gif.replace(Variables.base_url + "/", "");
                         }
 
                         data_list.add(i, item);

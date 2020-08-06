@@ -2,11 +2,11 @@ package com.funnyvo.android.soundlists;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 
@@ -25,6 +25,11 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
     public Context context;
 
     ArrayList<SoundCategory> datalist;
+
+    public void updateList(ArrayList<SoundCategory> searchedSoundCategory) {
+        datalist = searchedSoundCategory;
+        notifyDataSetChanged();
+    }
 
     public interface OnItemClickListener {
         void onItemClick(View view, int postion, Sounds item);
@@ -56,7 +61,7 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.CustomViewHo
     public void onBindViewHolder(final SoundAdapter.CustomViewHolder holder, final int i) {
         holder.setIsRecyclable(false);
         SoundCategory item = datalist.get(i);
-        holder.title.setText(item.catagory);
+        holder.title.setText(item.catagoryName);
         SoundItemsAdapter adapter = new SoundItemsAdapter(context, item.sound_list, new SoundItemsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, Sounds item) {
@@ -156,9 +161,11 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
 
 
             if (item.thum != null && !item.thum.equals("")) {
-                Log.d(Variables.tag, item.thum);
-                Uri uri = Uri.parse(item.thum);
-                holder.sound_image.setImageURI(uri);
+                Glide.with(context)
+                        .load(item.thum)
+                        .centerCrop()
+                        .placeholder(R.color.colorAccent)
+                        .into(holder.sound_image);
             }
 
 
@@ -172,13 +179,12 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
 
         ImageButton done, fav_btn;
         TextView sound_name, description_txt;
-        SimpleDraweeView sound_image;
+        ImageView sound_image;
 
         public CustomViewHolder(View view) {
             super(view);
 
-            done = view.findViewById(R.id.done);
-            fav_btn = view.findViewById(R.id.fav_btn);
+            done = view.findViewById(R.id.btnSoundSelected);
 
             sound_name = view.findViewById(R.id.sound_name);
             description_txt = view.findViewById(R.id.description_txt);
@@ -196,13 +202,6 @@ class SoundItemsAdapter extends RecyclerView.Adapter<SoundItemsAdapter.CustomVie
             });
 
             done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(v, pos, item);
-                }
-            });
-
-            fav_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v, pos, item);

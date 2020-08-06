@@ -22,10 +22,9 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.home.datamodel.Home;
-import com.funnyvo.android.R;
-import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -66,7 +65,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
             item = (Home) intent.getSerializableExtra("data");
         }
 
-        video_file = new File(Variables.app_folder + item.video_id + ".mp4");
+        video_file = new File(Variables.APP_FOLDER + item.video_id + ".mp4");
 
         sound_name = findViewById(R.id.sound_name);
         description_txt = findViewById(R.id.description_txt);
@@ -88,7 +87,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         findViewById(R.id.play_btn).setOnClickListener(this);
         findViewById(R.id.pause_btn).setOnClickListener(this);
 
-        if (video_file.exists()) {
+        if (video_file != null && video_file.exists()) {
             Glide.with(this)
                     .load(Uri.fromFile(video_file))
                     .into(sound_image);
@@ -104,14 +103,13 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.back_btn:
                 finish();
                 break;
             case R.id.btnSaveSound:
                 try {
-                    copyFile(new File(Variables.app_folder + Variables.SelectedAudio_MP3),
-                            new File(Variables.app_folder + item.video_id + ".mp3"));
+                    copyFile(new File(Variables.APP_FOLDER + Variables.SelectedAudio_MP3),
+                            new File(Variables.APP_FOLDER + item.video_id + ".mp3"));
                     Toast.makeText(this, "Audio Saved", Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -127,9 +125,9 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                 break;
 
             case R.id.play_btn:
-                if (audio_file.exists())
+                if (audio_file != null && audio_file.exists())
                     playAudio();
-                else if (video_file.exists())
+                else if (audio_file != null && video_file.exists())
                     loadFFmpeg();
                 else
                     saveVideo();
@@ -142,7 +140,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    public void playAudio() {
+    private void playAudio() {
 
         DefaultTrackSelector trackSelector = new DefaultTrackSelector();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
@@ -161,9 +159,16 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
     }
 
 
-    public void stopPlaying() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopPlaying();
+    }
+
+    private void stopPlaying() {
         if (player != null) {
             player.setPlayWhenReady(false);
+            player.release();
         }
         showPauseState();
     }
@@ -174,20 +179,20 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         stopPlaying();
     }
 
-    public void showPlayingState() {
+    private void showPlayingState() {
         findViewById(R.id.play_btn).setVisibility(View.GONE);
         findViewById(R.id.pause_btn).setVisibility(View.VISIBLE);
     }
 
-    public void showPauseState() {
+    private void showPauseState() {
         findViewById(R.id.play_btn).setVisibility(View.VISIBLE);
         findViewById(R.id.pause_btn).setVisibility(View.GONE);
     }
 
 
-    public void saveVideo() {
+    private void saveVideo() {
         PRDownloader.initialize(this);
-        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.app_folder, item.video_id + ".mp4")
+        DownloadRequest prDownloader = PRDownloader.download(item.video_url, Variables.APP_FOLDER, item.video_id + ".mp4")
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
@@ -220,8 +225,8 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onDownloadComplete() {
                 dismissProgressDialog();
-                audio_file = new File(Variables.app_folder + item.video_id + ".mp4");
-                Glide.with(VideoSoundActivity.this)
+                audio_file = new File(Variables.APP_FOLDER + item.video_id + ".mp4");
+                Glide.with(getApplicationContext())
                         .load(Uri.fromFile(video_file))
                         .into(sound_image);
                 loadFFmpeg();
@@ -236,10 +241,10 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    public void loadFFmpeg() {
+    private void loadFFmpeg() {
         showAudioLoading();
-        final String[] complexCommand = {"-y", "-i", Variables.app_folder + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
-                Variables.app_folder + Variables.SelectedAudio_MP3};
+        final String[] complexCommand = {"-y", "-i", Variables.APP_FOLDER + item.video_id + ".mp4", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "256k", "-f", "mp3",
+                Variables.APP_FOLDER + Variables.SelectedAudio_MP3};
 
 
         new AsyncTask<Object, Object, Object>() {
@@ -258,7 +263,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
                 if (rc == RETURN_CODE_SUCCESS) {
                     Log.d(Variables.tag, "Command execution completed successfully.");
                     hideAudioLoading();
-                    audio_file = new File(Variables.app_folder + Variables.SelectedAudio_MP3);
+                    audio_file = new File(Variables.APP_FOLDER + Variables.SelectedAudio_MP3);
                     if (audio_file.exists())
                         playAudio();
 
@@ -366,7 +371,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
     private void convertMp3ToAcc() {
         showProgressDialog();
-        final String[] complexCommand = new String[]{"-y", "-i", Variables.app_folder + Variables.SelectedAudio_MP3, Variables.app_folder + Variables.SelectedAudio_AAC};
+        final String[] complexCommand = new String[]{"-y", "-i", Variables.APP_FOLDER + Variables.SelectedAudio_MP3, Variables.APP_FOLDER + Variables.SelectedAudio_AAC};
 
         new AsyncTask<Object, Object, Object>() {
             @Override

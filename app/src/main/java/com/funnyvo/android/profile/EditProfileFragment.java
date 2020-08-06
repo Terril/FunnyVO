@@ -1,7 +1,6 @@
 package com.funnyvo.android.profile;
 
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,11 +23,15 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -45,7 +48,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +65,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
-import static com.funnyvo.android.main_menu.MainMenuFragment.hasPermissions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,20 +73,20 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
     private View view;
     private Context context;
-    FragmentCallback fragment_callback;
+    private FragmentCallback fragment_callback;
+    private ImageView profile_image;
+    private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit, txtInstagram, txtTwitter, txtYoutube;
+
+    private RadioButton male_btn, female_btn, btnNone;
+    private String imageFilePath;
 
     public EditProfileFragment() {
     }
 
     public EditProfileFragment(FragmentCallback fragment_callback) {
+        super();
         this.fragment_callback = fragment_callback;
     }
-
-    private ImageView profile_image;
-    private EditText username_edit, firstname_edit, lastname_edit, user_bio_edit;
-
-    private RadioButton male_btn, female_btn, btnNone;
-    private String imageFilePath;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +94,12 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         context = getContext();
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.Goback).setOnClickListener(this);
         view.findViewById(R.id.save_btn).setOnClickListener(this);
         view.findViewById(R.id.upload_pic_btn).setOnClickListener(this);
@@ -105,18 +111,21 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         lastname_edit = view.findViewById(R.id.lastname_edit);
         user_bio_edit = view.findViewById(R.id.user_bio_edit);
 
+        txtInstagram = view.findViewById(R.id.edtTextInstagram);
+        txtTwitter = view.findViewById(R.id.edtTextTwitter);
+        txtYoutube = view.findViewById(R.id.edtTextYoutube);
+
 
         username_edit.setText(Variables.sharedPreferences.getString(Variables.u_name, ""));
         firstname_edit.setText(Variables.sharedPreferences.getString(Variables.f_name, ""));
         lastname_edit.setText(Variables.sharedPreferences.getString(Variables.l_name, ""));
 
-        Picasso.with(context)
+        Glide.with(this)
                 .load(Variables.sharedPreferences.getString(Variables.u_pic, ""))
-                .placeholder(R.drawable.profile_image_placeholder)
-                .resize(200, 200)
                 .centerCrop()
+                .apply(new RequestOptions().override(200, 200))
+                .placeholder(R.drawable.profile_image_placeholder)
                 .into(profile_image);
-
 
         male_btn = view.findViewById(R.id.male_btn);
         female_btn = view.findViewById(R.id.female_btn);
@@ -124,7 +133,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
 
         callApiForUserDetails();
 
-        return view;
     }
 
     @Override
@@ -158,11 +166,11 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
-                    if (checkPermissions())
+                    if (PermissionUtils.INSTANCE.checkPermissions(Objects.requireNonNull(getActivity())))
                         openCameraIntent();
 
                 } else if (options[item].equals("Choose from Gallery")) {
-                    if (checkPermissions()) {
+                    if (PermissionUtils.INSTANCE.checkPermissions(Objects.requireNonNull(getActivity()))) {
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, 2);
                     }
@@ -177,25 +185,6 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
         builder.show();
 
     }
-
-
-    public boolean checkPermissions() {
-
-        String[] PERMISSIONS = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-        };
-
-        if (!hasPermissions(context, PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, 2);
-        } else {
-
-            return true;
-        }
-        return false;
-    }
-
 
     // below three method is related with taking the picture from camera
     private void openCameraIntent() {
@@ -401,7 +390,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.uploadImage, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.UPLOAD_IMAGE, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();
@@ -414,13 +403,14 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                         ProfileFragment.pic_url = image_link;
                         Variables.user_pic = image_link;
 
-                        Picasso.with(context)
+                        Glide.with(context)
                                 .load(ProfileFragment.pic_url)
-                                .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
-                                .resize(200, 200).centerCrop().into(profile_image);
+                                .centerCrop()
+                                .apply(new RequestOptions().override(200, 200))
+                                .placeholder(R.drawable.profile_image_placeholder)
+                                .into(profile_image);
 
-
-                        Toast.makeText(context, "Image Update Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.image_update_success, Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (JSONException e) {
@@ -441,6 +431,9 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
             parameters.put("first_name", firstname_edit.getText().toString());
             parameters.put("last_name", lastname_edit.getText().toString());
+            parameters.put("instagram_id", txtInstagram.getText().toString());
+            parameters.put("twitter_id", txtTwitter.getText().toString());
+            parameters.put("youtube_id", txtYoutube.getText().toString());
 
             if (male_btn.isChecked()) {
                 parameters.put("gender", "Male");
@@ -457,7 +450,7 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.edit_profile, parameters, new Callback() {
+        ApiRequest.callApi(context, Variables.EDIT_PROFILE, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 dismissProgressDialog();
@@ -534,9 +527,13 @@ public class EditProfileFragment extends RootFragment implements View.OnClickLis
                 firstname_edit.setText(data.optString("first_name"));
                 lastname_edit.setText(data.optString("last_name"));
 
+                txtYoutube.setText(data.optString("youtube_id"));
+                txtTwitter.setText(data.optString("twitter_id"));
+                txtInstagram.setText(data.optString("instagram_id"));
+
                 String picture = data.optString("profile_pic");
 
-                Picasso.with(context)
+                Glide.with(context)
                         .load(picture)
                         .placeholder(R.drawable.profile_image_placeholder)
                         .into(profile_image);

@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/Setting_F"
+    android:id="@+id/settingsFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -27,7 +27,7 @@
                 android:background="@drawable/d_bottom_gray_line">
 
                 <ImageButton
-                    android:id="@+id/Goback"
+                    android:id="@+id/btnGoBackSettings"
                     android:layout_width="@dimen/margin_32"
                     android:layout_height="@dimen/margin_32"
                     android:layout_alignParentStart="true"
@@ -74,6 +74,61 @@
                 android:background="@drawable/d_bottom_gray_line"
                 android:padding="@dimen/margin_15"
                 android:text="@string/privacy_policy"
+                android:textColor="@color/palette_cheddar_dark"
+                android:textSize="@dimen/text_size_18" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/d_bottom_gray_line">
+
+                <com.funnyvo.android.customview.FunnyVOTextView
+                    android:id="@+id/video_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_15"
+                    android:text="@string/video_visible_to"
+                    android:textColor="@color/palette_cheddar_dark"
+                    android:textSize="@dimen/text_size_18"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtVideoVisibleType"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:paddingEnd="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:textColor="@color/palette_cheddar_dark"
+                    android:textSize="@dimen/text_size_15"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/txtVideoVisibleDropdown"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:textColor="@color/palette_cheddar_dark"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.funnyvo.android.customview.FunnyVOTextView
+                android:id="@+id/txtRateApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/d_bottom_gray_line"
+                android:padding="@dimen/margin_15"
+                android:text="@string/rate_the_app"
                 android:textColor="@color/palette_cheddar_dark"
                 android:textSize="@dimen/text_size_18" />
 

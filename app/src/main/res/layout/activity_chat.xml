@@ -171,7 +171,7 @@
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:textColorHint="@color/palette_cheddar"
+            android:textColorHint="@color/graycolor"
             android:textColor="@color/black"
             android:layout_toLeftOf="@+id/upload_gif_btn"
             android:backgroundTint="@android:color/transparent"

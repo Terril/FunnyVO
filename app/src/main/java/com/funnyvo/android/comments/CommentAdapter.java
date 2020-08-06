@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.comments.datamodel.Comments;
-import com.squareup.picasso.Picasso;
+import com.funnyvo.android.profile.ProfileFragment;
 
 import java.util.ArrayList;
 
@@ -57,10 +59,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CustomVi
         holder.username.setText(item.first_name + " " + item.last_name);
 
         try {
-            Picasso.with(context).
-                    load(item.profile_pic)
-                    .resize(50, 50)
-                    .placeholder(context.getResources().getDrawable(R.drawable.profile_image_placeholder))
+            Glide.with(context)
+                    .load(item.profile_pic)
+                    .centerCrop()
+                    .apply(new RequestOptions().override(50, 50))
+                    .placeholder(R.drawable.profile_image_placeholder)
                     .into(holder.user_pic);
 
         } catch (Exception e) {
