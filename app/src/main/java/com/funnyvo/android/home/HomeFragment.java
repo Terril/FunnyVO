@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -51,6 +52,7 @@ import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
 import com.funnyvo.android.R;
 import com.funnyvo.android.VideoDownloadedListener;
+import com.funnyvo.android.ads.ShowAdvertisement;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.comments.CommentFragment;
 import com.funnyvo.android.helper.PermissionUtils;
@@ -78,9 +80,11 @@ import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.analytics.AnalyticsCollector;
+import com.google.android.exoplayer2.ext.ima.ImaAdsLoader;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.ads.AdsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -92,12 +96,14 @@ import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.ResponseInfo;
-import com.google.android.gms.ads.VideoOptions;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.formats.MediaView;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.NativeContentAd;
+import com.google.android.gms.ads.formats.OnPublisherAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.material.tabs.TabLayout;
@@ -146,6 +152,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private VideoDownloadedListener videoDownloadedListener;
 
     private static HomeFragment fragment;
+    private UnifiedNativeAdView adView;
 
     private HomeFragment() {
         // Required empty public constructor
@@ -184,6 +191,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         dataList = new ArrayList<>();
         setAdapter();
+        final ShowAdvertisement advertisement = ShowAdvertisement.Companion.getInstance();
         // this is the scroll listener of recycler view which will tell the current item number
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -201,6 +209,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 int page_no = scrollOffset / height;
 
                 if (page_no != currentPage) {
+                    adView = advertisement.showNativeAd(context);
                     currentPage = page_no;
                     releasePreviousPlayer();
                     setPlayer(currentPage);
@@ -221,66 +230,46 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 if (dataList != null && !dataList.isEmpty()) {
                     dataList.clear();
                 }
-                callApiForGetAllVideos();
+                handleApiCallRequest();
             }
         });
 
-        // callApiForGetAllVideos();
-        callApiForGetAllVideosWithAds();
-        showNativeAd();
-        if (!Variables.is_remove_ads)
-            loadAdd();
+        handleApiCallRequest();
+
+//        if (!Variables.is_remove_ads)
+//            loadAdd();
 
         return view;
     }
 
-    private void showNativeAd() {
-        AdLoader adLoader = new AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110") //getString(R.string.native_ad)
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        NativeAd.AdChoicesInfo choicesInfo = unifiedNativeAd.getAdChoicesInfo();
-                        Log.d(APP_NAME, " Ads data" + unifiedNativeAd.getExtras());
-                        // Show the ad.
-                        UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater()
-                                .inflate(R.layout.view_ads, null);
-                        //   adView.setMediaView(previousPlayer);
-                    }
-                })
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(int errorCode) {
-                        // Handle the failure by logging, altering the UI, and so on.
-                    }
-                })
-                .withNativeAdOptions(new NativeAdOptions.Builder()
-                        // Methods in the NativeAdOptions.Builder class can be
-                        // used here to specify individual options settings.
-                        .build())
-                .build();
-        adLoader.loadAd(new AdRequest.Builder().build());
+    private void handleApiCallRequest() {
+        if (Variables.sharedPreferences.getBoolean(Variables.SHOW_ADS, false)) {
+            callApiForGetAllVideosWithAds();
+        } else {
+            callApiForGetAllVideos();
+        }
     }
 
-    private void loadAdd() {
-        // this is test app id you will get the actual id when you add app in your
-        //add mob account
-        MobileAds.initialize(context,
-                getResources().getString(R.string.ad_app_id));
-
-        final InterstitialAd mInterstitialAd;
-        //code for intertial add
-        mInterstitialAd = new InterstitialAd(context);
-
-        //here we will get the add id keep in mind above id is app id and below Id is add Id
-        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitial_add));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-        });
-    }
+//    private void loadAdd() {
+//        // this is test app id you will get the actual id when you add app in your
+//        //add mob account
+//        MobileAds.initialize(context,
+//                getResources().getString(R.string.ad_app_id));
+//
+//        final InterstitialAd mInterstitialAd;
+//        //code for intertial add
+//        mInterstitialAd = new InterstitialAd(context);
+//
+//        //here we will get the add id keep in mind above id is app id and below Id is add Id
+//        mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitial_add));
+//        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//        mInterstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdClosed() {
+//                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//            }
+//        });
+//    }
 
     public void setAdapter() {
         adapter = new HomeAdapter(context, dataList, new HomeAdapter.OnItemClickListener() {
@@ -448,7 +437,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     }
 
                     JSONObject count = itemdata.optJSONObject("count");
-                    if(count != null) {
+                    if (count != null) {
                         item.like_count = count.optString("like_count");
                         item.video_comment_count = count.optString("video_comment_count");
                     }
@@ -489,12 +478,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this function will set the player to the current video
     private void setPlayer(final int currentPage) {
         if (!dataList.isEmpty() && currentPage >= 0) {
+            View layout = layoutManager.findViewByPosition(currentPage);
+            final RelativeLayout mainLayout = layout.findViewById(R.id.mainLayoutHome);
+            final FrameLayout loadAdsLayout = layout.findViewById(R.id.frameLoadAdsHome);
+            final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
+
             final Home item = dataList.get(currentPage);
 
-            HttpProxyCacheServer proxy = getProxy(context);
-            String proxyUrl = proxy.getProxyUrl(item.video_url);
-
-            DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl();
+            DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(32 * 1024, 64 * 1024, 1024, 1024).createDefaultLoadControl();
 
             DefaultTrackSelector trackSelector = new DefaultTrackSelector(context);
             RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
@@ -506,23 +497,38 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     bandwidthMeter, looper, analyticsCollector, true, clock).build();
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                     Util.getUserAgent(context, APP_NAME));
-            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(proxyUrl));
-            previousPlayer.prepare(videoSource);
+            if (item.video_url.isEmpty()) {
+                loadAdsLayout.setVisibility(View.VISIBLE);
+                if (adView != null) {
+                    if (adView.getParent() != null) {
+                        ((ViewGroup) adView.getParent()).removeView(adView);
+                    }
+                    loadAdsLayout.addView(adView);
+                }
+            } else {
+                loadAdsLayout.setVisibility(View.INVISIBLE);
+                if (adView != null) {
+                    if (adView.getParent() != null) {
+                        ((ViewGroup) adView.getParent()).removeView(adView);
+                    }
+                }
+
+                HttpProxyCacheServer proxy = getProxy(context);
+                String proxyUrl = proxy.getProxyUrl(item.video_url);
+                MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(Uri.parse(proxyUrl));
+                playerView.setPlayer(previousPlayer);
+                previousPlayer.prepare(videoSource);
+
+            }
 
             setUpVideoCache();
 
             previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
             previousPlayer.addListener(this);
 
-            View layout = layoutManager.findViewByPosition(currentPage);
-            final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
-            playerView.setPlayer(previousPlayer);
-
             previousPlayer.setPlayWhenReady(is_visible_to_user);
 
-
-            final RelativeLayout mainlayout = layout.findViewById(R.id.mainlayout);
             playerView.setOnTouchListener(new View.OnTouchListener() {
                 private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 
@@ -538,7 +544,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             }
                         }
 
-
                         return true;
                     }
 
@@ -552,7 +557,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             is_user_stop_video = true;
                             previousPlayer.setPlayWhenReady(false);
                         }
-
 
                         return true;
                     }
@@ -570,7 +574,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                             previousPlayer.setPlayWhenReady(true);
                         }
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                            showHeartOnDoubleTap(item, mainlayout, e);
+                            showHeartOnDoubleTap(item, mainLayout, e);
                             likeVideo(currentPage, item);
                         } else {
                             Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show();
@@ -597,8 +601,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             }).handle(desc_txt);
 
             LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
-            Animation sound_animation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
-            soundimage.startAnimation(sound_animation);
+            Animation soundAnimation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
+            soundimage.startAnimation(soundAnimation);
 
             if (Variables.sharedPreferences.getBoolean(Variables.islogin, false))
                 Functions.callApiForUpdateView(getActivity(), item.video_id);
@@ -627,7 +631,13 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private void setUpVideoCache() {
         if (currentPage + 1 < dataList.size()) {
             HttpProxyCacheServer proxy = getProxy(context);
-            proxy.getProxyUrl(dataList.get(currentPage + 1).video_url);
+            String url = "";
+            if (dataList.get(currentPage + 1).video_url.isEmpty()) {
+
+            } else {
+                url = dataList.get(currentPage + 1).video_url;
+            }
+            proxy.getProxyUrl(url);
         }
     }
 
@@ -1028,7 +1038,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         if (previousPlayer != null) {
             previousPlayer.release();
         }
-
         getProxy(context).shutdown();
     }
 

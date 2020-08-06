@@ -120,7 +120,7 @@ dependencies {
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.airbnb.android:lottie:2.7.0'
+    implementation 'com.airbnb.android:lottie:3.3.1'
 
     //Do not Update this library their is a camera issue with new version
     implementation 'com.wonderkiln:camerakit:0.13.0'

@@ -45,48 +45,49 @@ public class SplashActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+        MaterialButton btnSkip = findViewById(R.id.btnSkip);
+        btnNext = findViewById(R.id.btnNext);
         Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, MODE_PRIVATE);
 
         if (Variables.sharedPreferences.getBoolean(Variables.IS_FIRST_TIME, false)) {
             ImageView imvLogoImage = findViewById(R.id.imvLogoImage);
             imvLogoImage.setVisibility(View.VISIBLE);
+            btnSkip.setVisibility(View.GONE);
+            btnNext.setVisibility(View.GONE);
             callApiForSettings();
-        }
+        } else {
+            viewPager = findViewById(R.id.viewPager);
+            pagerAdapter = new SplashPagerAdapter(getSupportFragmentManager());
+            addingFragmentsTOpagerAdapter();
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
 
-        viewPager = findViewById(R.id.viewPager);
+            final String androidId = Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            SharedPreferences.Editor editor2 = Variables.sharedPreferences.edit();
+            editor2.putString(Variables.device_id, androidId).apply();
 
-        pagerAdapter = new SplashPagerAdapter(getSupportFragmentManager());
-        addingFragmentsTOpagerAdapter();
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
-
-        final String androidId = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        SharedPreferences.Editor editor2 = Variables.sharedPreferences.edit();
-        editor2.putString(Variables.device_id, androidId).apply();
-
-        MaterialButton btnSkip = findViewById(R.id.btnSkip);
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callNextActivity();
-            }
-        });
-
-        btnNext = findViewById(R.id.btnNext);
-        btnNext.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (btnNext.getText().toString().equals(getString(R.string.finish))) {
+            btnSkip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     callNextActivity();
-                } else {
-                    viewPager.setCurrentItem(getItem(+1), true); //getItem(-1) for previous
-                    viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
                 }
+            });
 
-            }
-        });
+            btnNext.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    if (btnNext.getText().toString().equals(getString(R.string.finish))) {
+                        callNextActivity();
+                    } else {
+                        viewPager.setCurrentItem(getItem(+1), true); //getItem(-1) for previous
+                        viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
+                    }
+
+                }
+            });
+        }
     }
 
     private void callApiForSettings() {
@@ -110,7 +111,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
 
-                if (getIntent().getExtras() != null) {
+                if (getIntent() != null && getIntent().getExtras() != null) {
                     intent.putExtras(getIntent().getExtras());
                     setIntent(null);
                 }
