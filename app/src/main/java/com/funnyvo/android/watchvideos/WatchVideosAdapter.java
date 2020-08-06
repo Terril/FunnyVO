@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,52 +61,55 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
 
         try {
             holder.bind(i, item, listener);
-            holder.username.setText(item.username);
-            if ((item.sound_name == null || item.sound_name.equals("") || item.sound_name.equals("null"))) {
-                holder.sound_name.setText("original sound - " + item.first_name + " " + item.last_name);
+            if (item.video_url.isEmpty()) {
+                holder.mainLayoutWatchVideo.setVisibility(View.INVISIBLE);
             } else {
-                holder.sound_name.setText(item.sound_name);
+                holder.username.setText(item.username);
+                if ((item.sound_name == null || item.sound_name.equals("") || item.sound_name.equals("null"))) {
+                    holder.sound_name.setText("original sound - " + item.first_name + " " + item.last_name);
+                } else {
+                    holder.sound_name.setText(item.sound_name);
+                }
+                holder.sound_name.setSelected(true);
+
+                holder.desc_txt.setText("" + item.video_description);
+
+                Glide.with(context)
+                        .load(item.profile_pic)
+                        .centerCrop()
+                        .apply(new RequestOptions().override(100, 100))
+                        .placeholder(R.drawable.profile_image_placeholder)
+                        .into(holder.user_pic);
+
+                if ((item.sound_name == null || item.sound_name.equals(""))
+                        || item.sound_name.equals("null")) {
+
+                    item.sound_pic = item.profile_pic;
+
+                } else if (item.sound_pic.equals(""))
+                    item.sound_pic = "Null";
+
+                Glide.with(context)
+                        .load(item.sound_pic)
+                        .apply(new RequestOptions().override(100, 100))
+                        .placeholder(R.drawable.ic_round_music)
+                        .into(holder.sound_image);
+
+                if (item.liked.equals("1")) {
+                    holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));
+                } else {
+                    holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart));
+                }
+
+                holder.like_txt.setText(item.like_count);
+                holder.comment_txt.setText(item.video_comment_count);
+
+                if (item.verified != null && item.verified.equalsIgnoreCase("1")) {
+                    holder.varified_btn.setVisibility(View.VISIBLE);
+                } else {
+                    holder.varified_btn.setVisibility(View.GONE);
+                }
             }
-            holder.sound_name.setSelected(true);
-
-            holder.desc_txt.setText("" + item.video_description);
-
-            Glide.with(context)
-                    .load(item.profile_pic)
-                    .centerCrop()
-                    .apply(new RequestOptions().override(100, 100))
-                    .placeholder(R.drawable.profile_image_placeholder)
-                    .into(holder.user_pic);
-
-            if ((item.sound_name == null || item.sound_name.equals(""))
-                    || item.sound_name.equals("null")) {
-
-                item.sound_pic = item.profile_pic;
-
-            } else if (item.sound_pic.equals(""))
-                item.sound_pic = "Null";
-
-            Glide.with(context)
-                    .load(item.sound_pic)
-                    .apply(new RequestOptions().override(100, 100))
-                    .placeholder(R.drawable.ic_round_music)
-                    .into(holder.sound_image);
-
-            if (item.liked.equals("1")) {
-                holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));
-            } else {
-                holder.like_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart));
-            }
-
-            holder.like_txt.setText(item.like_count);
-            holder.comment_txt.setText(item.video_comment_count);
-
-            if (item.verified != null && item.verified.equalsIgnoreCase("1")) {
-                holder.varified_btn.setVisibility(View.VISIBLE);
-            } else {
-                holder.varified_btn.setVisibility(View.GONE);
-            }
-
         } catch (Exception e) {
 
         }
@@ -124,10 +128,12 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
 
         ImageButton btnShare;
 
+        RelativeLayout mainLayoutWatchVideo;
+
         public CustomViewHolder(View view) {
             super(view);
 
-            playerview = view.findViewById(R.id.playerview);
+            playerview = view.findViewById(R.id.playerViewWatchVideo);
 
             username = view.findViewById(R.id.username);
             user_pic = view.findViewById(R.id.user_pic);
@@ -148,6 +154,8 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
 
             sound_image_layout = view.findViewById(R.id.sound_image_layout);
             btnShare = view.findViewById(R.id.btnShare);
+
+            mainLayoutWatchVideo = view.findViewById(R.id.mainLayoutWatchVideo);
         }
 
         public void bind(final int postion, final Home item, final WatchVideosAdapter.OnItemClickListener listener) {

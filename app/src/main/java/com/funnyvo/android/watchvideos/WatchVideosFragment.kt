@@ -7,13 +7,14 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
-import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
+import android.view.View.INVISIBLE
 import android.view.View.OnTouchListener
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -31,6 +32,7 @@ import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.funnyvo.android.R
 import com.funnyvo.android.VideoDownloadedListener
+import com.funnyvo.android.ads.ShowAdvertisement
 import com.funnyvo.android.comments.CommentFragment
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.helper.PermissionUtils.checkPermissions
@@ -54,6 +56,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.SystemClock
 import com.google.android.exoplayer2.util.Util
+import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.google.firebase.iid.FirebaseInstanceId
 import com.volokh.danylo.hashtaghelper.HashTagHelper
 import kotlinx.android.synthetic.main.fragment_watchvideo.*
@@ -64,7 +67,7 @@ import java.io.File
 import kotlin.math.abs
 
 class WatchVideosFragment : Fragment(), Player.EventListener,
-        KeyboardHeightObserver, View.OnClickListener, FragmentDataSend {
+        KeyboardHeightObserver, FragmentDataSend {
 
     private lateinit var adapter: WatchVideosAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -77,6 +80,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
 
     private var position = 0
     private var currentPage = -1
+    private var adView: UnifiedNativeAdView? = null
 
     private object HOLDER {
         val INSTANCE = WatchVideosFragment()
@@ -130,87 +134,108 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         btnReturnWatchVideo.setOnClickListener { activity?.onBackPressed() }
         keyboardHeightProvider = KeyboardHeightProvider(activity)
         WatchVideo_F.post(Runnable { keyboardHeightProvider.start() })
-        send_btn.setOnClickListener(this)
     }
 
-    private fun setPlayer(currentPage: Int) {
-        val item: Home = dataList[currentPage]
-        val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl()
-
-        val trackSelector = DefaultTrackSelector(context!!)
-        val renderersFactory: RenderersFactory = DefaultRenderersFactory(context!!)
-        val bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
-        val looper = Looper.myLooper()
-        val clock = SystemClock.DEFAULT
-        val analyticsCollector = AnalyticsCollector(clock)
-        val player = SimpleExoPlayer.Builder(context!!, renderersFactory, trackSelector, loadControl,
-                bandwidthMeter, looper!!, analyticsCollector, true, clock).build()
-        val dataSourceFactory = DefaultDataSourceFactory(context,
-                Util.getUserAgent(context!!, Variables.APP_NAME))
-        val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(item.video_url))
-        if (Variables.is_secure_info) Log.d(Variables.tag, item.video_url)
-        player.prepare(videoSource)
-        player.repeatMode = Player.REPEAT_MODE_ALL
-        player.addListener(this)
+    private fun setPlayer(currentPage: Int, showAds: Boolean) {
         val layout = layoutManager.findViewByPosition(currentPage)
-        val playerView: PlayerView = layout!!.findViewById(R.id.playerview)
-        playerView.player = player
-        player.playWhenReady = true
-        previousPlayer = player
-        playerView.setOnTouchListener(object : OnTouchListener {
-            private val gestureDetector = GestureDetector(context, object : SimpleOnGestureListener() {
-                override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                    super.onFling(e1, e2, velocityX, velocityY)
-                    val deltaX = e1.x - e2.x
-                    val deltaXAbs = abs(deltaX)
-                    // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
-                    if (deltaXAbs > 100 && deltaXAbs < 1000) {
-                        if (deltaX > 0) {
-                            openProfile(item, true)
+        val frameLoadAdsWatchVideo = layout?.findViewById<FrameLayout>(R.id.frameLoadAdsWatchVideo)
+        val mainLayoutWatchVideo = layout?.findViewById<RelativeLayout>(R.id.mainLayoutWatchVideo)
+        val playerView: PlayerView? = layout?.findViewById(R.id.playerViewWatchVideo)
+        if (showAds) {
+            dataList.add(currentPage, Home())
+            frameLoadAdsWatchVideo?.visibility = View.VISIBLE
+            mainLayoutWatchVideo?.visibility = INVISIBLE
+            if (adView != null) {
+                if (adView?.parent != null) {
+                    (adView?.parent as ViewGroup).removeView(adView)
+                }
+                frameLoadAdsWatchVideo?.addView(adView)
+            }
+        } else {
+            val item: Home = dataList[currentPage]
+            val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(32 * 1024, 64 * 1024, 1024, 1024).createDefaultLoadControl()
+            val trackSelector = DefaultTrackSelector(context!!)
+            val renderersFactory: RenderersFactory = DefaultRenderersFactory(context!!)
+            val bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
+            val looper = Looper.myLooper()
+            val clock = SystemClock.DEFAULT
+            val analyticsCollector = AnalyticsCollector(clock)
+            val player = SimpleExoPlayer.Builder(context!!, renderersFactory, trackSelector, loadControl,
+                    bandwidthMeter, looper!!, analyticsCollector, true, clock).build()
+            val dataSourceFactory = DefaultDataSourceFactory(context,
+                    Util.getUserAgent(context!!, Variables.APP_NAME))
+            frameLoadAdsWatchVideo?.visibility = INVISIBLE
+            mainLayoutWatchVideo?.visibility = View.VISIBLE
+            if (adView != null) {
+                if (adView?.parent != null) {
+                    (adView?.parent as ViewGroup).removeView(adView)
+                }
+            }
+            val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(item.video_url))
+            player.prepare(videoSource)
+            player.repeatMode = Player.REPEAT_MODE_ALL
+            player.addListener(this)
+
+            playerView?.player = player
+            player.playWhenReady = true
+            previousPlayer = player
+
+            playerView?.setOnTouchListener(object : OnTouchListener {
+                private val gestureDetector = GestureDetector(context, object : SimpleOnGestureListener() {
+                    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                        super.onFling(e1, e2, velocityX, velocityY)
+                        val deltaX = e1.x - e2.x
+                        val deltaXAbs = abs(deltaX)
+                        // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
+                        if (deltaXAbs > 100 && deltaXAbs < 1000) {
+                            if (deltaX > 0) {
+                                openProfile(item, true)
+                            }
                         }
+                        return true
                     }
+
+                    override fun onSingleTapUp(e: MotionEvent): Boolean {
+                        super.onSingleTapUp(e)
+                        previousPlayer?.playWhenReady = !player.playWhenReady
+                        return true
+                    }
+
+                    override fun onLongPress(e: MotionEvent) {
+                        super.onLongPress(e)
+                        showVideoOption(item)
+                    }
+
+                    override fun onDoubleTap(e: MotionEvent): Boolean {
+                        if (!player.playWhenReady) {
+                            previousPlayer?.playWhenReady = true
+                        }
+                        if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                            showHeartOnDoubleTap(item, mainLayoutWatchVideo!!, e)
+                            likeVideo(currentPage, item)
+                        } else {
+                            Toast.makeText(context, getString(R.string.please_login), Toast.LENGTH_SHORT).show()
+                        }
+                        return super.onDoubleTap(e)
+                    }
+                })
+
+                override fun onTouch(v: View, event: MotionEvent): Boolean {
+                    gestureDetector.onTouchEvent(event)
                     return true
-                }
-
-                override fun onSingleTapUp(e: MotionEvent): Boolean {
-                    super.onSingleTapUp(e)
-                    previousPlayer?.playWhenReady = !player.playWhenReady
-                    return true
-                }
-
-                override fun onLongPress(e: MotionEvent) {
-                    super.onLongPress(e)
-                    showVideoOption(item)
-                }
-
-                override fun onDoubleTap(e: MotionEvent): Boolean {
-                    if (!player.playWhenReady) {
-                        previousPlayer?.playWhenReady = true
-                    }
-                    if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                        showHeartOnDoubleTap(item, mainlayout, e)
-                        likeVideo(currentPage, item)
-                    } else {
-                        Toast.makeText(context, "Please Login into ", Toast.LENGTH_SHORT).show()
-                    }
-                    return super.onDoubleTap(e)
                 }
             })
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                gestureDetector.onTouchEvent(event)
-                return true
-            }
-        })
-        HashTagHelper.Creator.create(context!!.resources.getColor(R.color.maincolor)) { hashTag -> openHashtag(hashTag) }.handle(desc_txt)
-        val aniRotate = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation)
-        sound_image_layout.startAnimation(aniRotate)
-        if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) Functions.callApiForUpdateView(context, item.video_id)
-        callApiForSingleVideos(currentPage)
+            HashTagHelper.Creator.create(context!!.resources.getColor(R.color.maincolor)) { hashTag -> openHashtag(hashTag) }.handle(desc_txt)
+            val aniRotate = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation)
+            sound_image_layout.startAnimation(aniRotate)
+            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) Functions.callApiForUpdateView(context, item.video_id)
+            callApiForSingleVideos(currentPage)
+        }
     }
 
     fun setAdapter() {
+        val advertisement = ShowAdvertisement.instance
         layoutManager = LinearLayoutManager(context)
         recylerViewWatchVideo.layoutManager = layoutManager
         recylerViewWatchVideo.setHasFixedSize(false)
@@ -267,7 +292,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         adapter.setHasStableIds(true)
         recylerViewWatchVideo.adapter = adapter
 
-
         // this is the scroll listener of recycler view which will tell the current item number
         recylerViewWatchVideo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -283,7 +307,15 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
                 if (pageNo != currentPage) {
                     currentPage = pageNo
                     previousPlayer()
-                    setPlayer(currentPage)
+                    adView = context?.let { advertisement.showNativeAd(it) }
+                    var showAds = false;
+                    if (Variables.sharedPreferences.getBoolean(Variables.SHOW_ADS, false)) {
+                        val adCountPage = Variables.sharedPreferences.getString(Variables.PAGE_COUNT_SHOW_ADS_AFTER_VIEWS, "2")?.toInt()
+                        if ((currentPage.rem(adCountPage!!)) == 0) {
+                            showAds = true
+                        }
+                    }
+                    setPlayer(currentPage, showAds)
                 }
             }
         })
@@ -373,25 +405,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         iv.startAnimation(fadeoutani)
     }
 
-    private fun sendComments(user_id: String, video_id: String, comment: String) {
-        send_progress.visibility = View.VISIBLE
-        send_btn.visibility = View.GONE
-        Functions.callApiToSendComment(activity, video_id, comment, object : ApiCallBack {
-            override fun arrayData(arrayList: ArrayList<*>?) {
-                message_edit.text = null
-                send_progress.visibility = View.GONE
-                send_btn.visibility = View.VISIBLE
-                var commentCount: Int = dataList[currentPage].video_comment_count.toInt()
-                commentCount++
-                onDataSent("" + commentCount)
-            }
-
-            override fun onSuccess(responce: String) {}
-            override fun onFailure(responce: String) {}
-        })
-        sendPushNotification(user_id, comment)
-    }
-
     // this will open the profile of user which have uploaded the currenlty running video
     private fun openHashtag(tag: String) {
         val tagedVideosFragment = TaggedVideosFragment()
@@ -475,8 +488,8 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         MediaScannerConnection.scanFile(context, arrayOf(Variables.APP_FOLDER + item.video_id + ".mp4"),
                 null
         ) { path, uri ->
-           // Log.i("ExternalStorage", "Scanned " + path + ":");
-          //  Log.i("ExternalStorage", "-> uri=" + uri);
+            // Log.i("ExternalStorage", "Scanned " + path + ":");
+            //  Log.i("ExternalStorage", "-> uri=" + uri);
             videoDownloadedListener?.onDownloadCompleted(uri)
         }
     }
@@ -588,7 +601,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         }
     } catch (e: JSONException) {
         e.printStackTrace()
-    } catch (e : Exception) {
+    } catch (e: Exception) {
         e.printStackTrace()
     }
 
@@ -685,22 +698,9 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
 
 
     override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
-        val params = RelativeLayout.LayoutParams(writeLayout.width, writeLayout.height)
-        params.bottomMargin = height
-        writeLayout.layoutParams = params
-    }
-
-    override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.send_btn -> if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                val commentTxt = message_edit.text.toString()
-                if (!TextUtils.isEmpty(commentTxt)) {
-                    sendComments(dataList[currentPage].fb_id, dataList[currentPage].video_id, commentTxt)
-                }
-            } else {
-                Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show()
-            }
-        }
+//        val params = RelativeLayout.LayoutParams(writeLayout.width, writeLayout.height)
+//        params.bottomMargin = height
+//        writeLayout.layoutParams = params
     }
 
     override fun onDataSent(yourData: String?) {

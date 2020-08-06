@@ -13,13 +13,11 @@
         android:layout_height="match_parent"
         android:background="@color/palette_milk">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recylerViewWatchVideo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/palette_milk" />
-
 
         <ImageButton
             android:id="@+id/btnReturnWatchVideo"
@@ -43,71 +41,5 @@
             android:indeterminateTint="@color/black"
             android:secondaryProgress="@android:integer/config_shortAnimTime"
             android:visibility="visible" />
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-            <RelativeLayout
-                android:id="@+id/writeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="43dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_alignParentBottom="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/black_gradient" />
-
-
-                <EditText
-                    android:id="@+id/message_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toLeftOf="@+id/send_btn_layout"
-                    android:backgroundTint="@color/transparent"
-                    android:hint="Leave a comment..."
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/colorwhite_50"
-                    android:textSize="14dp" />
-
-                <RelativeLayout
-                    android:id="@+id/send_btn_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp">
-
-
-                    <ImageButton
-                        android:id="@+id/send_btn"
-                        android:layout_width="@dimen/margin_32"
-                        android:layout_height="@dimen/margin_32"
-                        android:background="@color/transparent"
-                        android:padding="@dimen/margin_5"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_send"
-                        android:tint="@color/palette_cheddar_dark" />
-
-                    <ProgressBar
-                        android:id="@+id/send_progress"
-                        android:layout_width="@dimen/margin_32"
-                        android:layout_height="@dimen/margin_32"
-                        android:padding="5dp"
-                        android:theme="@style/CustomProgressbar"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
     </RelativeLayout>
-
 </FrameLayout>

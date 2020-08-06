@@ -33,6 +33,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.funnyvo.android.simpleclasses.Variables.*;
+
 public class SplashActivity extends AppCompatActivity {
     private SplashPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -47,9 +49,9 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         MaterialButton btnSkip = findViewById(R.id.btnSkip);
         btnNext = findViewById(R.id.btnNext);
-        Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(pref_name, MODE_PRIVATE);
 
-        if (Variables.sharedPreferences.getBoolean(Variables.IS_FIRST_TIME, false)) {
+        if (sharedPreferences.getBoolean(IS_FIRST_TIME, false)) {
             ImageView imvLogoImage = findViewById(R.id.imvLogoImage);
             imvLogoImage.setVisibility(View.VISIBLE);
             btnSkip.setVisibility(View.GONE);
@@ -64,8 +66,8 @@ public class SplashActivity extends AppCompatActivity {
 
             final String androidId = Settings.Secure.getString(getContentResolver(),
                     Settings.Secure.ANDROID_ID);
-            SharedPreferences.Editor editor2 = Variables.sharedPreferences.edit();
-            editor2.putString(Variables.device_id, androidId).apply();
+            SharedPreferences.Editor editor2 = sharedPreferences.edit();
+            editor2.putString(device_id, androidId).apply();
 
             btnSkip.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,18 +93,20 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void callApiForSettings() {
-        ApiRequest.callApi(this, Variables.FETCH_SETTINGS, null, new Callback() {
+        ApiRequest.callApi(this, FETCH_SETTINGS, null, new Callback() {
             @Override
             public void response(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String code = jsonObject.optString("code");
-                    if (code.equals(Variables.API_SUCCESS_CODE)) {
+                    if (code.equals(API_SUCCESS_CODE)) {
                         JSONObject msgJson = jsonObject.getJSONObject("msg");
                         String advertisement = msgJson.optString("advertisement");
+                        String adAfterVideos = msgJson.optString("ad_after_videos");
                         if (advertisement.equals("1")) {
                             SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
-                            editor.putBoolean(Variables.SHOW_ADS, true);
+                            editor.putBoolean(SHOW_ADS, true);
+                            editor.putString(PAGE_COUNT_SHOW_ADS_AFTER_VIEWS, adAfterVideos);
                             editor.apply();
                         }
                     }
@@ -123,8 +127,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void callNextActivity() {
-        SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
-        editor.putBoolean(Variables.IS_FIRST_TIME, true);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_FIRST_TIME, true);
         editor.apply();
         Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
 
