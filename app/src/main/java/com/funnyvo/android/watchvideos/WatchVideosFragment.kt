@@ -37,8 +37,6 @@ import com.funnyvo.android.comments.CommentFragment
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.helper.PermissionUtils.checkPermissions
 import com.funnyvo.android.home.datamodel.Home
-import com.funnyvo.android.keyboard.KeyboardHeightObserver
-import com.funnyvo.android.keyboard.KeyboardHeightProvider
 import com.funnyvo.android.main_menu.MainMenuActivity
 import com.funnyvo.android.main_menu.MainMenuFragment
 import com.funnyvo.android.profile.ProfileFragment
@@ -66,12 +64,10 @@ import org.json.JSONObject
 import java.io.File
 import kotlin.math.abs
 
-class WatchVideosFragment : Fragment(), Player.EventListener,
-        KeyboardHeightObserver, FragmentDataSend {
+class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
 
     private lateinit var adapter: WatchVideosAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var keyboardHeightProvider: KeyboardHeightProvider
     private var previousPlayer: SimpleExoPlayer? = null
     private var videoDownloadedListener: VideoDownloadedListener? = null
     private var dataList = arrayListOf<Home>()
@@ -132,8 +128,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         activityIndicator = context?.let { ActivityIndicator(it) }!!
         setAdapter()
         btnReturnWatchVideo.setOnClickListener { activity?.onBackPressed() }
-        keyboardHeightProvider = KeyboardHeightProvider(activity)
-        WatchVideo_F.post(Runnable { keyboardHeightProvider.start() })
     }
 
     private fun setPlayer(currentPage: Int, showAds: Boolean) {
@@ -668,17 +662,11 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         videoDownloadedListener = downloadListener
     }
 
-    override fun onResume() {
-        super.onResume()
-        keyboardHeightProvider.setKeyboardHeightObserver(this)
-    }
-
     override fun onPause() {
         super.onPause()
         if (previousPlayer != null) {
             previousPlayer?.playWhenReady = false
         }
-        keyboardHeightProvider.setKeyboardHeightObserver(null)
     }
 
     override fun onStop() {
@@ -693,14 +681,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener,
         if (previousPlayer != null) {
             previousPlayer?.release()
         }
-        keyboardHeightProvider.close()
-    }
-
-
-    override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
-//        val params = RelativeLayout.LayoutParams(writeLayout.width, writeLayout.height)
-//        params.bottomMargin = height
-//        writeLayout.layoutParams = params
     }
 
     override fun onDataSent(yourData: String?) {
