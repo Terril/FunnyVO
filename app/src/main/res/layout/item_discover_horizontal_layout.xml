@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="0dp"
+    app:cardCornerRadius="@dimen/margin_5"
+    app:cardElevation="@dimen/margin_2"
+    app:cardUseCompatPadding="true">
 
-    <ImageView
-        android:id="@+id/video_thumbnail"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/margin_150"
-        android:layout_marginLeft="@dimen/margin_5"
-        android:layout_marginRight="@dimen/margin_5"
-        android:scaleType="centerCrop" />
+        android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/userImageInDiscovery"
-        android:layout_below="@+id/video_thumbnail"
-        android:layout_width="@dimen/margin_40"
-        android:layout_height="@dimen/margin_40"
-        android:layout_gravity="center|bottom"
-        android:background="@drawable/back_avtar"
-        android:src="@drawable/profile_image_placeholder" />
+        <ImageView
+            android:id="@+id/video_thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin_150"
+            android:scaleType="centerCrop" />
 
-</FrameLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImageInDiscovery"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_below="@+id/video_thumbnail"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/back_avtar"
+            android:src="@drawable/profile_image_placeholder" />
+    </FrameLayout>
+</androidx.cardview.widget.CardView>
