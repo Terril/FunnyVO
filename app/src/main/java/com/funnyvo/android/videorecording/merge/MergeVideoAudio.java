@@ -48,10 +48,10 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
         return null;
     }
 
-    private Track cropAudio(String videopath, Track fullAudio) {
+    private Track cropAudio(String videoPath, Track fullAudio) {
         try {
 
-            IsoFile isoFile = new IsoFile(videopath);
+            IsoFile isoFile = new IsoFile(videoPath);
 
             double lengthInSeconds = (double)
                     isoFile.getMovieBox().getMovieHeaderBox().getDuration() /

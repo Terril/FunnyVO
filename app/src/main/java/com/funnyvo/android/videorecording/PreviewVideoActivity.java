@@ -281,11 +281,11 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     private void prepareAudio() {
         player.setVolume(0);
-        File file = new File(APP_FOLDER + Variables.SelectedAudio_AAC);
+        File file = new File(APP_FOLDER + Variables.SELECTED_AUDIO_AAC);
         if (file.exists()) {
             audio = new MediaPlayer();
             try {
-                audio.setDataSource(APP_FOLDER + Variables.SelectedAudio_AAC);
+                audio.setDataSource(APP_FOLDER + Variables.SELECTED_AUDIO_AAC);
                 audio.prepare();
                 audio.setLooping(true);
 
@@ -704,7 +704,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     // this will add the select audio with the video
     private void mergeWithAudio() {
-        final String audioFile = APP_FOLDER + Variables.SelectedAudio_AAC;
+        final String audioFile = APP_FOLDER + Variables.SELECTED_AUDIO_AAC;
 
         MergeVideoAudio mergeVideoAudio = new MergeVideoAudio(this);
         mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2, draftFile);

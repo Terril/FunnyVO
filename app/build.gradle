@@ -176,12 +176,10 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$hilt_viewmodel_version"
  //   annotationProcessor "androidx.hilt:hilt-compiler:$hilt_viewmodel_version"
 
-    implementation 'org.apache.httpcomponents:httpmime:4.5.12'
-
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //   implementation "com.writingminds:FFmpegAndroid:0.3.2"
-    implementation "org.apache.httpcomponents:httpmime:4.3.1"
+    implementation "org.apache.httpcomponents:httpmime:4.3.6"
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'com.github.AndroidDeveloperLB:VideoTrimmer:6'
     implementation 'com.danikula:videocache:2.7.0'

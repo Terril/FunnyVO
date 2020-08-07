@@ -63,7 +63,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     private var isRecording = false
     private var secondsPassed = 0
     private var recordingTime = 3
-    private var audio = MediaPlayer()
+    private var audio: MediaPlayer? = null
     private var number = 0;
 
     private val SOUND_RECORD_CODE = 151
@@ -153,18 +153,18 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             arrayOfVideoPaths.add(Variables.APP_FOLDER + "myvideo" + number + ".mp4")
             cameraRecording.takeVideoSnapshot(file)
             //   cameraRecording.captureVideo(file)
-            if (audio != null) audio.start()
+            if (audio != null) audio?.start()
             videoProgress.resume()
             btnDone.isEnabled = false
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
-          //  btnAddMusicRecord.isClickable = false
+            //  btnAddMusicRecord.isClickable = false
             // cameraRecording.open()
         } else if (isRecording) {
             isRecording = false
             videoProgress.pause()
             videoProgress.addDivider()
-            if (audio != null) audio.pause()
+            if (audio != null) audio?.pause()
             if (secondsPassed > Variables.recording_duration / 1000 / 4) {
                 btnDone.visibility = View.VISIBLE
                 btnDone.isEnabled = true
@@ -180,11 +180,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     }
 
     private fun prepareAudio() {
-        val file = File(Variables.APP_FOLDER + Variables.SelectedAudio_AAC)
+        val file = File(Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC)
         if (file.exists()) {
+            audio = MediaPlayer()
             try {
-                audio.setDataSource(Variables.APP_FOLDER + Variables.SelectedAudio_AAC)
-                audio.prepare()
+                audio?.setDataSource(Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC)
+                audio?.prepare()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -404,8 +405,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
                 imvGallery.visibility = GONE
                 startOrStopRecording()
             }
-            imvGallery ->
-            {
+            imvGallery -> {
                 if (checkPermissions(this)) {
                     if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                         pickVideoFromGallery()
@@ -449,7 +449,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SOUND_RECORD_CODE) {
                 if (data != null) {
-                    if (data.getStringExtra("isSelected") == "yes") {
+                    if (data.getStringExtra("isSelected") == getString(R.string.yes)) {
                         btnAddMusicRecord.text = data.getStringExtra("sound_name")
                         Variables.Selected_sound_id = data.getStringExtra("sound_id")
                         prepareAudio()
@@ -477,7 +477,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     }
 
     private fun mergeWithAudio(): Unit {
-        val audioFile = Variables.APP_FOLDER + Variables.SelectedAudio_AAC
+        val audioFile = Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC
         val mergeVideoAudio = MergeVideoAudio(this)
         mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2)
     }

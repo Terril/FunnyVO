@@ -371,7 +371,7 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
 
     private void convertMp3ToAcc() {
         showProgressDialog();
-        final String[] complexCommand = new String[]{"-y", "-i", Variables.APP_FOLDER + Variables.SelectedAudio_MP3, Variables.APP_FOLDER + Variables.SelectedAudio_AAC};
+        final String[] complexCommand = new String[]{"-y", "-i", Variables.APP_FOLDER + Variables.SelectedAudio_MP3, Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC};
 
         new AsyncTask<Object, Object, Object>() {
             @Override

@@ -144,6 +144,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         val outputFilterMotionFile = File(Variables.OUTPUT_FILE_MOTION)
         val outputFilterTrimmedFile = File(Variables.OUTPUT_FILE_TRIMMED)
         val outputFilterMessageFile = File(Variables.OUTPUT_FILE_MESSAGE)
+        val selectedAudioFile = File(Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC)
         if (output.exists()) {
             output.delete()
         }
@@ -161,6 +162,9 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         }
         if (outputFilterMessageFile.exists()) {
             outputFilterMessageFile.delete()
+        }
+        if(selectedAudioFile.exists()) {
+            selectedAudioFile.delete()
         }
         val file = File(Variables.APP_FOLDER + "myvideo" + deleteCount + ".mp4")
         if (file.exists()) {
@@ -191,7 +195,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
                         val isVideo = context.getString(R.string.yes) == hasVideo
                         if (isVideo && file.length() > 3000) {
                             //        Log.d("resp", videopaths.get(i));
-                            videoList.add(videoPaths.get(i))
+                            videoList.add(videoPaths[i])
                         }
                     } catch (e: java.lang.Exception) {
                         Log.d(Variables.tag, e.toString())
@@ -202,7 +206,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
             try {
                 val inMovies = arrayOfNulls<Movie>(videoPaths.size)
                 for (i in videoPaths.indices) {
-                    inMovies[i] = MovieCreator.build(videoPaths.get(i))
+                    inMovies[i] = MovieCreator.build(videoPaths[i])
                 }
                 val videoTracks: MutableList<Track> = LinkedList()
                 val audioTracks: MutableList<Track> = LinkedList()

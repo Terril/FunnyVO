@@ -309,7 +309,7 @@ public class DeviceSoundFragment extends RootFragment implements Player.EventLis
 
     private void copyAudio(final String soundName, String sourcePath) {
         showProgressDialog();
-        final String[] complexCommand = {"-y", "-i", sourcePath, Variables.APP_FOLDER + Variables.SelectedAudio_AAC};
+        final String[] complexCommand = {"-y", "-i", sourcePath, Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC};
 
         new AsyncTask<Object, Object, Object>() {
             @Override

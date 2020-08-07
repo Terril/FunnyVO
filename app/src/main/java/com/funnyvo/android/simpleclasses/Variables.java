@@ -16,7 +16,7 @@ public class Variables {
     public static int screen_height;
 
     public static final String SelectedAudio_MP3 = "SelectedAudio.mp3";
-    public static final String SelectedAudio_AAC = "SelectedAudio.aac";
+    public static final String SELECTED_AUDIO_AAC = "selectedAudio.aac";
 
     public static final String ROOT = Environment.getExternalStorageDirectory().toString();
     public static final String APP_FOLDER = ROOT + "/FunnyVO/";

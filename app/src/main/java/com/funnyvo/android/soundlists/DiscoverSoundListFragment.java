@@ -34,17 +34,14 @@ import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -56,7 +53,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
@@ -343,7 +339,7 @@ public class DiscoverSoundListFragment extends RootFragment implements Player.Ev
 
     public void downLoadMp3(final String id, final String sound_name, String url) {
         showProgressDialog();
-        prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, Variables.SelectedAudio_AAC)
+        prDownloader = PRDownloader.download(url, Variables.APP_FOLDER, Variables.SELECTED_AUDIO_AAC)
                 .build()
                 .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                     @Override
