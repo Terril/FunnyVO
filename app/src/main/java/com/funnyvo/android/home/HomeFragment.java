@@ -195,6 +195,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 int page_no = scrollOffset / height;
 
                 if (page_no != currentPage) {
+                    if (adView != null) {
+                        adView.destroy();
+                    }
                     adView = advertisement.showNativeAd(context);
                     currentPage = page_no;
                     releasePreviousPlayer();

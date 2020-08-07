@@ -15,8 +15,7 @@ import android.provider.MediaStore
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.DragShadowBuilder
-import android.view.View.OnTouchListener
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
@@ -28,17 +27,21 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.funnyvo.android.R
+import com.funnyvo.android.accounts.LoginActivity
 import com.funnyvo.android.base.BaseActivity
 import com.funnyvo.android.customview.FunnyVOEditTextView
 import com.funnyvo.android.extensions.filterNull
 import com.funnyvo.android.filter.CameraFilter
 import com.funnyvo.android.filter.CameraFilterAdapter
 import com.funnyvo.android.filter.CameraFilterAdapter.OnItemClickListener
-import com.funnyvo.android.simpleclasses.FileUtils
+import com.funnyvo.android.helper.FileUtils
+import com.funnyvo.android.helper.PermissionUtils.checkPermissions
 import com.funnyvo.android.simpleclasses.FragmentCallback
 import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.soundlists.SoundListMainActivity
+import com.funnyvo.android.videorecording.merge.MergeVideoAudio
+import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.otaliastudios.cameraview.filter.Filters
@@ -51,7 +54,7 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrimmingListener, View.OnDragListener {
+class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingListener, OnDragListener, MergeVideoAudioCallBack {
     private val recordingViewModel: VideoRecordingViewModel by viewModels()
 
     private var isSlided = false
@@ -63,7 +66,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
     private var audio = MediaPlayer()
     private var number = 0;
 
-    private val SOUNDRECORDCODE = 151
+    private val SOUND_RECORD_CODE = 151
     private var _xDelta = 0F
     private var _yDelta = 0F
 
@@ -80,7 +83,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
         initializeVideoProgress()
 
         loadFilters()
-        observeFilters()
+        observeLiveEvents()
         observeVideoRecordingEvent()
 
         if (intent.hasExtra("sound_name")) {
@@ -94,15 +97,19 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
         btnRotateCamera.setOnClickListener(this)
         btnFlashCamera.setOnClickListener(this)
         btnTimer.setOnClickListener(this)
-        btnSlowMotion.setOnClickListener(this)
-        btnFastMotion.setOnClickListener(this)
+        btnRecodingSpeed.setOnClickListener(this)
+        //   btnFastMotion.setOnClickListener(this)
         btnFilter.setOnClickListener(this)
         btnCrop.setOnClickListener(this)
         btnRecord.setOnClickListener(this)
         imvGallery.setOnClickListener(this)
         btnCloseRecordVideo.setOnClickListener(this)
+        btnDone.setOnClickListener(this)
         btnAddMusicRecord.setOnClickListener(this)
-        btnTextEditor.setOnClickListener(this)
+//        btnTextEditor.setOnClickListener(this)
+        sliderZoom.addOnChangeListener { slider, value, fromUser ->
+            cameraRecording.zoom = value
+        }
     }
 
     private fun loadFilters() {
@@ -111,7 +118,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
 
         val adapter = CameraFilterAdapter(this, filterTypes, object : OnItemClickListener {
             override fun onItemClick(view: View?, postion: Int, item: Filters) {
-                PreviewVideoActivity.select_postion = postion
+                // PreviewVideoActivity.selectPostion = postion
                 cameraRecording.filter = CameraFilter.createFilter(filterTypes[postion])
             }
         })
@@ -138,11 +145,12 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
     }
 
     private fun startOrStopRecording() {
+        sliderZoom.visibility = VISIBLE
         if (!isRecording && secondsPassed < Variables.recording_duration / 1000 - 1) {
             number += 1
             isRecording = true
-            val file = File(Variables.app_folder + "myvideo" + number + ".mp4")
-            arrayOfVideoPaths.add(Variables.app_folder + "myvideo" + number + ".mp4")
+            val file = File(Variables.APP_FOLDER + "myvideo" + number + ".mp4")
+            arrayOfVideoPaths.add(Variables.APP_FOLDER + "myvideo" + number + ".mp4")
             cameraRecording.takeVideoSnapshot(file)
             //   cameraRecording.captureVideo(file)
             if (audio != null) audio.start()
@@ -150,7 +158,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
             btnDone.isEnabled = false
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
-            btnAddMusicRecord.isClickable = false
+          //  btnAddMusicRecord.isClickable = false
             // cameraRecording.open()
         } else if (isRecording) {
             isRecording = false
@@ -172,10 +180,10 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
     }
 
     private fun prepareAudio() {
-        val file = File(Variables.app_folder + Variables.SelectedAudio_AAC)
+        val file = File(Variables.APP_FOLDER + Variables.SelectedAudio_AAC)
         if (file.exists()) {
             try {
-                audio.setDataSource(Variables.app_folder + Variables.SelectedAudio_AAC)
+                audio.setDataSource(Variables.APP_FOLDER + Variables.SelectedAudio_AAC)
                 audio.prepare()
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -237,9 +245,18 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
                 }.show()
     }
 
-    private fun observeFilters() {
+    private fun observeLiveEvents() {
         recordingViewModel.motionFilter.observe(this) {
 
+        }
+
+        recordingViewModel.videoAppendEvent.observe(this) {
+            if (it.filterNull()) {
+                if (audio != null) mergeWithAudio() else {
+                    goToPreviewActivity()
+                }
+            }
+            dismissProgressDialog()
         }
     }
 
@@ -253,6 +270,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
                     dismissProgressDialog()
                     val intent = Intent(this, PreviewVideoActivity::class.java)
                     intent.putExtra("video_path", Variables.gallery_resize_video)
+                    intent.putExtra("isFromGallery", true)
                     startActivity(intent)
                 }
                 it.hasFailed.filterNull() -> {
@@ -304,7 +322,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
     }
 
     private fun slideUp(view: View) {
-        view.visibility = View.VISIBLE
+        view.visibility = VISIBLE
         val animate = TranslateAnimation(
                 0.0F,  // fromXDelta
                 0.0F,  // toXDelta
@@ -358,7 +376,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
                 Intent.ACTION_PICK,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
         intent.type = "video/*"
-        startActivityForResult(intent, Variables.PICKVIDEOFROMGALLERY)
+        startActivityForResult(intent, Variables.PICK_VIDEO_FROM_GALLERY)
     }
 
     private fun slideCameraOptions() {
@@ -379,17 +397,26 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
         isFilterUp = !isFilterUp
     }
 
-
     override fun onClick(v: View?) {
         when (v) {
             btnRecord -> {
+                imvCollage.visibility = GONE
+                imvGallery.visibility = GONE
                 startOrStopRecording()
             }
             imvGallery ->
-                pickVideoFromGallery()
+            {
+                if (checkPermissions(this)) {
+                    if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                        pickVideoFromGallery()
+                    } else {
+                        openLoginScreen()
+                    }
+                }
+            }
             btnAddMusicRecord -> {
                 val intent = Intent(this, SoundListMainActivity::class.java)
-                startActivityForResult(intent, SOUNDRECORDCODE)
+                startActivityForResult(intent, SOUND_RECORD_CODE)
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top)
             }
             btnTimer -> {
@@ -402,15 +429,25 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
                 closeVideoView()
             btnRotateCamera ->
                 cameraRecording.toggleFacing()
-            btnTextEditor ->
-                startWritingOnVideo()
+            btnDone -> {
+                var outputFilePath: String? = null
+                outputFilePath = if (audio != null) {
+                    Variables.outputfile
+                } else {
+                    Variables.outputfile2
+                }
+                showProgressDialog()
+                recordingViewModel.appendTheContent(this, arrayOfVideoPaths, outputFilePath)
+            }
+            btnRecodingSpeed ->
+                layoutVideoSpeed.visibility = VISIBLE
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SOUNDRECORDCODE) {
+            if (requestCode == SOUND_RECORD_CODE) {
                 if (data != null) {
                     if (data.getStringExtra("isSelected") == "yes") {
                         btnAddMusicRecord.text = data.getStringExtra("sound_name")
@@ -418,12 +455,13 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
                         prepareAudio()
                     }
                 }
-            } else if (requestCode == Variables.PICKVIDEOFROMGALLERY) {
+            } else if (requestCode == Variables.PICK_VIDEO_FROM_GALLERY) {
                 val uri: Uri = data?.data!!
                 try {
-                    val videoFle = FileUtils.getFileFromUri(this, uri)
+                    val path = FileUtils(this).getPath(uri)!!
+                    val videoFile = File(path)
                     if (getFileDuration(uri) < 19500) {
-                        recordingViewModel.changeVideoSize(videoFle.absolutePath, Variables.gallery_resize_video)
+                        recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.gallery_resize_video)
                     } else {
                         try {
                             recordingViewModel.trimVideo(this, uri, this)
@@ -438,6 +476,12 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
         }
     }
 
+    private fun mergeWithAudio(): Unit {
+        val audioFile = Variables.APP_FOLDER + Variables.SelectedAudio_AAC
+        val mergeVideoAudio = MergeVideoAudio(this)
+        mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2)
+    }
+
     private fun getFileDuration(uri: Uri): Long {
         try {
             val mmr = MediaMetadataRetriever()
@@ -450,6 +494,18 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
         return 0
     }
 
+    private fun goToPreviewActivity() {
+        val intent = Intent(this, PreviewVideoActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left)
+    }
+
+    private fun openLoginScreen() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
+        overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top)
+    }
+
     override fun onResume() {
         super.onResume()
         cameraRecording.open()
@@ -458,6 +514,7 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
     override fun onPause() {
         super.onPause()
         cameraRecording.close()
+        sliderZoom.visibility = INVISIBLE
     }
 
     override fun onDestroy() {
@@ -504,6 +561,13 @@ class VideoRecorderActivityNew : BaseActivity(), View.OnClickListener, VideoTrim
             }
         }
         return true
+    }
+
+    override fun onCompletion(state: Boolean, draftFile: String?) {
+        val intent = Intent(this, PreviewVideoActivity::class.java)
+        intent.putExtra("video_path", Variables.outputfile2)
+        intent.putExtra("draft_file", draftFile)
+        startActivity(intent)
     }
 
 }

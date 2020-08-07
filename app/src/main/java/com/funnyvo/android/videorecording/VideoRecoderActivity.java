@@ -38,6 +38,8 @@ import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
+import com.funnyvo.android.videorecording.merge.MergeVideoAudio;
+import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;

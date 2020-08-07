@@ -15,6 +15,7 @@
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_9">9sp</dimen>
 
     <dimen name="margin_90">90dp</dimen>
     <dimen name="margin_70">70dp</dimen>

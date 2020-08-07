@@ -1,7 +1,9 @@
 package com.funnyvo.android.videorecording.viewModel
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
@@ -12,15 +14,23 @@ import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.daasuu.gpuv.composer.GPUMp4Composer
 import com.funnyvo.android.FunnyVOExceptions
+import com.funnyvo.android.R
 import com.funnyvo.android.helper.Result
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.videorecording.data.VideoRecording
+import com.googlecode.mp4parser.authoring.Movie
+import com.googlecode.mp4parser.authoring.Track
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator
+import com.googlecode.mp4parser.authoring.tracks.AppendTrack
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.lb.video_trimmer_library.utils.TrimVideoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
 class VideoRecordingViewModel @ViewModelInject constructor(
         @Assisted private val savedStateHandle: SavedStateHandle
@@ -28,6 +38,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
 
     val motionFilter = MutableLiveData<Boolean>()
     val videoRecordingLiveEvent = MutableLiveData<VideoRecording>()
+    val videoAppendEvent = MutableLiveData<Boolean>()
 
     private var deleteCount = 0;
 //
@@ -86,7 +97,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         var recording: VideoRecording
         GPUMp4Composer(src_path, destination_path)
                 .size(720, 1280)
-                .videoBitrate((0.25 * 16 * 540 * 960).toInt())
+                .videoBitrate((0.25 * 16 * 720 * 1280).toInt())
                 .listener(object : GPUMp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         recording = VideoRecording(isInProgress = true)
@@ -151,10 +162,77 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         if (outputFilterMessageFile.exists()) {
             outputFilterMessageFile.delete()
         }
-        val file = File(Variables.app_folder + "myvideo" + deleteCount + ".mp4")
+        val file = File(Variables.APP_FOLDER + "myvideo" + deleteCount + ".mp4")
         if (file.exists()) {
             file.delete()
             deleteFile()
+        }
+    }
+
+    fun appendTheContent(context: Context, videoPaths: ArrayList<String>, outputFilePath: String) {
+        viewModelScope.launch {
+            when (append(context, videoPaths, outputFilePath)) {
+                is Result.Success -> videoAppendEvent.value = true
+                else -> videoAppendEvent.value = false
+            }
+        }
+    }
+
+    private suspend fun append(context: Context, videoPaths: ArrayList<String>, outputFilePath: String): Result<Boolean> {
+        return withContext(Dispatchers.IO) {
+            val videoList = ArrayList<String>()
+            for (i in videoPaths.indices) {
+                val file = File(videoPaths[i])
+                if (file.exists()) {
+                    try {
+                        val retriever = MediaMetadataRetriever()
+                        retriever.setDataSource(context, Uri.fromFile(file))
+                        val hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)
+                        val isVideo = context.getString(R.string.yes) == hasVideo
+                        if (isVideo && file.length() > 3000) {
+                            //        Log.d("resp", videopaths.get(i));
+                            videoList.add(videoPaths.get(i))
+                        }
+                    } catch (e: java.lang.Exception) {
+                        Log.d(Variables.tag, e.toString())
+                    }
+                }
+            }
+
+            try {
+                val inMovies = arrayOfNulls<Movie>(videoPaths.size)
+                for (i in videoPaths.indices) {
+                    inMovies[i] = MovieCreator.build(videoPaths.get(i))
+                }
+                val videoTracks: MutableList<Track> = LinkedList()
+                val audioTracks: MutableList<Track> = LinkedList()
+                for (m in inMovies) {
+                    for (t in m!!.tracks) {
+                        if (t.handler == "soun") {
+                            audioTracks.add(t)
+                        }
+                        if (t.handler == "vide") {
+                            videoTracks.add(t)
+                        }
+                    }
+                }
+                val result = Movie()
+                if (audioTracks.size > 0) {
+                    result.addTrack(AppendTrack(*audioTracks.toTypedArray()))
+                }
+                if (videoTracks.size > 0) {
+                    result.addTrack(AppendTrack(*videoTracks.toTypedArray()))
+                }
+                val out = DefaultMp4Builder().build(result)
+
+                val fos = FileOutputStream(File(outputFilePath))
+                out.writeContainer(fos.channel)
+                fos.close()
+                Result.Success(true)
+
+            } catch (e: java.lang.Exception) {
+                Result.Error(e)
+            }
         }
     }
 }

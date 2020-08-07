@@ -38,6 +38,8 @@ import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
+import com.funnyvo.android.videorecording.merge.MergeVideoAudio;
+import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
@@ -131,15 +133,12 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 MediaStore.Video.Thumbnails.MINI_KIND);
         Bitmap bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (int) (bmThumbnail.getWidth() * 0.4), (int) (bmThumbnail.getHeight() * 0.4), true);
 
-        adapter = new FilterAdapter(this, filterTypes, bmThumbnailResized, new FilterAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int postion, FilterType item) {
-                selectPostion = postion;
-                gpuPlayerView.setElevation(3.0F);
+        adapter = new FilterAdapter(this, filterTypes, bmThumbnailResized, (view, position, item) -> {
+            selectPostion = position;
+            gpuPlayerView.setElevation(3.0F);
 
-                gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(postion), getApplicationContext(), null)));
-                adapter.notifyDataSetChanged();
-            }
+            gpuPlayerView.setGlFilter(new GlFilterGroup(FilterType.createGlFilter(filterTypes.get(position), getApplicationContext(), null)));
+            adapter.notifyDataSetChanged();
         });
         recylerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recylerview.setAdapter(adapter);

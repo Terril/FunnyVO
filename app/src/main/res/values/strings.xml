@@ -75,7 +75,7 @@
     <string name="are_you_sure">Are you Sure?</string>
     <string name="cant_undo">If you go back you can\'t undo this action</string>
     <string name="no">No</string>
-    <string name="yes">Yes</string>
+    <string name="yesValue">Yes</string>
     <string name="error_saving_video">Error saving the video</string>
     <string name="skip">Skip</string>
     <string name="finish">Finish</string>
@@ -107,4 +107,14 @@
     <string name="video_visible_to">Video Visible To</string>
     <string name="rate_the_app">Rate the app</string>
     <string name="video_not_available">Video not available at the moment</string>
+    <string name="rotate_camera">Rotate Camera</string>
+    <string name="switch_flash">Switch Flash</string>
+    <string name="recording_timer">Recording Timer</string>
+    <string name="recording_speed">Recording Speed</string>
+    <string name="filters">Filters</string>
+    <string name="_0_2x">0.2x</string>
+    <string name="_0_5x">0.5x</string>
+    <string name="_1x">1x</string>
+    <string name="_1_5x">1.5x</string>
+    <string name="_2x">2x</string>
 </resources>

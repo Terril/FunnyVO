@@ -19,7 +19,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSkip"
-        style="?attr/materialButtonOutlinedStyle"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -31,7 +31,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNext"
-        style="?attr/materialButtonOutlinedStyle"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

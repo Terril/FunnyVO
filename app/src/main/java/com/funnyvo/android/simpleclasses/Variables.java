@@ -83,7 +83,7 @@ public class Variables {
     public final static int permission_Read_data = 789;
     public final static int permission_Recording_audio = 790;
     public final static int Pick_video_from_gallery = 791;
-    public final static int PICKVIDEOFROMGALLERY = 793;
+    public final static int PICK_VIDEO_FROM_GALLERY = 793;
 
     public static String gif_api_key1 = "giphy_api_key_here";
 

@@ -1,4 +1,4 @@
-package com.funnyvo.android.videorecording;
+package com.funnyvo.android.videorecording.merge;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -30,7 +30,6 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
 
     public MergeVideoAudio(MergeVideoAudioCallBack callBack) {
         this.callBack = callBack;
-//        indicator = new ActivityIndicator(activity);
     }
 
     @Override
@@ -135,6 +134,3 @@ public class MergeVideoAudio extends AsyncTask<String, String, String> {
     };
 }
 
-interface MergeVideoAudioCallBack {
-    void onCompletion(boolean state, String draftFile);
-}

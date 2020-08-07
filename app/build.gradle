@@ -99,7 +99,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.exifinterface:exifinterface:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.0'
     testImplementation 'junit:junit:4.12'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
@@ -117,7 +117,7 @@ dependencies {
 
     //Do not Update this library their is a camera issue with new version
    implementation 'com.wonderkiln:camerakit:0.13.0'
-    api 'com.otaliastudios:cameraview:2.6.2'
+    api 'com.otaliastudios:cameraview:2.6.3'
 
     //You will change the versions at your own risk.
     //Do not Change below 7 libraries versions
