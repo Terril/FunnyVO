@@ -23,6 +23,7 @@
     <color name="delete_message_text">#b8b8b8</color>
 
     <color name="transparent">#00ffffff</color>
+    <color name="graytransparentcolor">#99D3D3D3</color>
     <color name="fifty_transparent_black">#802F2F2F</color>
     <color name="background_progress_color">#6C6D6D</color>
     <color name="progress_color">@color/colorPrimary</color>

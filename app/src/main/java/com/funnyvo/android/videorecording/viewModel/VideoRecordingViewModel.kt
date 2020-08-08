@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.daasuu.gpuv.composer.GPUMp4Composer
-import com.funnyvo.android.FunnyVOExceptions
+import com.funnyvo.android.FunnyVOException
 import com.funnyvo.android.R
 import com.funnyvo.android.helper.Result
 import com.funnyvo.android.simpleclasses.Variables
@@ -41,47 +41,22 @@ class VideoRecordingViewModel @ViewModelInject constructor(
     val videoAppendEvent = MutableLiveData<Boolean>()
 
     private var deleteCount = 0;
-//
-//    fun applyFastMoVideo() {
-//        showProgressDialog()
-//        val complexCommand = arrayOf("-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION)
-//        object : AsyncTask<Any?, Any?, Any>() {
-//            override fun doInBackground(objects: Array<Any?>): Any {
-//                return FFmpeg.execute(complexCommand)
-//            }
-//
-//            override fun onPostExecute(o: Any) {
-//                super.onPostExecute(o)
-//                val rc = o as Int
-//                if (rc == Config.RETURN_CODE_SUCCESS) {
-//                    dismissProgressDialog()
-//                    updateMediaSource(Variables.OUTPUT_FILE_MOTION)
-//                    isMotionFilterSelected = true
-//                } else if (rc == Config.RETURN_CODE_CANCEL) {
-//                    dismissProgressDialog()
-//                } else {
-//                    Config.printLastCommandOutput(Log.INFO)
-//                    dismissProgressDialog()
-//                }
-//            }
-//        }.execute()
-    //   }
 
-    fun applyFastMoSlowMoVideo(srcFile: String, destFile: String) {
+    fun applyFastMoSlowMoVideo(srcFile: String, destFile: String, speedValue: String) {
         viewModelScope.launch {
-            when (applyFameMotionFilter(srcFile, destFile)) {
+            when (applyFrameMotionFilter(srcFile, destFile, speedValue)) {
                 is Result.Success -> motionFilter.value = true
                 else -> motionFilter.value = false
             }
         }
     }
 
-    private suspend fun applyFameMotionFilter(srcFile: String, destFile: String): Result<Int> {
-        val complexCommand = arrayOf("-y", "-i", srcFile, "-filter_complex", "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", destFile)
+    private suspend fun applyFrameMotionFilter(srcFile: String, destFile: String, speedValue: String): Result<Int> {
+        val complexCommand = arrayOf("-y", "-i", srcFile, "-filter_complex", "[0:v]setpts=" + 1.div(speedValue.toFloat()) + "*PTS[v];[0:a]atempo=" + speedValue.toFloat() + "[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", destFile)
         return withContext(Dispatchers.IO) {
             when (FFmpeg.execute(complexCommand)) {
                 RETURN_CODE_SUCCESS -> Result.Success(RETURN_CODE_SUCCESS)
-                else -> Result.Error(FunnyVOExceptions())
+                else -> Result.Error(FunnyVOException())
             }
         }
     }
@@ -93,9 +68,9 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         }
     }
 
-    fun changeVideoSize(src_path: String?, destination_path: String?) {
+    fun changeVideoSize(srcPath: String?, destinationPath: String?) {
         var recording: VideoRecording
-        GPUMp4Composer(src_path, destination_path)
+        GPUMp4Composer(srcPath, destinationPath)
                 .size(720, 1280)
                 .videoBitrate((0.25 * 16 * 720 * 1280).toInt())
                 .listener(object : GPUMp4Composer.Listener {
@@ -163,7 +138,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         if (outputFilterMessageFile.exists()) {
             outputFilterMessageFile.delete()
         }
-        if(selectedAudioFile.exists()) {
+        if (selectedAudioFile.exists()) {
             selectedAudioFile.delete()
         }
         val file = File(Variables.APP_FOLDER + "myvideo" + deleteCount + ".mp4")

@@ -507,12 +507,12 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
     private fun showVideoOption(home: Home) {
         var options = arrayOf<CharSequence>("Save Video", "Cancel")
         if (home.fb_id == Variables.sharedPreferences.getString(Variables.u_id, "")) options = arrayOf<CharSequence>("Save Video", "Delete Video", "Cancel")
-        val builder = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
-        builder.setTitle(null)
-        builder.setItems(options, DialogInterface.OnClickListener { dialog, item ->
-            if (options.get(item) == "Save Video") {
+        val builder = context?.let { AlertDialog.Builder(it, R.style.AlertDialogCustom) }
+        builder?.setTitle(null)
+        builder?.setItems(options, DialogInterface.OnClickListener { dialog, item ->
+            if (options[item] == getString(R.string.save_video)) {
                 if (Functions.checkstoragepermision(activity)) saveVideo(home)
-            } else if (options.get(item) == "Delete Video") {
+            } else if (options[item] == getString(R.string.delete_video)) {
                 if (Variables.is_secure_info) {
                     Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show()
                 } else {
@@ -529,7 +529,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                 dialog.dismiss()
             }
         })
-        builder.show()
+        builder?.show()
     }
 
     private fun previousPlayer() {
@@ -563,7 +563,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                 item.fb_id = itemdata.optString("fb_id")
                 val userInfo = itemdata.optJSONObject("user_info")
                 item.username = userInfo.optString("username")
-                item.first_name = userInfo.optString("first_name", context!!.resources.getString(R.string.app_name))
+                item.first_name = userInfo.optString("first_name", context?.resources?.getString(R.string.app_name))
                 item.last_name = userInfo.optString("last_name", "User")
                 item.profile_pic = userInfo.optString("profile_pic", "null")
                 item.verified = userInfo.optString("verified")
@@ -624,7 +624,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                     item.fb_id = itemdata.optString("fb_id")
                     val userInfo = itemdata.optJSONObject("user_info")
                     item.username = userInfo.optString("username")
-                    item.first_name = userInfo.optString("first_name", context!!.resources.getString(R.string.app_name))
+                    item.first_name = userInfo.optString("first_name", context?.resources?.getString(R.string.app_name))
                     item.last_name = userInfo.optString("last_name", "User")
                     item.profile_pic = userInfo.optString("profile_pic", "null")
                     item.verified = userInfo.optString("verified")

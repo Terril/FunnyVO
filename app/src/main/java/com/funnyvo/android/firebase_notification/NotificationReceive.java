@@ -181,6 +181,7 @@ public class NotificationReceive extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSound(defaultSoundUri)
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
         Notification notification = builder.build();

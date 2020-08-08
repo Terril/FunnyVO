@@ -55,6 +55,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingListener, OnDragListener, MergeVideoAudioCallBack {
+    private var fileName: String = ""
+    private var speedValue: String = "1.0"
     private val recordingViewModel: VideoRecordingViewModel by viewModels()
 
     private var isSlided = false
@@ -107,9 +109,31 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         btnDone.setOnClickListener(this)
         btnAddMusicRecord.setOnClickListener(this)
 //        btnTextEditor.setOnClickListener(this)
+        btn0_5x.setOnClickListener(this)
+        btn0_75x.setOnClickListener(this)
+        btn1x.setOnClickListener(this)
+        btn1_5x.setOnClickListener(this)
+        btn2x.setOnClickListener(this)
         sliderZoom.addOnChangeListener { slider, value, fromUser ->
             cameraRecording.zoom = value
         }
+        toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
+            // Respond to button selection
+            toggleButton.isSingleSelection = true
+            toggleView(checkedId)
+        }
+    }
+
+    private fun toggleView(viewId: Int) {
+        speedValue = when (viewId) {
+            R.id.btn0_5x -> "0.5"
+            R.id.btn0_75x -> "0.75"
+            R.id.btn1x -> "1.0"
+            R.id.btn1_5x -> "1.5"
+            R.id.btn2x -> "2.0"
+            else -> "1.0"
+        }
+
     }
 
     private fun loadFilters() {
@@ -146,11 +170,18 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
 
     private fun startOrStopRecording() {
         sliderZoom.visibility = VISIBLE
+        layoutVideoSpeed.visibility = INVISIBLE
         if (!isRecording && secondsPassed < Variables.recording_duration / 1000 - 1) {
-            number += 1
             isRecording = true
-            val file = File(Variables.APP_FOLDER + "myvideo" + number + ".mp4")
-            arrayOfVideoPaths.add(Variables.APP_FOLDER + "myvideo" + number + ".mp4")
+
+            fileName = if (speedValue != "1.0") {
+                Variables.APP_FOLDER + number + ".mp4"
+            } else {
+                Variables.APP_FOLDER + "myvideo" + number + ".mp4"
+            }
+
+            val file = File(fileName)
+            arrayOfVideoPaths.add(fileName)
             cameraRecording.takeVideoSnapshot(file)
             //   cameraRecording.captureVideo(file)
             if (audio != null) audio?.start()
@@ -158,12 +189,16 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             btnDone.isEnabled = false
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
+            number += 1
             //  btnAddMusicRecord.isClickable = false
             // cameraRecording.open()
         } else if (isRecording) {
             isRecording = false
             videoProgress.pause()
             videoProgress.addDivider()
+            if (speedValue != "1.0") {
+                recordingViewModel.applyFastMoSlowMoVideo(fileName, Variables.APP_FOLDER + number + ".mp4", speedValue)
+            }
             if (audio != null) audio?.pause()
             if (secondsPassed > Variables.recording_duration / 1000 / 4) {
                 btnDone.visibility = View.VISIBLE

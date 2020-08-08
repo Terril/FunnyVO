@@ -114,7 +114,7 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (JSONException je) {
                     je.printStackTrace();
                 }
-                Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+                Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
 
                 if (getIntent() != null && getIntent().getExtras() != null) {
                     intent.putExtras(getIntent().getExtras());
