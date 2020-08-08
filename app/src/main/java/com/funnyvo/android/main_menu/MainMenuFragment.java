@@ -1,9 +1,7 @@
 package com.funnyvo.android.main_menu;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,9 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -35,7 +31,6 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.notifications.NotificationFragment;
 import com.funnyvo.android.profile.ProfileTabFragment;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.tabs.TabLayout;
 
@@ -268,9 +263,9 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         if (MainMenuActivity.intent != null) {
             if (MainMenuActivity.intent.hasExtra("action_type")) {
                 if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                    String action_type = MainMenuActivity.intent.getExtras().getString("action_type");
+                    String actionType = MainMenuActivity.intent.getExtras().getString("action_type");
 
-                    if (action_type.equals("message")) {
+                    if (actionType.equals("message")) {
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -291,7 +286,6 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
                 }
             }
         }
-
     }
 
     private void openLoginScreen() {
@@ -347,22 +341,16 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             registeredFragments.put(position, fragment);
             return fragment;
-
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-
             registeredFragments.remove(position);
-
             super.destroyItem(container, position, object);
-
         }
-
 
         /**
          * Get the Fragment by position
@@ -371,13 +359,11 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
          * @return
          */
         public Fragment getRegisteredFragment(int position) {
-
             return registeredFragments.get(position);
-
         }
     }
 
-    public void onHomeClick() {
+    private void onHomeClick() {
 
         TabLayout.Tab tab1 = tabLayout.getTabAt(1);
         View view1 = tab1.getCustomView();
@@ -416,7 +402,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         tabLayout.setBackground(getResources().getDrawable(R.drawable.d_top_white_line));
     }
 
-    public void onOtherTabClick() {
+    private void onOtherTabClick() {
 
         TabLayout.Tab tab1 = tabLayout.getTabAt(1);
         View view1 = tab1.getCustomView();
@@ -457,8 +443,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
     }
 
-
-    public void chatFragment(String receiverid, String name, String picture) {
+    private void chatFragment(String receiverid, String name, String picture) {
         ChatActivity chat_activity = new ChatActivity();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
@@ -472,6 +457,4 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         transaction.addToBackStack(null);
         transaction.replace(R.id.MainMenuFragment, chat_activity).commit();
     }
-
-
 }

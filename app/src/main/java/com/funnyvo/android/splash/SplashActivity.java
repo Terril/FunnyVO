@@ -18,7 +18,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.SplashScreenCubeTransformation;
+import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Callback;
@@ -26,17 +28,27 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.splash.fragments.FirstFragment;
 import com.funnyvo.android.splash.fragments.SecondFragment;
 import com.funnyvo.android.splash.fragments.ThirdFragment;
-import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.button.MaterialButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.funnyvo.android.simpleclasses.Variables.*;
+import static com.funnyvo.android.simpleclasses.Variables.API_SUCCESS_CODE;
+import static com.funnyvo.android.simpleclasses.Variables.FETCH_SETTINGS;
+import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
+import static com.funnyvo.android.simpleclasses.Variables.IS_FIRST_TIME;
+import static com.funnyvo.android.simpleclasses.Variables.PAGE_COUNT_SHOW_ADS_AFTER_VIEWS;
+import static com.funnyvo.android.simpleclasses.Variables.SHOW_ADS;
+import static com.funnyvo.android.simpleclasses.Variables.SHOW_ALL_VIDEOS;
+import static com.funnyvo.android.simpleclasses.Variables.SHOW_ALL_VIDEOS_WITH_ADS;
+import static com.funnyvo.android.simpleclasses.Variables.device_id;
+import static com.funnyvo.android.simpleclasses.Variables.pref_name;
+import static com.funnyvo.android.simpleclasses.Variables.sharedPreferences;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     private SplashPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private MaterialButton btnNext;
@@ -114,18 +126,117 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (JSONException je) {
                     je.printStackTrace();
                 }
-                Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
 
-                if (getIntent() != null && getIntent().getExtras() != null) {
-                    intent.putExtras(getIntent().getExtras());
-                    setIntent(null);
+                String url;
+                if (Variables.sharedPreferences.getBoolean(Variables.SHOW_ADS, false)) {
+                    url = SHOW_ALL_VIDEOS_WITH_ADS;
+                } else {
+                    url = SHOW_ALL_VIDEOS;
                 }
-
-                startActivity(intent);
-                finish();
+                callApiForGetAllVideos(url);
             }
         });
     }
+
+    private void callApiForGetAllVideos(String url) {
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+            parameters.put("token", MainMenuActivity.token);
+            parameters.put("page_number", 1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        showProgressDialog();
+        ApiRequest.callApi(this, url, parameters, new Callback() {
+            @Override
+            public void response(String response) {
+                dismissProgressDialog();
+                parseData(response);
+            }
+        });
+    }
+
+    public void parseData(String response) {
+        ArrayList dataList = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            String code = jsonObject.optString("code");
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
+                JSONArray msgArray = jsonObject.getJSONArray("msg");
+                int arrayItems = msgArray.length();
+                for (int i = 0; i < arrayItems; i++) {
+                    JSONObject itemdata = msgArray.optJSONObject(i);
+                    Home item = new Home();
+                    item.fb_id = itemdata.optString("fb_id");
+
+                    JSONObject userInfo = itemdata.optJSONObject("user_info");
+
+                    if (userInfo != null) {
+                        item.username = userInfo.optString("username");
+                        item.first_name = userInfo.optString("first_name", getResources().getString(R.string.app_name));
+                        item.last_name = userInfo.optString("last_name", "User");
+                        item.profile_pic = userInfo.optString("profile_pic", "null");
+                        item.verified = userInfo.optString("verified");
+                    }
+
+                    JSONObject soundData = itemdata.optJSONObject("sound");
+                    if (soundData != null) {
+                        item.sound_id = soundData.optString("id");
+                        item.sound_name = soundData.optString("sound_name");
+                        item.sound_pic = soundData.optString("thum");
+                        item.soundUrl = soundData.optString("sound_url");
+                    }
+
+                    JSONObject count = itemdata.optJSONObject("count");
+                    if (count != null) {
+                        item.like_count = count.optString("like_count");
+                        item.video_comment_count = count.optString("video_comment_count");
+                    }
+
+                    item.video_id = itemdata.optString("id");
+                    item.liked = itemdata.optString("liked");
+                    item.video_url = itemdata.optString("video");
+
+                    item.video_description = itemdata.optString("description");
+
+                    item.thum = itemdata.optString("thum");
+                    item.created_date = itemdata.optString("created");
+                    if (item.video_url.contains(Variables.base_url)) {
+                        item.video_url = item.video_url.replace(Variables.base_url + "/", "");
+                    }
+                    if (item.sound_pic.contains(Variables.base_url)) {
+                        item.sound_pic = item.sound_pic.replace(Variables.base_url + "/", "");
+                    }
+                    if (item.thum.contains(Variables.base_url)) {
+                        item.thum = item.thum.replace(Variables.base_url + "/", "");
+                    }
+
+                    dataList.add(item);
+                }
+
+            } else {
+                //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+
+            intent.putExtra(HOME_DATA, dataList);
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                intent.putExtras(getIntent().getExtras());
+                setIntent(null);
+            }
+
+            startActivity(intent);
+            finish();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private void callNextActivity() {
         SharedPreferences.Editor editor = sharedPreferences.edit();

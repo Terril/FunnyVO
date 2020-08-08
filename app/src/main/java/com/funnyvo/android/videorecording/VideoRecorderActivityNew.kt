@@ -61,6 +61,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
 
     private var isSlided = false
     private var isFilterUp = false
+    private var isSpeedViewDispalyed = true
     private var isRecordingTimerEnable = false
     private var isRecording = false
     private var secondsPassed = 0
@@ -433,6 +434,15 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         isFilterUp = !isFilterUp
     }
 
+    private fun toggleSpeedView() {
+        if (isSpeedViewDispalyed) {
+            layoutVideoSpeed.visibility = VISIBLE
+        } else {
+            layoutVideoSpeed.visibility = INVISIBLE
+        }
+        isSpeedViewDispalyed = !isSpeedViewDispalyed
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             btnRecord -> {
@@ -474,8 +484,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
                 showProgressDialog()
                 recordingViewModel.appendTheContent(this, arrayOfVideoPaths, outputFilePath)
             }
-            btnRecodingSpeed ->
-                layoutVideoSpeed.visibility = VISIBLE
+            btnRecodingSpeed -> toggleSpeedView()
         }
     }
 

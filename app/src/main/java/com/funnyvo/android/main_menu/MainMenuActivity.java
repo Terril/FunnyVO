@@ -17,6 +17,8 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
+
 
 public class MainMenuActivity extends BaseActivity {
     public static MainMenuActivity mainMenuActivity;

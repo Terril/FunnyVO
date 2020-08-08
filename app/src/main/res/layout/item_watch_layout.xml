@@ -54,6 +54,7 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:scaleType="centerCrop"
+                            android:background="@drawable/back_avtar"
                             android:src="@drawable/profile_image_placeholder" />
 
                         <ImageView

@@ -41,6 +41,7 @@ public class Variables {
     public static final String USER_PREF_VIDEO_VISIBILITY = "user_video_visibility";
     public static final String SHOW_ADS = "show_ads";
     public static final String PAGE_COUNT_SHOW_ADS_AFTER_VIEWS = "show_ads_after_views";
+    public static final String HOME_DATA = "homeData";
 
     public static String outputfile = APP_FOLDER + "output.mp4";
     public static String outputfile2 = APP_FOLDER + "output2.mp4";

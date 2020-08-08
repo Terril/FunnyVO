@@ -105,6 +105,7 @@ import java.util.ArrayList;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.funnyvo.android.FunnyVOApplication.getProxy;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
+import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -128,7 +129,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     boolean is_add_show = false;
     private HomeAdapter adapter;
 
-    // when we swipe for another video this will relaese the privious player
+    // when we swipe for another video this will release the previous player
     private SimpleExoPlayer previousPlayer;
     int swipe_count = 0;
 
@@ -139,6 +140,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     private static HomeFragment fragment;
     private UnifiedNativeAdView adView;
+    private PlayerView playerView;
 
     private HomeFragment() {
         // Required empty public constructor
@@ -174,8 +176,12 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
-
-        dataList = new ArrayList<>();
+        if (MainMenuActivity.intent != null) {
+            dataList = (ArrayList<Home>) MainMenuActivity.intent.getSerializableExtra(HOME_DATA);
+        } else {
+            dataList = new ArrayList<>();
+            handleApiCallRequest();
+        }
         setAdapter();
         final ShowAdvertisement advertisement = ShowAdvertisement.Companion.getInstance();
         // this is the scroll listener of recycler view which will tell the current item number
@@ -223,8 +229,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             }
         });
 
-        handleApiCallRequest();
-
 //        if (!Variables.is_remove_ads)
 //            loadAdd();
 
@@ -232,11 +236,13 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     }
 
     private void handleApiCallRequest() {
+        String url;
         if (Variables.sharedPreferences.getBoolean(Variables.SHOW_ADS, false)) {
-            callApiForGetAllVideosWithAds();
+            url = Variables.SHOW_ALL_VIDEOS_WITH_ADS;
         } else {
-            callApiForGetAllVideos();
+            url = Variables.SHOW_ALL_VIDEOS;
         }
+        callApiForGetAllVideos(url);
     }
 
 //    private void loadAdd() {
@@ -353,28 +359,8 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-    private void callApiForGetAllVideosWithAds() {
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
-            parameters.put("token", MainMenuActivity.token);
-            parameters.put("page_number", pageNumber);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS_WITH_ADS, parameters, new Callback() {
-            @Override
-            public void response(String resp) {
-                swiperefresh.setRefreshing(false);
-                parseData(resp);
-            }
-        });
-    }
-
     // Bottom two function will call the api and get all the videos form api and parse the json data
-    private void callApiForGetAllVideos() {
+    private void callApiForGetAllVideos(String url) {
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
@@ -385,7 +371,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             e.printStackTrace();
         }
 
-        ApiRequest.callApi(context, Variables.SHOW_ALL_VIDEOS, parameters, new Callback() {
+        ApiRequest.callApi(context, url, parameters, new Callback() {
             @Override
             public void response(String resp) {
                 swiperefresh.setRefreshing(false);
@@ -470,7 +456,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             View layout = layoutManager.findViewByPosition(currentPage);
             final RelativeLayout mainLayout = layout.findViewById(R.id.mainLayoutHome);
             final FrameLayout loadAdsLayout = layout.findViewById(R.id.frameLoadAdsHome);
-            final PlayerView playerView = layout.findViewById(R.id.playerViewHome);
+            playerView = layout.findViewById(R.id.playerViewHome);
 
             final Home item = dataList.get(currentPage);
 
@@ -602,7 +588,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
             if (currentPage == dataList.size() - 1) {
                 pageNumber = pageNumber + 1;
-                callApiForGetAllVideos();
+                handleApiCallRequest();
             } else {
                 recyclerView.post(new Runnable() {
                     public void run() {
@@ -991,15 +977,18 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     }
 
-    // this is lifecyle of the Activity which is importent for play,pause video or relaese the player
+    // this is lifecyle of the Activity which is important for play, pause video or release the player
     @Override
     public void onResume() {
         super.onResume();
         if ((previousPlayer != null && (is_visible_to_user && !is_user_stop_video)) && !doesfragmentExits()) {
             previousPlayer.setPlayWhenReady(true);
+            if (playerView != null) {
+                playerView.requestFocus();
+                playerView.setPlayer(previousPlayer);
+            }
         }
     }
-
 
     @Override
     public void onPause() {
@@ -1049,7 +1038,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
         if (playbackState == Player.STATE_BUFFERING) {
             pBar.setVisibility(View.VISIBLE);
         } else if (playbackState == Player.STATE_READY) {
