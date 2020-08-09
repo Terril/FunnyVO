@@ -50,6 +50,7 @@ import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.downloader.request.DownloadRequest;
+import com.funnyvo.android.FunnyVOApplication;
 import com.funnyvo.android.R;
 import com.funnyvo.android.VideoDownloadedListener;
 import com.funnyvo.android.ads.ShowAdvertisement;
@@ -59,6 +60,7 @@ import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
+import com.funnyvo.android.main_menu.relatetofragment_onback.OnBackPressListener;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -71,6 +73,8 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.VideoSoundActivity;
 import com.funnyvo.android.taged.TaggedVideosFragment;
 import com.funnyvo.android.videoAction.VideoActionFragment;
+import com.funnyvo.android.videocache.VideoPreLoadingService;
+import com.funnyvo.android.videocache.utility.Constants;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -88,6 +92,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.SystemClock;
 import com.google.android.exoplayer2.util.Util;
@@ -103,7 +110,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.funnyvo.android.FunnyVOApplication.getProxy;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
 
@@ -176,14 +182,15 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
-        dataList = new ArrayList<>();
         if (MainMenuActivity.intent != null) {
             dataList = (ArrayList<Home>) MainMenuActivity.intent.getSerializableExtra(HOME_DATA);
         }
-        if (dataList.isEmpty()) {
+        if (dataList == null || dataList.isEmpty()) {
+            dataList = new ArrayList<Home>();
             handleApiCallRequest();
         }
         setAdapter();
+        startPreLoadingService();
         final ShowAdvertisement advertisement = ShowAdvertisement.Companion.getInstance();
         // this is the scroll listener of recycler view which will tell the current item number
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -235,6 +242,14 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         return view;
     }
+
+    private void startPreLoadingService() {
+        Intent preloadingServiceIntent = new Intent(context, VideoPreLoadingService.class);
+        preloadingServiceIntent.putExtra(Constants.VIDEO_LIST, dataList);
+        getActivity().startService(preloadingServiceIntent);
+    }
+
+
 
     private void handleApiCallRequest() {
         String url;
@@ -482,8 +497,15 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             AnalyticsCollector analyticsCollector = new AnalyticsCollector(clock);
             previousPlayer = new SimpleExoPlayer.Builder(context, renderersFactory, trackSelector, loadControl,
                     bandwidthMeter, looper, analyticsCollector, true, clock).build();
-            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, APP_NAME));
+            SimpleCache simpleCache = FunnyVOApplication.Companion.getSimpleCache();
+
+            CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(
+                    simpleCache,
+                    new DefaultDataSourceFactory(context,
+                            Util.getUserAgent(context, APP_NAME)),
+            CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+        );
+
             if (item.video_url.isEmpty()) {
                 loadAdsLayout.setVisibility(View.VISIBLE);
                 if (adView != null) {
@@ -500,15 +522,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     }
                 }
 
-                HttpProxyCacheServer proxy = getProxy(context);
-                String proxyUrl = proxy.getProxyUrl(item.video_url);
-                MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(proxyUrl));
+                MediaSource videoSource = new ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+                        .createMediaSource(Uri.parse(item.video_url));
                 playerView.setPlayer(previousPlayer);
                 previousPlayer.prepare(videoSource);
             }
-
-            setUpVideoCache();
 
             previousPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
             previousPlayer.addListener(this);
@@ -610,19 +628,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 });
 
             }
-        }
-    }
-
-    private void setUpVideoCache() {
-        if (currentPage + 1 < dataList.size()) {
-            HttpProxyCacheServer proxy = getProxy(context);
-            String url = "";
-            if (dataList.get(currentPage + 1).video_url.isEmpty()) {
-
-            } else {
-                url = dataList.get(currentPage + 1).video_url;
-            }
-            proxy.getProxyUrl(url);
         }
     }
 
@@ -1026,7 +1031,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         if (previousPlayer != null) {
             previousPlayer.release();
         }
-        getProxy(context).shutdown();
+      //  getProxy(context).shutdown();
     }
 
     // Bottom all the function and the Call back listener of the Expo player
