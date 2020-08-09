@@ -40,7 +40,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
-import com.danikula.videocache.HttpProxyCacheServer;
 import com.downloader.Error;
 import com.downloader.OnCancelListener;
 import com.downloader.OnDownloadListener;

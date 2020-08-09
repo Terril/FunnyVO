@@ -2,7 +2,6 @@ package com.funnyvo.android
 
 import android.app.Application
 import android.content.Context
-import com.danikula.videocache.HttpProxyCacheServer
 import com.google.android.exoplayer2.database.ExoDatabaseProvider
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
@@ -11,7 +10,6 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class FunnyVOApplication : Application() {
-    private var proxy: HttpProxyCacheServer? = null
 
     companion object {
         var simpleCache: SimpleCache? = null
