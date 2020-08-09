@@ -11,7 +11,9 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Parcelable
 import android.provider.MediaStore
+import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
@@ -35,10 +37,12 @@ import com.funnyvo.android.filter.CameraFilter
 import com.funnyvo.android.filter.CameraFilterAdapter
 import com.funnyvo.android.filter.CameraFilterAdapter.OnItemClickListener
 import com.funnyvo.android.helper.FileUtils
+import com.funnyvo.android.helper.PermissionUtils
 import com.funnyvo.android.helper.PermissionUtils.checkPermissions
 import com.funnyvo.android.simpleclasses.FragmentCallback
 import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
+import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.soundlists.SoundListMainActivity
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
@@ -94,6 +98,52 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             Variables.Selected_sound_id = intent.getStringExtra("sound_id")
             prepareAudio()
         }
+
+        if (checkPermissions(this)) {
+            if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                openSharedVideo()
+            } else {
+                openLoginScreen()
+            }
+        }
+    }
+
+    private fun openSharedVideo() {
+        val uri = onSharedIntent()
+        if (uri != null) {
+            try {
+                val path = FileUtils(this).getPath(uri)
+                if (path != null) {
+                    val videoFile = File(path)
+                    if (getFileDuration(uri) < 19500) {
+                        recordingViewModel.changeVideoSize(path, Variables.gallery_resize_video)
+                    } else {
+                        try {
+                            recordingViewModel.trimVideo(this, uri, this)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun onSharedIntent(): Uri? {
+        val receivedIntent = intent
+        val receivedAction = receivedIntent.action
+        val receivedType = receivedIntent.type
+        if (receivedAction != null && receivedAction == Intent.ACTION_SEND) {
+            // check mime type
+            if (receivedType!!.startsWith("video/")) {
+                //do your stuff
+                return receivedIntent
+                        .getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as Uri // save to your own Uri object
+            }
+        }
+        return null
     }
 
     private fun setListeners() {
@@ -174,7 +224,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         layoutVideoSpeed.visibility = INVISIBLE
         if (!isRecording && secondsPassed < Variables.recording_duration / 1000 - 1) {
             isRecording = true
-
+            number += 1
             fileName = if (speedValue != "1.0") {
                 Variables.APP_FOLDER + number + ".mp4"
             } else {
@@ -190,7 +240,6 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             btnDone.isEnabled = false
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
-            number += 1
             //  btnAddMusicRecord.isClickable = false
             // cameraRecording.open()
         } else if (isRecording) {
@@ -198,11 +247,13 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             videoProgress.pause()
             videoProgress.addDivider()
             if (speedValue != "1.0") {
-                recordingViewModel.applyFastMoSlowMoVideo(fileName, Variables.APP_FOLDER + number + ".mp4", speedValue)
+                showProgressDialog()
+                number += 1
+                recordingViewModel.applyFastMoSlowMoVideo(fileName, Variables.APP_FOLDER + number + ".mp4", speedValue.toFloat())
             }
             if (audio != null) audio?.pause()
             if (secondsPassed > Variables.recording_duration / 1000 / 4) {
-                btnDone.visibility = View.VISIBLE
+                btnDone.visibility = VISIBLE
                 btnDone.isEnabled = true
                 btnDone.setOnClickListener(this)
             }
@@ -284,7 +335,11 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
 
     private fun observeLiveEvents() {
         recordingViewModel.motionFilter.observe(this) {
-
+            dismissProgressDialog()
+            if(it.filterNull()) {
+                arrayOfVideoPaths.add(Variables.APP_FOLDER + number + ".mp4")
+            }
+            Log.e(APP_NAME, "MotionFilter is : " + it.filterNull())
         }
 
         recordingViewModel.videoAppendEvent.observe(this) {

@@ -17,6 +17,7 @@ import com.funnyvo.android.FunnyVOException
 import com.funnyvo.android.R
 import com.funnyvo.android.helper.Result
 import com.funnyvo.android.simpleclasses.Variables
+import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.videorecording.data.VideoRecording
 import com.googlecode.mp4parser.authoring.Movie
 import com.googlecode.mp4parser.authoring.Track
@@ -26,6 +27,7 @@ import com.googlecode.mp4parser.authoring.tracks.AppendTrack
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.lb.video_trimmer_library.utils.TrimVideoUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -42,7 +44,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
 
     private var deleteCount = 0;
 
-    fun applyFastMoSlowMoVideo(srcFile: String, destFile: String, speedValue: String) {
+    fun applyFastMoSlowMoVideo(srcFile: String, destFile: String, speedValue: Float) {
         viewModelScope.launch {
             when (applyFrameMotionFilter(srcFile, destFile, speedValue)) {
                 is Result.Success -> motionFilter.value = true
@@ -51,8 +53,9 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         }
     }
 
-    private suspend fun applyFrameMotionFilter(srcFile: String, destFile: String, speedValue: String): Result<Int> {
-        val complexCommand = arrayOf("-y", "-i", srcFile, "-filter_complex", "[0:v]setpts=" + 1.div(speedValue.toFloat()) + "*PTS[v];[0:a]atempo=" + speedValue.toFloat() + "[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", destFile)
+    private suspend fun applyFrameMotionFilter(srcFile: String, destFile: String, speedValue: Float): Result<Int> {
+        Log.e(APP_NAME, " Motion Filter value " + speedValue)
+        val complexCommand = arrayOf("-y", "-i", srcFile, "-filter_complex", "[0:v]setpts=" + 1.div(speedValue) + "*PTS[v];[0:a]atempo=" + speedValue + "[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", destFile)
         return withContext(Dispatchers.IO) {
             when (FFmpeg.execute(complexCommand)) {
                 RETURN_CODE_SUCCESS -> Result.Success(RETURN_CODE_SUCCESS)

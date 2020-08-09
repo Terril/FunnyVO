@@ -176,10 +176,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+        dataList = new ArrayList<>();
         if (MainMenuActivity.intent != null) {
             dataList = (ArrayList<Home>) MainMenuActivity.intent.getSerializableExtra(HOME_DATA);
-        } else {
-            dataList = new ArrayList<>();
+        }
+        if (dataList.isEmpty()) {
             handleApiCallRequest();
         }
         setAdapter();
@@ -212,7 +213,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             }
         });
 
-
         swiperefresh = view.findViewById(R.id.swiperefresh);
         swiperefresh.setProgressViewOffset(false, 0, 200);
 
@@ -231,6 +231,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
 
 //        if (!Variables.is_remove_ads)
 //            loadAdd();
+        setupNotification();
 
         return view;
     }
@@ -245,6 +246,17 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         callApiForGetAllVideos(url);
     }
 
+    private void setupNotification() {
+        JSONObject parameters = new JSONObject();
+        try {
+            parameters.put("fb_id", Variables.sharedPreferences.getString(Variables.u_id, "0"));
+            parameters.put("device_id", Variables.sharedPreferences.getString(Variables.device_token, ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiRequest.callApi(context, Variables.SET_UP_NOTIFICATION, parameters, null);
+    }
 //    private void loadAdd() {
 //        // this is test app id you will get the actual id when you add app in your
 //        //add mob account

@@ -115,7 +115,7 @@ public class SplashActivity extends BaseActivity {
                     if (code.equals(API_SUCCESS_CODE)) {
                         JSONObject msgJson = jsonObject.getJSONObject("msg");
                         String advertisement = msgJson.optString("advertisement");
-                        String adAfterVideos = msgJson.optString("ad_after_videos");
+                        String adAfterVideos = msgJson.optString("ad_after_no_videos");
                         if (advertisement.equals("1")) {
                             SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
                             editor.putBoolean(SHOW_ADS, true);
