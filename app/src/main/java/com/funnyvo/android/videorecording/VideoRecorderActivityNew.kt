@@ -37,7 +37,6 @@ import com.funnyvo.android.filter.CameraFilter
 import com.funnyvo.android.filter.CameraFilterAdapter
 import com.funnyvo.android.filter.CameraFilterAdapter.OnItemClickListener
 import com.funnyvo.android.helper.FileUtils
-import com.funnyvo.android.helper.PermissionUtils
 import com.funnyvo.android.helper.PermissionUtils.checkPermissions
 import com.funnyvo.android.simpleclasses.FragmentCallback
 import com.funnyvo.android.simpleclasses.Functions
@@ -165,6 +164,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         btn1x.setOnClickListener(this)
         btn1_5x.setOnClickListener(this)
         btn2x.setOnClickListener(this)
+        imvStickers.setOnClickListener(this)
         sliderZoom.addOnChangeListener { slider, value, fromUser ->
             cameraRecording.zoom = value
         }
@@ -540,7 +540,14 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
                 recordingViewModel.appendTheContent(this, arrayOfVideoPaths, outputFilePath)
             }
             btnRecodingSpeed -> toggleSpeedView()
+            imvStickers -> showStickers()
         }
+    }
+
+    private fun showStickers() {
+        val showStickerFragment: ShowStickerFragment = ShowStickerFragment.instance
+        showStickerFragment.show(supportFragmentManager,
+                "show_stickers_dialog_fragment")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

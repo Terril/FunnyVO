@@ -28,6 +28,7 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.splash.fragments.FirstFragment;
 import com.funnyvo.android.splash.fragments.SecondFragment;
 import com.funnyvo.android.splash.fragments.ThirdFragment;
+import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
@@ -221,7 +222,7 @@ public class SplashActivity extends BaseActivity {
                 //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
-            Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+            Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
 
             intent.putExtra(HOME_DATA, dataList);
             if (getIntent() != null && getIntent().getExtras() != null) {

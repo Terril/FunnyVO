@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/palette_milk"></androidx.recyclerview.widget.RecyclerView>-->
+
+    <TextView
+        android:id="@+id/text"
+        android:text="This is "
+        android:padding="@dimen/margin_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></TextView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

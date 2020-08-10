@@ -364,6 +364,15 @@
                 android:src="@drawable/ic_record_video_pre" />
 
             <ImageView
+                android:id="@+id/imvStickers"
+                android:layout_width="@dimen/margin_40"
+                android:layout_toEndOf="@+id/imvGallery"
+                android:layout_toStartOf="@+id/btnRecord"
+                android:layout_height="@dimen/margin_40"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_gallery" />
+
+            <ImageView
                 android:id="@+id/imvGallery"
                 android:layout_width="@dimen/margin_40"
                 android:layout_height="@dimen/margin_40"
