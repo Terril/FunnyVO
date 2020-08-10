@@ -1,4 +1,4 @@
-package com.funnyvo.android.videorecording
+package com.funnyvo.android.videorecording.stickers
 
 import android.os.Bundle
 import android.view.LayoutInflater

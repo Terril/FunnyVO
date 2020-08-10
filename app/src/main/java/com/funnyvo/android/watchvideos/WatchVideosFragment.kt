@@ -143,6 +143,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                 if (adView?.parent != null) {
                     (adView?.parent as ViewGroup).removeView(adView)
                 }
+                frameLoadAdsWatchVideo?.removeAllViews()
                 frameLoadAdsWatchVideo?.addView(adView)
             }
         } else {
@@ -349,7 +350,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         args.putString("user_id", item.fb_id)
         commentFragment.arguments = args
         transaction.addToBackStack(null)
-        transaction.replace(R.id.WatchVideo_F, commentFragment).commit()
+        transaction.replace(R.id.watchVideoContainer, commentFragment).commit()
     }
 
 
@@ -370,7 +371,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
             args.putString("user_pic", item.profile_pic)
             profileFragment.arguments = args
             transaction.addToBackStack(null)
-            transaction.replace(R.id.WatchVideo_F, profileFragment).commit()
+            transaction.replace(R.id.watchVideoContainer, profileFragment).commit()
         }
     }
 
@@ -408,7 +409,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         args.putString("tag", tag)
         tagedVideosFragment.arguments = args
         transaction.addToBackStack(null)
-        transaction.replace(R.id.WatchVideo_F, tagedVideosFragment).commit()
+        transaction.replace(R.id.watchVideoContainer, tagedVideosFragment).commit()
     }
 
     private fun saveVideo(item: Home) {

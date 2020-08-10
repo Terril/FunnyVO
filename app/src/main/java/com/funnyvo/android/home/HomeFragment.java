@@ -175,6 +175,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         pBar = view.findViewById(R.id.p_bar);
 
         recyclerView = view.findViewById(R.id.recylerviewHome);
+        FrameLayout adContainer = view.findViewById(R.id.ad_container);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
@@ -511,6 +512,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     if (adView.getParent() != null) {
                         ((ViewGroup) adView.getParent()).removeView(adView);
                     }
+                    loadAdsLayout.removeAllViews();
                     loadAdsLayout.addView(adView);
                 }
             } else {

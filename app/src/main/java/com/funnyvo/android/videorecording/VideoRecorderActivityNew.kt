@@ -45,6 +45,7 @@ import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.soundlists.SoundListMainActivity
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
+import com.funnyvo.android.videorecording.stickers.ShowStickerFragment
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.otaliastudios.cameraview.filter.Filters

@@ -9,7 +9,7 @@
         android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/margin_70"
+        android:padding="@dimen/margin_90"
         android:src="@mipmap/ic_launcher_watermark" />
 
     <androidx.viewpager.widget.ViewPager

@@ -10,7 +10,7 @@ import com.google.android.gms.ads.formats.MediaView
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
 
-class ShowAdvertisement private constructor() {
+class ShowAdvertisement {
     private var adView: UnifiedNativeAdView? = null
     private object HOLDER {
         val INSTANCE = ShowAdvertisement()
