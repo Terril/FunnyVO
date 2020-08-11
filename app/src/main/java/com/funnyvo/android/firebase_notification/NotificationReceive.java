@@ -14,27 +14,15 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.funnyvo.android.R;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.main_menu.MainMenuActivity;
-import com.funnyvo.android.main_menu.MainMenuFragment;
-import com.funnyvo.android.R;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -43,8 +31,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 public class NotificationReceive extends FirebaseMessagingService {
 
@@ -149,8 +135,8 @@ public class NotificationReceive extends FirebaseMessagingService {
 
     private void showNotification(Context context, String title, String message, Bitmap bitmap) {
         // The id of the channel.
-        final String CHANNEL_ID = "default";
-        final String CHANNEL_NAME = "Default";
+        final String CHANNEL_ID = "funny_vo_channel_id";
+        final String CHANNEL_NAME = "FunnyVO";
 
         Intent notificationIntent = new Intent(context, MainMenuActivity.class);
         notificationIntent.putExtra("user_id", receiverid);
@@ -177,7 +163,7 @@ public class NotificationReceive extends FirebaseMessagingService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSound(defaultSoundUri)
@@ -185,8 +171,7 @@ public class NotificationReceive extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         Notification notification = builder.build();
-        notification.defaults |= Notification.DEFAULT_VIBRATE;
+        notification.defaults |= NotificationCompat.DEFAULT_VIBRATE;
         notificationManager.notify(100, notification);
     }
-
 }
