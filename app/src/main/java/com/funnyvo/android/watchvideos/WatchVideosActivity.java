@@ -60,6 +60,7 @@ public class WatchVideosActivity extends BaseActivity {
         WatchVideosFragment fragment = WatchVideosFragment.Companion.getInstance();
         fragment.setArguments(bundle);
         ft.replace(R.id.frameLayoutWatchVideo, fragment);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
