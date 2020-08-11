@@ -5,7 +5,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 
-class FunnyVOEditTextView(context: Context?, attrs: AttributeSet?) : AppCompatEditText(context, attrs) {
+class FunnyVOEditTextView(context: Context, attrs: AttributeSet?) : AppCompatEditText(context, attrs) {
     init {
         init()
     }

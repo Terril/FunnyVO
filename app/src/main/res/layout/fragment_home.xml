@@ -1,16 +1,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/palette_milk">
+    android:layout_height="match_parent">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/search_layout">
-
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,8 +15,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recylerviewHome"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/palette_milk" />
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/p_bar"
