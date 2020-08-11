@@ -48,6 +48,7 @@ import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
 import com.funnyvo.android.videorecording.stickers.ShowStickerFragment
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
+import com.otaliastudios.cameraview.controls.Flash
 import com.otaliastudios.cameraview.filter.Filters
 import com.otaliastudios.cameraview.overlay.OverlayLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -542,7 +543,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             }
             btnRecodingSpeed -> toggleSpeedView()
             imvStickers -> showStickers()
+            btnFlashCamera -> setFlash()
         }
+    }
+
+    private fun setFlash() {
+       cameraRecording.flash = Flash.AUTO
     }
 
     private fun showStickers() {

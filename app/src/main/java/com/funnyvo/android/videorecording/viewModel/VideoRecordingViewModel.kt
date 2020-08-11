@@ -114,6 +114,15 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         }
     }
 
+    fun requestForVideoFilters() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+
+
+            }
+        }
+    }
+
     fun deleteFile() {
         deleteCount++
         val output = File(Variables.outputfile)

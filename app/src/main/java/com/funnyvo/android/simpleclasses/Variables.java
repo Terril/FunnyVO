@@ -125,4 +125,5 @@ public class Variables {
     public static final String UPDATE_APP_VERSION = DOMAIN + "update_version";
     public static final String LOGOUT = DOMAIN + "logout";
     public static final String SET_UP_NOTIFICATION = DOMAIN + "storeAnonymousUser";
+    public static final String GET_VIDEO_RECORDING_FILTERS = DOMAIN + "showFilters";
 }
