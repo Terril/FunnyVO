@@ -9,7 +9,7 @@ import com.funnyvo.android.R
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 
 
-class FunnyVOTextView(context: Context?, val attrs: AttributeSet?) : AppCompatTextView(context, attrs) {
+class FunnyVOTextView(context: Context, val attrs: AttributeSet?) : AppCompatTextView(context, attrs) {
     init {
         init()
     }
