@@ -22,19 +22,27 @@
             app:cameraVideoCodec="h264"
             app:cameraWhiteBalance="auto">
 
-            <com.funnyvo.android.customview.FunnyVOEditTextView
-                android:id="@+id/edtTxtVideoMessage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:background="@android:color/transparent"
-                android:focusable="true"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:inputType="textCapSentences|textMultiLine"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_size_35"
-                android:visibility="gone" />
+            <!--            <com.funnyvo.android.customview.FunnyVOEditTextView-->
+            <!--                android:id="@+id/edtTxtVideoMessage"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_centerInParent="true"-->
+            <!--                android:background="@android:color/transparent"-->
+            <!--                android:focusable="true"-->
+            <!--                android:gravity="center"-->
+            <!--                android:imeOptions="actionDone"-->
+            <!--                android:inputType="textCapSentences|textMultiLine"-->
+            <!--                android:textColor="@color/colorAccent"-->
+            <!--                android:textSize="@dimen/text_size_35"-->
+            <!--                android:visibility="gone" />-->
+
+            <ImageView
+                android:id="@+id/imvFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:layout_drawOnPreview="true"
+                app:layout_drawOnVideoSnapshot="true" />
         </com.otaliastudios.cameraview.CameraView>
 
 
@@ -366,11 +374,11 @@
             <ImageView
                 android:id="@+id/imvStickers"
                 android:layout_width="@dimen/margin_40"
-                android:layout_toEndOf="@+id/imvGallery"
-                android:layout_toStartOf="@+id/btnRecord"
                 android:layout_height="@dimen/margin_40"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_gallery" />
+                android:layout_toStartOf="@+id/btnRecord"
+                android:visibility="invisible"
+                android:layout_toEndOf="@+id/imvGallery" />
 
             <ImageView
                 android:id="@+id/imvGallery"
@@ -385,8 +393,8 @@
                 android:layout_height="@dimen/margin_40"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:visibility="invisible"
-                android:src="@drawable/ic_collage" />
+                android:src="@drawable/ic_collage"
+                android:visibility="invisible" />
 
             <ImageButton
                 android:id="@+id/btnDone"

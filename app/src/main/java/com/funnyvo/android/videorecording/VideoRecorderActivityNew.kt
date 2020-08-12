@@ -1,9 +1,6 @@
 package com.funnyvo.android.videorecording
 
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipDescription
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.MediaMetadataRetriever
@@ -15,19 +12,21 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
 import android.view.DragEvent
-import android.view.MotionEvent
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.funnyvo.android.R
 import com.funnyvo.android.accounts.LoginActivity
 import com.funnyvo.android.base.BaseActivity
@@ -43,9 +42,11 @@ import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.soundlists.SoundListMainActivity
+import com.funnyvo.android.videorecording.data.RecordingFilters
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
 import com.funnyvo.android.videorecording.stickers.ShowStickerFragment
+import com.funnyvo.android.videorecording.stickers.StickerCallBack
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.otaliastudios.cameraview.controls.Flash
@@ -59,7 +60,8 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingListener, OnDragListener, MergeVideoAudioCallBack {
+class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingListener, OnDragListener, MergeVideoAudioCallBack, StickerCallBack {
+    private var filters: List<RecordingFilters> = mutableListOf()
     private var fileName: String = ""
     private var speedValue: String = "1.0"
     private val recordingViewModel: VideoRecordingViewModel by viewModels()
@@ -93,6 +95,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         loadFilters()
         observeLiveEvents()
         observeVideoRecordingEvent()
+        recordingViewModel.requestForVideoFilters(this)
 
         if (intent.hasExtra("sound_name")) {
             btnAddMusicRecord.text = intent.getStringExtra("sound_name")
@@ -240,6 +243,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             if (audio != null) audio?.start()
             videoProgress.resume()
             btnDone.isEnabled = false
+            imvStickers.visibility = INVISIBLE
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
             //  btnAddMusicRecord.isClickable = false
@@ -262,6 +266,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             cameraRecording.stopVideo()
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_pre))
             slideCameraOptions()
+            imvStickers.visibility = VISIBLE
             //            rotate_camera.setVisibility(View.VISIBLE);
         } else if (secondsPassed > Variables.recording_duration / 1000) {
             Functions.showAlert(this, "Alert", "Video only can be a " + Variables.recording_duration / 1000 + " S")
@@ -338,7 +343,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     private fun observeLiveEvents() {
         recordingViewModel.motionFilter.observe(this) {
             dismissProgressDialog()
-            if(it.filterNull()) {
+            if (it.filterNull()) {
                 arrayOfVideoPaths.add(Variables.APP_FOLDER + number + ".mp4")
             }
             Log.e(APP_NAME, "MotionFilter is : " + it.filterNull())
@@ -351,6 +356,18 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
                 }
             }
             dismissProgressDialog()
+        }
+
+        recordingViewModel.videoFiltersResponseEvent.observe(this) {
+            if (it.msg.isNotEmpty()) {
+                imvStickers.visibility = VISIBLE
+                filters = it.msg
+                Glide.with(this)
+                        .load(filters[0].main_image)
+                        .centerCrop()
+                        .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
+                        .into(imvStickers)
+            }
         }
     }
 
@@ -375,12 +392,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         }
     }
 
-    private fun startWritingOnVideo() {
-        edtTxtVideoMessage.visibility = View.VISIBLE
-        edtTxtVideoMessage.requestFocus()
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(edtTxtVideoMessage, InputMethodManager.SHOW_IMPLICIT)
-        edtTxtVideoMessage.setOnDragListener(this@VideoRecorderActivityNew)
+//    private fun startWritingOnVideo() {
+//        edtTxtVideoMessage.visibility = View.VISIBLE
+//        edtTxtVideoMessage.requestFocus()
+//        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.showSoftInput(edtTxtVideoMessage, InputMethodManager.SHOW_IMPLICIT)
+//        edtTxtVideoMessage.setOnDragListener(this@VideoRecorderActivityNew)
 //        edtTxtVideoMessage.addTextChangedListener(object: TextWatcher {
 //            override fun afterTextChanged(s: Editable?) {
 //
@@ -393,27 +410,27 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
 //            }
 //        })
 
-        edtTxtVideoMessage.setOnLongClickListener { v ->
-            val item: ClipData.Item = ClipData.Item(v.tag as CharSequence)
-            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-            val dragData = ClipData(v.tag.toString(), mimeTypes, item)
-            val myShadow = DragShadowBuilder(edtTxtVideoMessage)
-            v.startDrag(dragData, myShadow, null, 0)
-            true
-        }
-
-        edtTxtVideoMessage.setOnTouchListener(OnTouchListener { v, event ->
-            if (event.action === MotionEvent.ACTION_DOWN) {
-                val data = ClipData.newPlainText("", "")
-                val shadowBuilder = DragShadowBuilder(edtTxtVideoMessage)
-                edtTxtVideoMessage.startDrag(data, shadowBuilder, edtTxtVideoMessage, 0)
-                edtTxtVideoMessage.visibility = View.INVISIBLE
-                true
-            } else {
-                false
-            }
-        })
-    }
+//        edtTxtVideoMessage.setOnLongClickListener { v ->
+//            val item: ClipData.Item = ClipData.Item(v.tag as CharSequence)
+//            val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+//            val dragData = ClipData(v.tag.toString(), mimeTypes, item)
+//            val myShadow = DragShadowBuilder(edtTxtVideoMessage)
+//            v.startDrag(dragData, myShadow, null, 0)
+//            true
+//        }
+//
+//        edtTxtVideoMessage.setOnTouchListener(OnTouchListener { v, event ->
+//            if (event.action === MotionEvent.ACTION_DOWN) {
+//                val data = ClipData.newPlainText("", "")
+//                val shadowBuilder = DragShadowBuilder(edtTxtVideoMessage)
+//                edtTxtVideoMessage.startDrag(data, shadowBuilder, edtTxtVideoMessage, 0)
+//                edtTxtVideoMessage.visibility = View.INVISIBLE
+//                true
+//            } else {
+//                false
+//            }
+//        })
+//    }
 
     private fun slideUp(view: View) {
         view.visibility = VISIBLE
@@ -548,11 +565,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     }
 
     private fun setFlash() {
-       cameraRecording.flash = Flash.AUTO
+        cameraRecording.flash = Flash.AUTO
     }
 
     private fun showStickers() {
         val showStickerFragment: ShowStickerFragment = ShowStickerFragment.instance
+        showStickerFragment.set(filters, this)
         showStickerFragment.show(supportFragmentManager,
                 "show_stickers_dialog_fragment")
     }
@@ -681,6 +699,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         intent.putExtra("video_path", Variables.outputfile2)
         intent.putExtra("draft_file", draftFile)
         startActivity(intent)
+    }
+
+    override fun onStickerClicked(filter: RecordingFilters) {
+        Glide.with(this)
+                .load(filter.main_image)
+                .into(imvFilter)
     }
 
 }

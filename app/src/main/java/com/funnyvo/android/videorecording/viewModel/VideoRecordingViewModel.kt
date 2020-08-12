@@ -16,9 +16,12 @@ import com.daasuu.gpuv.composer.GPUMp4Composer
 import com.funnyvo.android.FunnyVOException
 import com.funnyvo.android.R
 import com.funnyvo.android.helper.Result
+import com.funnyvo.android.simpleclasses.ApiRequest
 import com.funnyvo.android.simpleclasses.Variables
-import com.funnyvo.android.simpleclasses.Variables.APP_NAME
+import com.funnyvo.android.simpleclasses.Variables.*
+import com.funnyvo.android.videorecording.data.VideoFilters
 import com.funnyvo.android.videorecording.data.VideoRecording
+import com.google.gson.Gson
 import com.googlecode.mp4parser.authoring.Movie
 import com.googlecode.mp4parser.authoring.Track
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder
@@ -27,9 +30,9 @@ import com.googlecode.mp4parser.authoring.tracks.AppendTrack
 import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.lb.video_trimmer_library.utils.TrimVideoUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -41,6 +44,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
     val motionFilter = MutableLiveData<Boolean>()
     val videoRecordingLiveEvent = MutableLiveData<VideoRecording>()
     val videoAppendEvent = MutableLiveData<Boolean>()
+    val videoFiltersResponseEvent = MutableLiveData<VideoFilters>()
 
     private var deleteCount = 0;
 
@@ -114,13 +118,22 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         }
     }
 
-    fun requestForVideoFilters() {
+    fun requestForVideoFilters(context: Context) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-
-
+            ApiRequest.callApi(context, GET_VIDEO_RECORDING_FILTERS, null) { response ->
+                run {
+                    val jsonObject = JSONObject(response)
+                    val code = jsonObject.optString("code")
+                    if (code == API_SUCCESS_CODE) {
+                        videoFiltersResponseEvent.value = fromJson(jsonObject.toString())
+                    }
+                }
             }
         }
+    }
+
+    private fun fromJson(json: String): VideoFilters {
+        return Gson().fromJson<VideoFilters>(json, VideoFilters::class.java)
     }
 
     fun deleteFile() {

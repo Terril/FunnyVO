@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:background="@color/palette_milk"></androidx.recyclerview.widget.RecyclerView>-->
-
-    <ImageView
-        android:id="@+id/sampleImage"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewStickers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_20"
-        android:src="@mipmap/ic_launcher_watermark"></ImageView>
+        android:background="@color/palette_milk"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
