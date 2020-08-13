@@ -4,8 +4,8 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.funnyvo.beta",
-  "variantName": "devRelease",
+  "applicationId": "com.funnyvo",
+  "variantName": "fullDebug",
   "elements": [
     {
       "type": "ONE_OF_MANY",
@@ -19,7 +19,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-arm64-v8a-release.apk"
+      "outputFile": "app-full-arm64-v8a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -37,7 +37,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-hdpiArm64-v8a-release.apk"
+      "outputFile": "app-full-hdpiArm64-v8a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -55,7 +55,21 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-hdpiArmeabi-v7a-release.apk"
+      "outputFile": "app-full-hdpiArmeabi-v7a-debug.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "armeabi-v7a"
+        }
+      ],
+      "properties": [],
+      "versionCode": 9,
+      "versionName": "0.7",
+      "enabled": true,
+      "outputFile": "app-full-armeabi-v7a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -73,21 +87,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-hdpiX86-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "armeabi-v7a"
-        }
-      ],
-      "properties": [],
-      "versionCode": 9,
-      "versionName": "0.7",
-      "enabled": true,
-      "outputFile": "app-dev-armeabi-v7a-release.apk"
+      "outputFile": "app-full-hdpiX86-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -105,7 +105,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-hdpiX86_64-release.apk"
+      "outputFile": "app-full-hdpiX86_64-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -123,7 +123,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-mdpiArm64-v8a-release.apk"
+      "outputFile": "app-full-mdpiArm64-v8a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -141,7 +141,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-mdpiArmeabi-v7a-release.apk"
+      "outputFile": "app-full-mdpiArmeabi-v7a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -159,7 +159,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-mdpiX86-release.apk"
+      "outputFile": "app-full-mdpiX86-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -177,7 +177,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-mdpiX86_64-release.apk"
+      "outputFile": "app-full-mdpiX86_64-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -191,7 +191,21 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-x86-release.apk"
+      "outputFile": "app-full-x86-debug.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86_64"
+        }
+      ],
+      "properties": [],
+      "versionCode": 9,
+      "versionName": "0.7",
+      "enabled": true,
+      "outputFile": "app-full-x86_64-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -209,39 +223,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-xhdpiArm64-v8a-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "x86_64"
-        }
-      ],
-      "properties": [],
-      "versionCode": 9,
-      "versionName": "0.7",
-      "enabled": true,
-      "outputFile": "app-dev-x86_64-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "armeabi-v7a"
-        },
-        {
-          "filterType": "DENSITY",
-          "value": "xhdpi"
-        }
-      ],
-      "properties": [],
-      "versionCode": 9,
-      "versionName": "0.7",
-      "enabled": true,
-      "outputFile": "app-dev-xhdpiArmeabi-v7a-release.apk"
+      "outputFile": "app-full-xhdpiArm64-v8a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -259,7 +241,25 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-xhdpiX86-release.apk"
+      "outputFile": "app-full-xhdpiX86-debug.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "armeabi-v7a"
+        },
+        {
+          "filterType": "DENSITY",
+          "value": "xhdpi"
+        }
+      ],
+      "properties": [],
+      "versionCode": 9,
+      "versionName": "0.7",
+      "enabled": true,
+      "outputFile": "app-full-xhdpiArmeabi-v7a-debug.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -277,7 +277,7 @@
       "versionCode": 9,
       "versionName": "0.7",
       "enabled": true,
-      "outputFile": "app-dev-xhdpiX86_64-release.apk"
+      "outputFile": "app-full-xhdpiX86_64-debug.apk"
     }
   ]
 }

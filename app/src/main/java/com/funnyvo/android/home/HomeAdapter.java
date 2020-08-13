@@ -131,7 +131,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         ImageView user_pic, sound_image, varified_btn;
 
         LinearLayout like_layout, comment_layout, sound_image_layout, soundImageLayour;
-        ImageView like_image;
+        ImageView like_image, imvHomeVideoSnap;
         FunnyVOTextView like_txt, comment_txt;
 
         ImageButton btnShare, btnMuteUnMuteAudio;
@@ -165,6 +165,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             soundImageLayour = view.findViewById(R.id.sound_image_layout);
 
             mainlayout = view.findViewById(R.id.mainLayoutHome);
+            imvHomeVideoSnap = view.findViewById(R.id.imvHomeVideoSnap);
         }
 
         public void bind(final int postion, final Home item, final HomeAdapter.OnItemClickListener listener) {

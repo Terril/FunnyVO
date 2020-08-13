@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlWatermarkFilter;
 import com.downloader.Error;
@@ -108,6 +109,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
@@ -146,6 +149,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     private static HomeFragment fragment;
     private UnifiedNativeAdView adView;
     private PlayerView playerView;
+    private ImageView imvHomeVideoSnap;
 
     private HomeFragment() {
         // Required empty public constructor
@@ -248,7 +252,6 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         preloadingServiceIntent.putExtra(Constants.VIDEO_LIST, dataList);
         getActivity().startService(preloadingServiceIntent);
     }
-
 
 
     private void handleApiCallRequest() {
@@ -483,6 +486,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             View layout = layoutManager.findViewByPosition(currentPage);
             final RelativeLayout mainLayout = layout.findViewById(R.id.mainLayoutHome);
             final FrameLayout loadAdsLayout = layout.findViewById(R.id.frameLoadAdsHome);
+            imvHomeVideoSnap = layout.findViewById(R.id.imvHomeVideoSnap);
             playerView = layout.findViewById(R.id.playerViewHome);
 
             final Home item = dataList.get(currentPage);
@@ -503,11 +507,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     simpleCache,
                     new DefaultDataSourceFactory(context,
                             Util.getUserAgent(context, APP_NAME)),
-            CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
-        );
+                    CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+            );
 
             if (item.video_url.isEmpty()) {
-                loadAdsLayout.setVisibility(View.VISIBLE);
+                loadAdsLayout.setVisibility(VISIBLE);
                 if (adView != null) {
                     if (adView.getParent() != null) {
                         ((ViewGroup) adView.getParent()).removeView(adView);
@@ -516,7 +520,10 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                     loadAdsLayout.addView(adView);
                 }
             } else {
-                loadAdsLayout.setVisibility(View.INVISIBLE);
+                Glide.with(context)
+                        .load(item.thum)
+                        .into(imvHomeVideoSnap);
+                loadAdsLayout.setVisibility(INVISIBLE);
                 if (adView != null) {
                     if (adView.getParent() != null) {
                         ((ViewGroup) adView.getParent()).removeView(adView);
@@ -1032,7 +1039,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         if (previousPlayer != null) {
             previousPlayer.release();
         }
-      //  getProxy(context).shutdown();
+        //  getProxy(context).shutdown();
     }
 
     // Bottom all the function and the Call back listener of the Expo player
@@ -1057,9 +1064,11 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (playbackState == Player.STATE_BUFFERING) {
-            pBar.setVisibility(View.VISIBLE);
+            pBar.setVisibility(VISIBLE);
+            if (imvHomeVideoSnap != null) imvHomeVideoSnap.setVisibility(VISIBLE);
         } else if (playbackState == Player.STATE_READY) {
             pBar.setVisibility(View.GONE);
+            if (imvHomeVideoSnap != null) imvHomeVideoSnap.setVisibility(INVISIBLE);
         }
 
 

@@ -30,6 +30,10 @@
                     app:show_timeout="1000"
                     app:use_controller="false" />
 
+                <ImageView
+                    android:id="@+id/imvHomeVideoSnap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
                 <ImageButton
                     android:id="@+id/btnMuteUnMuteAudio"
