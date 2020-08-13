@@ -1,7 +1,5 @@
 package com.funnyvo.android.filter
 
-import android.content.Context
-import android.graphics.Bitmap
 import com.otaliastudios.cameraview.filter.Filter
 import com.otaliastudios.cameraview.filter.Filters
 import com.otaliastudios.cameraview.filter.NoFilter

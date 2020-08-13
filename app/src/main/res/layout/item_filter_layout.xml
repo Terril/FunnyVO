@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
-    tools:background="@color/black">
+    tools:background="@color/dimgray">
 
     <jp.co.cyberagent.android.gpuimage.GPUImageView
         android:id="@+id/iv_photo"

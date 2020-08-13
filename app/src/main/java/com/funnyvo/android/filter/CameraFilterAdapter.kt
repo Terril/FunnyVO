@@ -10,6 +10,7 @@ import com.funnyvo.android.R
 import com.otaliastudios.cameraview.filter.Filters
 import com.otaliastudios.cameraview.filter.NoFilter
 import com.otaliastudios.cameraview.filters.HueFilter
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
 import kotlinx.android.synthetic.main.item_camera_filter_layout.view.*
 
 class CameraFilterAdapter(context: Context?) : RecyclerView.Adapter<CameraFilterAdapter.CustomViewHolder>() {
@@ -51,43 +52,7 @@ class CameraFilterAdapter(context: Context?) : RecyclerView.Adapter<CameraFilter
 //        if (PreviewVideoActivity.select_postion == i) {
 //            holder.ivPhoto.setBackgroundColor(context!!.resources.getColor(R.color.redcolor))
 //        }
-//        when (filterName) {
-//            "BRIGHTNESS" -> holder.ivPhoto.filter = GPUImageBrightnessFilter()
-//            "EXPOSURE" -> holder.ivPhoto.filter = GPUImageExposureFilter()
-//            "FILTER_GROUP_SAMPLE" -> holder.ivPhoto.filter = GPUImageVignetteFilter()
-//            "GAMMA" -> holder.ivPhoto.filter = GPUImageGammaFilter()
-//            "GRAY_SCALE" -> holder.ivPhoto.filter = GPUImageGrayscaleFilter()
-//            "HAZE" -> holder.ivPhoto.filter = GPUImageHazeFilter()
-//            "HIGHLIGHT_SHADOW" -> holder.ivPhoto.filter = GPUImageHighlightShadowFilter()
-//            "HUE" -> holder.ivPhoto.filter = GPUImageHueFilter()
-//            "INVERT" -> holder.ivPhoto.filter = GPUImageColorInvertFilter()
-//            "LUMINANCE" -> holder.ivPhoto.filter = GPUImageLuminanceFilter()
-//            "MONOCHROME" -> holder.ivPhoto.filter = GPUImageMonochromeFilter()
-//            "OPACITY" -> holder.ivPhoto.filter = GPUImageOpacityFilter()
-//            "PIXELATION" -> holder.ivPhoto.filter = GPUImagePixelationFilter()
-//            "POSTERIZE" -> holder.ivPhoto.filter = GPUImagePosterizeFilter()
-//            "RGB" -> holder.ivPhoto.filter = GPUImageRGBFilter()
-//            "SATURATION" -> holder.ivPhoto.filter = GPUImageSaturationFilter()
-//            "SEPIA" -> holder.ivPhoto.filter = GPUImageSepiaToneFilter()
-//            "SHARP" -> holder.ivPhoto.filter = GPUImageSharpenFilter()
-//            "BILATERAL_BLUR" -> holder.ivPhoto.filter = GPUImageBilateralBlurFilter()
-//            "BOX_BLUR" -> holder.ivPhoto.filter = GPUImageBoxBlurFilter()
-//            "BULGE_DISTORTION" -> holder.ivPhoto.filter = GPUImageLuminanceFilter()
-//            "CGA_COLORSPACE" -> holder.ivPhoto.filter = GPUImageCGAColorspaceFilter()
-//            "CONTRAST" -> holder.ivPhoto.filter = GPUImageContrastFilter()
-//            "CROSSHATCH" -> holder.ivPhoto.filter = GPUImageCrosshatchFilter()
-//            "GAUSSIAN_FILTER" -> holder.ivPhoto.filter = GPUImageGaussianBlurFilter()
-//            "HALFTONE" -> holder.ivPhoto.filter = GPUImageHalftoneFilter()
-//            "LUMINANCE_THRESHOLD" -> holder.ivPhoto.filter = GPUImageLuminanceThresholdFilter()
-//            "SOLARIZE" -> holder.ivPhoto.filter = GPUImageSolarizeFilter()
-//            "SPHERE_REFRACTION" -> holder.ivPhoto.filter = GPUImageSphereRefractionFilter()
-//            "SWIRL" -> holder.ivPhoto.filter = GPUImageSwirlFilter()
-//            "TONE" -> holder.ivPhoto.filter = GPUImageToneCurveFilter()
-//            "VIBRANCE" -> holder.ivPhoto.filter = GPUImageVibranceFilter()
-//            "VIGNETTE" -> holder.ivPhoto.filter = GPUImageVignetteFilter()
-//            "WEAK_PIXEL" -> holder.ivPhoto.filter = GPUImageWeakPixelInclusionFilter()
-//            "ZOOM_BLUR" -> holder.ivPhoto.filter = GPUImageBoxBlurFilter()
-//        }
+        //holder.imgPhoto.setImageBitmap(datalist[i].newInstance().fragmentShader)
         holder.bind(i, datalist[i], listener)
     }
 

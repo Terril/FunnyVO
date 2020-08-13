@@ -21,6 +21,7 @@ import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -432,6 +433,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
 //    }
 
     private fun slideUp(view: View) {
+        layoutVideoRecordingHandler.visibility = GONE
         view.visibility = VISIBLE
         val animate = TranslateAnimation(
                 0.0F,  // fromXDelta
@@ -446,6 +448,8 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
 
     // slide the view from its current position to below itself
     private fun slideDown(view: View) {
+        layoutVideoRecordingHandler.visibility = VISIBLE
+        view.visibility = GONE
         val animate = TranslateAnimation(
                 0.0F,  // fromXDelta
                 0.0F,  // toXDelta
