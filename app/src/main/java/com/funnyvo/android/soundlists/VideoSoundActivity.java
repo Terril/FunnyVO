@@ -27,6 +27,7 @@ import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.VideoRecoderActivity;
+import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -403,16 +404,13 @@ public class VideoSoundActivity extends BaseActivity implements View.OnClickList
         }.execute();
     }
 
-
-    public void openVideoRecording() {
-        Intent intent = new Intent(VideoSoundActivity.this, VideoRecoderActivity.class);
+    private void openVideoRecording() {
+        Intent intent = new Intent(VideoSoundActivity.this, VideoRecorderActivityNew.class);
         intent.putExtra("sound_name", sound_name.getText().toString());
         intent.putExtra("sound_id", item.sound_id);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
-
     }
-
 
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())
