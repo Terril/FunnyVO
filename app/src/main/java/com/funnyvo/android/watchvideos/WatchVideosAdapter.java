@@ -123,7 +123,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
         ImageView user_pic, sound_image, varified_btn;
 
         LinearLayout like_layout, comment_layout, sound_image_layout;
-        ImageView like_image, comment_image;
+        ImageView like_image, comment_image, imvWatchVideoSnap;
         TextView like_txt, desc_txt, comment_txt;
 
         ImageButton btnShare;
@@ -156,6 +156,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
             btnShare = view.findViewById(R.id.btnShare);
 
             mainLayoutWatchVideo = view.findViewById(R.id.mainLayoutWatchVideo);
+            imvWatchVideoSnap = view.findViewById(R.id.imvWatchVideoSnap);
         }
 
         public void bind(final int postion, final Home item, final WatchVideosAdapter.OnItemClickListener listener) {

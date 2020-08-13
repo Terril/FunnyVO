@@ -266,7 +266,6 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             cameraRecording.stopVideo()
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_pre))
             slideCameraOptions()
-            imvStickers.visibility = VISIBLE
             //            rotate_camera.setVisibility(View.VISIBLE);
         } else if (secondsPassed > Variables.recording_duration / 1000) {
             Functions.showAlert(this, "Alert", "Video only can be a " + Variables.recording_duration / 1000 + " S")

@@ -10,8 +10,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
-import android.view.View.INVISIBLE
-import android.view.View.OnTouchListener
+import android.view.View.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
@@ -25,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.bumptech.glide.Glide
 import com.daasuu.gpuv.composer.GPUMp4Composer
 import com.daasuu.gpuv.egl.filter.GlWatermarkFilter
 import com.downloader.Error
@@ -66,6 +66,7 @@ import kotlin.math.abs
 
 class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
 
+    private var imageSnapShot: ImageView? = null
     private lateinit var adapter: WatchVideosAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var previousPlayer: SimpleExoPlayer? = null
@@ -77,14 +78,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
     private var position = 0
     private var currentPage = -1
     private var adView: UnifiedNativeAdView? = null
-
-    private object HOLDER {
-        val INSTANCE = WatchVideosFragment()
-    }
-
-    companion object {
-        val instance: WatchVideosFragment by lazy { HOLDER.INSTANCE }
-    }
 
     lateinit var activityIndicator: ActivityIndicator
 
@@ -134,6 +127,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         val layout = layoutManager.findViewByPosition(currentPage)
         val frameLoadAdsWatchVideo = layout?.findViewById<FrameLayout>(R.id.frameLoadAdsWatchVideo)
         val mainLayoutWatchVideo = layout?.findViewById<RelativeLayout>(R.id.mainLayoutWatchVideo)
+         imageSnapShot = layout?.findViewById<ImageView>(R.id.imvWatchVideoSnap)
         val playerView: PlayerView? = layout?.findViewById(R.id.playerViewWatchVideo)
         if (showAds) {
             dataList.add(currentPage, Home())
@@ -148,6 +142,13 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
             }
         } else {
             val item: Home = dataList[currentPage]
+
+            imageSnapShot?.let {
+                Glide.with(context!!)
+                        .load(item.thum)
+                        .into(it)
+            }
+
             val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(32 * 1024, 64 * 1024, 1024, 1024).createDefaultLoadControl()
             val trackSelector = DefaultTrackSelector(context!!)
             val renderersFactory: RenderersFactory = DefaultRenderersFactory(context!!)
@@ -553,6 +554,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         }
     }
 
+
     private fun singleVideoParseData(pos: Int, response: String) = try {
         val jsonObject = JSONObject(response)
         val code = jsonObject.optString("code")
@@ -695,8 +697,10 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         if (playbackState == Player.STATE_BUFFERING) {
             p_bar.visibility = View.VISIBLE
+            if(imageSnapShot != null) imageSnapShot!!.visibility = VISIBLE
         } else if (playbackState == Player.STATE_READY) {
             p_bar.visibility = View.GONE
+            if(imageSnapShot != null) imageSnapShot!!.visibility = INVISIBLE
         }
     }
 }

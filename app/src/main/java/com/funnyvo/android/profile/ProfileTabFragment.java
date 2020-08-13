@@ -55,6 +55,7 @@ import com.funnyvo.android.simpleclasses.Callback;
 import com.funnyvo.android.simpleclasses.FragmentCallback;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.funnyvo.android.splash.SplashActivity;
 import com.funnyvo.android.videorecording.galleryvideos.GalleryVideosActivity;
 import com.google.android.material.tabs.TabLayout;
 
@@ -645,8 +646,10 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
                         editor.putString(Variables.u_pic, "");
                         editor.putBoolean(Variables.islogin, false);
                         editor.apply();
+                        Intent intent = new Intent(getActivity(), SplashActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         getActivity().finish();
-                        startActivity(new Intent(getActivity(), MainMenuActivity.class));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -15,6 +15,7 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment
 import com.funnyvo.android.simpleclasses.ApiRequest
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.WebviewFragment
+import com.funnyvo.android.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_setting.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -109,8 +110,10 @@ class SettingFragment : RootFragment(), View.OnClickListener {
                     editor.putString(Variables.u_pic, "").clear()
                     editor.putBoolean(Variables.islogin, false).clear()
                     editor.apply()
+                    val intent = Intent(activity, SplashActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
                     activity!!.finish()
-                    startActivity(Intent(activity, MainMenuActivity::class.java))
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()

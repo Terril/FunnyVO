@@ -22,7 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/playerViewWatchVideo"
                     android:layout_width="match_parent"
@@ -34,6 +33,11 @@
                     app:show_timeout="1000"
                     app:shutter_background_color="@color/black"
                     app:use_controller="false" />
+
+                <ImageView
+                    android:id="@+id/imvWatchVideoSnap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
                 <LinearLayout
                     android:id="@+id/side_menu"
@@ -53,8 +57,8 @@
                             android:id="@+id/user_pic"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:scaleType="centerCrop"
                             android:background="@drawable/back_avtar"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/profile_image_placeholder" />
 
                         <ImageView
@@ -231,6 +235,7 @@
 
                 </LinearLayout>
             </RelativeLayout>
+
             <FrameLayout
                 android:id="@+id/frameLoadAdsWatchVideo"
                 android:layout_width="match_parent"

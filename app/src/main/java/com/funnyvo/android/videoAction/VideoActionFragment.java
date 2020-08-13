@@ -183,7 +183,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
         HomeFragment fragment = HomeFragment.newInstance();
         fragment.setDownloadListener(this);
 
-        WatchVideosFragment videosFragment =  WatchVideosFragment.Companion.getInstance();
+        WatchVideosFragment videosFragment =  new WatchVideosFragment();
         videosFragment.setVideoDownloadListener(this);
     }
 

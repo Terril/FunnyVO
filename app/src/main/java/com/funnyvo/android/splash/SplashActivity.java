@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
+import com.funnyvo.android.customview.ActivityIndicator;
 import com.funnyvo.android.customview.SplashScreenCubeTransformation;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
@@ -28,7 +29,6 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.splash.fragments.FirstFragment;
 import com.funnyvo.android.splash.fragments.SecondFragment;
 import com.funnyvo.android.splash.fragments.ThirdFragment;
-import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
@@ -49,10 +49,12 @@ import static com.funnyvo.android.simpleclasses.Variables.device_id;
 import static com.funnyvo.android.simpleclasses.Variables.pref_name;
 import static com.funnyvo.android.simpleclasses.Variables.sharedPreferences;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends AppCompatActivity {
     private SplashPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private MaterialButton btnNext;
+
+    ActivityIndicator activityIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class SplashActivity extends BaseActivity {
         MaterialButton btnSkip = findViewById(R.id.btnSkip);
         btnNext = findViewById(R.id.btnNext);
         sharedPreferences = getSharedPreferences(pref_name, MODE_PRIVATE);
-
+        activityIndicator = new ActivityIndicator(this);
         if (sharedPreferences.getBoolean(IS_FIRST_TIME, false)) {
             ImageView imvLogoImage = findViewById(R.id.imvLogoImage);
             imvLogoImage.setVisibility(View.VISIBLE);
@@ -295,5 +297,15 @@ public class SplashActivity extends BaseActivity {
         public void addFragments(Fragment fragment) {
             fragmentList.add(fragment);
         }
+    }
+
+    private void showProgressDialog() {
+        if (activityIndicator != null)
+            activityIndicator.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (activityIndicator != null)
+            activityIndicator.hide();
     }
 }
