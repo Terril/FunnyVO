@@ -26,6 +26,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -697,7 +698,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
                 owner.removeView(view)
                 val container: OverlayLayout = v as OverlayLayout
                 container.addView(view)
-                view.visibility = View.VISIBLE
+                view.visibility = VISIBLE
             }
             DragEvent.ACTION_DRAG_ENDED -> {
             }
