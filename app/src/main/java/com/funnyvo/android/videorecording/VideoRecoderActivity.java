@@ -60,6 +60,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
+import static com.funnyvo.android.simpleclasses.Variables.SOUNDS_LIST_REQUEST_CODE;
 
 public class VideoRecoderActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
 
@@ -77,8 +78,6 @@ public class VideoRecoderActivity extends BaseActivity implements View.OnClickLi
     private LinearLayout camera_options;
     private ImageButton rotate_camera;
     private ImageView imvGallery;
-
-    public static int SOUNDS_LIST_REQUEST_CODE = 1;
     private Button btnAddMusic;
 
     private int sec_passed = 0;

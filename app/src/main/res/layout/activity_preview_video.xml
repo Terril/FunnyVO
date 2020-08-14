@@ -14,13 +14,13 @@
         android:id="@+id/btnTextEditor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSlowMotion"
+        android:layout_above="@+id/btnCrop"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_20"
         android:background="@color/transparent"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:src="@drawable/ic_text_fields" />
 
     <ImageButton
@@ -30,6 +30,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
         android:src="@drawable/ic_slow_motion" />
 
@@ -61,12 +62,12 @@
         android:id="@+id/btnFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnCrop"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
+        android:layout_below="@+id/btnSlowMotion"
         android:src="@drawable/ic_filter" />
 
     <androidx.appcompat.widget.Toolbar

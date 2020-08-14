@@ -26,7 +26,6 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.funnyvo.android.videorecording.VideoRecoderActivity;
 import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;

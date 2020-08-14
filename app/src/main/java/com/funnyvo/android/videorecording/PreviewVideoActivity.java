@@ -57,7 +57,7 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 import static com.funnyvo.android.simpleclasses.Variables.APP_FOLDER;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
-import static com.funnyvo.android.videorecording.VideoRecoderActivity.SOUNDS_LIST_REQUEST_CODE;
+import static com.funnyvo.android.simpleclasses.Variables.SOUNDS_LIST_REQUEST_CODE;
 
 public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
 

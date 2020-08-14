@@ -2,30 +2,31 @@ package com.funnyvo.android.filter
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.funnyvo.android.R
 import com.otaliastudios.cameraview.filter.Filters
-import com.otaliastudios.cameraview.filter.NoFilter
-import com.otaliastudios.cameraview.filters.HueFilter
-import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
 import kotlinx.android.synthetic.main.item_camera_filter_layout.view.*
+
 
 class CameraFilterAdapter(context: Context?) : RecyclerView.Adapter<CameraFilterAdapter.CustomViewHolder>() {
     var context: Context? = null
     lateinit var datalist: List<Filters>
     lateinit var listener: OnItemClickListener
+    lateinit var icon: Bitmap
 
     interface OnItemClickListener {
         fun onItemClick(view: View?, postion: Int, item: Filters)
     }
 
-    constructor(context: Context?, arrayList: List<Filters>, listener: OnItemClickListener) : this(context) {
+    constructor(context: Context?, icon: Bitmap, arrayList: List<Filters>, listener: OnItemClickListener) : this(context) {
         this.context = context
         datalist = arrayList
         this.listener = listener
+        this.icon = icon
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewtype: Int): CustomViewHolder {
@@ -53,6 +54,8 @@ class CameraFilterAdapter(context: Context?) : RecyclerView.Adapter<CameraFilter
 //            holder.ivPhoto.setBackgroundColor(context!!.resources.getColor(R.color.redcolor))
 //        }
         //holder.imgPhoto.setImageBitmap(datalist[i].newInstance().fragmentShader)
+
+        holder.imgPhoto.setImage(icon)
         holder.bind(i, datalist[i], listener)
     }
 
