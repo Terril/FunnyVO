@@ -197,9 +197,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     private fun loadFilters() {
         val filterTypes = CameraFilter.createFilterList()
         //    val bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (bmThumbnail.width * 0.4).toInt(), (bmThumbnail.height * 0.4).toInt(), true)
-        val icon = BitmapFactory.decodeResource(resources,
-                R.drawable.image_filter_holder)
-        val adapter = CameraFilterAdapter(this, icon ,filterTypes, object : OnItemClickListener {
+        val adapter = CameraFilterAdapter(this ,filterTypes, object : OnItemClickListener {
             override fun onItemClick(view: View?, postion: Int, item: Filters) {
                 // PreviewVideoActivity.selectPostion = postion
                 cameraRecording.filter = CameraFilter.createFilter(filterTypes[postion])
