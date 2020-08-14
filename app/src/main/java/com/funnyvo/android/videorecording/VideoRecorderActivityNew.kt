@@ -197,7 +197,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     private fun loadFilters() {
         val filterTypes = CameraFilter.createFilterList()
         //    val bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (bmThumbnail.width * 0.4).toInt(), (bmThumbnail.height * 0.4).toInt(), true)
-        val adapter = CameraFilterAdapter(this ,filterTypes, object : OnItemClickListener {
+        val adapter = CameraFilterAdapter(this, filterTypes, object : OnItemClickListener {
             override fun onItemClick(view: View?, postion: Int, item: Filters) {
                 // PreviewVideoActivity.selectPostion = postion
                 cameraRecording.filter = CameraFilter.createFilter(filterTypes[postion])
@@ -362,11 +362,21 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             if (it.msg.isNotEmpty()) {
                 imvStickers.visibility = VISIBLE
                 filters = it.msg
-                Glide.with(this)
-                        .load(filters[0].main_image)
-                        .centerCrop()
-                        .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
-                        .into(imvStickers)
+                if (filters[0].isGif == "1") {
+                    Glide.with(this)
+                            .asGif()
+                            .load(filters[0].main_image)
+                            .centerCrop()
+                            .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
+                            .into(imvStickers)
+                } else {
+                    Glide.with(this)
+                            .load(filters[0].main_image)
+                            .centerCrop()
+                            .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
+                            .into(imvStickers)
+                }
+
             }
         }
     }
@@ -705,9 +715,16 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     }
 
     override fun onStickerClicked(filter: RecordingFilters) {
-        Glide.with(this)
-                .load(filter.main_image)
-                .into(imvFilter)
+        if (filter.isGif == "1") {
+            Glide.with(this)
+                    .asGif()
+                    .load(filter.main_image)
+                    .into(imvFilter)
+        } else {
+            Glide.with(this)
+                    .load(filter.main_image)
+                    .into(imvFilter)
+        }
     }
 
 }
