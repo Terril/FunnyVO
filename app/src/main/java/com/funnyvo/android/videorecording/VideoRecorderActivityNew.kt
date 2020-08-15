@@ -173,6 +173,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         btn1_5x.setOnClickListener(this)
         btn2x.setOnClickListener(this)
         imvStickers.setOnClickListener(this)
+        btnChallenge.setOnClickListener(this)
         sliderZoom.addOnChangeListener { slider, value, fromUser ->
             cameraRecording.zoom = value
         }
