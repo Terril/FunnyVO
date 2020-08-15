@@ -15,6 +15,8 @@ import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
@@ -60,6 +62,7 @@ public class MainMenuActivity extends BaseActivity {
         Functions.makeDirectory(Variables.APP_FOLDER);
         Functions.makeDirectory(Variables.draft_app_folder);
 
+        ReviewManager manager = ReviewManagerFactory.create(this);
     }
 
 

@@ -135,6 +135,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+    implementation 'com.google.android.play:core:1.8.0'
     implementation('com.giphy.sdk:core:1.0.2@aar') {
         transitive = true
     }
