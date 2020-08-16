@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -17,7 +19,6 @@ import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsCollector
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -26,14 +27,18 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.SystemClock
 import com.google.android.exoplayer2.util.Util
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlin.properties.ReadOnlyProperty
 
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var player: SimpleExoPlayer
+    private val TIMEOUT: Long = 120000 // 2 min = 2 * 60 * 1000 ms
+    private lateinit var manager : ReviewManager
 
     @Inject
     lateinit var activityIndicator: ActivityIndicator
@@ -50,6 +55,8 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, Context.MODE_PRIVATE)
+
+        manager = ReviewManagerFactory.create(this)
     }
 
     //     This will hide the bottom mobile navigation control 
@@ -118,4 +125,48 @@ abstract class BaseActivity : AppCompatActivity() {
             player.prepare(videoSource)
     }
 
+    private val disconnectHandler: Handler = Handler(Handler.Callback {
+        true
+    })
+
+    private val disconnectCallback = Runnable {
+        // Perform any required operation on disconnect
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { request ->
+            if (request.isSuccessful) {
+                // We got the ReviewInfo object
+                val reviewInfo = request.result
+                val flow = manager.launchReviewFlow(this, reviewInfo)
+                flow.addOnCompleteListener { _ ->
+                    stopDisconnectTimer()
+                }
+
+            } else {
+                // There was some problem, continue regardless of the result.
+            }
+        }
+    }
+
+    private fun resetDisconnectTimer() {
+        disconnectHandler.removeCallbacks(disconnectCallback)
+        disconnectHandler.postDelayed(disconnectCallback, TIMEOUT)
+    }
+
+    private fun stopDisconnectTimer() {
+        disconnectHandler.removeCallbacks(disconnectCallback)
+    }
+
+    override fun onUserInteraction() {
+        resetDisconnectTimer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resetDisconnectTimer()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopDisconnectTimer()
+    }
 }

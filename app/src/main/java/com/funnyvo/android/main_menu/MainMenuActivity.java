@@ -15,11 +15,7 @@ import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.chat.ChatActivity;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
 
 
 public class MainMenuActivity extends BaseActivity {
@@ -62,9 +58,17 @@ public class MainMenuActivity extends BaseActivity {
         Functions.makeDirectory(Variables.APP_FOLDER);
         Functions.makeDirectory(Variables.draft_app_folder);
 
-        ReviewManager manager = ReviewManagerFactory.create(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     protected void onNewIntent(final Intent intent) {
@@ -86,7 +90,7 @@ public class MainMenuActivity extends BaseActivity {
 
                         chat_activity.setArguments(args);
                         transaction.addToBackStack(null);
-                        transaction.replace(R.id.MainMenuFragment, chat_activity).commit();
+                        transaction.replace(R.id.main_menu_container, chat_activity).commit();
                     }
                 }, 2000);
 

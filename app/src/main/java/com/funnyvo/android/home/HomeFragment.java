@@ -60,7 +60,6 @@ import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.MainMenuFragment;
-import com.funnyvo.android.main_menu.relatetofragment_onback.OnBackPressListener;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.ProfileFragment;
 import com.funnyvo.android.simpleclasses.ApiCallBack;
@@ -772,7 +771,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         args.putString("user_id", item.fb_id);
         comment_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, comment_fragment).commit();
+        transaction.replace(R.id.main_menu_container, comment_fragment).commit();
 
     }
 
@@ -802,7 +801,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
             args.putString("user_pic", item.profile_pic);
             profile_fragment.setArguments(args);
             transaction.addToBackStack(null);
-            transaction.replace(R.id.MainMenuFragment, profile_fragment).commit();
+            transaction.replace(R.id.main_menu_container, profile_fragment).commit();
         }
 
     }
@@ -818,7 +817,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
         args.putString("tag", tag);
         taged_videos_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, taged_videos_fragment).commit();
+        transaction.replace(R.id.main_menu_container, taged_videos_fragment).commit();
 
     }
 

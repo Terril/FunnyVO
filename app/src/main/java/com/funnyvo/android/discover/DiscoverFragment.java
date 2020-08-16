@@ -218,7 +218,7 @@ public class DiscoverFragment extends RootFragment implements View.OnClickListen
         SearchMainFragment search_main_fragment = new SearchMainFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, search_main_fragment).commit();
+        transaction.replace(R.id.main_menu_container, search_main_fragment).commit();
     }
 
     @Override

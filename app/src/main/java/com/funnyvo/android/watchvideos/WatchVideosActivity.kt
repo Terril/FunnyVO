@@ -27,7 +27,8 @@ class WatchVideosActivity : BaseActivity() {
         if (intent != null) {
             val appLinkData = intent.data
             videoId = intent.getStringExtra("video_id")
-            if (appLinkData == null) {
+            if(videoId != null) {}
+            else if (appLinkData == null) {
                 dataList = intent.getSerializableExtra("arraylist") as ArrayList<Home>
                 position = intent.getIntExtra("position", 0)
             } else {

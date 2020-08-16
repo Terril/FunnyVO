@@ -2,9 +2,7 @@ package com.funnyvo.android.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -527,9 +525,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         see_image_f.setArguments(args);
         transaction.addToBackStack(null);
 
-        View view = getActivity().findViewById(R.id.MainMenuFragment);
+        View view = getActivity().findViewById(R.id.main_menu_container);
         if (view != null)
-            transaction.replace(R.id.MainMenuFragment, see_image_f).commit();
+            transaction.replace(R.id.main_menu_container, see_image_f).commit();
         else
             transaction.replace(R.id.Profile_F, see_image_f).commit();
 
@@ -547,9 +545,9 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         chat_activity.setArguments(args);
         transaction.addToBackStack(null);
 
-        View view = getActivity().findViewById(R.id.MainMenuFragment);
+        View view = getActivity().findViewById(R.id.main_menu_container);
         if (view != null)
-            transaction.replace(R.id.MainMenuFragment, chat_activity).commit();
+            transaction.replace(R.id.main_menu_container, chat_activity).commit();
         else
             transaction.replace(R.id.Profile_F, chat_activity).commit();
 
@@ -568,10 +566,10 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         transaction.addToBackStack(null);
 
 
-        View view = getActivity().findViewById(R.id.MainMenuFragment);
+        View view = getActivity().findViewById(R.id.main_menu_container);
 
         if (view != null)
-            transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
+            transaction.replace(R.id.main_menu_container, following_fragment).commit();
         else
             transaction.replace(R.id.Profile_F, following_fragment).commit();
 
@@ -589,10 +587,10 @@ public class ProfileFragment extends RootFragment implements View.OnClickListene
         transaction.addToBackStack(null);
 
 
-        View view = getActivity().findViewById(R.id.MainMenuFragment);
+        View view = getActivity().findViewById(R.id.main_menu_container);
 
         if (view != null)
-            transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
+            transaction.replace(R.id.main_menu_container, following_fragment).commit();
         else
             transaction.replace(R.id.Profile_F, following_fragment).commit();
 

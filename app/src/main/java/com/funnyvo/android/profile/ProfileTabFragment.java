@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -45,7 +43,6 @@ import com.funnyvo.android.BuildConfig;
 import com.funnyvo.android.R;
 import com.funnyvo.android.SeeFullImageFragment;
 import com.funnyvo.android.following.FollowingFragment;
-import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.profile.liked_videos.LikedVideoFragment;
 import com.funnyvo.android.profile.uservideos.UserVideoFragment;
@@ -531,7 +528,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, edit_profile_fragment).commit();
+        transaction.replace(R.id.main_menu_container, edit_profile_fragment).commit();
     }
 
 
@@ -540,7 +537,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, setting_fragment).commit();
+        transaction.replace(R.id.main_menu_container, setting_fragment).commit();
     }
 
 
@@ -553,7 +550,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         args.putSerializable("image_url", url);
         see_image_f.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, see_image_f).commit();
+        transaction.replace(R.id.main_menu_container, see_image_f).commit();
     }
 
 
@@ -602,7 +599,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         args.putString("from_where", "following");
         following_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
+        transaction.replace(R.id.main_menu_container, following_fragment).commit();
 
     }
 
@@ -620,7 +617,7 @@ public class ProfileTabFragment extends RootFragment implements View.OnClickList
         args.putString("from_where", "fan");
         following_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, following_fragment).commit();
+        transaction.replace(R.id.main_menu_container, following_fragment).commit();
 
     }
 
