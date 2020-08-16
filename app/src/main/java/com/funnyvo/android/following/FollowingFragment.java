@@ -285,7 +285,7 @@ public class FollowingFragment extends RootFragment {
         args.putString("user_pic", item.profile_pic);
         profile_fragment.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, profile_fragment).commit();
+        transaction.replace(R.id.main_menu_container, profile_fragment).commit();
     }
 
 

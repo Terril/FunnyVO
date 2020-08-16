@@ -455,6 +455,6 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
 
         chat_activity.setArguments(args);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.MainMenuFragment, chat_activity).commit();
+        transaction.replace(R.id.main_menu_container, chat_activity).commit();
     }
 }

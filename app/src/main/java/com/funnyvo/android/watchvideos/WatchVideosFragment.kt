@@ -307,7 +307,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                     var showAds = false;
                     if (Variables.sharedPreferences.getBoolean(Variables.SHOW_ADS, false)) {
                         val adCountPage = Variables.sharedPreferences.getString(Variables.PAGE_COUNT_SHOW_ADS_AFTER_VIEWS, "2")?.toInt()
-                        if ((currentPage.rem(adCountPage!!)) == 0) {
+                        if ((currentPage.rem(adCountPage!!)) == 1) {
                             showAds = true
                         }
                     }

@@ -17,8 +17,6 @@ import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import static com.funnyvo.android.simpleclasses.Variables.HOME_DATA;
-
 
 public class MainMenuActivity extends BaseActivity {
     public static MainMenuActivity mainMenuActivity;
@@ -62,6 +60,15 @@ public class MainMenuActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     protected void onNewIntent(final Intent intent) {
@@ -83,7 +90,7 @@ public class MainMenuActivity extends BaseActivity {
 
                         chat_activity.setArguments(args);
                         transaction.addToBackStack(null);
-                        transaction.replace(R.id.MainMenuFragment, chat_activity).commit();
+                        transaction.replace(R.id.main_menu_container, chat_activity).commit();
                     }
                 }, 2000);
 

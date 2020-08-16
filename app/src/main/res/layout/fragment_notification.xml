@@ -38,7 +38,7 @@
 
 
                 <ImageButton
-                    android:id="@+id/inbox_btn"
+                    android:id="@+id/btnInbox"
                     android:layout_width="@dimen/margin_32"
                     android:layout_height="@dimen/margin_32"
                     android:layout_alignParentEnd="true"
@@ -53,7 +53,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swiperefresh"
+            android:id="@+id/swipeRefreshNotification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bannerad"
@@ -71,7 +71,7 @@
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recylerview"
+                        android:id="@+id/recylerViewNotification"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
@@ -79,7 +79,7 @@
 
 
                 <RelativeLayout
-                    android:id="@+id/no_data_layout"
+                    android:id="@+id/noDataLayoutNotification"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
