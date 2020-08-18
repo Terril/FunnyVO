@@ -82,17 +82,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".videorecording.VideoRecoderActivity"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            tools:ignore="LockedOrientationActivity">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.SEND" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <data android:mimeType="video/*" />-->
-
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <activity
+            android:name=".videorecording.phototemplate.PhotoTemplateActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".videorecording.VideoRecorderActivityNew"
             android:screenOrientation="portrait"

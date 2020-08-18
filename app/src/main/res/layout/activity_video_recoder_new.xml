@@ -397,7 +397,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_collage"
-                android:visibility="invisible" />
+                 />
 
             <ImageButton
                 android:id="@+id/btnDone"

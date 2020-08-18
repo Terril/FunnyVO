@@ -48,6 +48,7 @@ import com.funnyvo.android.soundlists.SoundListMainActivity
 import com.funnyvo.android.videorecording.data.RecordingFilters
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
+import com.funnyvo.android.videorecording.phototemplate.PhotoTemplateActivity
 import com.funnyvo.android.videorecording.stickers.ShowStickerFragment
 import com.funnyvo.android.videorecording.stickers.StickerCallBack
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
@@ -173,6 +174,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         btn1_5x.setOnClickListener(this)
         btn2x.setOnClickListener(this)
         imvStickers.setOnClickListener(this)
+        imvCollage.setOnClickListener(this)
         sliderZoom.addOnChangeListener { slider, value, fromUser ->
             cameraRecording.zoom = value
         }
@@ -575,7 +577,13 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             btnRecodingSpeed -> toggleSpeedView()
             imvStickers -> showStickers()
             btnFlashCamera -> setFlash()
+            imvCollage -> loadTemplates()
         }
+    }
+
+    private fun loadTemplates() {
+        val intent = Intent(this, PhotoTemplateActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setFlash() {

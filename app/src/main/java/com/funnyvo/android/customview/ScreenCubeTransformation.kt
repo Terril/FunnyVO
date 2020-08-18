@@ -4,7 +4,7 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import kotlin.math.abs
 
-class SplashScreenCubeTransformation : ViewPager.PageTransformer {
+class ScreenCubeTransformation : ViewPager.PageTransformer {
     override fun transformPage(page: View, position: Float) {
         if (position < -1) {    // [-Infinity,-1)
             // This page is way off-screen to the left.
