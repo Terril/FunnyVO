@@ -72,17 +72,7 @@ public class SplashActivity extends AppCompatActivity {
             imvLogoImage.setVisibility(View.VISIBLE);
             btnSkip.setVisibility(View.GONE);
             btnNext.setVisibility(View.GONE);
-            Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
-
-//            intent.putExtra(HOME_DATA, dataList);
-//            if (getIntent() != null && getIntent().getExtras() != null) {
-//                intent.putExtras(getIntent().getExtras());
-//                setIntent(null);
-//            }
-
-            startActivity(intent);
-            finish();
-           // callApiForSettings();
+            callApiForSettings();
         } else {
             viewPager = findViewById(R.id.viewPager);
             pagerAdapter = new SplashPagerAdapter(getSupportFragmentManager());
@@ -234,7 +224,7 @@ public class SplashActivity extends AppCompatActivity {
                 //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
-            Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
+            Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
 
             intent.putExtra(HOME_DATA, dataList);
             if (getIntent() != null && getIntent().getExtras() != null) {
