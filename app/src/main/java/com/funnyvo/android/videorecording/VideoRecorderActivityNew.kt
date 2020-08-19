@@ -728,6 +728,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             Glide.with(this)
                     .asGif()
                     .load(filter.main_image)
+                    .centerCrop()
                     .into(imvFilter)
         } else {
             Glide.with(this)

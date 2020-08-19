@@ -10,12 +10,14 @@ import com.funnyvo.android.customview.ZoomOutTransformation
 import kotlinx.android.synthetic.main.activity_photo_template.*
 import java.util.*
 
-class PhotoTemplateActivity: BaseActivity() {
+class PhotoTemplateActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hideNavigation()
         setContentView(R.layout.activity_photo_template)
+
+        pagerImageTemplate.clipToPadding = false
 
         val pagerAdapter = TemplatePagerAdapter(supportFragmentManager)
         pagerAdapter.addFragments(PhotoTemplateFragment())
@@ -23,6 +25,10 @@ class PhotoTemplateActivity: BaseActivity() {
         pagerAdapter.addFragments(PhotoTemplateFragment())
         pagerImageTemplate.adapter = pagerAdapter
         pagerImageTemplate.setPageTransformer(true, ZoomOutTransformation())
+
+        btnGoBackPost.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     class TemplatePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

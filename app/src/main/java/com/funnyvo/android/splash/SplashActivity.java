@@ -18,9 +18,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.funnyvo.android.R;
-import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.customview.ActivityIndicator;
-import com.funnyvo.android.customview.SplashScreenCubeTransformation;
+import com.funnyvo.android.customview.ScreenCubeTransformation;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.main_menu.MainMenuActivity;
 import com.funnyvo.android.simpleclasses.ApiRequest;
@@ -29,6 +28,7 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.splash.fragments.FirstFragment;
 import com.funnyvo.android.splash.fragments.SecondFragment;
 import com.funnyvo.android.splash.fragments.ThirdFragment;
+import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
@@ -72,13 +72,23 @@ public class SplashActivity extends AppCompatActivity {
             imvLogoImage.setVisibility(View.VISIBLE);
             btnSkip.setVisibility(View.GONE);
             btnNext.setVisibility(View.GONE);
-            callApiForSettings();
+            Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
+
+//            intent.putExtra(HOME_DATA, dataList);
+//            if (getIntent() != null && getIntent().getExtras() != null) {
+//                intent.putExtras(getIntent().getExtras());
+//                setIntent(null);
+//            }
+
+            startActivity(intent);
+            finish();
+           // callApiForSettings();
         } else {
             viewPager = findViewById(R.id.viewPager);
             pagerAdapter = new SplashPagerAdapter(getSupportFragmentManager());
             addingFragmentsTOpagerAdapter();
             viewPager.setAdapter(pagerAdapter);
-            viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
+            viewPager.setPageTransformer(true, new ScreenCubeTransformation());
 
             final String androidId = Settings.Secure.getString(getContentResolver(),
                     Settings.Secure.ANDROID_ID);
@@ -100,7 +110,7 @@ public class SplashActivity extends AppCompatActivity {
                         callNextActivity();
                     } else {
                         viewPager.setCurrentItem(getItem(+1), true); //getItem(-1) for previous
-                        viewPager.setPageTransformer(true, new SplashScreenCubeTransformation());
+                        viewPager.setPageTransformer(true, new ScreenCubeTransformation());
                     }
 
                 }
@@ -224,7 +234,7 @@ public class SplashActivity extends AppCompatActivity {
                 //   Toast.makeText(context, "" + jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
             }
 
-            Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+            Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
 
             intent.putExtra(HOME_DATA, dataList);
             if (getIntent() != null && getIntent().getExtras() != null) {

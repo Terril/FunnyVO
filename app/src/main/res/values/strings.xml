@@ -120,4 +120,7 @@
     <string name="save_video">Save Video</string>
     <string name="delete_video">Delete Video</string>
     <string name="templates">Templates</string>
+    <string name="image_library">Image Library</string>
+    <string name="limit_reached">Limit Reached</string>
+    <string name="select">Select</string>
 </resources>
