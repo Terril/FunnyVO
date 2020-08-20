@@ -153,7 +153,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
             desc_txt = view.findViewById(R.id.desc_txt);
 
             sound_image_layout = view.findViewById(R.id.sound_image_layout);
-            btnShare = view.findViewById(R.id.btnShare);
+            btnShare = view.findViewById(R.id.btnShareWatchVideo);
 
             mainLayoutWatchVideo = view.findViewById(R.id.mainLayoutWatchVideo);
             imvWatchVideoSnap = view.findViewById(R.id.imvWatchVideoSnap);

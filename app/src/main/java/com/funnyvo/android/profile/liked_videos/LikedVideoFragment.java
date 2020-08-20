@@ -116,7 +116,7 @@ public class LikedVideoFragment extends Fragment {
         try {
             JSONObject jsonObject = new JSONObject(responce);
             String code = jsonObject.optString("code");
-            if (code.equals("200")) {
+            if (code.equals(Variables.API_SUCCESS_CODE)) {
                 JSONArray msgArray = jsonObject.getJSONArray("msg");
 
                 JSONObject data = msgArray.getJSONObject(0);

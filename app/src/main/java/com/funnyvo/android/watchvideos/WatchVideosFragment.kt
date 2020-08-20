@@ -36,6 +36,7 @@ import com.funnyvo.android.ads.ShowAdvertisement
 import com.funnyvo.android.comments.CommentFragment
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.helper.PermissionUtils.checkPermissions
+import com.funnyvo.android.home.HomeFragment
 import com.funnyvo.android.home.datamodel.Home
 import com.funnyvo.android.main_menu.MainMenuActivity
 import com.funnyvo.android.main_menu.MainMenuFragment
@@ -80,6 +81,14 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
     private var adView: UnifiedNativeAdView? = null
 
     lateinit var activityIndicator: ActivityIndicator
+
+    private object HOLDER {
+        val INSTANCE = WatchVideosFragment()
+    }
+
+    companion object {
+        val instance: WatchVideosFragment by lazy { HOLDER.INSTANCE }
+    }
 
     fun showProgressDialog() {
         if (activityIndicator != null)
@@ -250,7 +259,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                     Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show()
                 }
                 R.id.comment_layout -> openComment(item)
-                R.id.btnShare -> {
+                R.id.btnShareWatchVideo -> {
                     val fragment = VideoActionFragment(item.video_id, FragmentCallback { bundle ->
                         if (bundle.getString("action") == "save") {
                             saveVideo(item)
@@ -290,9 +299,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
 
         // this is the scroll listener of recycler view which will tell the current item number
         recylerViewWatchVideo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)

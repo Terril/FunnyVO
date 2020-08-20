@@ -47,9 +47,6 @@ import static android.app.Activity.RESULT_OK;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class VideoActionFragment extends BottomSheetDialogFragment implements View.OnClickListener, VideoDownloadedListener {
 
     View view;
@@ -125,7 +122,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
                     PackageManager pm = getActivity().getPackageManager();
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("video/mp4");
-                    intent.putExtra(Intent.EXTRA_TEXT, " Download the FunnyVo app now : https://play.google.com/store/apps/details?id=com.funnyvo");
+                    intent.putExtra(Intent.EXTRA_TEXT, "Download the FunnyVO app now : https://play.google.com/store/apps/details?id=com.funnyvo");
                     List<ResolveInfo> launchables = pm.queryIntentActivities(intent, 0);
                     for (int i = 0; i < launchables.size(); i++) {
                         if (launchables.get(i).activityInfo.name.contains("SendTextToClipboardActivity")) {
@@ -160,8 +157,6 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
                 }
             }
         }).start();
-
-
     }
 
     //
@@ -183,7 +178,7 @@ public class VideoActionFragment extends BottomSheetDialogFragment implements Vi
         HomeFragment fragment = HomeFragment.newInstance();
         fragment.setDownloadListener(this);
 
-        WatchVideosFragment videosFragment =  new WatchVideosFragment();
+        WatchVideosFragment videosFragment =  WatchVideosFragment.Companion.getInstance();
         videosFragment.setVideoDownloadListener(this);
     }
 

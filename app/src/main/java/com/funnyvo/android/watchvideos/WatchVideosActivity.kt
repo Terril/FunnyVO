@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.funnyvo.android.R
 import com.funnyvo.android.base.BaseActivity
 import com.funnyvo.android.home.datamodel.Home
@@ -11,10 +12,12 @@ import com.funnyvo.android.main_menu.MainMenuActivity
 import com.funnyvo.android.simpleclasses.Variables
 
 class WatchVideosActivity : BaseActivity() {
+
     private var dataList = ArrayList<Home>()
     private var position = 0
     private var videoId: String? = null
     private var link: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_watch_video)
@@ -27,8 +30,8 @@ class WatchVideosActivity : BaseActivity() {
         if (intent != null) {
             val appLinkData = intent.data
             videoId = intent.getStringExtra("video_id")
-            if(videoId != null) {}
-            else if (appLinkData == null) {
+            if (videoId != null) {
+            } else if (appLinkData == null) {
                 dataList = intent.getSerializableExtra("arraylist") as ArrayList<Home>
                 position = intent.getIntExtra("position", 0)
             } else {
@@ -42,10 +45,10 @@ class WatchVideosActivity : BaseActivity() {
             bundle.putSerializable("arraylist", dataList)
         }
         val ft = supportFragmentManager.beginTransaction()
-        val fragment = WatchVideosFragment()
+        val fragment = WatchVideosFragment.instance
         fragment.arguments = bundle
         ft.replace(R.id.frameLayoutWatchVideo, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack("watchVideo")
         ft.commit()
     }
 
@@ -59,7 +62,7 @@ class WatchVideosActivity : BaseActivity() {
                 finish()
             } else {
                 if (supportFragmentManager.backStackEntryCount > 1) {
-                    supportFragmentManager.popBackStack()
+                    supportFragmentManager.popBackStack("watchVideo", POP_BACK_STACK_INCLUSIVE)
                 } else {
                     super.onBackPressed()
                 }

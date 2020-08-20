@@ -133,7 +133,7 @@
                     </LinearLayout>
 
                     <ImageButton
-                        android:id="@+id/btnShare"
+                        android:id="@+id/btnShareWatchVideo"
                         android:layout_width="@dimen/margin_32"
                         android:layout_height="@dimen/margin_32"
                         android:layout_marginTop="@dimen/margin_10"

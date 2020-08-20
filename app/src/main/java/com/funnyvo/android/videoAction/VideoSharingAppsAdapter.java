@@ -10,12 +10,9 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funnyvo.android.R;
+import com.funnyvo.android.customview.FunnyVOTextView;
 
 import java.util.List;
-
-/**
- * Created by AQEEL on 3/20/2018.
- */
 
 public class VideoSharingAppsAdapter extends RecyclerView.Adapter<VideoSharingAppsAdapter.CustomViewHolder> {
 
@@ -23,19 +20,16 @@ public class VideoSharingAppsAdapter extends RecyclerView.Adapter<VideoSharingAp
     private VideoSharingAppsAdapter.OnItemClickListener listener;
     private List<ResolveInfo> dataList;
 
-
     // meker the onitemclick listener interface and this interface is impliment in Chatinbox activity
     // for to do action when user click on item
     public interface OnItemClickListener {
         void onItemClick(int positon, ResolveInfo item, View view);
     }
 
-
     public VideoSharingAppsAdapter(Context context, List<ResolveInfo> dataList, VideoSharingAppsAdapter.OnItemClickListener listener) {
         this.context = context;
         this.dataList = dataList;
         this.listener = listener;
-
     }
 
     @Override
@@ -56,30 +50,25 @@ public class VideoSharingAppsAdapter extends RecyclerView.Adapter<VideoSharingAp
     public void onBindViewHolder(final VideoSharingAppsAdapter.CustomViewHolder holder, final int i) {
         final ResolveInfo item = dataList.get(i);
         holder.setIsRecyclable(false);
-
         try {
-
             holder.bind(i, item, listener);
-
             holder.image.setImageDrawable(item.loadIcon(context.getPackageManager()));
-
+            holder.txtSharedAppName.setText(item.loadLabel(context.getPackageManager()));
 
         } catch (Exception e) {
 
         }
     }
 
-
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
-
-
+        FunnyVOTextView txtSharedAppName;
         public CustomViewHolder(View view) {
             super(view);
 
-
-            image = view.findViewById(R.id.image);
+            txtSharedAppName = view.findViewById(R.id.txtSharedAppName);
+            image = view.findViewById(R.id.imageAppIcon);
         }
 
         public void bind(final int postion, final ResolveInfo item, final VideoSharingAppsAdapter.OnItemClickListener listener) {
@@ -90,12 +79,6 @@ public class VideoSharingAppsAdapter extends RecyclerView.Adapter<VideoSharingAp
                     listener.onItemClick(postion, item, v);
                 }
             });
-
-
         }
-
-
     }
-
-
 }

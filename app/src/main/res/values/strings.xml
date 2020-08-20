@@ -8,9 +8,11 @@
     <string name="banner_ad">ca-app-pub-2753248478514790/1361953130</string>
     <string name="native_ad">ca-app-pub-2753248478514790/8059969259</string>
 
+    <string name="giphy_api_key">noHzjGEOAjw7Q1FnLMHcbqEUyEClXTOl</string>
+
     <string name="request_verification">Request Verification</string>
     <string name="apply_for_funny_vo_verification">Apply for FunnyVO Verification</string>
-    <string name="upper_body">A verified badge is check that which appears next to an FunnyVO accounts name to indicate that the account is authentic. Presence of notable public figure, celebrity, global brand or entity it represents.</string>
+    <string name="upper_body">A verified badge is a check that which appears next to an FunnyVO account users name to indicate that the account is authentic. Presence of notable public figure, celebrity, global brand or entity it represents.</string>
     <string name="upper_body_below">Submitting a request for verification does not \nguarantee that your account will be verified</string>
     <string name="lower_body">We require a government-issued photo ID that shows \nyour name and date of birth(e.g driver\'s license, passport or national identification card) or an official business document(tax filing, recent utility bill, article of incorporation) in order to review your request.</string>
 
