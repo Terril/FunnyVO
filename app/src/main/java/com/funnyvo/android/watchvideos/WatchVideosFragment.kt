@@ -490,22 +490,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         }
     }
 
-
-    private fun sendPushNotification(userId: String, comment: String) {
-        val notimap = JSONObject()
-        try {
-            notimap.put("title", Variables.sharedPreferences.getString(Variables.u_name, "") + " Comment on your video")
-            notimap.put("message", comment)
-            notimap.put("icon", Variables.sharedPreferences.getString(Variables.u_pic, ""))
-            notimap.put("senderid", Variables.sharedPreferences.getString(Variables.u_id, ""))
-            notimap.put("receiverid", userId)
-            notimap.put("action_type", "comment")
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        ApiRequest.callApi(context, Variables.SEND_PUSH_NOTIFICATION, notimap, null)
-    }
-
     private fun showVideoOption(home: Home) {
         var options = arrayOf<CharSequence>("Save Video", "Cancel")
         if (home.fb_id == Variables.sharedPreferences.getString(Variables.u_id, "")) options = arrayOf<CharSequence>("Save Video", "Delete Video", "Cancel")
