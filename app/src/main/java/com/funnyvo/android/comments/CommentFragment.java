@@ -138,10 +138,7 @@ public class CommentFragment extends RootFragment {
             }
         });
 
-
         getAllComments();
-
-
         return view;
     }
 
@@ -195,9 +192,6 @@ public class CommentFragment extends RootFragment {
                 for (Comments item : arrayList1) {
                     data_list.add(0, item);
                     comment_count++;
-
-                    sendPushNotification(getActivity(), user_id, comment);
-
                     comment_count_txt.setText(comment_count + " comments");
 
                     if (fragment_data_send != null)
@@ -220,24 +214,4 @@ public class CommentFragment extends RootFragment {
         });
 
     }
-
-
-    public void sendPushNotification(Activity activity, String user_id, String comment) {
-
-        JSONObject notimap = new JSONObject();
-        try {
-            notimap.put("title", Variables.sharedPreferences.getString(Variables.u_name, "") + " Comment on your video");
-            notimap.put("message", comment);
-            notimap.put("icon", Variables.sharedPreferences.getString(Variables.u_pic, ""));
-            notimap.put("senderid", Variables.sharedPreferences.getString(Variables.u_id, ""));
-            notimap.put("receiverid", user_id);
-            notimap.put("action_type", "comment");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        ApiRequest.callApi(context, Variables.SEND_PUSH_NOTIFICATION, notimap, null);
-
-    }
-
-
 }
