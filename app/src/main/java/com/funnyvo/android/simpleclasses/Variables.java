@@ -50,6 +50,7 @@ public class Variables {
     public static String OUTPUT_FILE_MESSAGE = APP_FOLDER + "output_file_message.mp4";
     public static String OUTPUT_FILTER_FILE = APP_FOLDER + "output-filtered" + Functions.getRandomString() + ".mp4";
     public static String OUTPUT_FILE_TRIMMED = APP_FOLDER + "output_trimmed.mp4";
+    public static String OUTPUT_PHOTO_FILE = APP_FOLDER + "output_photo_video.mp4";
 
     public static String gallery_trimed_video = APP_FOLDER + "gallery_trimed_video.mp4";
     public static String gallery_resize_video = APP_FOLDER + "gallery_resize_video.mp4";

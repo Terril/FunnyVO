@@ -61,12 +61,6 @@ import com.funnyvo.android.main_menu.relatetofragment_onback.RootFragment;
 import com.funnyvo.android.simpleclasses.ApiRequest;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
-import com.giphy.sdk.core.models.Media;
-import com.giphy.sdk.core.models.enums.MediaType;
-import com.giphy.sdk.core.network.api.CompletionHandler;
-import com.giphy.sdk.core.network.api.GPHApi;
-import com.giphy.sdk.core.network.api.GPHApiClient;
-import com.giphy.sdk.core.network.response.ListMediaResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -1585,7 +1579,7 @@ public class ChatActivity extends RootFragment {
     GifAdapter gif_adapter;
     final ArrayList<String> url_list = new ArrayList<>();
     RecyclerView gips_list;
-    GPHApi client = new GPHApiClient(Variables.gif_api_key1);
+  //  GPHApi client =  Giphy.configure(getContext(), R.string.giphy_api_key, true);
 
     public void GetGipy() {
         url_list.clear();
@@ -1600,51 +1594,51 @@ public class ChatActivity extends RootFragment {
         });
         gips_list.setAdapter(gif_adapter);
 
-        client.trending(MediaType.gif, null, null, null, new CompletionHandler<ListMediaResponse>() {
-            @Override
-            public void onComplete(ListMediaResponse result, Throwable e) {
-                if (result == null) {
-                    // Do what you want to do with the error
-                } else {
-                    if (result.getData() != null) {
-                        for (Media gif : result.getData()) {
-
-                            url_list.add(gif.getId());
-                        }
-                        gif_adapter.notifyDataSetChanged();
-
-                    } else {
-                        Log.e("giphy error", "No results found");
-                    }
-                }
-            }
-        });
+//        client.trending(MediaType.gif, null, null, null, new CompletionHandler<ListMediaResponse>() {
+//            @Override
+//            public void onComplete(ListMediaResponse result, Throwable e) {
+//                if (result == null) {
+//                    // Do what you want to do with the error
+//                } else {
+//                    if (result.getData() != null) {
+//                        for (Media gif : result.getData()) {
+//
+//                            url_list.add(gif.getId());
+//                        }
+//                        gif_adapter.notifyDataSetChanged();
+//
+//                    } else {
+//                        Log.e("giphy error", "No results found");
+//                    }
+//                }
+//            }
+//        });
     }
 
 
     // if we want to search the gif then this mehtod is immportaant
     public void searchGif(String search) {
         /// Gif Search
-        client.search(search, MediaType.gif, null, null, null, null, new CompletionHandler<ListMediaResponse>() {
-            @Override
-            public void onComplete(ListMediaResponse result, Throwable e) {
-                if (result == null) {
-                    // Do what you want to do with the error
-                } else {
-                    if (result.getData() != null) {
-                        url_list.clear();
-                        for (Media gif : result.getData()) {
-                            url_list.add(gif.getId());
-                            gif_adapter.notifyDataSetChanged();
-                        }
-                        gips_list.smoothScrollToPosition(0);
-
-                    } else {
-                        Log.e("giphy error", "No results found");
-                    }
-                }
-            }
-        });
+//        client.search(search, MediaType.gif, null, null, null, null, new CompletionHandler<ListMediaResponse>() {
+//            @Override
+//            public void onComplete(ListMediaResponse result, Throwable e) {
+//                if (result == null) {
+//                    // Do what you want to do with the error
+//                } else {
+//                    if (result.getData() != null) {
+//                        url_list.clear();
+//                        for (Media gif : result.getData()) {
+//                            url_list.add(gif.getId());
+//                            gif_adapter.notifyDataSetChanged();
+//                        }
+//                        gips_list.smoothScrollToPosition(0);
+//
+//                    } else {
+//                        Log.e("giphy error", "No results found");
+//                    }
+//                }
+//            }
+//        });
     }
 
 

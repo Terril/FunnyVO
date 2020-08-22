@@ -18,11 +18,11 @@
             android:id="@+id/txtTemplateMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dimgray"
             android:gravity="center"
             android:padding="@dimen/margin_10"
             android:textColor="@color/palette_cheddar"
             android:textSize="@dimen/text_size_16"
+            app:fontFamily="@string/font_bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

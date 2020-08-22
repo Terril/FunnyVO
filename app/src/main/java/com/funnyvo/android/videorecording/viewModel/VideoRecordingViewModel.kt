@@ -58,7 +58,6 @@ class VideoRecordingViewModel @ViewModelInject constructor(
     }
 
     private suspend fun applyFrameMotionFilter(srcFile: String, destFile: String, speedValue: Float): Result<Int> {
-        Log.e(APP_NAME, " Motion Filter value " + speedValue)
         val complexCommand = arrayOf("-y", "-i", srcFile, "-filter_complex", "[0:v]setpts=" + 1.div(speedValue) + "*PTS[v];[0:a]atempo=" + speedValue + "[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", destFile)
         return withContext(Dispatchers.IO) {
             when (FFmpeg.execute(complexCommand)) {
@@ -69,7 +68,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
     }
 
     fun applySlowMoVideo() {
-        val complexCommand = arrayOf("-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MOTION)
+        val complexCommand = arrayOf("-y", "-i", Variables.outputfile2, "-filter_complex", "[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]", "-map", "[v]", "-map", "[a]", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", OUTPUT_FILE_MOTION)
         viewModelScope.launch(Dispatchers.IO) {
             FFmpeg.execute(complexCommand)
         }
