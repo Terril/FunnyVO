@@ -36,7 +36,6 @@ import com.funnyvo.android.ads.ShowAdvertisement
 import com.funnyvo.android.comments.CommentFragment
 import com.funnyvo.android.customview.ActivityIndicator
 import com.funnyvo.android.helper.PermissionUtils.checkPermissions
-import com.funnyvo.android.home.HomeFragment
 import com.funnyvo.android.home.datamodel.Home
 import com.funnyvo.android.main_menu.MainMenuActivity
 import com.funnyvo.android.main_menu.MainMenuFragment
@@ -505,9 +504,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
             if (options[item] == getString(R.string.save_video)) {
                 if (Functions.checkstoragepermision(activity)) saveVideo(home)
             } else if (options[item] == getString(R.string.delete_video)) {
-                if (Variables.is_secure_info) {
-                    Toast.makeText(context, getString(R.string.delete_function_not_available_in_demo), Toast.LENGTH_SHORT).show()
-                } else {
                     Functions.callApiForDeleteVideo(activity, home.video_id, object : ApiCallBack {
                         override fun arrayData(arrayList: ArrayList<*>?) {}
                         override fun onSuccess(responce: String) {
@@ -516,7 +512,6 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
 
                         override fun onFailure(responce: String) {}
                     })
-                }
             } else if (options[item] == "Cancel") {
                 dialog.dismiss()
             }

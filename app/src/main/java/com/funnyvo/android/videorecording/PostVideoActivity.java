@@ -51,16 +51,18 @@ public class PostVideoActivity extends BaseActivity implements View.OnClickListe
         hideNavigation();
         setContentView(R.layout.activity_post_video);
 
+        boolean isScaleModeSet = true;
         Intent intent = getIntent();
         if (intent != null) {
             draft_file = intent.getStringExtra("draft_file");
+            isScaleModeSet = intent.getBooleanExtra("isScaleMode", true);
         }
 
         eventListener = new PlayerEventListener();
 
         video_path = Variables.OUTPUT_FILTER_FILE;
 
-        GPUPlayerView gpuPlayerView = setPlayer(this, Uri.parse(video_path), eventListener);
+        GPUPlayerView gpuPlayerView = setPlayer(this, Uri.parse(video_path), eventListener, isScaleModeSet);
         ((MovieWrapperView) findViewById(R.id.layout_post_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
 

@@ -80,6 +80,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private boolean isFastMoEnabled = true;
     private boolean isFromGallery = false;
     private String tempOutputSource = Variables.outputfile2;
+    private boolean isScaleModeSet = true;
     // this function will set the player to the current video
 
     @Override
@@ -93,6 +94,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             path = intent.getStringExtra("video_path");
             draftFile = intent.getStringExtra("draft_file");
             isFromGallery = intent.getBooleanExtra("isFromGallery", false);
+            isScaleModeSet = intent.getBooleanExtra("isScaleMode", true);
         }
 
         eventListener = new PlayerEventListener();
@@ -121,7 +123,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         }
 
 
-        gpuPlayerView = setPlayer(this, Uri.parse(videoUrl), eventListener);
+        gpuPlayerView = setPlayer(this, Uri.parse(videoUrl), eventListener, isScaleModeSet);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerviewPreview);
@@ -275,6 +277,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         Intent intent = new Intent(PreviewVideoActivity.this, PostVideoActivity.class);
         intent.putExtra("path", Variables.outputfile2);
         intent.putExtra("draft_file", draftFile);
+        intent.putExtra("isScaleMode", isScaleModeSet);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }

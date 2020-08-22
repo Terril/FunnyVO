@@ -38,7 +38,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var player: SimpleExoPlayer
     private val TIMEOUT: Long = 120000 // 2 min = 2 * 60 * 1000 ms
-    private lateinit var manager : ReviewManager
+    private lateinit var manager: ReviewManager
 
     @Inject
     lateinit var activityIndicator: ActivityIndicator
@@ -87,7 +87,8 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun setPlayer(context: Context, path: Uri?, listener: Player.EventListener): GPUPlayerView {
+    open fun setPlayer(context: Context, path: Uri?, listener: Player.EventListener, setScaleMode: Boolean): GPUPlayerView {
+        val gpuPlayerView = GPUPlayerView(this)
         val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(1 * 1024, 1 * 1024, 500, 1024).createDefaultLoadControl()
 
         val trackSelector = DefaultTrackSelector(context)
@@ -106,10 +107,12 @@ abstract class BaseActivity : AppCompatActivity() {
         player.repeatMode = Player.REPEAT_MODE_ALL
         player.addListener(listener)
         player.playWhenReady = true
-        player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
-
-        val gpuPlayerView = GPUPlayerView(this)
-        gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_FIT_HEIGHT)
+        if (setScaleMode) {
+            player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+            gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_FIT_HEIGHT)
+        } else {
+            gpuPlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE)
+        }
         gpuPlayerView.setSimpleExoPlayer(player)
         gpuPlayerView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
 

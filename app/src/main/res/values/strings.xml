@@ -125,7 +125,8 @@
     <string name="image_library">Image Library</string>
     <string name="limit_reached">Limit Reached</string>
     <string name="select">Select</string>
-    <string name="single_pic_msg">Select 1 photo</string>
+    <string name="single_pic_msg">Select 1 picture</string>
+    <string name="select_2_photo">Select 2 pictures</string>
     <string name="select_4_photo">Select 4 pictures</string>
     <string name="select_6_photo">Select 6 pictures</string>
 </resources>
