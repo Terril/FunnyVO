@@ -376,7 +376,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         TabLayout.Tab tab2 = tabLayout.getTabAt(2);
         View view2 = tab2.getCustomView();
         ImageView image = view2.findViewById(R.id.image);
-        image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_add_white));
+        image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_record));
         tab2.setCustomView(view2);
 
         TabLayout.Tab tab3 = tabLayout.getTabAt(3);
@@ -415,7 +415,7 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         TabLayout.Tab tab2 = tabLayout.getTabAt(2);
         View view2 = tab2.getCustomView();
         ImageView image = view2.findViewById(R.id.image);
-        image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_add_black));
+        image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_record));
         tab2.setCustomView(view2);
 
         TabLayout.Tab tab3 = tabLayout.getTabAt(3);

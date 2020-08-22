@@ -8,7 +8,7 @@
         android:layout_height="40dp"
         android:scaleType="fitCenter"
         android:id="@+id/image"
-        android:src="@drawable/ic_add_white"
+        android:src="@drawable/ic_record"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
