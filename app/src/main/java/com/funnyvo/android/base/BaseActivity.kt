@@ -37,7 +37,7 @@ import javax.inject.Inject
 abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var player: SimpleExoPlayer
-    private val TIMEOUT: Long = 120000 // 2 min = 2 * 60 * 1000 ms
+    private val TIMEOUT: Long = 60000 // 2 min = 1 * 60 * 1000 ms
     private lateinit var manager: ReviewManager
 
     @Inject
