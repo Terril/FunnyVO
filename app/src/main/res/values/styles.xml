@@ -7,6 +7,17 @@
         <item name="colorPrimaryDark">@color/palette_cheddar_dark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+    </style>
+
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
+        <item name="actionTextColorAlpha">1</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Snackbar" parent="">
+        <item name="colorPrimary">@color/palette_cheddar</item>
+        <item name="colorOnSurface">@color/palette_cheddar_dark</item>
     </style>
 
     <style name="white_status" parent="Theme.AppCompat.Light.NoActionBar">

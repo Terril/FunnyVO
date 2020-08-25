@@ -40,6 +40,7 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio;
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack;
+import com.google.android.material.snackbar.Snackbar;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
@@ -120,6 +121,11 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             Variables.Selected_sound_id = "null";
             btnAddMusic.setEnabled(true);
             append(false, path); //galleryAppend();
+            if (getFileDuration(Uri.parse(path)) > 30000) {
+                Snackbar.make(btnAddMusic, "Please trim the video", Snackbar.LENGTH_LONG)
+                        .setBackgroundTint(getResources().getColor(R.color.palette_cheddar))
+                        .show();
+            }
         }
 
 
@@ -249,7 +255,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onFailed(Exception exception) {
-                        Log.e(APP_NAME, "Exception occured on SaveVideo : " + exception.getMessage());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -719,4 +724,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         finalTouchesToVideo();
     }
 
+    private Long getFileDuration(Uri uri) {
+        try {
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            mmr.setDataSource(this, uri);
+            String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long fileDuration = Long.parseLong(durationStr);
+            return fileDuration;
+        } catch (Exception e) {
+        }
+        return 0l;
+    }
 }

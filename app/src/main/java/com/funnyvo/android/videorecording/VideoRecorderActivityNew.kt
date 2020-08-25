@@ -55,13 +55,14 @@ import com.otaliastudios.cameraview.filter.Filters
 import com.otaliastudios.cameraview.overlay.OverlayLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_video_recoder_new.*
+import kotlinx.android.synthetic.main.activity_video_recoder_new.view.*
 import java.io.File
 import java.io.IOException
 import java.util.*
 
 
 @AndroidEntryPoint
-class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingListener, OnDragListener, MergeVideoAudioCallBack, StickerCallBack {
+class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener, MergeVideoAudioCallBack, StickerCallBack {
     private var filters: List<RecordingFilters> = mutableListOf()
     private var fileName: String = ""
     private var speedValue: String = "1.0"
@@ -119,16 +120,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
             try {
                 val path = FileUtils(this).getPath(uri)
                 if (path != null) {
-                    val videoFile = File(path)
-                    if (getFileDuration(uri) < 19500) {
-                        recordingViewModel.changeVideoSize(path, Variables.gallery_resize_video)
-                    } else {
-                        try {
-                            recordingViewModel.trimVideo(this, uri, this)
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }
+                    recordingViewModel.changeVideoSize(path, Variables.gallery_resize_video)
                 }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
@@ -610,15 +602,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
                 try {
                     val path = FileUtils(this).getPath(uri)!!
                     val videoFile = File(path)
-                    if (getFileDuration(uri) < 19500) {
-                        recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.gallery_resize_video)
-                    } else {
-                        try {
-                            recordingViewModel.trimVideo(this, uri, this)
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }
+                    recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.gallery_resize_video)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -630,18 +614,6 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
         val audioFile = Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC
         val mergeVideoAudio = MergeVideoAudio(this)
         mergeVideoAudio.doInBackground(audioFile, Variables.outputfile, Variables.outputfile2)
-    }
-
-    private fun getFileDuration(uri: Uri): Long {
-        try {
-            val mmr = MediaMetadataRetriever()
-            mmr.setDataSource(this, uri)
-            val durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            val fileDuration = durationStr.toInt()
-            return fileDuration.toLong()
-        } catch (e: java.lang.Exception) {
-        }
-        return 0
     }
 
     private fun goToPreviewActivity() {
@@ -670,22 +642,6 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, VideoTrimmingL
     override fun onDestroy() {
         super.onDestroy()
         cameraRecording.destroy()
-    }
-
-    override fun onErrorWhileViewingVideo(what: Int, extra: Int) {
-        Toast.makeText(this, getString(R.string.try_again), Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onFinishedTrimming(uri: Uri?) {
-        recordingViewModel.changeVideoSize(Variables.gallery_trimed_video, Variables.gallery_resize_video)
-    }
-
-    override fun onTrimStarted() {
-        showProgressDialog()
-    }
-
-    override fun onVideoPrepared() {
-        cameraRecording.overlay
     }
 
     override fun onDrag(v: View?, event: DragEvent?): Boolean {

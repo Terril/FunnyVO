@@ -79,7 +79,7 @@ class PhotoTemplateActivity : BaseActivity() {
                 // Single image video
 //                val videoFile = getFileFromAssets(this, "video_file.mp4").absolutePath
 //                command = "-i \"$videoFile\" -i \"$path1\" -filter_complex \"[0:v][1:v] overlay=(W-w)/2:(H-h)/2:enable='between(t,3,10)'\" -pix_fmt yuv420p -c:a copy $OUTPUT_PHOTO_FILE"
-                command = "-loop 1 -i  \"$path1\" -c:v libx264 -t 10 -pix_fmt yuv420p -vf scale=1080:1080 $OUTPUT_PHOTO_FILE"
+                command = "-loop 1 -i  \"$path1\" -c:v libx264 -t 10 -pix_fmt yuv420p $OUTPUT_PHOTO_FILE"
             }
             2 -> {
                 val path1 = uriList?.get(0)?.let { FileUtils(this).getPath(it) }.orEmpty()
