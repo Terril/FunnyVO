@@ -3,4 +3,8 @@
     <declare-styleable name="CustomTextView">
         <attr name="customFont" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="PhotoEditorView">
+        <attr name="photo_src" format="integer" />
+    </declare-styleable>
 </resources>

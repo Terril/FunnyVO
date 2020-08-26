@@ -112,6 +112,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.btnFilter).setOnClickListener(this);
         findViewById(R.id.btnTextEditor).setOnClickListener(this);
         findViewById(R.id.btnTextAdded).setOnClickListener(this);
+        findViewById(R.id.btnFreeDraw).setOnClickListener(this);
 
         if (!isFromGallery) {
             btnAddMusic.setText(getString(R.string.preview));
@@ -122,7 +123,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             btnAddMusic.setEnabled(true);
             append(false, path); //galleryAppend();
             if (getFileDuration(Uri.parse(path)) > 30000) {
-                Snackbar.make(btnAddMusic, "Please trim the video", Snackbar.LENGTH_LONG)
+                Snackbar.make(btnAddMusic, R.string.crop_the_video_message, Snackbar.LENGTH_LONG)
                         .setBackgroundTint(getResources().getColor(R.color.palette_cheddar))
                         .show();
             }

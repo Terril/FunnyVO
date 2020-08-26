@@ -20,8 +20,8 @@
         android:layout_marginTop="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_20"
         android:background="@color/transparent"
-        android:visibility="gone"
-        android:src="@drawable/ic_text_fields" />
+        android:src="@drawable/ic_text_fields"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/btnSlowMotion"
@@ -30,45 +30,129 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_20"
-        android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
         android:src="@drawable/ic_slow_motion" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtSlowMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSlowMotion"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_alignStart="@+id/btnSlowMotion"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:text="@string/slow_motion"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
 
     <ImageButton
         android:id="@+id/btnFastMotion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnSlowMotion"
+        android:layout_above="@+id/txtFastMotion"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_20"
-        android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
         android:src="@drawable/ic_fast_play" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtFastMotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSlowMotion"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_alignStart="@+id/btnFastMotion"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:text="@string/fast_motion"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
+
+    <ImageButton
+        android:id="@+id/btnFreeDraw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtFreeDraw"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_baseline_brush" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtFreeDraw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnCrop"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_alignStart="@+id/btnFreeDraw"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:gravity="center"
+        android:text="@string/free_draw"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
 
     <ImageButton
         android:id="@+id/btnCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnFastMotion"
+        android:layout_above="@+id/txtCrop"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_20"
-        android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
         android:src="@drawable/ic_scissors" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnFastMotion"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_alignStart="@+id/btnCrop"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:gravity="center"
+        android:text="@string/crop"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
 
     <ImageButton
         android:id="@+id/btnFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/txtSlowMotion"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_20"
-        android:layout_marginBottom="@dimen/margin_15"
         android:background="@color/transparent"
-        android:layout_below="@+id/btnSlowMotion"
         android:src="@drawable/ic_filter" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtFilters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnFilter"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_alignStart="@+id/btnFilter"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:text="@string/filters"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -91,14 +175,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:text="@string/add_sound"
                 android:layout_marginStart="@dimen/margin_5"
                 android:layout_marginEnd="@dimen/margin_5"
+                android:layout_toStartOf="@+id/btnNext"
+                android:layout_toEndOf="@+id/btnGoBackPreview"
+                android:gravity="center"
+                android:text="@string/add_sound"
                 android:textColor="@color/palette_cheddar"
                 android:tint="@color/palette_cheddar"
-                android:gravity="center"
-                android:layout_toEndOf="@+id/btnGoBackPreview"
-                android:layout_toStartOf="@+id/btnNext"
                 app:icon="@drawable/ic_music"
                 app:iconGravity="textStart"
                 app:iconTint="@color/palette_cheddar" />
