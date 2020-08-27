@@ -117,4 +117,12 @@
         <item name="android:shadowColor">@android:color/transparent</item>
         <item name="strokeColor">@android:color/transparent</item>
     </style>
+
+    <style name="EditText">
+        <item name="android:singleLine">true</item>
+        <item name="colorControlNormal">@color/palette_milk</item>
+        <item name="colorControlActivated">@color/palette_milk</item>
+        <item name="android:textColorPrimary">@color/palette_milk</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
 </resources>
