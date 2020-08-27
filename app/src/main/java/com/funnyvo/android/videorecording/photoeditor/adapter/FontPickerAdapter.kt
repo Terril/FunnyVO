@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -26,7 +27,7 @@ class FontPickerAdapter internal constructor(private val context: Context, selec
         val typeface = ResourcesCompat.getFont(context, fontId[i])
         viewHolder.name.typeface = typeface
         if (selecetedPosition == i) {
-            viewHolder.name.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary))
+            viewHolder.name.setBackgroundColor(ContextCompat.getColor(context, R.color.palette_cheddar_dark))
         } else {
             viewHolder.name.setBackgroundColor(ContextCompat.getColor(context, R.color.black_trasp))
         }
@@ -37,7 +38,7 @@ class FontPickerAdapter internal constructor(private val context: Context, selec
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var name: TextView = itemView.findViewById(R.id.txtFontName)
+        var name: Button = itemView.findViewById(R.id.btnFontName)
 
         init {
             name.setOnClickListener {

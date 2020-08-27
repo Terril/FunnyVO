@@ -10,18 +10,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.funnyvo.android.videorecording.photoeditor.PhotoEditorView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/btnTextEditor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnCrop"
+        android:layout_above="@+id/txtAddText"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_20"
         android:background="@color/transparent"
-        android:src="@drawable/ic_text_fields"
-        android:visibility="gone" />
+        android:src="@drawable/ic_text_fields" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtAddText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnCrop"
+        android:layout_alignStart="@+id/btnTextEditor"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:gravity="center"
+        android:text="@string/add_text"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
 
     <ImageButton
         android:id="@+id/btnSlowMotion"
@@ -38,12 +61,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnSlowMotion"
+        android:layout_alignStart="@+id/btnSlowMotion"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_alignStart="@+id/btnSlowMotion"
         android:layout_marginTop="@dimen/margin_2"
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
+        android:gravity="center"
         android:text="@string/slow_motion"
         android:textColor="@color/palette_cheddar"
         android:textSize="@dimen/text_size_9" />
@@ -64,12 +88,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnSlowMotion"
+        android:layout_alignStart="@+id/btnFastMotion"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_alignStart="@+id/btnFastMotion"
         android:layout_marginTop="@dimen/margin_2"
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
+        android:gravity="center"
         android:text="@string/fast_motion"
         android:textColor="@color/palette_cheddar"
         android:textSize="@dimen/text_size_9" />
@@ -89,10 +114,10 @@
         android:id="@+id/txtFreeDraw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnCrop"
+        android:layout_above="@+id/btnTextEditor"
+        android:layout_alignStart="@+id/btnFreeDraw"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_alignStart="@+id/btnFreeDraw"
         android:layout_marginTop="@dimen/margin_2"
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
@@ -117,9 +142,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnFastMotion"
+        android:layout_alignStart="@+id/btnCrop"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_alignStart="@+id/btnCrop"
         android:layout_marginTop="@dimen/margin_2"
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
@@ -144,9 +169,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnFilter"
+        android:layout_alignStart="@+id/btnFilter"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_alignStart="@+id/btnFilter"
         android:layout_marginTop="@dimen/margin_2"
         android:layout_marginEnd="@dimen/margin_20"
         android:layout_marginBottom="@dimen/margin_15"
@@ -222,11 +247,18 @@
         android:paddingBottom="@dimen/margin_20"
         android:visibility="invisible" />
 
-    <include
-        layout="@layout/view_video_input_message"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_70"
+    <Button
+        android:id="@+id/btnDelete"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:visibility="invisible"></include>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="@dimen/margin_40"
+        android:padding="@dimen/margin_10"
+        android:visibility="gone"
+        app:icon="@drawable/ic_baseline_delete"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp" />
 </RelativeLayout>

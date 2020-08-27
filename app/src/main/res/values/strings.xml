@@ -134,6 +134,7 @@
     <string name="fast_motion">Fast motion</string>
     <string name="slow_motion">Slow motion</string>
     <string name="free_draw">Free draw</string>
+    <string name="add_text">Add text</string>
 
     <string-array name="photo_editor_emoji">
 

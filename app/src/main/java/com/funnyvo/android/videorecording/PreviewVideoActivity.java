@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
@@ -17,9 +18,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +44,11 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.soundlists.SoundListMainActivity;
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio;
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack;
+import com.funnyvo.android.videorecording.photoeditor.OnPhotoEditorListener;
+import com.funnyvo.android.videorecording.photoeditor.PhotoEditor;
+import com.funnyvo.android.videorecording.photoeditor.PhotoEditorView;
+import com.funnyvo.android.videorecording.photoeditor.TextStyleBuilder;
+import com.funnyvo.android.videorecording.photoeditor.ViewType;
 import com.google.android.material.snackbar.Snackbar;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -60,7 +69,7 @@ import static com.funnyvo.android.simpleclasses.Variables.APP_FOLDER;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.simpleclasses.Variables.SOUNDS_LIST_REQUEST_CODE;
 
-public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack {
+public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack, OnPhotoEditorListener {
 
     public static final int CROP_RESULT = 101;
     private GPUPlayerView gpuPlayerView;
@@ -69,9 +78,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private final List<FilterType> filterTypes = FilterType.createFilterList();
     private FilterAdapter adapter;
     private RecyclerView recylerview;
-    private LinearLayout layoutViewInputText;
     private PlayerEventListener eventListener;
-    private FunnyVOEditTextView edtVideoMessage;
     private Button btnAddMusic;
     private String draftFile;
     private String path;
@@ -82,6 +89,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private boolean isFromGallery = false;
     private String tempOutputSource = Variables.outputfile2;
     private boolean isScaleModeSet = true;
+    private PhotoEditor photoEditor;
     // this function will set the player to the current video
 
     @Override
@@ -111,8 +119,19 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.btnCrop).setOnClickListener(this);
         findViewById(R.id.btnFilter).setOnClickListener(this);
         findViewById(R.id.btnTextEditor).setOnClickListener(this);
-        findViewById(R.id.btnTextAdded).setOnClickListener(this);
         findViewById(R.id.btnFreeDraw).setOnClickListener(this);
+
+        PhotoEditorView ivImage = findViewById(R.id.ivImage);
+        Button btnDelete = findViewById(R.id.btnDelete);
+
+        photoEditor = new PhotoEditor.Builder(this, ivImage)
+                .setPinchTextScalable(true) // set flag to make text scalable when pinch
+                .setDeleteView(btnDelete)
+                //.setDefaultTextTypeface(mTextRobotoTf)
+                //.setDefaultEmojiTypeface(mEmojiTypeFace)
+                .build(); // build photo editor sdk
+
+        photoEditor.setOnPhotoEditorListener(this);
 
         if (!isFromGallery) {
             btnAddMusic.setText(getString(R.string.preview));
@@ -134,9 +153,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
         gpuPlayerView.onResume();
         recylerview = findViewById(R.id.recylerviewPreview);
-        layoutViewInputText = findViewById(R.id.layoutViewInputText);
-        edtVideoMessage = findViewById(R.id.edtVideoMessage);
-        edtVideoMessage.setFilters(new InputFilter[]{EMOJI_FILTER});
 
         Bitmap bmThumbnail = ThumbnailUtils.createVideoThumbnail(videoUrl,
                 MediaStore.Video.Thumbnails.MINI_KIND);
@@ -382,13 +398,13 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
 
     private void applyMessageOnVideo() {
         showProgressDialog();
-        String mesaage = edtVideoMessage.getText().toString().trim();
-        String msg = mesaage.substring(0, mesaage.length() / 2);
-        String msg1 = mesaage.substring((mesaage.length() / 2) + 1);
+        String message = ""; //edtVideoMessage.getText().toString().trim();
+        String msg = message.substring(0, message.length() / 2);
+        String msg1 = message.substring((message.length() / 2) + 1);
 
-        mesaage = msg + "\n" + msg1;
+        message = msg + "\n" + msg1;
         final String[] complexCommand = new String[]{
-                "-y", "-i", Variables.outputfile2, "-vf", "drawtext=text=" + mesaage + ":fontfile=/system/fonts/DroidSans.ttf: fontcolor=white: fontsize=21: x=(w-tw)/2: y=(h/PHI)+th", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MESSAGE
+                "-y", "-i", Variables.outputfile2, "-vf", "drawtext=text=" + message + ":fontfile=/system/fonts/DroidSans.ttf: fontcolor=white: fontsize=21: x=(w-tw)/2: y=(h/PHI)+th", "-b:v", "2097k", "-r", "60", "-vcodec", "mpeg4", Variables.OUTPUT_FILE_MESSAGE
         };
         new AsyncTask<Object, Object, Object>() {
             @Override
@@ -472,27 +488,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void slideFilterTextView() {
-        if (isUp) {
-            isTextFilterSelected = false;
-            slideDown(layoutViewInputText);
-        } else {
-            slideUp(layoutViewInputText);
-        }
-        isUp = !isUp;
+        TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(this, 0);
+        textEditorDialogFragment.setOnTextEditorListener((inputText, colorCode, position) -> {
+            final TextStyleBuilder styleBuilder = new TextStyleBuilder();
+            styleBuilder.withTextColor(colorCode);
+            Typeface typeface = ResourcesCompat.getFont(PreviewVideoActivity.this, TextEditorDialogFragment.getDefaultFontIds(PreviewVideoActivity.this).get(position));
+            styleBuilder.withTextFont(typeface);
+            photoEditor.addText(inputText, styleBuilder, position);
+        });
     }
-
-    private static InputFilter EMOJI_FILTER = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            for (int index = start; index < end; index++) {
-                int type = Character.getType(source.charAt(index));
-                if (type == Character.SURROGATE) {
-                    return "";
-                }
-            }
-            return null;
-        }
-    };
 
     private void openVideoCropActivity() {
         Intent intent = new Intent(this, VideoCropActivity.class);
@@ -539,9 +543,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btnTextEditor:
                 slideFilterTextView();
-                break;
-            case R.id.btnTextAdded:
-                applyMessageOnVideo();
                 break;
             case R.id.btnAddMusic:
                 Intent intent = new Intent(this, SoundListMainActivity.class);
@@ -735,5 +736,66 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         } catch (Exception e) {
         }
         return 0l;
+    }
+
+    /**
+     * When user long press the existing text this event will trigger implying that user want to
+     * edit the current {@link TextView}
+     *
+     * @param rootView  view on which the long press occurs
+     * @param text      current text set on the view
+     * @param colorCode current color value set on view
+     * @param pos
+     */
+    @Override
+    public void onEditTextChangeListener(View rootView, String text, int colorCode, int pos) {
+
+    }
+
+    /**
+     * This is a callback when user adds any view on the {@link PhotoEditorView} it can be
+     * brush,text or sticker i.e bitmap on parent view
+     *
+     * @param viewType           enum which define type of view is added
+     * @param numberOfAddedViews number of views currently added
+     * @see ViewType
+     */
+    @Override
+    public void onAddViewListener(ViewType viewType, int numberOfAddedViews) {
+
+    }
+
+    /**
+     * This is a callback when user remove any view on the {@link PhotoEditorView} it happens when usually
+     * undo and redo happens or text is removed
+     *
+     * @param viewType           enum which define type of view is added
+     * @param numberOfAddedViews number of views currently added
+     */
+    @Override
+    public void onRemoveViewListener(ViewType viewType, int numberOfAddedViews) {
+
+    }
+
+    /**
+     * A callback when user start dragging a view which can be
+     * any of {@link ViewType}
+     *
+     * @param viewType enum which define type of view is added
+     */
+    @Override
+    public void onStartViewChangeListener(ViewType viewType) {
+
+    }
+
+    /**
+     * A callback when user stop/up touching a view which can be
+     * any of {@link ViewType}
+     *
+     * @param viewType enum which define type of view is added
+     */
+    @Override
+    public void onStopViewChangeListener(ViewType viewType) {
+
     }
 }

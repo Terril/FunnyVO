@@ -19,7 +19,7 @@
         android:textSize="@dimen/text_size_15" />
 
     <EditText
-        android:id="@+id/add_text_edit_text"
+        android:id="@+id/edtTextAddText"
         style="@style/EditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
