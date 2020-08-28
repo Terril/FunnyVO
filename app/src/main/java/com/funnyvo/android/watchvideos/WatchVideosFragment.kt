@@ -135,7 +135,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         val layout = layoutManager.findViewByPosition(currentPage)
         val frameLoadAdsWatchVideo = layout?.findViewById<FrameLayout>(R.id.frameLoadAdsWatchVideo)
         val mainLayoutWatchVideo = layout?.findViewById<RelativeLayout>(R.id.mainLayoutWatchVideo)
-         imageSnapShot = layout?.findViewById<ImageView>(R.id.imvWatchVideoSnap)
+        imageSnapShot = layout?.findViewById<ImageView>(R.id.imvWatchVideoSnap)
         val playerView: PlayerView? = layout?.findViewById(R.id.playerViewWatchVideo)
         if (showAds) {
             dataList.add(currentPage, Home())
@@ -194,7 +194,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
                         // Only when swipe distance between minimal and maximal distance value then we treat it as effective swipe
                         if (deltaXAbs > 100 && deltaXAbs < 1000) {
                             if (deltaX > 0) {
-                                openProfile(item, true)
+                                openProfile(item, position, true)
                             }
                         }
                         return true
@@ -246,14 +246,14 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         val snapHelper: SnapHelper = PagerSnapHelper()
         recylerViewWatchVideo.onFlingListener = null
         snapHelper.attachToRecyclerView(recylerViewWatchVideo)
-        adapter = WatchVideosAdapter(context, dataList, WatchVideosAdapter.OnItemClickListener { postion, item, view ->
+        adapter = WatchVideosAdapter(context, dataList, WatchVideosAdapter.OnItemClickListener { position, item, view ->
             when (view.id) {
                 R.id.user_pic, R.id.chipUsernameWatchVideo -> {
                     onPause()
-                    openProfile(item, false)
+                    openProfile(item, position, false)
                 }
                 R.id.like_layout -> if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                    likeVideo(postion, item)
+                    likeVideo(position, item)
                 } else {
                     Toast.makeText(context, "Please Login.", Toast.LENGTH_SHORT).show()
                 }
@@ -361,8 +361,8 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
 
 
     // this will open the profile of user which have uploaded the currenlty running video
-    private fun openProfile(item: Home, from_right_to_left: Boolean) {
-        if (Variables.sharedPreferences.getString(Variables.u_id, "0") == item.fb_id) {
+    private fun openProfile(item: Home, position: Int, fromRightToleft: Boolean) {
+        if (Variables.sharedPreferences.getString(Variables.u_id, "0") == item.fb_id || dataList.size >= 0 || item.fb_id == dataList[position].fb_id) {
             if (MainMenuFragment.tabLayout != null) {
                 val profile = MainMenuFragment.tabLayout.getTabAt(4)
                 profile!!.select()
@@ -370,7 +370,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         } else {
             val profileFragment = ProfileFragment(FragmentCallback { callApiForSingleVideos(currentPage) })
             val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
-            if (from_right_to_left) transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right) else transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom)
+            if (fromRightToleft) transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right) else transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom)
             val args = Bundle()
             args.putString("user_id", item.fb_id)
             args.putString("user_name", item.first_name + " " + item.last_name)
@@ -504,14 +504,14 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
             if (options[item] == getString(R.string.save_video)) {
                 if (Functions.checkstoragepermision(activity)) saveVideo(home)
             } else if (options[item] == getString(R.string.delete_video)) {
-                    Functions.callApiForDeleteVideo(activity, home.video_id, object : ApiCallBack {
-                        override fun arrayData(arrayList: ArrayList<*>?) {}
-                        override fun onSuccess(responce: String) {
-                            activity?.finish()
-                        }
+                Functions.callApiForDeleteVideo(activity, home.video_id, object : ApiCallBack {
+                    override fun arrayData(arrayList: ArrayList<*>?) {}
+                    override fun onSuccess(responce: String) {
+                        activity?.finish()
+                    }
 
-                        override fun onFailure(responce: String) {}
-                    })
+                    override fun onFailure(responce: String) {}
+                })
             } else if (options[item] == "Cancel") {
                 dialog.dismiss()
             }
@@ -682,10 +682,10 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         if (playbackState == Player.STATE_BUFFERING) {
             p_bar.visibility = View.VISIBLE
-            if(imageSnapShot != null) imageSnapShot!!.visibility = VISIBLE
+            if (imageSnapShot != null) imageSnapShot!!.visibility = VISIBLE
         } else if (playbackState == Player.STATE_READY) {
             p_bar.visibility = View.GONE
-            if(imageSnapShot != null) imageSnapShot!!.visibility = INVISIBLE
+            if (imageSnapShot != null) imageSnapShot!!.visibility = INVISIBLE
         }
     }
 }
