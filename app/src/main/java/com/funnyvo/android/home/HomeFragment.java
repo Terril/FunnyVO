@@ -305,7 +305,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         toggleSound(position, item);
                         break;
                     case R.id.user_pic:
-                    case R.id.username:
+                    case R.id.chipUernameHome:
                         onPause();
                         openProfile(item, false);
                         break;

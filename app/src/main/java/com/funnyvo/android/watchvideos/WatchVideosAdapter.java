@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.funnyvo.android.R;
 import com.funnyvo.android.home.datamodel.Home;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 
@@ -119,9 +120,9 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
         PlayerView playerview;
-        TextView username, sound_name;
+        TextView sound_name;
         ImageView user_pic, sound_image, varified_btn;
-
+        Chip username;
         LinearLayout like_layout, comment_layout, sound_image_layout;
         ImageView like_image, comment_image, imvWatchVideoSnap;
         TextView like_txt, desc_txt, comment_txt;
@@ -135,7 +136,7 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
 
             playerview = view.findViewById(R.id.playerViewWatchVideo);
 
-            username = view.findViewById(R.id.username);
+            username = view.findViewById(R.id.chipUsernameWatchVideo);
             user_pic = view.findViewById(R.id.user_pic);
             sound_name = view.findViewById(R.id.sound_name);
             sound_image = view.findViewById(R.id.sound_image);
@@ -180,7 +181,6 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
             username.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     listener.onItemClick(postion, item, v);
                 }
             });
@@ -188,7 +188,6 @@ public class WatchVideosAdapter extends RecyclerView.Adapter<WatchVideosAdapter.
             like_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     listener.onItemClick(postion, item, v);
                 }
             });

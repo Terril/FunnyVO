@@ -18,6 +18,7 @@ import com.funnyvo.android.customview.FunnyVOTextView;
 import com.funnyvo.android.home.datamodel.Home;
 import com.funnyvo.android.profile.ProfileFragment;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 
@@ -127,7 +128,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        FunnyVOTextView username, desc_txt, sound_name;
+        FunnyVOTextView  desc_txt, sound_name;
+        Chip username;
         ImageView user_pic, sound_image, varified_btn;
 
         LinearLayout like_layout, comment_layout, sound_image_layout, soundImageLayour;
@@ -142,7 +144,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         public CustomViewHolder(View view) {
             super(view);
 
-            username = view.findViewById(R.id.txtUsernameHome);
+            username = view.findViewById(R.id.chipUernameHome);
             user_pic = view.findViewById(R.id.user_pic);
             sound_name = view.findViewById(R.id.txtSoundNameHome);
             sound_image = view.findViewById(R.id.sound_image);

@@ -248,7 +248,7 @@ class WatchVideosFragment : Fragment(), Player.EventListener, FragmentDataSend {
         snapHelper.attachToRecyclerView(recylerViewWatchVideo)
         adapter = WatchVideosAdapter(context, dataList, WatchVideosAdapter.OnItemClickListener { postion, item, view ->
             when (view.id) {
-                R.id.user_pic -> {
+                R.id.user_pic, R.id.chipUsernameWatchVideo -> {
                     onPause()
                     openProfile(item, false)
                 }

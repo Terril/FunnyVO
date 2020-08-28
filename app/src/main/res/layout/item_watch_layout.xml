@@ -43,9 +43,9 @@
                     android:id="@+id/side_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="@dimen/margin_10"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -153,7 +153,7 @@
                     android:orientation="vertical">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/username"
+                        android:id="@+id/chipUsernameWatchVideo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:shadowColor="@color/black"
@@ -161,8 +161,9 @@
                         android:shadowDy="1"
                         android:shadowRadius="3"
                         android:text="Username"
+                        app:chipBackgroundColor="@color/palette_cheddar_dark"
                         android:textColor="@color/palette_milk"
-                        android:textSize="@dimen/text_size_13"
+                        android:textSize="@dimen/text_size_11"
                         app:fontFamily="@string/font_bold" />
 
                     <com.funnyvo.android.customview.FunnyVOTextView
