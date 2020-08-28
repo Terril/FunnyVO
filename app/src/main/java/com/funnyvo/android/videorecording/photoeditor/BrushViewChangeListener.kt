@@ -6,7 +6,7 @@ package com.funnyvo.android.videorecording.photoeditor
  *
  *
  */
-internal interface BrushViewChangeListener {
+interface BrushViewChangeListener {
     fun onViewAdd(brushDrawingView: BrushDrawingView?)
     fun onViewRemoved(brushDrawingView: BrushDrawingView?)
     fun onStartDrawing()

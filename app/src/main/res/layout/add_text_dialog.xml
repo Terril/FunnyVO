@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnDone"
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"

@@ -12,14 +12,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.InputFilter;
-import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,15 +26,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
+import com.bumptech.glide.Glide;
 import com.coremedia.iso.boxes.Container;
 import com.daasuu.gpuv.composer.GPUMp4Composer;
 import com.daasuu.gpuv.egl.filter.GlFilterGroup;
 import com.daasuu.gpuv.player.GPUPlayerView;
 import com.funnyvo.android.R;
 import com.funnyvo.android.base.BaseActivity;
-import com.funnyvo.android.customview.FunnyVOEditTextView;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
+import com.funnyvo.android.helper.DimensionData;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
@@ -63,13 +61,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.funnyvo.android.helper.MediaUtils.getScaledDimension;
 import static com.funnyvo.android.simpleclasses.Variables.APP_FOLDER;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.simpleclasses.Variables.SOUNDS_LIST_REQUEST_CODE;
 
-public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack, OnPhotoEditorListener {
+public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack, OnPhotoEditorListener, PropertiesBSFragment.Properties {
 
     public static final int CROP_RESULT = 101;
     private GPUPlayerView gpuPlayerView;
@@ -90,7 +90,14 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private String tempOutputSource = Variables.outputfile2;
     private boolean isScaleModeSet = true;
     private PhotoEditor photoEditor;
+    private PropertiesBSFragment propertiesBSFragment;
     // this function will set the player to the current video
+
+    private int originalDisplayWidth;
+    private int originalDisplayHeight;
+    private int newCanvasWidth, newCanvasHeight;
+    private int DRAW_CANVASW = 0;
+    private int DRAW_CANVASH = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +131,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         PhotoEditorView ivImage = findViewById(R.id.ivImage);
         Button btnDelete = findViewById(R.id.btnDelete);
 
+        Glide.with(this).load(R.drawable.trans).centerCrop().into(ivImage.getSource());
+        propertiesBSFragment = new PropertiesBSFragment();
+        propertiesBSFragment.setPropertiesChangeListener(this);
         photoEditor = new PhotoEditor.Builder(this, ivImage)
                 .setPinchTextScalable(true) // set flag to make text scalable when pinch
                 .setDeleteView(btnDelete)
@@ -148,6 +158,24 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             }
         }
 
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(videoUrl);
+        String metaRotation = retriever.extractMetadata(METADATA_KEY_VIDEO_ROTATION);
+        int rotation = metaRotation == null ? 0 : Integer.parseInt(metaRotation);
+        if (rotation == 90 || rotation == 270) {
+            DRAW_CANVASH = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            DRAW_CANVASW = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        } else {
+            DRAW_CANVASW = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            DRAW_CANVASH = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        }
+
+        setCanvasAspectRatio();
+//        videoSurface.getLayoutParams().width = newCanvasWidth;
+//        videoSurface.getLayoutParams().height = newCanvasHeight;
+
+        ivImage.getLayoutParams().width = newCanvasWidth;
+        ivImage.getLayoutParams().height = newCanvasHeight;
 
         gpuPlayerView = setPlayer(this, Uri.parse(videoUrl), eventListener, isScaleModeSet);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(gpuPlayerView);
@@ -549,6 +577,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 startActivityForResult(intent, SOUNDS_LIST_REQUEST_CODE);
                 overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
                 break;
+            case R.id.btnFreeDraw:
+                setDrawingMode();
+                break;
         }
     }
 
@@ -712,6 +743,39 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         return true;
     }
 
+    private void setCanvasAspectRatio() {
+        originalDisplayHeight = getDisplayHeight();
+        originalDisplayWidth = getDisplayWidth();
+
+        DimensionData displayDimension =
+                getScaledDimension(new DimensionData((int) DRAW_CANVASW, (int) DRAW_CANVASH),
+                        new DimensionData(originalDisplayWidth, originalDisplayHeight));
+        newCanvasWidth = displayDimension.width;
+        newCanvasHeight = displayDimension.height;
+
+    }
+
+    private void setDrawingMode() {
+        if (photoEditor.getBrushDrawableMode()) {
+            photoEditor.setBrushDrawingMode(false);
+        } else {
+            photoEditor.setBrushDrawingMode(true);
+            propertiesBSFragment.show(getSupportFragmentManager(), propertiesBSFragment.getTag());
+        }
+    }
+
+    private int getDisplayWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
+
+    private int getDisplayHeight() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
+    }
+
     // this will add the select audio with the video
     private void mergeWithAudio() {
         final String audioFile = APP_FOLDER + Variables.SELECTED_AUDIO_AAC;
@@ -749,7 +813,18 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
      */
     @Override
     public void onEditTextChangeListener(View rootView, String text, int colorCode, int pos) {
-
+        TextEditorDialogFragment textEditorDialogFragment =
+                TextEditorDialogFragment.show(this, text, colorCode, pos);
+        textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
+            @Override
+            public void onDone(String inputText, int colorCode, int position) {
+                final TextStyleBuilder styleBuilder = new TextStyleBuilder();
+                styleBuilder.withTextColor(colorCode);
+                Typeface typeface = ResourcesCompat.getFont(PreviewVideoActivity.this, TextEditorDialogFragment.getDefaultFontIds(PreviewVideoActivity.this).get(position));
+                styleBuilder.withTextFont(typeface);
+                photoEditor.editText(rootView, inputText, styleBuilder, position);
+            }
+        });
     }
 
     /**
@@ -797,5 +872,20 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onStopViewChangeListener(ViewType viewType) {
 
+    }
+
+    @Override
+    public void onColorChanged(int colorCode) {
+        photoEditor.setBrushColor(colorCode);
+    }
+
+    @Override
+    public void onOpacityChanged(int opacity) {
+        photoEditor.setOpacity(opacity);
+    }
+
+    @Override
+    public void onBrushSizeChanged(int brushSize) {
+        photoEditor.setBrushSize(brushSize);
     }
 }

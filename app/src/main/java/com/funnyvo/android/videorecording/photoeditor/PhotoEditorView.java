@@ -24,7 +24,6 @@ import com.funnyvo.android.R;
 import com.funnyvo.android.videorecording.photoeditor.adapter.InfinitePagerAdapter;
 import com.funnyvo.android.videorecording.photoeditor.adapter.InfiniteViewPager;
 
-
 /**
  * <p>
  * This ViewGroup will have the {@link BrushDrawingView} to draw paint on it with {@link ImageView}
@@ -118,7 +117,6 @@ public class PhotoEditorView extends RelativeLayout {
 
 
         //setUp View Pager
-
         viewPager = new InfiniteViewPager(getContext());
         viewPager.setId(viewPagerId);
         viewPager.setVisibility(View.VISIBLE);
@@ -142,7 +140,6 @@ public class PhotoEditorView extends RelativeLayout {
 
         //Add brush view
         addView(mBrushDrawingView, brushParam);
-
 
     }
 
@@ -199,18 +196,20 @@ public class PhotoEditorView extends RelativeLayout {
             ImageView ivBottom = layout.findViewById(R.id.ivBottom);
             ivBottom.setVisibility(GONE);
 
-//            if (position == 0) {
-//                viewBG.setBackgroundColor(Color.parseColor("#10000000"));
-//                viewBG.setVisibility(VISIBLE);
-//                ivBottom.setVisibility(GONE);
-//            } else if (position == 1) {
-//                viewBG.setBackgroundColor(Color.parseColor("#15FF5733"));
-//                viewBG.setVisibility(VISIBLE);
-//                ivBottom.setVisibility(GONE);
-//            } else if (position == 2) {
+            if (position == 0) {
+                viewBG.setBackgroundColor(Color.parseColor("#10000000"));
+                viewBG.setVisibility(VISIBLE);
+                ivBottom.setVisibility(GONE);
+            } else if (position == 1) {
+                viewBG.setBackgroundColor(Color.parseColor("#15FF5733"));
+                viewBG.setVisibility(VISIBLE);
+                ivBottom.setVisibility(GONE);
+            }
+
+//            else if (position == 2) {
 //                viewBG.setVisibility(GONE);
 //                ivBottom.setVisibility(VISIBLE);
-//                ivBottom.setImageDrawable(getResources().getDrawable(R.drawable.gg));
+//                ivBottom.setImageDrawable(getResources().getDrawable(R.drawable.));
 //
 //            } else if (position == 3) {
 //                viewBG.setVisibility(VISIBLE);

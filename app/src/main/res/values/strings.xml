@@ -135,6 +135,8 @@
     <string name="slow_motion">Slow motion</string>
     <string name="free_draw">Free draw</string>
     <string name="add_text">Add text</string>
+    <string name="opacity">Opacity</string>
+    <string name="brush">Brush</string>
 
     <string-array name="photo_editor_emoji">
 

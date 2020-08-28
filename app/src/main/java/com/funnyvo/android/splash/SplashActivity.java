@@ -72,7 +72,11 @@ public class SplashActivity extends AppCompatActivity {
             imvLogoImage.setVisibility(View.VISIBLE);
             btnSkip.setVisibility(View.GONE);
             btnNext.setVisibility(View.GONE);
-            callApiForSettings();
+            Intent intent = new Intent(SplashActivity.this, VideoRecorderActivityNew.class);
+
+            startActivity(intent);
+            finish();
+          //  callApiForSettings();
         } else {
             viewPager = findViewById(R.id.viewPager);
             pagerAdapter = new SplashPagerAdapter(getSupportFragmentManager());
