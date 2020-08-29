@@ -85,7 +85,7 @@ public class GalleryVideosActivity extends BaseActivity {
 
                 } else {
                     try {
-                        startTrim(new File(item.video_path), new File(Variables.gallery_trimed_video), 1000, 18000);
+                        startTrim(new File(item.video_path), new File(Variables.GALLERY_TRIMMED_VIDEO), 1000, 18000);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -388,7 +388,7 @@ public class GalleryVideosActivity extends BaseActivity {
                     Toast.makeText(GalleryVideosActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
                     dismissProgressDialog();
-                    changeVideoSize(Variables.gallery_trimed_video, Variables.gallery_resize_video);
+                    changeVideoSize(Variables.GALLERY_TRIMMED_VIDEO, Variables.gallery_resize_video);
                 }
             }
 
@@ -414,7 +414,7 @@ public class GalleryVideosActivity extends BaseActivity {
         File output = new File(Variables.outputfile);
         File output2 = new File(Variables.outputfile2);
         File outputFilterFile = new File(Variables.OUTPUT_FILTER_FILE);
-        File gallery_trim_video = new File(Variables.gallery_trimed_video);
+        File gallery_trim_video = new File(Variables.GALLERY_TRIMMED_VIDEO);
         File gallery_resize_video = new File(Variables.gallery_resize_video);
 
         if (output.exists()) {

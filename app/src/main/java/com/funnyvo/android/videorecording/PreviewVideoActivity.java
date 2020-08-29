@@ -58,6 +58,10 @@ import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
+import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener;
+import com.lb.video_trimmer_library.utils.TrimVideoUtils;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -74,7 +78,8 @@ import static com.funnyvo.android.simpleclasses.Variables.APP_FOLDER;
 import static com.funnyvo.android.simpleclasses.Variables.APP_NAME;
 import static com.funnyvo.android.simpleclasses.Variables.SOUNDS_LIST_REQUEST_CODE;
 
-public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack, OnPhotoEditorListener, PropertiesBSFragment.Properties {
+public class PreviewVideoActivity extends BaseActivity implements View.OnClickListener, MergeVideoAudioCallBack,
+        OnPhotoEditorListener, PropertiesBSFragment.Properties, VideoTrimmingListener {
 
     public static final int CROP_RESULT = 101;
     private GPUPlayerView gpuPlayerView;
@@ -290,7 +295,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void run() {
                                 try {
-                                    Variables.outputfile2 =  Variables.OUTPUT_FILTER_FILE;
+                                    Variables.outputfile2 = Variables.OUTPUT_FILTER_FILE;
                                     dismissProgressDialog();
                                     applyFreeOverLayFeature();
                                 } catch (Exception e) {
@@ -630,6 +635,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         } else {
             applyFreeOverLayFeature();
         }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -645,18 +651,17 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                     .setTransparencyEnabled(false)
                     .build();
 
-            if(PermissionUtils.INSTANCE.checkPermissions(this)) {
-                photoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
-                    @Override
-                    public void onSuccess(@NonNull String imagePath) {
-                        copyVideoUsingFfmpeg(imagePath);
-                    }
+            photoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+                @Override
+                public void onSuccess(@NonNull String imagePath) {
+                    copyVideoUsingFfmpeg(imagePath);
+                }
 
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                    }
-                });
-            }
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -665,7 +670,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void copyVideoUsingFfmpeg(String imagePath) {
-        Variables.OUTPUT_FILTER_FILE = APP_FOLDER + Functions.getRandomString() + ".mp4";
+        Variables.OUTPUT_FILTER_FILE_OTHER = APP_FOLDER + Functions.getRandomString() + ".mp4";
         final String[] complexCommand = new String[]{
                 "-y", "-i", Variables.outputfile2, "-i", imagePath, "-filter_complex", "[1:v]scale=" + DRAW_CANVASW + ":" + DRAW_CANVASH + "[ovrl];[0:v][ovrl]overlay=x=0:y=0", "-c:v", "libx264", "-preset", "ultrafast", Variables.OUTPUT_FILTER_FILE_OTHER
         };
@@ -687,8 +692,15 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 super.onPostExecute(o);
                 int rc = (int) o;
                 if (rc == RETURN_CODE_SUCCESS) {
-                    dismissProgressDialog();
-                    gotoPostScreen();
+                    Variables.outputfile2 = Variables.OUTPUT_FILTER_FILE_OTHER;
+                    if (getFileDuration(Uri.parse(Variables.outputfile2)) > 30000) {
+                        TrimVideoUtils.startTrim(PreviewVideoActivity.this, Uri.fromFile(new File(Variables.outputfile2)), new File(Variables.GALLERY_TRIMMED_VIDEO), 1000, 30000, 30000, PreviewVideoActivity.this);
+                    } else {
+                        Variables.GALLERY_TRIMMED_VIDEO = Variables.OUTPUT_FILTER_FILE_OTHER;
+                        dismissProgressDialog();
+                        gotoPostScreen();
+                    }
+                    updateMediaSource(Variables.outputfile2);
                 } else if (rc == RETURN_CODE_CANCEL) {
                     dismissProgressDialog();
                 } else {
@@ -929,5 +941,26 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onBrushSizeChanged(int brushSize) {
         photoEditor.setBrushSize(brushSize);
+    }
+
+    @Override
+    public void onErrorWhileViewingVideo(int i, int i1) {
+
+    }
+
+    @Override
+    public void onFinishedTrimming(@Nullable Uri uri) {
+        dismissProgressDialog();
+        gotoPostScreen();
+    }
+
+    @Override
+    public void onTrimStarted() {
+
+    }
+
+    @Override
+    public void onVideoPrepared() {
+
     }
 }

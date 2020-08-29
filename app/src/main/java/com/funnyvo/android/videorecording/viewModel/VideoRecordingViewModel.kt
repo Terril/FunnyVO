@@ -113,7 +113,7 @@ class VideoRecordingViewModel @ViewModelInject constructor(
 
     fun trimVideo(context: Context, uri: Uri, trimmingListener: VideoTrimmingListener) {
         viewModelScope.launch(Dispatchers.IO) {
-            TrimVideoUtils.startTrim(context, uri, File(Variables.gallery_trimed_video), 1000, 18000, 18000, trimmingListener)
+            TrimVideoUtils.startTrim(context, uri, File(Variables.GALLERY_TRIMMED_VIDEO), 1000, 18000, 18000, trimmingListener)
         }
     }
 
