@@ -694,7 +694,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 if (rc == RETURN_CODE_SUCCESS) {
                     Variables.outputfile2 = Variables.OUTPUT_FILTER_FILE_OTHER;
                     if (getFileDuration(Uri.parse(Variables.outputfile2)) > 30000) {
-                        TrimVideoUtils.startTrim(PreviewVideoActivity.this, Uri.fromFile(new File(Variables.outputfile2)), new File(Variables.GALLERY_TRIMMED_VIDEO), 1000, 30000, 30000, PreviewVideoActivity.this);
+                        Variables.GALLERY_TRIMMED_VIDEO = APP_FOLDER + Functions.getRandomString() + "_gallery_trimed_video.mp4";
+                        TrimVideoUtils.startTrim(PreviewVideoActivity.this, Uri.fromFile(new File(Variables.outputfile2)), new File(Variables.GALLERY_TRIMMED_VIDEO),
+                                1000, 30000, 30000, PreviewVideoActivity.this);
                     } else {
                         Variables.GALLERY_TRIMMED_VIDEO = Variables.OUTPUT_FILTER_FILE_OTHER;
                         dismissProgressDialog();
