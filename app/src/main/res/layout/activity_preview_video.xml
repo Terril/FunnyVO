@@ -179,6 +179,32 @@
         android:textColor="@color/palette_cheddar"
         android:textSize="@dimen/text_size_9" />
 
+    <ImageButton
+        android:id="@+id/btnUndo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtUndo"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_baseline_undo" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtUndo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnUndo"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_2"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_40"
+        android:text="@string/undo"
+        android:textColor="@color/palette_cheddar"
+        android:textSize="@dimen/text_size_9" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

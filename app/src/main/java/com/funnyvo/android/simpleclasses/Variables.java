@@ -48,7 +48,8 @@ public class Variables {
     public static String outputfile2 = APP_FOLDER + "output2.mp4";
     public static String OUTPUT_FILE_MOTION = APP_FOLDER + "output_file_motions.mp4";
     public static String OUTPUT_FILE_MESSAGE = APP_FOLDER + "output_file_message.mp4";
-    public static String OUTPUT_FILTER_FILE = APP_FOLDER + "output-filtered" + Functions.getRandomString() + ".mp4";
+    public static String OUTPUT_FILTER_FILE = APP_FOLDER + "output_filtered" + Functions.getRandomString() + ".mp4";
+    public static String OUTPUT_FILTER_FILE_OTHER = APP_FOLDER + "output_filtered_other" + Functions.getRandomString() + ".mp4";
     public static String OUTPUT_FILE_TRIMMED = APP_FOLDER + "output_trimmed.mp4";
     public static String OUTPUT_PHOTO_FILE = APP_FOLDER + "output_photo_video.mp4";
 

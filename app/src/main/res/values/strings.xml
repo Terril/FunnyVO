@@ -137,6 +137,7 @@
     <string name="add_text">Add text</string>
     <string name="opacity">Opacity</string>
     <string name="brush">Brush</string>
+    <string name="undo">Undo</string>
 
     <string-array name="photo_editor_emoji">
 

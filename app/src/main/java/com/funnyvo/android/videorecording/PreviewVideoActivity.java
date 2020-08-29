@@ -1,5 +1,6 @@
 package com.funnyvo.android.videorecording;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +39,7 @@ import com.funnyvo.android.base.BaseActivity;
 import com.funnyvo.android.filter.FilterAdapter;
 import com.funnyvo.android.filter.FilterType;
 import com.funnyvo.android.helper.DimensionData;
+import com.funnyvo.android.helper.PermissionUtils;
 import com.funnyvo.android.helper.PlayerEventListener;
 import com.funnyvo.android.simpleclasses.Functions;
 import com.funnyvo.android.simpleclasses.Variables;
@@ -45,6 +49,7 @@ import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack;
 import com.funnyvo.android.videorecording.photoeditor.OnPhotoEditorListener;
 import com.funnyvo.android.videorecording.photoeditor.PhotoEditor;
 import com.funnyvo.android.videorecording.photoeditor.PhotoEditorView;
+import com.funnyvo.android.videorecording.photoeditor.SaveSettings;
 import com.funnyvo.android.videorecording.photoeditor.TextStyleBuilder;
 import com.funnyvo.android.videorecording.photoeditor.ViewType;
 import com.google.android.material.snackbar.Snackbar;
@@ -127,6 +132,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.btnFilter).setOnClickListener(this);
         findViewById(R.id.btnTextEditor).setOnClickListener(this);
         findViewById(R.id.btnFreeDraw).setOnClickListener(this);
+        findViewById(R.id.btnUndo).setOnClickListener(this);
 
         PhotoEditorView ivImage = findViewById(R.id.ivImage);
         Button btnDelete = findViewById(R.id.btnDelete);
@@ -284,8 +290,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void run() {
                                 try {
+                                    Variables.outputfile2 =  Variables.OUTPUT_FILTER_FILE;
                                     dismissProgressDialog();
-                                    gotoPostScreen();
+                                    applyFreeOverLayFeature();
                                 } catch (Exception e) {
 
                                 }
@@ -580,6 +587,9 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
             case R.id.btnFreeDraw:
                 setDrawingMode();
                 break;
+            case R.id.btnUndo:
+                photoEditor.clearBrushAllViews();
+                break;
         }
     }
 
@@ -618,14 +628,46 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
         if (selectPostion > 0) {
             saveVideo(Variables.outputfile2, Variables.OUTPUT_FILTER_FILE);
         } else {
-            copyVideoUsingFfmpeg();
+            applyFreeOverLayFeature();
         }
     }
 
-    private void copyVideoUsingFfmpeg() {
+    @SuppressLint("MissingPermission")
+    private void applyFreeOverLayFeature() {
+        File file = new File(Environment.getExternalStorageDirectory()
+                + File.separator + ""
+                + System.currentTimeMillis() + ".png");
+        try {
+            file.createNewFile();
+
+            SaveSettings saveSettings = new SaveSettings.Builder()
+                    .setClearViewsEnabled(true)
+                    .setTransparencyEnabled(false)
+                    .build();
+
+            if(PermissionUtils.INSTANCE.checkPermissions(this)) {
+                photoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+                    @Override
+                    public void onSuccess(@NonNull String imagePath) {
+                        copyVideoUsingFfmpeg(imagePath);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    private void copyVideoUsingFfmpeg(String imagePath) {
         Variables.OUTPUT_FILTER_FILE = APP_FOLDER + Functions.getRandomString() + ".mp4";
         final String[] complexCommand = new String[]{
-                "-y", "-i", Variables.outputfile2, "-vcodec", "copy", Variables.OUTPUT_FILTER_FILE
+                "-y", "-i", Variables.outputfile2, "-i", imagePath, "-filter_complex", "[1:v]scale=" + DRAW_CANVASW + ":" + DRAW_CANVASH + "[ovrl];[0:v][ovrl]overlay=x=0:y=0", "-c:v", "libx264", "-preset", "ultrafast", Variables.OUTPUT_FILTER_FILE_OTHER
         };
         new AsyncTask<Object, Object, Object>() {
             @Override

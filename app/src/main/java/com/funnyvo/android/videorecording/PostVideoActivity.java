@@ -60,7 +60,7 @@ public class PostVideoActivity extends BaseActivity implements View.OnClickListe
 
         eventListener = new PlayerEventListener();
 
-        video_path = Variables.OUTPUT_FILTER_FILE;
+        video_path = Variables.OUTPUT_FILTER_FILE_OTHER;
 
         GPUPlayerView gpuPlayerView = setPlayer(this, Uri.parse(video_path), eventListener, isScaleModeSet);
         ((MovieWrapperView) findViewById(R.id.layout_post_movie_wrapper)).addView(gpuPlayerView);
