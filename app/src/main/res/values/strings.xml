@@ -129,7 +129,7 @@
     <string name="select_2_photo">Select 2 pictures</string>
     <string name="select_4_photo">Select 4 pictures</string>
     <string name="select_6_photo">Select 6 pictures</string>
-    <string name="crop_the_video_message">Please crop the video</string>
+    <string name="crop_the_video_message">Please crop the video. Allowed is 30s</string>
     <string name="crop">Crop</string>
     <string name="fast_motion">Fast motion</string>
     <string name="slow_motion">Slow motion</string>
