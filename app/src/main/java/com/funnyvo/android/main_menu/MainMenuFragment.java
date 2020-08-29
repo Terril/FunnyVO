@@ -34,6 +34,10 @@ import com.funnyvo.android.simpleclasses.Variables;
 import com.funnyvo.android.videorecording.VideoRecorderActivityNew;
 import com.google.android.material.tabs.TabLayout;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+
 public class MainMenuFragment extends RootFragment implements View.OnClickListener {
 
     public static TabLayout tabLayout;
@@ -42,6 +46,12 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
     private Context context;
 
     public MainMenuFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        deleteAllFile();
     }
 
     @Override
@@ -456,5 +466,48 @@ public class MainMenuFragment extends RootFragment implements View.OnClickListen
         chat_activity.setArguments(args);
         transaction.addToBackStack(null);
         transaction.replace(R.id.main_menu_container, chat_activity).commit();
+    }
+
+    private void deleteAllFile() {
+        try {
+            File output = new File(Variables.outputfile);
+            File output2 = new File(Variables.outputfile2);
+            File outputFilterFile = new File(Variables.OUTPUT_FILTER_FILE);
+            File outputFilterFileOther = new File(Variables.OUTPUT_FILTER_FILE_OTHER);
+            File outputFilterMotionFile = new File(Variables.OUTPUT_FILE_MOTION);
+            File outputFilterTrimmedFile = new File(Variables.OUTPUT_FILE_TRIMMED);
+            File outputFilterMessageFile = new File(Variables.OUTPUT_FILE_MESSAGE);
+            File outputGalleryResizeFile = new File(Variables.GALLERY_RESIZE_VIDEO);
+            File selectedAudioFile = new File(Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC);
+            if (output.exists()) {
+                output.delete();
+            }
+            if (output2.exists()) {
+                output2.delete();
+            }
+            if (outputFilterFile.exists()) {
+                outputFilterFile.delete();
+            }
+            if (outputFilterMotionFile.exists()) {
+                outputFilterMotionFile.delete();
+            }
+            if (outputFilterTrimmedFile.exists()) {
+                outputFilterTrimmedFile.delete();
+            }
+            if (outputFilterMessageFile.exists()) {
+                outputFilterMessageFile.delete();
+            }
+            if (outputGalleryResizeFile.exists()) {
+                outputGalleryResizeFile.delete();
+            }
+            if (outputFilterFileOther.exists()) {
+                outputFilterFileOther.delete();
+            }
+            if (selectedAudioFile.exists()) {
+                selectedAudioFile.delete();
+            }
+        } catch (Exception e) {
+
+        }
     }
 }
