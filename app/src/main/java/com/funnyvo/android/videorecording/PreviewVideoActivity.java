@@ -687,6 +687,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 return rc;
             }
 
+            @SuppressLint("WrongThread")
             @Override
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
