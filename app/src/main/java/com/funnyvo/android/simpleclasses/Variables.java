@@ -54,7 +54,7 @@ public class Variables {
     public static String OUTPUT_PHOTO_FILE = APP_FOLDER + "output_photo_video.mp4";
 
     public static String GALLERY_TRIMMED_VIDEO = APP_FOLDER + "gallery_trimed_video.mp4";
-    public static String gallery_resize_video = APP_FOLDER + "gallery_resize_video.mp4";
+    public static String GALLERY_RESIZE_VIDEO = APP_FOLDER + "gallery_resize_video.mp4";
 
     public static String user_id;
     public static String user_name;

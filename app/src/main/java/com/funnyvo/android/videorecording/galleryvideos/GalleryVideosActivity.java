@@ -81,7 +81,7 @@ public class GalleryVideosActivity extends BaseActivity {
                 }
 
                 if (item.video_duration_ms < 31500) {
-                    changeVideoSize(item.video_path, Variables.gallery_resize_video);
+                    changeVideoSize(item.video_path, Variables.GALLERY_RESIZE_VIDEO);
 
                 } else {
                     try {
@@ -272,7 +272,7 @@ public class GalleryVideosActivity extends BaseActivity {
                 out.close();
 
                 Intent intent = new Intent(GalleryVideosActivity.this, PreviewVideoActivity.class);
-                intent.putExtra("video_path", Variables.gallery_resize_video);
+                intent.putExtra("video_path", Variables.GALLERY_RESIZE_VIDEO);
                 intent.putExtra("isFromGallery", true);
                 intent.putExtra("draft_file", src_path);
                 startActivity(intent);
@@ -370,7 +370,7 @@ public class GalleryVideosActivity extends BaseActivity {
                     Toast.makeText(GalleryVideosActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
                 } else {
                     dismissProgressDialog();
-                    changeVideoSize(Variables.GALLERY_TRIMMED_VIDEO, Variables.gallery_resize_video);
+                    changeVideoSize(Variables.GALLERY_TRIMMED_VIDEO, Variables.GALLERY_RESIZE_VIDEO);
                 }
             }
 
@@ -397,7 +397,7 @@ public class GalleryVideosActivity extends BaseActivity {
         File output2 = new File(Variables.outputfile2);
         File outputFilterFile = new File(Variables.OUTPUT_FILTER_FILE);
         File gallery_trim_video = new File(Variables.GALLERY_TRIMMED_VIDEO);
-        File gallery_resize_video = new File(Variables.gallery_resize_video);
+        File gallery_resize_video = new File(Variables.GALLERY_RESIZE_VIDEO);
 
         if (output.exists()) {
             output.delete();

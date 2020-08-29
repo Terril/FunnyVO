@@ -119,7 +119,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
                 val path = FileUtils(this).getPath(uri)
                 if (path != null) {
                     if (getFileDuration(uri)!! < 31500) {
-                        recordingViewModel.changeVideoSize(path, Variables.gallery_resize_video)
+                        recordingViewModel.changeVideoSize(path, Variables.GALLERY_RESIZE_VIDEO)
                     } else {
                         Variables.outputfile2 = path
                         openVideoCropActivity()
@@ -390,7 +390,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
                 it.hasCompleted.filterNull() -> {
                     dismissProgressDialog()
                     val intent = Intent(this, PreviewVideoActivity::class.java)
-                    intent.putExtra("video_path", Variables.gallery_resize_video)
+                    intent.putExtra("video_path", Variables.GALLERY_RESIZE_VIDEO)
                     intent.putExtra("isFromGallery", true)
                     startActivity(intent)
                 }
@@ -611,7 +611,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
                     val path = FileUtils(this).getPath(uri)!!
                     val videoFile = File(path)
                     if (getFileDuration(uri)!! < 31500) {
-                        recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.gallery_resize_video)
+                        recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.GALLERY_RESIZE_VIDEO)
                     } else {
                         try {
                             Variables.outputfile2 = path
@@ -626,7 +626,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
             } else if (requestCode == PreviewVideoActivity.CROP_RESULT) {
                 if (resultCode == RESULT_OK) {
                     val result = data!!.getStringExtra("result")
-                    recordingViewModel.changeVideoSize(result, Variables.gallery_resize_video)
+                    recordingViewModel.changeVideoSize(result, Variables.GALLERY_RESIZE_VIDEO)
                 }
                 if (resultCode == RESULT_CANCELED) {
                     //Write your code if there's no result

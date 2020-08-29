@@ -45,7 +45,7 @@ public class MainMenuActivity extends BaseActivity {
         Variables.user_name = Variables.sharedPreferences.getString(Variables.u_name, "");
         Variables.user_pic = Variables.sharedPreferences.getString(Variables.u_pic, "");
 
-
+        deleteAllFile();
         token = FirebaseInstanceId.getInstance().getToken();
         if (token == null || (token.equals("") || token.equals("null")))
             token = Variables.sharedPreferences.getString(Variables.device_token, "null");
@@ -60,11 +60,7 @@ public class MainMenuActivity extends BaseActivity {
         Functions.makeDirectory(Variables.APP_FOLDER);
         Functions.makeDirectory(Variables.draft_app_folder);
 
-        deleteAllFile();
-
     }
-
-
 
 
     @Override
@@ -149,6 +145,7 @@ public class MainMenuActivity extends BaseActivity {
             File outputFilterMotionFile = new File(Variables.OUTPUT_FILE_MOTION);
             File outputFilterTrimmedFile = new File(Variables.OUTPUT_FILE_TRIMMED);
             File outputFilterMessageFile = new File(Variables.OUTPUT_FILE_MESSAGE);
+            File outputGalleryResizeFile = new File(Variables.GALLERY_RESIZE_VIDEO);
             File selectedAudioFile = new File(Variables.APP_FOLDER + Variables.SELECTED_AUDIO_AAC);
             if (output.exists()) {
                 output.delete();
@@ -167,6 +164,9 @@ public class MainMenuActivity extends BaseActivity {
             }
             if (outputFilterMessageFile.exists()) {
                 outputFilterMessageFile.delete();
+            }
+            if (outputGalleryResizeFile.exists()) {
+                outputGalleryResizeFile.delete();
             }
             if (outputFilterFileOther.exists()) {
                 outputFilterFileOther.delete();
