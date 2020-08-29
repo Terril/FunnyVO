@@ -693,17 +693,11 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
                 super.onPostExecute(o);
                 int rc = (int) o;
                 if (rc == RETURN_CODE_SUCCESS) {
-                    Variables.outputfile2 = Variables.OUTPUT_FILTER_FILE_OTHER;
-                    if (getFileDuration(Uri.parse(Variables.outputfile2)) > 30000) {
-                        Variables.GALLERY_TRIMMED_VIDEO = APP_FOLDER + Functions.getRandomString() + "_gallery_trimed_video.mp4";
-                        TrimVideoUtils.startTrim(PreviewVideoActivity.this, Uri.fromFile(new File(Variables.outputfile2)), new File(Variables.GALLERY_TRIMMED_VIDEO),
-                                1000, 30000, 30000, PreviewVideoActivity.this);
-                    } else {
-                        Variables.GALLERY_TRIMMED_VIDEO = Variables.OUTPUT_FILTER_FILE_OTHER;
-                        dismissProgressDialog();
-                        gotoPostScreen();
-                    }
-                    updateMediaSource(Variables.outputfile2);
+                    Variables.GALLERY_TRIMMED_VIDEO = Variables.OUTPUT_FILTER_FILE_OTHER;
+                    dismissProgressDialog();
+                    gotoPostScreen();
+
+                    updateMediaSource(Variables.OUTPUT_FILTER_FILE_OTHER);
                 } else if (rc == RETURN_CODE_CANCEL) {
                     dismissProgressDialog();
                 } else {
@@ -845,18 +839,6 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     public void onCompletion(boolean state, String draftFile) {
         this.draftFile = draftFile;
         finalTouchesToVideo();
-    }
-
-    private Long getFileDuration(Uri uri) {
-        try {
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(this, uri);
-            String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long fileDuration = Long.parseLong(durationStr);
-            return fileDuration;
-        } catch (Exception e) {
-        }
-        return 0l;
     }
 
     /**

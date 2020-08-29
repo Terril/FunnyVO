@@ -1,6 +1,7 @@
 package com.funnyvo.android.base;
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -126,6 +127,17 @@ abstract class BaseActivity : AppCompatActivity() {
                 .createMediaSource(Uri.parse(path))
         if (player != null)
             player.prepare(videoSource)
+    }
+
+    fun getFileDuration(uri: Uri): Long? {
+        try {
+            val mmr = MediaMetadataRetriever()
+            mmr.setDataSource(this, uri)
+            val durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            return durationStr.toLong()
+        } catch (e: java.lang.Exception) {
+        }
+        return 0L
     }
 
     private val disconnectHandler: Handler = Handler(Handler.Callback {

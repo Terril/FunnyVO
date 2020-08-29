@@ -80,7 +80,7 @@ public class GalleryVideosActivity extends BaseActivity {
 
                 }
 
-                if (item.video_duration_ms < 19500) {
+                if (item.video_duration_ms < 31500) {
                     changeVideoSize(item.video_path, Variables.gallery_resize_video);
 
                 } else {
@@ -180,24 +180,6 @@ public class GalleryVideosActivity extends BaseActivity {
 
 
     }
-
-
-    // get the audio file duration that is store in our directory
-    public long getFileDuration(Uri uri) {
-        try {
-
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(this, uri);
-            String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            final int file_duration = Integer.parseInt(durationStr);
-
-            return file_duration;
-        } catch (Exception e) {
-
-        }
-        return 0;
-    }
-
 
     public String changeSecToTime(long file_duration) {
         long second = (file_duration / 1000) % 60;

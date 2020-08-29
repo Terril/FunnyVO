@@ -49,13 +49,11 @@ import com.funnyvo.android.videorecording.phototemplate.PhotoTemplateActivity
 import com.funnyvo.android.videorecording.stickers.ShowStickerFragment
 import com.funnyvo.android.videorecording.stickers.StickerCallBack
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
-import com.lb.video_trimmer_library.interfaces.VideoTrimmingListener
 import com.otaliastudios.cameraview.controls.Flash
 import com.otaliastudios.cameraview.filter.Filters
 import com.otaliastudios.cameraview.overlay.OverlayLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_video_recoder_new.*
-import kotlinx.android.synthetic.main.activity_video_recoder_new.view.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -120,12 +118,22 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
             try {
                 val path = FileUtils(this).getPath(uri)
                 if (path != null) {
-                    recordingViewModel.changeVideoSize(path, Variables.gallery_resize_video)
+                    if (getFileDuration(uri)!! < 31500) {
+                        recordingViewModel.changeVideoSize(path, Variables.gallery_resize_video)
+                    } else {
+                        Variables.outputfile2 = path
+                        openVideoCropActivity()
+                    }
                 }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun openVideoCropActivity() {
+        val intent = Intent(this, VideoCropActivity::class.java)
+        startActivityForResult(intent, PreviewVideoActivity.CROP_RESULT)
     }
 
     private fun onSharedIntent(): Uri? {
@@ -602,9 +610,26 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
                 try {
                     val path = FileUtils(this).getPath(uri)!!
                     val videoFile = File(path)
-                    recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.gallery_resize_video)
+                    if (getFileDuration(uri)!! < 31500) {
+                        recordingViewModel.changeVideoSize(videoFile.absolutePath, Variables.gallery_resize_video)
+                    } else {
+                        try {
+                            Variables.outputfile2 = path
+                            openVideoCropActivity()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
+                }
+            } else if (requestCode == PreviewVideoActivity.CROP_RESULT) {
+                if (resultCode == RESULT_OK) {
+                    val result = data!!.getStringExtra("result")
+                    recordingViewModel.changeVideoSize(result, Variables.gallery_resize_video)
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    //Write your code if there's no result
                 }
             }
         }
