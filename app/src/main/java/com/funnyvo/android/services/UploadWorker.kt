@@ -48,11 +48,13 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
     }
 
     private fun uploadFunnyVOVideo(uri: Uri, uriGif: Uri, desc: String) {
-        val bmThumbnail: Bitmap = ThumbnailUtils.createVideoThumbnail(uri.path,
+        val bmThumbnail: Bitmap = uri.path?.let {
+            ThumbnailUtils.createVideoThumbnail(it,
                 MediaStore.Video.Thumbnails.FULL_SCREEN_KIND)
+        }!!
         val bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (bmThumbnail.width * 0.4).toInt(), (bmThumbnail.height * 0.4).toInt(), true)
 
-        Log.d(APP_NAME, "Video path :" + uri.path)
+      //  Log.d(APP_NAME, "Video path :" + uri.path)
         val videoFile = File(uri.path)
         val gifFile = File(uriGif.path)
         val thumbNail: File = saveBitmapInFile(bmThumbnailResized)
@@ -75,14 +77,14 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         fileRequest["thum"] = thumbNail
         fileRequest["gif"] = gifFile
         val multipartRequest = MultipartRequest(Variables.UPLOAD_VIDEO, Response.ErrorListener { error ->
-            Log.e(APP_NAME, "Video Upload Error : " + error.message)
+          //  Log.e(APP_NAME, "Video Upload Error : " + error.message)
             videoFile.deleteOnExit()
             gifFile.deleteOnExit()
             thumbNail.deleteOnExit()
 
             return@ErrorListener
         }, Response.Listener<String> { response ->
-            Log.e(APP_NAME, "Video Upload Success : $response")
+          //  Log.e(APP_NAME, "Video Upload Success : $response")
             videoFile.deleteOnExit()
             gifFile.deleteOnExit()
             thumbNail.deleteOnExit()

@@ -134,7 +134,7 @@ abstract class BaseActivity : AppCompatActivity() {
             val mmr = MediaMetadataRetriever()
             mmr.setDataSource(this, uri)
             val durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            return durationStr.toLong()
+            return durationStr?.toLong()
         } catch (e: java.lang.Exception) {
         }
         return 0L
@@ -169,10 +169,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun stopDisconnectTimer() {
         disconnectHandler.removeCallbacks(disconnectCallback)
-    }
-
-    override fun onUserInteraction() {
-        resetDisconnectTimer()
     }
 
     override fun onResume() {

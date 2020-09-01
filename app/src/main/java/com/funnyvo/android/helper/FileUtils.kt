@@ -238,7 +238,7 @@ open class FileUtils(context: Context?) {
             Log.e("File Path", "Path " + file.path)
             Log.e("File Size", "Size " + file.length())
         } catch (e: Exception) {
-            Log.e("Exception", e.message)
+            e.message?.let { Log.e("Exception", it) }
         }
         return file.path
     }
@@ -287,7 +287,7 @@ open class FileUtils(context: Context?) {
             inputStream.close()
             outputStream.close()
         } catch (e: Exception) {
-            Log.e("Exception", e.message)
+            e.message?.let { Log.e("Exception", it) }
         }
         return output.path
     }

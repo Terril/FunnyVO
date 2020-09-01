@@ -96,8 +96,8 @@ class PostVideoActivity : BaseActivity(), View.OnClickListener {
         var i = 1000000
         while (i < 2000 * 1000) {
             val bitmap = mmRetriever.getFrameAtTime(i.toLong(), MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-            val resized = Bitmap.createScaledBitmap(bitmap, (bitmap.width * 0.4).toInt(), (bitmap.height * 0.4).toInt(), true)
-            frames.add(resized)
+            val resized = bitmap?.let { Bitmap.createScaledBitmap(it, (bitmap.width * 0.4).toInt(), (bitmap.height * 0.4).toInt(), true) }
+            resized?.let { frames.add(it) }
             i += 100000
         }
 

@@ -286,10 +286,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
             val mmr = MediaMetadataRetriever()
             mmr.setDataSource(this, Uri.fromFile(file))
             val durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            val fileDuration = durationStr.toInt()
-            if (fileDuration < Variables.max_recording_duration) {
-                Variables.recording_duration = fileDuration
-                initializeVideoProgress()
+            val fileDuration = durationStr?.toInt()
+            if (fileDuration != null) {
+                if (fileDuration < Variables.max_recording_duration) {
+                    Variables.recording_duration = fileDuration
+                    initializeVideoProgress()
+                }
             }
         }
     }
