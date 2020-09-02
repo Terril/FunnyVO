@@ -138,6 +138,9 @@
     <string name="opacity">Opacity</string>
     <string name="brush">Brush</string>
     <string name="undo">Undo</string>
+    <string name="stickers">Stickers</string>
+    <string name="gallery">Gallery</string>
+    <string name="collage">Collage</string>
 
     <string-array name="photo_editor_emoji">
 

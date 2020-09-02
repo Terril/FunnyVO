@@ -41,8 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom|end"
-                android:scaleType="fitEnd"
                 android:adjustViewBounds="true"
+                android:scaleType="fitEnd"
                 app:layout_drawOnPreview="true"
                 app:layout_drawOnVideoSnapshot="true" />
         </com.otaliastudios.cameraview.CameraView>
@@ -270,12 +270,12 @@
                 android:paddingStart="@dimen/margin_5"
                 android:paddingEnd="@dimen/margin_5"
                 app:checkedButton="@id/btn1x"
-                app:singleSelection="true"
-                app:selectionRequired="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn0.5x"
@@ -382,8 +382,21 @@
                 android:layout_height="@dimen/margin_40"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/btnRecord"
-                android:visibility="invisible"
-                android:layout_toEndOf="@+id/imvGallery" />
+                android:layout_toEndOf="@+id/imvGallery"
+                android:visibility="visible" />
+
+            <com.funnyvo.android.customview.FunnyVOTextView
+                android:id="@+id/txtStickers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imvStickers"
+                android:layout_alignStart="@+id/imvStickers"
+                android:layout_alignEnd="@+id/imvStickers"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_2"
+                android:text="@string/stickers"
+                android:textColor="@color/palette_milk"
+                android:textSize="@dimen/text_size_9" />
 
             <ImageView
                 android:id="@+id/imvGallery"
@@ -392,14 +405,37 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_gallery" />
 
+            <com.funnyvo.android.customview.FunnyVOTextView
+                android:id="@+id/txtGallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imvGallery"
+                android:layout_alignStart="@+id/imvGallery"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_2"
+                android:text="@string/gallery"
+                android:textColor="@color/palette_milk"
+                android:textSize="@dimen/text_size_9" />
+
             <ImageView
                 android:id="@+id/imvCollage"
                 android:layout_width="@dimen/margin_40"
                 android:layout_height="@dimen/margin_40"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_collage"
-                 />
+                android:src="@drawable/ic_collage" />
+
+            <com.funnyvo.android.customview.FunnyVOTextView
+                android:id="@+id/txtCollage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imvCollage"
+                android:layout_alignStart="@+id/imvCollage"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_2"
+                android:text="@string/collage"
+                android:textColor="@color/palette_milk"
+                android:textSize="@dimen/text_size_9" />
 
             <ImageButton
                 android:id="@+id/btnDone"

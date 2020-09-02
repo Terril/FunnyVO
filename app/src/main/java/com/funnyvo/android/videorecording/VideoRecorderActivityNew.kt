@@ -245,6 +245,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
             videoProgress.resume()
             btnDone.isEnabled = false
             imvStickers.visibility = INVISIBLE
+            txtStickers.visibility = INVISIBLE
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
             //  btnAddMusicRecord.isClickable = false
@@ -535,8 +536,10 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
     override fun onClick(v: View?) {
         when (v) {
             btnRecord -> {
+                txtCollage.visibility = GONE
                 imvCollage.visibility = GONE
                 imvGallery.visibility = GONE
+                txtGallery.visibility = GONE
                 startOrStopRecording()
             }
             imvGallery -> {
