@@ -73,7 +73,7 @@ class SettingFragment : RootFragment(), View.OnClickListener {
 
     private fun openRequestVerification() {
         val requestVerificationFragment = RequestVerificationFragment()
-        val transaction = activity!!.supportFragmentManager.beginTransaction()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right)
         transaction.addToBackStack(null)
         transaction.replace(R.id.settingsFrameLayout, requestVerificationFragment).commit()
@@ -81,7 +81,7 @@ class SettingFragment : RootFragment(), View.OnClickListener {
 
     private fun openPrivacyUrl() {
         val webviewFragment = WebviewFragment()
-        val transaction = activity!!.supportFragmentManager.beginTransaction()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left, R.anim.in_from_left, R.anim.out_to_right)
         val bundle = Bundle()
         bundle.putString("url", Variables.privacy_policy)
@@ -101,19 +101,21 @@ class SettingFragment : RootFragment(), View.OnClickListener {
         }
         ApiRequest.callApi(activity, Variables.LOGOUT, parameters) { response ->
             try {
-                val jsonObject = JSONObject(response)
-                val code = jsonObject.optString("code")
-                if (code == Variables.API_SUCCESS_CODE) {
-                    val editor = Variables.sharedPreferences.edit()
-                    editor.putString(Variables.u_id, "").clear()
-                    editor.putString(Variables.u_name, "").clear()
-                    editor.putString(Variables.u_pic, "").clear()
-                    editor.putBoolean(Variables.islogin, false).clear()
-                    editor.apply()
-                    val intent = Intent(activity, SplashActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(intent)
-                    activity!!.finish()
+                if(response.isNotEmpty()) {
+                    val jsonObject = JSONObject(response)
+                    val code = jsonObject.optString("code")
+                    if (code == Variables.API_SUCCESS_CODE) {
+                        val editor = Variables.sharedPreferences.edit()
+                        editor.putString(Variables.u_id, "").clear()
+                        editor.putString(Variables.u_name, "").clear()
+                        editor.putString(Variables.u_pic, "").clear()
+                        editor.putBoolean(Variables.islogin, false).clear()
+                        editor.apply()
+                        val intent = Intent(activity, SplashActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()

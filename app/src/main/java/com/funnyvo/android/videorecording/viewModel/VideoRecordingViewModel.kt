@@ -121,10 +121,12 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             ApiRequest.callApi(context, GET_VIDEO_RECORDING_FILTERS, null) { response ->
                 run {
-                    val jsonObject = JSONObject(response)
-                    val code = jsonObject.optString("code")
-                    if (code == API_SUCCESS_CODE) {
-                        videoFiltersResponseEvent.value = fromJson(jsonObject.toString())
+                    if(response.isNotEmpty()) {
+                        val jsonObject = JSONObject(response)
+                        val code = jsonObject.optString("code")
+                        if (code == API_SUCCESS_CODE) {
+                            videoFiltersResponseEvent.value = fromJson(jsonObject.toString())
+                        }
                     }
                 }
             }
