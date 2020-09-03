@@ -672,7 +672,7 @@ public class PreviewVideoActivity extends BaseActivity implements View.OnClickLi
     private void copyVideoUsingFfmpeg(String imagePath) {
         Variables.OUTPUT_FILTER_FILE_OTHER = APP_FOLDER + Functions.getRandomString() + ".mp4";
         final String[] complexCommand = new String[]{
-                "-y", "-i", Variables.outputfile2, "-i", imagePath, "-filter_complex", "[1:v]scale=" + DRAW_CANVASW + ":" + DRAW_CANVASH + "[ovrl];[0:v][ovrl]overlay=x=0:y=0", "-c:v", "libx264", "-preset", "ultrafast", Variables.OUTPUT_FILTER_FILE_OTHER
+                "-y", "-i", Variables.outputfile2, "-i", imagePath, "-filter_complex", "[1:v]scale=" + DRAW_CANVASW + ":" + DRAW_CANVASH + "[ovrl];[0:v][ovrl]overlay=x=0:y=0", Variables.OUTPUT_FILTER_FILE_OTHER
         };
         new AsyncTask<Object, Object, Object>() {
             @Override

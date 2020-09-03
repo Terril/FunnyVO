@@ -42,12 +42,12 @@ import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.soundlists.SoundListMainActivity
-import com.funnyvo.android.videorecording.data.RecordingFilters
+//import com.funnyvo.android.videorecording.data.RecordingFilters
 import com.funnyvo.android.videorecording.merge.MergeVideoAudio
 import com.funnyvo.android.videorecording.merge.MergeVideoAudioCallBack
 import com.funnyvo.android.videorecording.phototemplate.PhotoTemplateActivity
 import com.funnyvo.android.videorecording.stickers.ShowStickerFragment
-import com.funnyvo.android.videorecording.stickers.StickerCallBack
+// import com.funnyvo.android.videorecording.stickers.StickerCallBack
 import com.funnyvo.android.videorecording.viewModel.VideoRecordingViewModel
 import com.otaliastudios.cameraview.controls.Flash
 import com.otaliastudios.cameraview.filter.Filters
@@ -60,8 +60,8 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener, MergeVideoAudioCallBack, StickerCallBack {
-    private var filters: List<RecordingFilters> = mutableListOf()
+class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener, MergeVideoAudioCallBack {
+  //  private var filters: List<RecordingFilters> = mutableListOf()
     private var fileName: String = ""
     private var speedValue: String = "1.0"
     private val recordingViewModel: VideoRecordingViewModel by viewModels()
@@ -95,7 +95,7 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
         loadFilters()
         observeLiveEvents()
         observeVideoRecordingEvent()
-        recordingViewModel.requestForVideoFilters(this)
+     //   recordingViewModel.requestForVideoFilters(this)
 
         if (intent.hasExtra("sound_name")) {
             btnAddMusicRecord.text = intent.getStringExtra("sound_name")
@@ -170,8 +170,8 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
         btn1x.setOnClickListener(this)
         btn1_5x.setOnClickListener(this)
         btn2x.setOnClickListener(this)
-        imvStickers.setOnClickListener(this)
-        imvCollage.setOnClickListener(this)
+     //   imvStickers.setOnClickListener(this)
+     //   imvCollage.setOnClickListener(this)
         sliderZoom.addOnChangeListener { slider, value, fromUser ->
             cameraRecording.zoom = value
         }
@@ -244,8 +244,8 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
             if (audio != null) audio?.start()
             videoProgress.resume()
             btnDone.isEnabled = false
-            imvStickers.visibility = INVISIBLE
-            txtStickers.visibility = INVISIBLE
+         //   imvStickers.visibility = INVISIBLE
+        //    txtStickers.visibility = INVISIBLE
             btnRecord.setImageDrawable(resources.getDrawable(R.drawable.ic_record_video_post))
             slideCameraOptions()
             //  btnAddMusicRecord.isClickable = false
@@ -361,27 +361,27 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
             dismissProgressDialog()
         }
 
-        recordingViewModel.videoFiltersResponseEvent.observe(this) {
-            if (it.msg.isNotEmpty()) {
-                imvStickers.visibility = VISIBLE
-                filters = it.msg
-                if (filters[0].isGif == "1") {
-                    Glide.with(this)
-                            .asGif()
-                            .load(filters[0].main_image)
-                            .centerCrop()
-                            .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
-                            .into(imvStickers)
-                } else {
-                    Glide.with(this)
-                            .load(filters[0].main_image)
-                            .centerCrop()
-                            .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
-                            .into(imvStickers)
-                }
-
-            }
-        }
+//        recordingViewModel.videoFiltersResponseEvent.observe(this) {
+//            if (it.msg.isNotEmpty()) {
+//                imvStickers.visibility = VISIBLE
+//                filters = it.msg
+//                if (filters[0].isGif == "1") {
+//                    Glide.with(this)
+//                            .asGif()
+//                            .load(filters[0].main_image)
+//                            .centerCrop()
+//                            .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
+//                            .into(imvStickers)
+//                } else {
+//                    Glide.with(this)
+//                            .load(filters[0].main_image)
+//                            .centerCrop()
+//                            .apply(RequestOptions().override(40, 40).transform(CenterCrop(), RoundedCorners(5)))
+//                            .into(imvStickers)
+//                }
+//
+//            }
+//        }
     }
 
     private fun observeVideoRecordingEvent() {
@@ -536,8 +536,8 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
     override fun onClick(v: View?) {
         when (v) {
             btnRecord -> {
-                txtCollage.visibility = GONE
-                imvCollage.visibility = GONE
+                //txtCollage.visibility = GONE
+               // imvCollage.visibility = GONE
                 imvGallery.visibility = GONE
                 txtGallery.visibility = GONE
                 startOrStopRecording()
@@ -577,9 +577,9 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
                 recordingViewModel.appendTheContent(this, arrayOfVideoPaths, outputFilePath)
             }
             btnRecodingSpeed -> toggleSpeedView()
-            imvStickers -> showStickers()
+           // imvStickers -> showStickers()
             btnFlashCamera -> setFlash()
-            imvCollage -> loadTemplates()
+            //imvCollage -> loadTemplates()
         }
     }
 
@@ -592,12 +592,12 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
         cameraRecording.flash = Flash.AUTO
     }
 
-    private fun showStickers() {
-        val showStickerFragment: ShowStickerFragment = ShowStickerFragment.instance
-        showStickerFragment.set(filters, this)
-        showStickerFragment.show(supportFragmentManager,
-                "show_stickers_dialog_fragment")
-    }
+//    private fun showStickers() {
+//        val showStickerFragment: ShowStickerFragment = ShowStickerFragment.instance
+//        showStickerFragment.set(filters, this)
+//        showStickerFragment.show(supportFragmentManager,
+//                "show_stickers_dialog_fragment")
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -706,18 +706,18 @@ class VideoRecorderActivityNew : BaseActivity(), OnClickListener, OnDragListener
         startActivity(intent)
     }
 
-    override fun onStickerClicked(filter: RecordingFilters) {
-        if (filter.isGif == "1") {
-            Glide.with(this)
-                    .asGif()
-                    .load(filter.main_image)
-                    .centerCrop()
-                    .into(imvFilter)
-        } else {
-            Glide.with(this)
-                    .load(filter.main_image)
-                    .into(imvFilter)
-        }
-    }
+//    override fun onStickerClicked(filter: RecordingFilters) {
+//        if (filter.isGif == "1") {
+//            Glide.with(this)
+//                    .asGif()
+//                    .load(filter.main_image)
+//                    .centerCrop()
+//                    .into(imvFilter)
+//        } else {
+//            Glide.with(this)
+//                    .load(filter.main_image)
+//                    .into(imvFilter)
+//        }
+//    }
 
 }

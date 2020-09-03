@@ -122,20 +122,20 @@ class PhotoTemplateActivity : BaseActivity() {
             }
         }
 
-        FFmpeg.executeAsync(command) { l: Long, rc: Int ->
-            if (rc == Config.RETURN_CODE_SUCCESS) {
-                dismissProgressDialog()
-                val intent = Intent(this, PreviewVideoActivity::class.java)
-                intent.putExtra("video_path", OUTPUT_PHOTO_FILE)
-                intent.putExtra("isFromGallery", true)
-                intent.putExtra("isScaleMode", false)
-                startActivity(intent)
-            } else if (rc == Config.RETURN_CODE_CANCEL) {
-                dismissProgressDialog()
-            } else {
-                dismissProgressDialog()
-            }
-        }
+//        FFmpeg.executeAsync(command) { l: Long, rc: Int ->
+//            if (rc == Config.RETURN_CODE_SUCCESS) {
+//                dismissProgressDialog()
+//                val intent = Intent(this, PreviewVideoActivity::class.java)
+//                intent.putExtra("video_path", OUTPUT_PHOTO_FILE)
+//                intent.putExtra("isFromGallery", true)
+//                intent.putExtra("isScaleMode", false)
+//                startActivity(intent)
+//            } else if (rc == Config.RETURN_CODE_CANCEL) {
+//                dismissProgressDialog()
+//            } else {
+//                dismissProgressDialog()
+//            }
+//        }
     }
 
     override fun onStop() {

@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.funnyvo.android.R
-import com.funnyvo.android.videorecording.data.RecordingFilters
-import com.funnyvo.android.videorecording.stickers.StickerAdapter.OnItemClickListener
+// import com.funnyvo.android.videorecording.data.RecordingFilters
+// import com.funnyvo.android.videorecording.stickers.StickerAdapter.OnItemClickListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_dialog_stickers_bottom_sheet.*
 
 class ShowStickerFragment : BottomSheetDialogFragment() {
 
-    private var recordingFilters: List<RecordingFilters> = mutableListOf()
-    private lateinit var callBack: StickerCallBack
+   // private var recordingFilters: List<RecordingFilters> = mutableListOf()
+//    private lateinit var callBack: StickerCallBack
 
     private object HOLDER {
         val INSTANCE = ShowStickerFragment()
@@ -33,21 +33,21 @@ class ShowStickerFragment : BottomSheetDialogFragment() {
         val layoutManager = GridLayoutManager(context, 6)
         recyclerViewStickers.layoutManager = layoutManager
         recyclerViewStickers.setHasFixedSize(false)
-        val adapter = StickerAdapter(recordingFilters, object : OnItemClickListener {
-            override fun onItemClick(item: RecordingFilters?) {
-                if (item != null) {
-                    callBack.onStickerClicked(item)
-                }
-                dismissAllowingStateLoss()
-            }
-        })
-        recyclerViewStickers.adapter = adapter
+//        val adapter = StickerAdapter(recordingFilters, object : OnItemClickListener {
+//            override fun onItemClick(item: RecordingFilters?) {
+//                if (item != null) {
+//                    callBack.onStickerClicked(item)
+//                }
+//                dismissAllowingStateLoss()
+//            }
+//        })
+//        recyclerViewStickers.adapter = adapter
     }
 
-    fun set(filters: List<RecordingFilters>, stickerCallBack: StickerCallBack) {
-        if (filters.isNotEmpty()) {
-            recordingFilters = filters
-        }
-        callBack = stickerCallBack
-    }
+//    fun set(filters: List<RecordingFilters>, stickerCallBack: StickerCallBack) {
+//        if (filters.isNotEmpty()) {
+//            recordingFilters = filters
+//        }
+//        callBack = stickerCallBack
+//    }
 }

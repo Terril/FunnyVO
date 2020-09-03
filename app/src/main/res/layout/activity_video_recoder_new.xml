@@ -376,27 +376,27 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_record_video_pre" />
 
-            <ImageView
-                android:id="@+id/imvStickers"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/btnRecord"
-                android:layout_toEndOf="@+id/imvGallery"
-                android:visibility="visible" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imvStickers"-->
+<!--                android:layout_width="@dimen/margin_40"-->
+<!--                android:layout_height="@dimen/margin_40"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_toStartOf="@+id/btnRecord"-->
+<!--                android:layout_toEndOf="@+id/imvGallery"-->
+<!--                android:visibility="visible" />-->
 
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:id="@+id/txtStickers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imvStickers"
-                android:layout_alignStart="@+id/imvStickers"
-                android:layout_alignEnd="@+id/imvStickers"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/stickers"
-                android:textColor="@color/palette_milk"
-                android:textSize="@dimen/text_size_9" />
+<!--            <com.funnyvo.android.customview.FunnyVOTextView-->
+<!--                android:id="@+id/txtStickers"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/imvStickers"-->
+<!--                android:layout_alignStart="@+id/imvStickers"-->
+<!--                android:layout_alignEnd="@+id/imvStickers"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginTop="@dimen/margin_2"-->
+<!--                android:text="@string/stickers"-->
+<!--                android:textColor="@color/palette_milk"-->
+<!--                android:textSize="@dimen/text_size_9" />-->
 
             <ImageView
                 android:id="@+id/imvGallery"
@@ -417,25 +417,25 @@
                 android:textColor="@color/palette_milk"
                 android:textSize="@dimen/text_size_9" />
 
-            <ImageView
-                android:id="@+id/imvCollage"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_collage" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imvCollage"-->
+<!--                android:layout_width="@dimen/margin_40"-->
+<!--                android:layout_height="@dimen/margin_40"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:src="@drawable/ic_collage" />-->
 
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:id="@+id/txtCollage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imvCollage"
-                android:layout_alignStart="@+id/imvCollage"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/collage"
-                android:textColor="@color/palette_milk"
-                android:textSize="@dimen/text_size_9" />
+<!--            <com.funnyvo.android.customview.FunnyVOTextView-->
+<!--                android:id="@+id/txtCollage"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/imvCollage"-->
+<!--                android:layout_alignStart="@+id/imvCollage"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginTop="@dimen/margin_2"-->
+<!--                android:text="@string/collage"-->
+<!--                android:textColor="@color/palette_milk"-->
+<!--                android:textSize="@dimen/text_size_9" />-->
 
             <ImageButton
                 android:id="@+id/btnDone"
