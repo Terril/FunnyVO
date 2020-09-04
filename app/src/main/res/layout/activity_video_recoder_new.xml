@@ -1,490 +1,497 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <RelativeLayout
+    <com.otaliastudios.cameraview.CameraView
+        android:id="@+id/cameraRecording"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_25"
+        android:adjustViewBounds="true"
+        app:cameraAudio="on"
+        app:cameraFacing="front"
+        app:cameraFlash="off"
+        app:cameraMode="video"
+        app:cameraUseDeviceOrientation="false"
+        app:cameraVideoCodec="h264"
+        app:cameraWhiteBalance="auto">
 
-        <com.otaliastudios.cameraview.CameraView
-            android:id="@+id/cameraRecording"
+        <!--            <com.funnyvo.android.customview.FunnyVOEditTextView-->
+        <!--                android:id="@+id/edtTxtVideoMessage"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:background="@android:color/transparent"-->
+        <!--                android:focusable="true"-->
+        <!--                android:gravity="center"-->
+        <!--                android:imeOptions="actionDone"-->
+        <!--                android:inputType="textCapSentences|textMultiLine"-->
+        <!--                android:textColor="@color/colorAccent"-->
+        <!--                android:textSize="@dimen/text_size_35"-->
+        <!--                android:visibility="gone" />-->
+
+        <ImageView
+            android:id="@+id/imvFilter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="bottom|end"
             android:adjustViewBounds="true"
-            app:cameraAudio="on"
-            app:cameraFacing="front"
-            app:cameraFlash="off"
-            app:cameraMode="video"
-            app:cameraUseDeviceOrientation="false"
-            app:cameraVideoCodec="h264"
-            app:cameraWhiteBalance="auto">
-
-            <!--            <com.funnyvo.android.customview.FunnyVOEditTextView-->
-            <!--                android:id="@+id/edtTxtVideoMessage"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_centerInParent="true"-->
-            <!--                android:background="@android:color/transparent"-->
-            <!--                android:focusable="true"-->
-            <!--                android:gravity="center"-->
-            <!--                android:imeOptions="actionDone"-->
-            <!--                android:inputType="textCapSentences|textMultiLine"-->
-            <!--                android:textColor="@color/colorAccent"-->
-            <!--                android:textSize="@dimen/text_size_35"-->
-            <!--                android:visibility="gone" />-->
-
-            <ImageView
-                android:id="@+id/imvFilter"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom|end"
-                android:adjustViewBounds="true"
-                android:scaleType="fitEnd"
-                app:layout_drawOnPreview="true"
-                app:layout_drawOnVideoSnapshot="true" />
-        </com.otaliastudios.cameraview.CameraView>
+            android:scaleType="fitEnd"
+            app:layout_drawOnPreview="true"
+            app:layout_drawOnVideoSnapshot="true" />
+    </com.otaliastudios.cameraview.CameraView>
 
 
-        <RelativeLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_margin="5dp">
+
+        <com.funnyvo.android.segmentprogress.SegmentedProgressBar
+            android:id="@+id/videoProgress"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_margin="5dp">
-
-            <com.funnyvo.android.segmentprogress.SegmentedProgressBar
-                android:id="@+id/videoProgress"
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:layout_centerVertical="true"
-                android:background="@color/fifty_transparent_black" />
-        </RelativeLayout>
-
-
-        <ImageButton
-            android:id="@+id/btnCloseRecordVideo"
-            android:layout_width="@dimen/margin_32"
-            android:layout_height="@dimen/margin_32"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="@dimen/margin_40"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_close"
-            android:tint="@color/palette_cheddar" />
-
-        <Button
-            android:id="@+id/btnAddMusicRecord"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/margin_5"
-            android:layout_marginTop="@dimen/margin_35"
-            android:layout_marginEnd="@dimen/margin_50"
-            android:layout_toEndOf="@+id/btnCloseRecordVideo"
-            android:scaleType="fitCenter"
-            android:text="@string/add_sound"
-            android:textColor="@color/palette_cheddar"
-            android:tint="@color/palette_cheddar"
-            app:icon="@drawable/ic_music"
-            app:iconGravity="textStart"
-            app:iconTint="@color/palette_cheddar" />
-
-        <LinearLayout
-            android:id="@+id/layoutCameraOptions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/margin_70"
-            android:layout_marginRight="@dimen/margin_10"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageButton
-                android:id="@+id/btnRotateCamera"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_20"
-                android:background="@color/transparent"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_rotate_cam" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/rotate_camera"
-                android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_9" />
-
-            <ImageButton
-                android:id="@+id/btnFlashCamera"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_10"
-                android:background="@color/transparent"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_flash_on" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/switch_flash"
-                android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_9" />
-
-            <ImageButton
-                android:id="@+id/btnTimer"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_10"
-                android:background="@color/transparent"
-                android:padding="@dimen/margin_5"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_timer" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/recording_timer"
-                android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_9" />
-
-            <!--            <ImageButton-->
-            <!--                android:id="@+id/btnTextEditor"-->
-            <!--                android:layout_width="@dimen/margin_40"-->
-            <!--                android:layout_height="@dimen/margin_40"-->
-            <!--                android:layout_marginTop="@dimen/margin_10"-->
-            <!--                android:layout_marginEnd="@dimen/margin_20"-->
-            <!--                android:background="@color/transparent"-->
-            <!--                android:padding="@dimen/margin_5"-->
-            <!--                android:src="@drawable/ic_text_fields" />-->
-
-            <ImageButton
-                android:id="@+id/btnRecodingSpeed"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_10"
-                android:background="@color/transparent"
-                android:padding="@dimen/margin_5"
-                android:src="@drawable/ic_speed_meter" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/recording_speed"
-                android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_9" />
-            <!--            <ImageButton-->
-            <!--                android:id="@+id/btnFastMotion"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="@dimen/margin_10"-->
-            <!--                android:layout_marginEnd="@dimen/margin_20"-->
-            <!--                android:background="@color/transparent"-->
-            <!--                android:padding="@dimen/margin_5"-->
-            <!--                android:src="@drawable/ic_fast_play" />-->
-
-            <ImageButton
-                android:id="@+id/btnFilter"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_10"
-                android:background="@color/transparent"
-                android:padding="@dimen/margin_5"
-                android:src="@drawable/ic_filter" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/filters"
-                android:textColor="@color/palette_cheddar"
-                android:textSize="@dimen/text_size_9" />
-
-            <ImageButton
-                android:id="@+id/btnCrop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10"
-                android:background="@color/transparent"
-                android:padding="@dimen/margin_5"
-                android:src="@drawable/ic_scissors"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recylerviewFilter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:paddingBottom="@dimen/margin_20"
-            android:visibility="invisible" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/sliderZoom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/layoutVideoRecordingHandler"
-            android:layout_marginStart="@dimen/margin_10"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:value="0.0"
-            android:valueFrom="0.0"
-            android:valueTo="1.0"
-            android:visibility="invisible" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutVideoSpeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/sliderZoom"
-            android:layout_marginStart="@dimen/margin_10"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:visibility="gone">
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/toggleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/graytransparentcolor"
-                android:paddingStart="@dimen/margin_5"
-                android:paddingEnd="@dimen/margin_5"
-                app:checkedButton="@id/btn1x"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn0.5x"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/_0_5x"
-                    android:textSize="@dimen/text_size_11"
-                    android:tint="@color/palette_cheddar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn0.75x"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn0.75x"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/_0_75x"
-                    android:textSize="@dimen/text_size_11"
-                    android:tint="@color/palette_cheddar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn1x"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/btn0.5x"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn1x"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/_1x"
-                    android:textSize="@dimen/text_size_11"
-                    android:tint="@color/palette_cheddar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn1.5x"
-                    app:layout_constraintHorizontal_bias="0."
-                    app:layout_constraintStart_toEndOf="@id/btn0.75x"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn1.5x"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/_1_5x"
-                    android:textSize="@dimen/text_size_11"
-                    android:tint="@color/palette_cheddar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn2x"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@id/btn1x"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn2x"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/_2x"
-                    android:textSize="@dimen/text_size_11"
-                    android:tint="@color/palette_cheddar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@id/btn1.5x"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <RelativeLayout
-            android:id="@+id/layoutVideoRecordingHandler"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="15dp">
-
-            <ImageButton
-                android:id="@+id/btnRecord"
-                android:layout_width="@dimen/margin_90"
-                android:layout_height="@dimen/margin_90"
-                android:layout_centerHorizontal="true"
-                android:background="@color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_record_video_pre" />
-
-            <ImageView
-                android:id="@+id/imvStickers"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/btnRecord"
-                android:layout_toEndOf="@+id/imvGallery"
-                android:visibility="visible" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:id="@+id/txtStickers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imvStickers"
-                android:layout_alignStart="@+id/imvStickers"
-                android:layout_alignEnd="@+id/imvStickers"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/stickers"
-                android:textColor="@color/palette_milk"
-                android:textSize="@dimen/text_size_9" />
-
-            <ImageView
-                android:id="@+id/imvGallery"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_gallery" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:id="@+id/txtGallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imvGallery"
-                android:layout_alignStart="@+id/imvGallery"
-                android:layout_alignEnd="@+id/imvGallery"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/gallery"
-                android:textColor="@color/palette_milk"
-                android:textSize="@dimen/text_size_9" />
-
-            <ImageView
-                android:id="@+id/imvCollage"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_collage" />
-
-            <com.funnyvo.android.customview.FunnyVOTextView
-                android:id="@+id/txtCollage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imvCollage"
-                android:layout_alignStart="@+id/imvCollage"
-                android:layout_alignEnd="@+id/imvCollage"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_2"
-                android:text="@string/collage"
-                android:textColor="@color/palette_milk"
-                android:textSize="@dimen/text_size_9" />
-
-            <ImageButton
-                android:id="@+id/btnDone"
-                android:layout_width="@dimen/margin_32"
-                android:layout_height="@dimen/margin_32"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/margin_15"
-                android:background="@color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_done"
-                android:tint="@color/palette_cheddar"
-                android:visibility="invisible" />
-
-
-        </RelativeLayout>
-
-        <com.funnyvo.android.customview.FunnyVOTextView
-            android:id="@+id/txtCountdownTimer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:shadowColor="@color/darkgray"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:text="3"
-            android:textColor="@color/colorAccent"
-            android:textSize="100sp"
-            android:visibility="gone"
-            app:customFont="@string/font_bold" />
-
-        <!--        <com.funnyvo.android.customview.FunnyVOEditTextView-->
-        <!--            android:id="@+id/edtTxtVideoMessage"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:layout_centerInParent="true"-->
-        <!--            android:background="@android:color/transparent"-->
-        <!--            android:focusable="true"-->
-        <!--            android:gravity="center"-->
-        <!--            android:imeOptions="actionDone"-->
-        <!--            android:inputType="textCapSentences|textMultiLine"-->
-        <!--            android:textColor="@color/colorAccent"-->
-        <!--            android:textSize="@dimen/text_size_35"-->
-        <!--            android:visibility="gone" />-->
-
+            android:layout_height="5dp"
+            android:layout_centerVertical="true"
+            android:background="@color/fifty_transparent_black" />
     </RelativeLayout>
 
 
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/btnCloseRecordVideo"
+        android:layout_width="@dimen/margin_32"
+        android:layout_height="@dimen/margin_32"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="@dimen/margin_40"
+        android:background="@color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_close"
+        android:tint="@color/palette_cheddar" />
+
+    <Button
+        android:id="@+id/btnAddMusicRecord"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/margin_5"
+        android:layout_marginTop="@dimen/margin_35"
+        android:layout_marginEnd="@dimen/margin_50"
+        android:layout_toEndOf="@+id/btnCloseRecordVideo"
+        android:scaleType="fitCenter"
+        android:text="@string/add_sound"
+        android:textColor="@color/palette_cheddar"
+        android:tint="@color/palette_cheddar"
+        app:icon="@drawable/ic_music"
+        app:iconGravity="textStart"
+        app:iconTint="@color/palette_cheddar" />
+
+    <LinearLayout
+        android:id="@+id/layoutCameraOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/margin_70"
+        android:layout_marginRight="@dimen/margin_10"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/btnRotateCamera"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_20"
+            android:background="@color/transparent"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_rotate_cam" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_2"
+            android:text="@string/rotate_camera"
+            android:textColor="@color/palette_cheddar"
+            android:textSize="@dimen/text_size_9" />
+
+        <ImageButton
+            android:id="@+id/btnFlashCamera"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/transparent"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_flash_on" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_2"
+            android:text="@string/switch_flash"
+            android:textColor="@color/palette_cheddar"
+            android:textSize="@dimen/text_size_9" />
+
+        <ImageButton
+            android:id="@+id/btnTimer"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/transparent"
+            android:padding="@dimen/margin_5"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_timer" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_2"
+            android:text="@string/recording_timer"
+            android:textColor="@color/palette_cheddar"
+            android:textSize="@dimen/text_size_9" />
+
+        <!--            <ImageButton-->
+        <!--                android:id="@+id/btnTextEditor"-->
+        <!--                android:layout_width="@dimen/margin_40"-->
+        <!--                android:layout_height="@dimen/margin_40"-->
+        <!--                android:layout_marginTop="@dimen/margin_10"-->
+        <!--                android:layout_marginEnd="@dimen/margin_20"-->
+        <!--                android:background="@color/transparent"-->
+        <!--                android:padding="@dimen/margin_5"-->
+        <!--                android:src="@drawable/ic_text_fields" />-->
+
+        <ImageButton
+            android:id="@+id/btnRecodingSpeed"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/transparent"
+            android:padding="@dimen/margin_5"
+            android:src="@drawable/ic_speed_meter" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_2"
+            android:text="@string/recording_speed"
+            android:textColor="@color/palette_cheddar"
+            android:textSize="@dimen/text_size_9" />
+        <!--            <ImageButton-->
+        <!--                android:id="@+id/btnFastMotion"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginTop="@dimen/margin_10"-->
+        <!--                android:layout_marginEnd="@dimen/margin_20"-->
+        <!--                android:background="@color/transparent"-->
+        <!--                android:padding="@dimen/margin_5"-->
+        <!--                android:src="@drawable/ic_fast_play" />-->
+
+        <ImageButton
+            android:id="@+id/btnFilter"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/transparent"
+            android:padding="@dimen/margin_5"
+            android:src="@drawable/ic_filter" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_2"
+            android:text="@string/filters"
+            android:textColor="@color/palette_cheddar"
+            android:textSize="@dimen/text_size_9" />
+
+        <ImageButton
+            android:id="@+id/btnCrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/transparent"
+            android:padding="@dimen/margin_5"
+            android:src="@drawable/ic_scissors"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recylerviewFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="@dimen/margin_20"
+        android:visibility="invisible" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderZoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layoutVideoRecordingHandler"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:value="0.0"
+        android:valueFrom="0.0"
+        android:valueTo="1.0"
+        android:visibility="invisible" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutVideoSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sliderZoom"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:visibility="gone">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/graytransparentcolor"
+            android:paddingStart="@dimen/margin_5"
+            android:paddingEnd="@dimen/margin_5"
+            app:checkedButton="@id/btn1x"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn0.5x"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="@dimen/margin_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/_0_5x"
+                android:textSize="@dimen/text_size_11"
+                android:tint="@color/palette_cheddar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn0.75x"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn0.75x"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="@dimen/margin_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/_0_75x"
+                android:textSize="@dimen/text_size_11"
+                android:tint="@color/palette_cheddar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn1x"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/btn0.5x"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn1x"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="@dimen/margin_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/_1x"
+                android:textSize="@dimen/text_size_11"
+                android:tint="@color/palette_cheddar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn1.5x"
+                app:layout_constraintHorizontal_bias="0."
+                app:layout_constraintStart_toEndOf="@id/btn0.75x"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn1.5x"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="@dimen/margin_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/_1_5x"
+                android:textSize="@dimen/text_size_11"
+                android:tint="@color/palette_cheddar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn2x"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/btn1x"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn2x"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="@dimen/margin_60"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/_2x"
+                android:textSize="@dimen/text_size_11"
+                android:tint="@color/palette_cheddar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/btn1.5x"
+                app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutVideoRecordingHandler"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/margin_15">
+
+        <ImageButton
+            android:id="@+id/btnRecord"
+            android:layout_width="@dimen/margin_90"
+            android:layout_height="@dimen/margin_90"
+            android:layout_centerHorizontal="true"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_record_video_pre" />
+
+        <ImageView
+            android:id="@+id/imvStickers"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btnRecord"
+            android:layout_toEndOf="@+id/imvGallery"
+            android:visibility="visible" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:id="@+id/txtStickers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imvStickers"
+            android:layout_alignStart="@+id/imvStickers"
+            android:layout_alignEnd="@+id/imvStickers"
+            android:layout_marginTop="@dimen/margin_2"
+            android:gravity="center"
+            android:text="@string/stickers"
+            android:textColor="@color/palette_milk"
+            android:textSize="@dimen/text_size_9" />
+
+        <ImageView
+            android:id="@+id/imvGallery"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_gallery" />
+
+        <ImageView
+            android:id="@+id/imvCollage"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_collage" />
+
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:id="@+id/txtCollage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imvCollage"
+            android:layout_alignStart="@+id/imvCollage"
+            android:layout_alignEnd="@+id/imvCollage"
+            android:layout_marginTop="@dimen/margin_2"
+            android:gravity="center"
+            android:text="@string/collage"
+            android:textColor="@color/palette_milk"
+            android:textSize="@dimen/text_size_9" />
+
+        <ImageButton
+            android:id="@+id/btnDone"
+            android:layout_width="@dimen/margin_32"
+            android:layout_height="@dimen/margin_32"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/margin_15"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_done"
+            android:tint="@color/palette_cheddar"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txtCountdownTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:shadowColor="@color/darkgray"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:text="3"
+        android:textColor="@color/colorAccent"
+        android:textSize="100sp"
+        android:visibility="gone"
+        app:customFont="@string/font_bold" />
+
+    <!--        <com.funnyvo.android.customview.FunnyVOEditTextView-->
+    <!--            android:id="@+id/edtTxtVideoMessage"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_centerInParent="true"-->
+    <!--            android:background="@android:color/transparent"-->
+    <!--            android:focusable="true"-->
+    <!--            android:gravity="center"-->
+    <!--            android:imeOptions="actionDone"-->
+    <!--            android:inputType="textCapSentences|textMultiLine"-->
+    <!--            android:textColor="@color/colorAccent"-->
+    <!--            android:textSize="@dimen/text_size_35"-->
+    <!--            android:visibility="gone" />-->
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txt30sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/_30s" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txt15sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_toStartOf="@+id/txt30sec"
+        android:text="@string/_15s" />
+
+    <com.funnyvo.android.customview.FunnyVOTextView
+        android:id="@+id/txt60sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_toEndOf="@+id/txt30sec"
+        android:text="@string/_60s" />
+</RelativeLayout>
+

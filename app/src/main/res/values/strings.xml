@@ -141,6 +141,9 @@
     <string name="stickers">Stickers</string>
     <string name="gallery">Gallery</string>
     <string name="collage">Collage</string>
+    <string name="_30s">30s</string>
+    <string name="_15s">15s</string>
+    <string name="_60s">60s</string>
 
     <string-array name="photo_editor_emoji">
 
