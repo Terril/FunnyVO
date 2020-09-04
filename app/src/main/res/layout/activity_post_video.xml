@@ -40,8 +40,6 @@
                 android:text="@string/post"
                 android:textColor="@color/palette_cheddar"
                 android:textSize="@dimen/text_size_18" />
-
-
             <ImageButton
                 android:id="@+id/btnGoBackPost"
                 android:layout_width="@dimen/margin_32"
@@ -97,4 +95,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"></ImageButton>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

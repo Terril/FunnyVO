@@ -1,13 +1,17 @@
 package com.funnyvo.android.services
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.ThumbnailUtils
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.work.*
 import com.android.volley.Response
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.Volley
@@ -20,6 +24,7 @@ import com.funnyvo.android.simpleclasses.Variables
 import com.funnyvo.android.simpleclasses.Variables.APP_NAME
 import com.funnyvo.android.simpleclasses.Variables.sharedPreferences
 import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.delay
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -30,9 +35,21 @@ import javax.net.ssl.HttpsURLConnection
 
 @ServiceScoped
 class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
-        Worker(appContext, workerParams) {
+        CoroutineWorker(appContext, workerParams) {
 
-    override fun doWork(): Result {
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val notificationManager = appContext.getSystemService(NotificationManager::class.java)
+
+    companion object {
+        const val Progress = "Progress"
+        private const val delayDuration = 100L
+        const val NOTIFICATION_ID = 42
+        const val TAG = "ForegroundWorker"
+        const val channelId = "Job progress"
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override suspend fun doWork(): Result {
 
         val uri = inputData.getString("uri")
         val uriGif = inputData.getString("uriGif")
@@ -42,6 +59,21 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         val uriData = Uri.parse(uri)
         val uriGifData = Uri.parse(uriGif)
 
+        createNotificationChannel()
+        val notification = NotificationCompat.Builder(applicationContext, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Uploading video to FunnyVO")
+                .build()
+
+        val foregroundInfo = ForegroundInfo(NOTIFICATION_ID, notification)
+        setForeground(foregroundInfo)
+
+        for (i in 0..100) {
+            setProgress(workDataOf(Progress to i))
+            showProgress(i)
+            delay(delayDuration)
+        }
+
         uploadFunnyVOVideo(uriData, uriGifData, desc)
 
         return Result.success()
@@ -50,11 +82,11 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
     private fun uploadFunnyVOVideo(uri: Uri, uriGif: Uri, desc: String) {
         val bmThumbnail: Bitmap = uri.path?.let {
             ThumbnailUtils.createVideoThumbnail(it,
-                MediaStore.Video.Thumbnails.FULL_SCREEN_KIND)
+                    MediaStore.Video.Thumbnails.FULL_SCREEN_KIND)
         }!!
         val bmThumbnailResized = Bitmap.createScaledBitmap(bmThumbnail, (bmThumbnail.width * 0.4).toInt(), (bmThumbnail.height * 0.4).toInt(), true)
 
-      //  Log.d(APP_NAME, "Video path :" + uri.path)
+        //  Log.d(APP_NAME, "Video path :" + uri.path)
         val videoFile = File(uri.path)
         val gifFile = File(uriGif.path)
         val thumbNail: File = saveBitmapInFile(bmThumbnailResized)
@@ -77,14 +109,14 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         fileRequest["thum"] = thumbNail
         fileRequest["gif"] = gifFile
         val multipartRequest = MultipartRequest(Variables.UPLOAD_VIDEO, Response.ErrorListener { error ->
-          //  Log.e(APP_NAME, "Video Upload Error : " + error.message)
+            //  Log.e(APP_NAME, "Video Upload Error : " + error.message)
             videoFile.deleteOnExit()
             gifFile.deleteOnExit()
             thumbNail.deleteOnExit()
 
             return@ErrorListener
         }, Response.Listener<String> { response ->
-          //  Log.e(APP_NAME, "Video Upload Success : $response")
+            //  Log.e(APP_NAME, "Video Upload Success : $response")
             videoFile.deleteOnExit()
             gifFile.deleteOnExit()
             thumbNail.deleteOnExit()
@@ -120,7 +152,26 @@ class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
         return fileName
     }
 
-    private fun deleteFiles() {
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showProgress(progress: Int) {
+        val notification = NotificationCompat.Builder(applicationContext, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Uploading video to FunnyVO")
+                .setProgress(100, progress, false)
+                .build()
+        notificationManager?.notify(NOTIFICATION_ID, notification)
+    }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            var notificationChannel =
+                    notificationManager?.getNotificationChannel(channelId)
+            if (notificationChannel == null) {
+                notificationChannel = NotificationChannel(
+                        channelId, TAG, NotificationManager.IMPORTANCE_LOW
+                )
+                notificationManager?.createNotificationChannel(notificationChannel)
+            }
+        }
     }
 }

@@ -7,22 +7,23 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.View.VISIBLE
 import android.widget.EditText
 import android.widget.Toast
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import androidx.work.WorkRequest
+import androidx.lifecycle.Observer
+import androidx.work.*
 import com.funnyvo.android.R
 import com.funnyvo.android.base.BaseActivity
 import com.funnyvo.android.helper.PlayerEventListener
 import com.funnyvo.android.main_menu.MainMenuActivity
 import com.funnyvo.android.services.UploadWorker
+import com.funnyvo.android.services.UploadWorker.Companion.Progress
 import com.funnyvo.android.simpleclasses.Functions
 import com.funnyvo.android.simpleclasses.Variables
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_post_video.*
 import java.io.*
-import java.util.*
+
 
 class PostVideoActivity : BaseActivity(), View.OnClickListener {
     private var video_path: String? = null
@@ -74,9 +75,19 @@ class PostVideoActivity : BaseActivity(), View.OnClickListener {
         //Set Input Data
         uploadWork.setInputData(data.build())
         val uploadWorkRequest: WorkRequest = uploadWork.build()
-        WorkManager
-                .getInstance(applicationContext)
-                .enqueue(uploadWorkRequest)
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueue(uploadWorkRequest)
+        workManager.getWorkInfoByIdLiveData(uploadWorkRequest.id)
+                .observe(this, Observer { workInfo: WorkInfo? ->
+                    if (workInfo != null) {
+                        val progress = workInfo.progress
+                        val value = progress.getInt(Progress, 0)
+                        progressBar.visibility = VISIBLE
+                        progressBar.progress = value
+                        // Do something with progress information
+                    }
+                })
+
         Toast.makeText(this@PostVideoActivity, R.string.continue_using_app, Toast.LENGTH_LONG).show()
         if (player != null) {
             player.removeListener(eventListener!!)
