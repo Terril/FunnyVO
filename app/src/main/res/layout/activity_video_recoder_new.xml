@@ -403,6 +403,19 @@
             android:layout_centerVertical="true"
             android:src="@drawable/ic_gallery" />
 
+        <com.funnyvo.android.customview.FunnyVOTextView
+            android:id="@+id/txtGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imvGallery"
+            android:layout_alignStart="@+id/imvGallery"
+            android:layout_alignEnd="@+id/imvGallery"
+            android:layout_marginTop="@dimen/margin_2"
+            android:gravity="center"
+            android:text="@string/collage"
+            android:textColor="@color/palette_milk"
+            android:textSize="@dimen/text_size_9" />
+
         <ImageView
             android:id="@+id/imvCollage"
             android:layout_width="@dimen/margin_40"
@@ -473,6 +486,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/palette_cheddar_dark"
+        android:layout_marginBottom="@dimen/margin_5"
+        app:fontFamily="@string/font_bold"
         android:text="@string/_30s" />
 
     <com.funnyvo.android.customview.FunnyVOTextView
@@ -482,6 +498,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/margin_10"
         android:layout_toStartOf="@+id/txt30sec"
+        android:layout_marginBottom="@dimen/margin_5"
+        android:textColor="@color/palette_cheddar_dark"
+        app:fontFamily="@string/font_bold"
         android:text="@string/_15s" />
 
     <com.funnyvo.android.customview.FunnyVOTextView
@@ -492,6 +511,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="@dimen/margin_10"
         android:layout_toEndOf="@+id/txt30sec"
+        android:textColor="@color/palette_cheddar_dark"
+        app:fontFamily="@string/font_bold"
+        android:layout_marginBottom="@dimen/margin_5"
         android:text="@string/_60s" />
 </RelativeLayout>
 

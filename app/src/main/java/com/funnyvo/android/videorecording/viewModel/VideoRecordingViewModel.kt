@@ -15,6 +15,7 @@ import com.arthenica.mobileffmpeg.FFmpeg
 import com.daasuu.gpuv.composer.GPUMp4Composer
 import com.funnyvo.android.FunnyVOException
 import com.funnyvo.android.R
+import com.funnyvo.android.extensions.fromJson
 import com.funnyvo.android.helper.Result
 import com.funnyvo.android.simpleclasses.ApiRequest
 import com.funnyvo.android.simpleclasses.Variables
@@ -133,9 +134,9 @@ class VideoRecordingViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun fromJson(json: String): VideoFilters {
-        return Gson().fromJson<VideoFilters>(json, VideoFilters::class.java)
-    }
+//    private fun fromJson(json: String): VideoFilters {
+//        return Gson().fromJson<VideoFilters>(json, VideoFilters::class.java)
+//    }
 
     fun deleteFile() {
         deleteCount++

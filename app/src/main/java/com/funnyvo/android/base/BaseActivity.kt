@@ -38,7 +38,7 @@ import javax.inject.Inject
 abstract class BaseActivity : AppCompatActivity() {
 
     lateinit var player: SimpleExoPlayer
-    private val TIMEOUT: Long = 60000 // 2 min = 1 * 60 * 1000 ms
+    private val TIMEOUT: Long = 30000 // 2 min = 1 * 60 * 1000 ms
     private lateinit var manager: ReviewManager
 
     @Inject
@@ -58,6 +58,7 @@ abstract class BaseActivity : AppCompatActivity() {
         Variables.sharedPreferences = getSharedPreferences(Variables.pref_name, Context.MODE_PRIVATE)
 
         manager = ReviewManagerFactory.create(this)
+        resetDisconnectTimer()
     }
 
     //     This will hide the bottom mobile navigation control 
@@ -140,9 +141,9 @@ abstract class BaseActivity : AppCompatActivity() {
         return 0L
     }
 
-    private val disconnectHandler: Handler = Handler(Handler.Callback {
+    private val disconnectHandler: Handler = Handler(Looper.getMainLooper()) {
         true
-    })
+    }
 
     private val disconnectCallback = Runnable {
         // Perform any required operation on disconnect
@@ -169,11 +170,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun stopDisconnectTimer() {
         disconnectHandler.removeCallbacks(disconnectCallback)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        resetDisconnectTimer()
     }
 
     override fun onStop() {

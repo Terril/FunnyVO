@@ -761,9 +761,9 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
     // this will open the comment screen
     private void openComment(Home item) {
 
-        int comment_counnt = Integer.parseInt(item.video_comment_count);
+        int commentCount = Integer.parseInt(item.video_comment_count);
         FragmentDataSend fragment_data_send = this;
-        CommentFragment comment_fragment = new CommentFragment(comment_counnt, fragment_data_send);
+        CommentFragment comment_fragment = new CommentFragment(commentCount, fragment_data_send);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.in_from_bottom, R.anim.out_to_top, R.anim.in_from_top, R.anim.out_from_bottom);
         Bundle args = new Bundle();

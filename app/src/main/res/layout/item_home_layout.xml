@@ -177,7 +177,7 @@
                         app:fontFamily="@string/font_bold" />
 
                     <com.funnyvo.android.customview.FunnyVOTextView
-                        android:id="@+id/desc_txt"
+                        android:id="@+id/descTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"

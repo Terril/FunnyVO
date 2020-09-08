@@ -28,9 +28,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     private HomeAdapter.OnItemClickListener listener;
     private ArrayList<Home> dataList;
 
-
-    // meker the onitemclick listener interface and this interface is impliment in Chatinbox activity
-    // for to do action when user click on item
     public interface OnItemClickListener {
         void onItemClick(int position, Home item, View view);
     }
@@ -75,7 +72,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
                     holder.sound_name.setText(item.sound_name);
                 }
                 holder.sound_name.setSelected(true);
-                holder.desc_txt.setText(item.video_description);
+                holder.descTxt.setText(item.video_description);
 
                 Glide.with(context)
                         .load(item.profile_pic)
@@ -128,7 +125,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        FunnyVOTextView  desc_txt, sound_name;
+        FunnyVOTextView  descTxt, sound_name;
         Chip username;
         ImageView user_pic, sound_image, varified_btn;
 
@@ -154,7 +151,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             like_image = view.findViewById(R.id.like_image);
             like_txt = view.findViewById(R.id.like_txt);
 
-            desc_txt = view.findViewById(R.id.desc_txt);
+            descTxt = view.findViewById(R.id.descTxt);
 
             comment_layout = view.findViewById(R.id.comment_layout);
             comment_txt = view.findViewById(R.id.comment_txt);
