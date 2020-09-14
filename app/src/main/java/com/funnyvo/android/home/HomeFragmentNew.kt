@@ -11,9 +11,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.funnyvo.android.FunnyVOApplication.Companion.simpleCache
 import com.funnyvo.android.R
 import com.funnyvo.android.ads.ShowAdvertisement
@@ -57,9 +55,10 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
     private var pageNumber = 1
     private lateinit var homeAdapter: HomeAdapter
     private var adView: UnifiedNativeAdView? = null
-    private lateinit var  player : SimpleExoPlayer
+    private var player: SimpleExoPlayer? = null
 
-    private lateinit var advertisement : ShowAdvertisement
+    private lateinit var advertisement: ShowAdvertisement
+
     private object HOLDER {
         val INSTANCE = HomeFragmentNew()
     }
@@ -86,16 +85,6 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
         startPreLoadingService()
         advertisement = ShowAdvertisement.instance
 
-        val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(32 * 1024, 64 * 1024, 1024, 1024).createDefaultLoadControl()
-        val trackSelector = DefaultTrackSelector(requireContext())
-        val renderersFactory: RenderersFactory = DefaultRenderersFactory(requireContext())
-        val bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
-        val looper = Looper.myLooper()
-        val clock = SystemClock.DEFAULT
-        val analyticsCollector = AnalyticsCollector(clock)
-        player = SimpleExoPlayer.Builder(requireContext(), renderersFactory, trackSelector, loadControl,
-                bandwidthMeter, looper!!, analyticsCollector, true, clock).build()
-
         pagerHome.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
@@ -103,6 +92,7 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
                     adView?.destroy()
                 }
                 adView = context?.let { advertisement.showNativeAd(it) }
+                releasePreviousPlayer()
                 setPlayer(position)
             }
         })
@@ -173,7 +163,7 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
                     fragment.arguments = bundle
                     fragment.show(childFragmentManager, "")
                 }
-                sound_image_layout -> if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
+                soundImageLayout -> if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                     if (checkPermissions(requireActivity())) {
                         val intent = Intent(activity, VideoSoundActivity::class.java)
                         intent.putExtra("data", item)
@@ -246,10 +236,18 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
 //            val layout: View = layoutManager.findViewByPosition(currentPage)
 //            val mainLayout = layout.findViewById<RelativeLayout>(R.id.mainLayoutHome)
 //            val loadAdsLayout = layout.findViewById<FrameLayout>(R.id.frameLoadAdsHome)
- //           imvHomeVideoSnap = layout.findViewById(R.id.imvHomeVideoSnap)
- //           playerView = layout.findViewById(R.id.playerViewHome)
+            //           imvHomeVideoSnap = layout.findViewById(R.id.imvHomeVideoSnap)
+            //           playerView = layout.findViewById(R.id.playerViewHome)
             val item = dataList[currentPage]
-
+            val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(32 * 1024, 64 * 1024, 1024, 1024).createDefaultLoadControl()
+            val trackSelector = DefaultTrackSelector(requireContext())
+            val renderersFactory: RenderersFactory = DefaultRenderersFactory(requireContext())
+            val bandwidthMeter = DefaultBandwidthMeter.Builder(context).build()
+            val looper = Looper.myLooper()
+            val clock = SystemClock.DEFAULT
+            val analyticsCollector = AnalyticsCollector(clock)
+            player = SimpleExoPlayer.Builder(requireContext(), renderersFactory, trackSelector, loadControl,
+                    bandwidthMeter, looper!!, analyticsCollector, true, clock).build()
             val cacheDataSourceFactory = CacheDataSourceFactory(
                     simpleCache,
                     DefaultDataSourceFactory(context,
@@ -278,11 +276,11 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
                 val videoSource: MediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
                         .createMediaSource(Uri.parse(item.video_url))
                 playerViewHome.player = player
-                player.prepare(videoSource)
+                player?.prepare(videoSource)
             }
-            player.repeatMode = Player.REPEAT_MODE_ALL
-            player.addListener(this)
-            player.playWhenReady = true
+            player?.repeatMode = Player.REPEAT_MODE_ALL
+            player?.addListener(this)
+            player?.playWhenReady = true
 
             playerViewHome.setOnTouchListener(object : OnTouchListener {
                 private val gestureDetector = GestureDetector(context, object : SimpleOnGestureListener() {
@@ -301,28 +299,28 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
 
                     override fun onSingleTapUp(e: MotionEvent): Boolean {
                         super.onSingleTapUp(e)
-                        if (!player.playWhenReady) {
-                          //  is_user_stop_video = false
-                            player.playWhenReady = true
+                        if (player?.playWhenReady == false) {
+                            //  is_user_stop_video = false
+                            player?.playWhenReady = true
                         } else {
-                           // is_user_stop_video = true
-                            player.playWhenReady = false
+                            // is_user_stop_video = true
+                            player?.playWhenReady = false
                         }
                         return true
                     }
 
                     override fun onLongPress(e: MotionEvent) {
                         super.onLongPress(e)
-                      //  showVideoOption(item)
+                        //  showVideoOption(item)
                     }
 
                     override fun onDoubleTap(e: MotionEvent): Boolean {
-                        if (!player.playWhenReady) {
-                           // is_user_stop_video = false
-                            player.playWhenReady = true
+                        if (player?.playWhenReady == false) {
+                            // is_user_stop_video = false
+                            player?.playWhenReady = true
                         }
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
-                           // showHeartOnDoubleTap(item, mainLayout, e)
+                            // showHeartOnDoubleTap(item, mainLayout, e)
                             likeVideo(currentPage, item)
                         } else {
                             Toast.makeText(context, "Please Login into app", Toast.LENGTH_SHORT).show()
@@ -338,11 +336,11 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
             })
             HashTagHelper.Creator.create(requireContext().resources.getColor(R.color.maincolor)) { hashTag ->
                 onPause()
-              //  openHashtag(hashTag)
+                //  openHashtag(hashTag)
             }.handle(descTxt)
 
             val soundAnimation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation)
-            sound_image_layout.startAnimation(soundAnimation)
+            soundImageLayout.startAnimation(soundAnimation)
             if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) Functions.callApiForUpdateView(activity, item.video_id)
 
             if (currentPage == dataList.size - 1) {
@@ -353,6 +351,35 @@ class HomeFragmentNew : RootFragment(), FragmentDataSend, Player.EventListener {
                     homeAdapter.notifyDataSetChanged()
                 })
             }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (player != null) {
+            player?.playWhenReady = false
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (player != null) {
+            player?.playWhenReady = false
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (player != null) {
+            player?.release()
+        }
+        //  getProxy(context).shutdown();
+    }
+
+    fun releasePreviousPlayer() {
+        if (player != null) {
+            player?.removeListener(this)
+            player?.release()
         }
     }
 

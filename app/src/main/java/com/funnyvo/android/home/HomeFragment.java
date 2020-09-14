@@ -365,7 +365,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                         fragment.show(getChildFragmentManager(), "");
                         //             }
                         break;
-                    case R.id.sound_image_layout:
+                    case R.id.soundImageLayout:
                         if (Variables.sharedPreferences.getBoolean(Variables.islogin, false)) {
                             if (PermissionUtils.INSTANCE.checkPermissions(getActivity())) {
                                 Intent intent = new Intent(getActivity(), VideoSoundActivity.class);
@@ -610,7 +610,7 @@ public class HomeFragment extends RootFragment implements Player.EventListener, 
                 }
             }).handle(desc_txt);
 
-            LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.sound_image_layout);
+            LinearLayout soundimage = (LinearLayout) layout.findViewById(R.id.soundImageLayout);
             Animation soundAnimation = AnimationUtils.loadAnimation(context, R.anim.d_clockwise_rotation);
             soundimage.startAnimation(soundAnimation);
 

@@ -171,8 +171,8 @@
                         android:shadowRadius="3"
                         android:text="Username"
                         app:chipIcon="@drawable/ic_baseline_add"
-                        app:chipBackgroundColor="@color/palette_cheddar_dark"
-                        android:textColor="@color/palette_milk"
+                        app:chipBackgroundColor="@color/transparent"
+                        android:textColor="@color/palette_cheddar_dark"
                         android:textSize="@dimen/text_size_11"
                         app:fontFamily="@string/font_bold" />
 
@@ -227,7 +227,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/sound_image_layout"
+                    android:id="@+id/soundImageLayout"
                     android:layout_width="@dimen/margin_65"
                     android:layout_height="@dimen/margin_65"
                     android:layout_alignParentRight="true"

@@ -116,15 +116,19 @@ public class SplashActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     String code = jsonObject.optString("code");
                     if (code.equals(API_SUCCESS_CODE)) {
+                        SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
                         JSONObject msgJson = jsonObject.getJSONObject("msg");
                         String advertisement = msgJson.optString("advertisement");
                         String adAfterVideos = msgJson.optString("ad_after_no_videos");
                         if (advertisement.equals("1")) {
-                            SharedPreferences.Editor editor = Variables.sharedPreferences.edit();
                             editor.putBoolean(SHOW_ADS, true);
                             editor.putString(PAGE_COUNT_SHOW_ADS_AFTER_VIEWS, adAfterVideos);
                             editor.apply();
+                        } else {
+                            editor.putBoolean(SHOW_ADS, false);
                         }
+
+                        editor.apply();
                     }
                 } catch (JSONException je) {
                     je.printStackTrace();
